@@ -1,6 +1,6 @@
 {
-  "name": "part1-data-preprocessing",
-  "private": true,
+  "name": "jskit-learn",
+  "main": "jskit-learn.mjs",
   "dependencies": {
     "@std/esm": "^0.18.0",
     "babel-runtime": "^6.26.0",
