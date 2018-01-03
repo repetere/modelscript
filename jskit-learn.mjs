@@ -1,6 +1,15 @@
-'use strict';
 import { default as csv } from 'csvtojson';
 import { default as ml } from 'ml';
+import { default as Random } from 'random-js';
+import { default as range } from 'lodash.range';
+import { default as rangeRight } from 'lodash.rangeright';
+
+const scale = (a, d) => a.map(x => (x - avg(a)) / d);
+const avg = ml.Stat.array.mean;
+const sum = ml.Stat.array.sum;
+const max = a => a.concat([]).sort((x, y) => x < y)[ 0 ];
+const min = a => a.concat([]).sort((x, y) => x > y)[ 0 ];
+const sd = ml.Stat.array.standardDeviation;//(a, av) => Math.sqrt(avg(a.map(x => (x - av) * x)));
 
 export async function loadCSV(filepath) {
   const csvData = [];
@@ -23,6 +32,70 @@ export async function loadCSV(filepath) {
   });
 }
 
+export const util = {
+  range,
+  rangeRight,
+  scale,
+  avg,
+  mean:avg,
+  sum,
+  max,
+  min,
+  sd,
+  StandardScaler: (z) => scale(z, sd(z)),//standardization
+  MinMaxScaler: (z) => scale(z,(max(z) - min(z))),
+}
+
+
+// https://machinelearningmastery.com/implement-resampling-methods-scratch-python/
+export const cross_validation = { 
+  train_test_split: function train_test_split(dataset=[], options = {
+    test_size: 0.2,
+    train_size: 0.8,
+    random_state: 0,
+    return_array: false,
+  }) {
+    const engine = Random.engines.mt19937().seed(options.random_state || 0);
+    const training_set = [];
+    const train_size =
+      (options.train_size)
+        ? options.train_size * dataset.length
+        : (1 - (options.test_size || 0.2)) * dataset.length;
+    const dataset_copy = [].concat(dataset);
+
+    while (training_set.length < train_size){
+      const index = Random.integer(0, (dataset_copy.length-1))(engine);
+      training_set.push(dataset_copy.splice(index, 1)[ 0 ]);
+    }
+    return (options.return_array)
+      ? [ training_set, dataset_copy ]
+      : {
+      train: training_set,
+      test: dataset_copy,
+    };
+  },
+  cross_validation_split: function kfolds(dataset=[], options = {
+    folds: 3,
+    random_state: 0,
+  }) { //kfolds
+    const engine = Random.engines.mt19937().seed(options.random_state || 0);
+    const folds = options.folds || 3;
+    const dataset_split = [];
+    const dataset_copy = [].concat(dataset);
+    const foldsize = parseInt(dataset.length / (folds||3), 10);
+    for (let i in range(folds)) {
+      const fold = [];
+      while (fold.length < foldsize) {
+        const index = Random.integer(0, (dataset_copy.length - 1))(engine);
+        fold.push(dataset_copy.splice(index, 1)[ 0 ]);
+      }
+      dataset_split.push(fold);
+    }
+
+    return dataset_split;
+  }
+}
+
 export const preprocessing = {
   RawData: class RawData {
     constructor(data=[]) {
@@ -30,7 +103,7 @@ export const preprocessing = {
       this.labels = new Map();
       this.encoders = new Map();
     }
-    columnArray(name, options) {
+    columnArray(name, options = {}) {
       const config = Object.assign({
         prefilter: () => true,
         filter: () => true,
@@ -40,9 +113,10 @@ export const preprocessing = {
         },
         parseInt: false,
         parseIntBase: 10,
-        parseFloat: false,
+        parseFloat: (options.scale) ? true : false,
+        scale: false,
       }, options);
-      return this.data
+      const modifiedColumn = this.data
         .filter(config.prefilter)
         .reduce((result, val, index, arr) => { 
           let objVal = val[ name ];
@@ -59,9 +133,14 @@ export const preprocessing = {
             else result.push(returnVal);
           }
         return result;
-      }, []);
+        }, []);
+      return (config.scale)
+        ? (config.scale === 'standard') 
+          ? util.StandardScaler(modifiedColumn)
+          : util.MinMaxScaler(modifiedColumn)
+        : modifiedColumn;
     }
-    columnReplace(name, options) {
+    columnReplace(name, options = {}) {
       const config = Object.assign({
         strategy: 'mean',
         empty: true,
@@ -85,6 +164,17 @@ export const preprocessing = {
             value: (result, val, index, arr) => replaceVal[ index ],
           };
           break;
+        case 'onehot':
+        case 'oneHot':
+        case 'oneHotEncode':
+        case 'oneHotEncoder':
+          replaceVal = this.oneHotEncoder(name, config.oneHotOptions);
+          replace = {
+            test: val => true,
+            value: (result, val, index, arr) => replaceVal[ index ],
+          };
+          return replaceVal;
+          break;
         default:
           replaceVal = ml.Stat.array[ config.strategy ](this.columnArray(name, config.arrayOptions));
           replace.value = replaceVal;
@@ -92,13 +182,14 @@ export const preprocessing = {
       }
       return this.columnArray(name, {
         replace,
+        scale: options.scale,
       });
     }
     labelEncoder(name, options) {
       const config = Object.assign({
         n_values: "auto",
         categorical_features: "all",
-        dtype: np.float64,
+        // dtype: np.float64,
         sparse: true,
         handle_unknown: 'error',
         binary: false,
@@ -115,7 +206,6 @@ export const preprocessing = {
       this.labels.set(name, labels);
       const labeledData = (config.binary)
         ? labelData.map(label => {
-          // console.log(label);
           if (!label) return 0;
           switch (label) {
             case 'N':
@@ -143,12 +233,34 @@ export const preprocessing = {
     }
     oneHotEncoder(name, options) {
       const config = Object.assign({
-        n_values: "auto",
+        // n_values: "auto",
         categorical_features: "all",
-        dtype: np.float64,
-        sparse: True,
-        handle_unknown: 'error'
+        prefix: true,
+        // dtype: np.float64,
+        // sparse: True,
+        // handle_unknown: 'error'
       }, options);
+      const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
+      const labels = Array.from(new Set(labelData).values());
+      const encodedData = labelData.reduce(
+        (result, val, index, arr) => { 
+          labels.forEach(encodedLabel => {
+            const oneHotLabelArrayName = `${name}_${encodedLabel}`;
+            const oneHotVal = (val === encodedLabel) ? 1 : 0;
+            if (Array.isArray(result[ oneHotLabelArrayName ])) {
+              result[ oneHotLabelArrayName ].push(oneHotVal)
+            } else {
+              result[ oneHotLabelArrayName ] = [oneHotVal];
+            }
+          })
+          return result;
+        },
+        {});
+      this.encoders.set(name, {
+        labels,
+        prefix: `${name}_`,
+      });
+      return encodedData;
     }
     fitColumns(options) {
       const config = Object.assign({
@@ -157,9 +269,15 @@ export const preprocessing = {
       }, options);
       const fittedColumns = config.columns
         .reduce((result, val, index, arr) => { 
-          const replacedColumn = this.columnReplace(val.name, val.options)
-            .map(columnVal => ({ [ val.name ]: columnVal }));
-          result[ val.name ] = replacedColumn;
+          let replacedColumn = this.columnReplace(val.name, val.options);
+          if (Array.isArray(replacedColumn)) {
+            replacedColumn = replacedColumn.map(columnVal => ({ [ val.name ]: columnVal }));
+            result[ val.name ] = replacedColumn;
+          } else {
+            Object.keys(replacedColumn).forEach(repColName => {
+              result[ repColName ] = replacedColumn[ repColName ].map(columnVal => ({ [ repColName]: columnVal }));
+            });
+          }
           return result;
         }, {});
       if (Object.keys(fittedColumns)) {
@@ -179,5 +297,3 @@ export const preprocessing = {
     }
   }
 };
-
-// export preprocessing
