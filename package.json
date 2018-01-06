@@ -1,14 +1,69 @@
 {
   "name": "jskit-learn",
-  "main": "jskit-learn.mjs",
+  "version": "0.1.0",
+  "main": "dist/jskit-learn.cjs.js",
+  "module": "dist/jskit-learn.esm.js",
+  "browser": "dist/jskit-learn.umd.js",
+  "modules.root": "lib",
+  "license": "MIT",
   "dependencies": {
-    "@std/esm": "^0.18.0",
     "babel-runtime": "^6.26.0",
     "csvtojson": "^1.1.9",
     "fs-extra": "^5.0.0",
+    "ml": "^2.2.0"
+  },
+  "devDependencies": {
+    "@std/esm": "^0.18.0",
+    "rollup": "^0.50.0",
     "matplotnode": "^0.1.3",
-    "ml": "^2.2.0",
     "numjs": "^0.15.1",
-    "pandas-js": "^0.2.4"
-  }
+    "rollup-plugin-commonjs": "^8.2.6",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "pandas-js": "^0.2.4",
+    "chai": "^4.0.2",
+    "coveralls": "^2.13.1",
+    "grunt": "^1.0.1",
+    "grunt-coveralls": "^1.0.1",
+    "grunt-jsdoc": "^2.1.0",
+    "grunt-mocha-cov": "^0.4.0",
+    "grunt-mocha-istanbul": "^5.0.2",
+    "grunt-simple-mocha": "^0.4.1",
+    "istanbul": "^0.4.5",
+    "jsdoc": "^3.4.3",
+    "jsdoc-to-markdown": "^3.0.0",
+    "mocha": "^3.4.2",
+    "sinon": "^2.3.6",
+    "sinon-chai": "^2.11.0"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test_simple": "node test/test.js",
+    "test": "mocha -R spec --recursive",
+    "pretest": "npm run build"
+  },
+  "files": [
+    "dist"
+  ],
+  "bugs": {
+    "url": "https://github.com/repetere/jskit-learn/issues"
+  },
+  "author":{
+    "name": "Yaw Joseph Etse",
+    "email": "yaw.etse@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/repetere/jskit-learn.git"
+  },
+  "keywords": [
+    "Machine Learning",
+    "scikit-learn",
+    "sk-learn",
+    "ml",
+    "pre-processing",
+    "data preperation",
+    "pandas",
+    "numpy"
+  ]
 }
