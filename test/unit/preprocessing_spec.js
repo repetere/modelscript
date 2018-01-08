@@ -1,5 +1,6 @@
 'use strict';
 const jsk = require('../../dist/jskit-learn.cjs');
+const ml = require('ml');
 const expect = require('chai').expect;
 const csvData = [
   {
@@ -187,6 +188,57 @@ describe('preprocessing', function () {
         expect(oneHotCountry.Country_Ghana[ 0 ]).to.eql(0);
         expect(CSVRawData.encoders.size).to.equal(1);
         expect(CSVRawData.encoders.has('Country')).to.be.true;
+      });
+    });
+    describe('columnReplace', () => {
+      it('should label encode', () => {
+        const leCountry = CSVRawData.labelEncoder('Country');
+        const crCountry = CSVRawData.columnReplace('Country', {
+          strategy: 'label',
+        });
+        const cr2Country = CSVRawData.columnReplace('Country', {
+          strategy: 'labelEncoder',
+        });
+        expect(leCountry).to.have.ordered.members(crCountry);
+        expect(leCountry).to.have.ordered.members(cr2Country);
+      });
+      it('should onehot encode', () => {
+        const ohCountry = CSVRawData.oneHotEncoder('Country');
+        const oh1Country = CSVRawData.columnReplace('Country', {
+          strategy: 'onehot',
+        });
+        const oh2Country = CSVRawData.columnReplace('Country', {
+          strategy: 'oneHot',
+        });
+        const oh3Country = CSVRawData.columnReplace('Country', {
+          strategy: 'oneHotEncode',
+        });
+        const oh4Country = CSVRawData.columnReplace('Country', {
+          strategy: 'oneHotEncoder',
+        });
+        expect(ohCountry).to.deep.eq(oh1Country);
+        expect(ohCountry).to.deep.eq(oh2Country);
+        expect(ohCountry).to.deep.eq(oh3Country);
+        expect(ohCountry).to.deep.eq(oh4Country);        
+      });
+      it('should replace empty values with mean by default', () => {
+        const colSalary = CSVRawData.columnArray('Salary', {
+          parseFloat: true,
+          filter: val => val,
+        });
+        const meanColSalary = CSVRawData.columnReplace('Salary');
+        const meanSal = jsk.util.mean(colSalary);
+        expect(meanColSalary).to.include(meanSal);
+      });
+      
+      it('should replace empty values with stat function from ml.js', () => {
+        const colSalary = CSVRawData.columnArray('Salary', {
+          parseFloat: true,
+          filter: val => val,
+        });
+        const standardDeviationColSalary = CSVRawData.columnReplace('Salary', { strategy: 'standardDeviation', });
+        const sdSal = jsk.util.sd(colSalary);
+        expect(standardDeviationColSalary).to.include(sdSal);
       });
     });
   });
