@@ -4,38 +4,69 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
+var http = require('http');
+var https = require('https');
+var validURL = _interopDefault(require('valid-url'));
 var csv = _interopDefault(require('csvtojson'));
 var ml = _interopDefault(require('ml'));
 var Random = _interopDefault(require('random-js'));
 var range = _interopDefault(require('lodash.range'));
 var rangeRight = _interopDefault(require('lodash.rangeright'));
+var path = _interopDefault(require('path'));
 
-const scale = (a, d) => a.map(x => (x - avg(a)) / d);
 const avg = ml.Stat.array.mean;
 const sum = ml.Stat.array.sum;
+const scale = (a, d) => a.map(x => (x - avg(a)) / d);
 const max = a => a.concat([]).sort((x, y) => x < y)[ 0 ];
 const min = a => a.concat([]).sort((x, y) => x > y)[ 0 ];
 const sd = ml.Stat.array.standardDeviation;//(a, av) => Math.sqrt(avg(a.map(x => (x - av) * x)));
 
-async function loadCSV(filepath) {
-  const csvData = [];
+function loadCSVURI(filepath) {
+  const reqMethod = (filepath.search('https', 'gi') > -1) ? https.get : http.get;
   return new Promise((resolve, reject) => {
-    csv()
-    .fromFile(filepath)
-    .on('json', jsonObj => {
-      csvData.push(jsonObj);
-    })
-    .on('error', err => {
-      return reject(err);
-    })
-    .on('done', error => {
-      if (error) {
-        return reject(error);
-      } else {
-        return resolve(csvData);
-      }
+    const csvData = [];
+    const req = reqMethod(filepath, res => {
+      csv().fromStream(res)
+      .on('json', jsonObj => {
+        csvData.push(jsonObj);
+      })
+      .on('error', err => {
+        return reject(err);
+      })
+      .on('done', error => {
+        if (error) {
+          return reject(error);
+        } else {
+          return resolve(csvData);
+        }
+      });
     });
-  });
+    req.on('error', reject);
+  })
+}
+
+function loadCSV(filepath) {
+  if (validURL.isUri(filepath)) {
+    return loadCSVURI(filepath);
+  } else {
+    return new Promise((resolve, reject) => {
+      const csvData = [];
+      csv().fromFile(filepath)
+        .on('json', jsonObj => {
+          csvData.push(jsonObj);
+        })
+        .on('error', err => {
+          return reject(err);
+        })
+        .on('done', error => {
+          if (error) {
+            return reject(error);
+          } else {
+            return resolve(csvData);
+          }
+        });
+    });
+  }
 }
 
 const util = {
@@ -51,7 +82,6 @@ const util = {
   StandardScaler: (z) => scale(z, sd(z)),//standardization
   MinMaxScaler: (z) => scale(z,(max(z) - min(z))),
 };
-
 
 // https://machinelearningmastery.com/implement-resampling-methods-scratch-python/
 const cross_validation = { 
@@ -131,7 +161,7 @@ const preprocessing = {
           let returnVal = (typeof config.replace.test === 'function')
             ? config.replace.test(objVal)
               ? typeof config.replace.value === 'function'
-                ? config.replace.value(result, val, index, arr)
+                ? config.replace.value(result, val, index, arr, name)
                 : config.replace.value
               : objVal
             : objVal;
@@ -307,6 +337,7 @@ const preprocessing = {
   }
 };
 
+exports.loadCSVURI = loadCSVURI;
 exports.loadCSV = loadCSV;
 exports.util = util;
 exports.cross_validation = cross_validation;

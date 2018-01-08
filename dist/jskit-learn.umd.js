@@ -1,15 +1,16 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('util'), require('stream'), require('os'), require('child_process'), require('fs'), require('http')) :
-	typeof define === 'function' && define.amd ? define(['exports', 'util', 'stream', 'os', 'child_process', 'fs', 'http'], factory) :
-	(factory((global['jskit-learn'] = {}),global.util,global.stream,global.os,global.child_process,global.fs,global.http));
-}(this, (function (exports,util,stream,os,child_process,fs,http) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('http'), require('https'), require('util'), require('stream'), require('os'), require('child_process'), require('fs'), require('path')) :
+	typeof define === 'function' && define.amd ? define(['exports', 'http', 'https', 'util', 'stream', 'os', 'child_process', 'fs', 'path'], factory) :
+	(factory((global['jskit-learn'] = {}),global.http,global.https,global.util,global.stream,global.os,global.child_process,global.fs,global.path));
+}(this, (function (exports,http,https,util,stream,os,child_process,fs,path) { 'use strict';
 
+var http__default = 'default' in http ? http['default'] : http;
 util = util && util.hasOwnProperty('default') ? util['default'] : util;
 stream = stream && stream.hasOwnProperty('default') ? stream['default'] : stream;
 os = os && os.hasOwnProperty('default') ? os['default'] : os;
 child_process = child_process && child_process.hasOwnProperty('default') ? child_process['default'] : child_process;
 fs = fs && fs.hasOwnProperty('default') ? fs['default'] : fs;
-http = http && http.hasOwnProperty('default') ? http['default'] : http;
+path = path && path.hasOwnProperty('default') ? path['default'] : path;
 
 var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -24,6 +25,162 @@ function unwrapExports (x) {
 function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
 }
+
+var validUrl = createCommonjsModule(function (module) {
+(function(module) {
+    'use strict';
+
+    module.exports.is_uri = is_iri;
+    module.exports.is_http_uri = is_http_iri;
+    module.exports.is_https_uri = is_https_iri;
+    module.exports.is_web_uri = is_web_iri;
+    // Create aliases
+    module.exports.isUri = is_iri;
+    module.exports.isHttpUri = is_http_iri;
+    module.exports.isHttpsUri = is_https_iri;
+    module.exports.isWebUri = is_web_iri;
+
+
+    // private function
+    // internal URI spitter method - direct from RFC 3986
+    var splitUri = function(uri) {
+        var splitted = uri.match(/(?:([^:\/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*)(?:\?([^#]*))?(?:#(.*))?/);
+        return splitted;
+    };
+
+    function is_iri(value) {
+        if (!value) {
+            return;
+        }
+
+        // check for illegal characters
+        if (/[^a-z0-9\:\/\?\#\[\]\@\!\$\&\'\(\)\*\+\,\;\=\.\-\_\~\%]/i.test(value)) return;
+
+        // check for hex escapes that aren't complete
+        if (/%[^0-9a-f]/i.test(value)) return;
+        if (/%[0-9a-f](:?[^0-9a-f]|$)/i.test(value)) return;
+
+        var splitted = [];
+        var scheme = '';
+        var authority = '';
+        var path$$1 = '';
+        var query = '';
+        var fragment = '';
+        var out = '';
+
+        // from RFC 3986
+        splitted = splitUri(value);
+        scheme = splitted[1]; 
+        authority = splitted[2];
+        path$$1 = splitted[3];
+        query = splitted[4];
+        fragment = splitted[5];
+
+        // scheme and path are required, though the path can be empty
+        if (!(scheme && scheme.length && path$$1.length >= 0)) return;
+
+        // if authority is present, the path must be empty or begin with a /
+        if (authority && authority.length) {
+            if (!(path$$1.length === 0 || /^\//.test(path$$1))) return;
+        } else {
+            // if authority is not present, the path must not start with //
+            if (/^\/\//.test(path$$1)) return;
+        }
+
+        // scheme must begin with a letter, then consist of letters, digits, +, ., or -
+        if (!/^[a-z][a-z0-9\+\-\.]*$/.test(scheme.toLowerCase()))  return;
+
+        // re-assemble the URL per section 5.3 in RFC 3986
+        out += scheme + ':';
+        if (authority && authority.length) {
+            out += '//' + authority;
+        }
+
+        out += path$$1;
+
+        if (query && query.length) {
+            out += '?' + query;
+        }
+
+        if (fragment && fragment.length) {
+            out += '#' + fragment;
+        }
+
+        return out;
+    }
+
+    function is_http_iri(value, allowHttps) {
+        if (!is_iri(value)) {
+            return;
+        }
+
+        var splitted = [];
+        var scheme = '';
+        var authority = '';
+        var path$$1 = '';
+        var port = '';
+        var query = '';
+        var fragment = '';
+        var out = '';
+
+        // from RFC 3986
+        splitted = splitUri(value);
+        scheme = splitted[1]; 
+        authority = splitted[2];
+        path$$1 = splitted[3];
+        query = splitted[4];
+        fragment = splitted[5];
+
+        if (!scheme)  return;
+
+        if(allowHttps) {
+            if (scheme.toLowerCase() != 'https') return;
+        } else {
+            if (scheme.toLowerCase() != 'http') return;
+        }
+
+        // fully-qualified URIs must have an authority section that is
+        // a valid host
+        if (!authority) {
+            return;
+        }
+
+        // enable port component
+        if (/:(\d+)$/.test(authority)) {
+            port = authority.match(/:(\d+)$/)[0];
+            authority = authority.replace(/:\d+$/, '');
+        }
+
+        out += scheme + ':';
+        out += '//' + authority;
+        
+        if (port) {
+            out += port;
+        }
+        
+        out += path$$1;
+        
+        if(query && query.length){
+            out += '?' + query;
+        }
+
+        if(fragment && fragment.length){
+            out += '#' + fragment;
+        }
+        
+        return out;
+    }
+
+    function is_https_iri(value) {
+        return is_http_iri(value, true);
+    }
+
+    function is_web_iri(value) {
+        return (is_http_iri(value) || is_https_iri(value));
+    }
+
+})(module);
+});
 
 var isUtf8 = createCommonjsModule(function (module, exports) {
 exports = module.exports = function(bytes)
@@ -2099,19 +2256,19 @@ var _toKey = toKey;
  * @param {Function} [customizer] The function to customize path creation.
  * @returns {Object} Returns `object`.
  */
-function baseSet(object, path, value, customizer) {
+function baseSet(object, path$$1, value, customizer) {
   if (!isObject_1(object)) {
     return object;
   }
-  path = _castPath(path, object);
+  path$$1 = _castPath(path$$1, object);
 
   var index = -1,
-      length = path.length,
+      length = path$$1.length,
       lastIndex = length - 1,
       nested = object;
 
   while (nested != null && ++index < length) {
-    var key = _toKey(path[index]),
+    var key = _toKey(path$$1[index]),
         newValue = value;
 
     if (index != lastIndex) {
@@ -2120,7 +2277,7 @@ function baseSet(object, path, value, customizer) {
       if (newValue === undefined) {
         newValue = isObject_1(objValue)
           ? objValue
-          : (_isIndex(path[index + 1]) ? [] : {});
+          : (_isIndex(path$$1[index + 1]) ? [] : {});
       }
     }
     _assignValue(nested, key, newValue);
@@ -2159,8 +2316,8 @@ var _baseSet = baseSet;
  * console.log(object.x[0].y.z);
  * // => 5
  */
-function set(object, path, value) {
-  return object == null ? object : _baseSet(object, path, value);
+function set(object, path$$1, value) {
+  return object == null ? object : _baseSet(object, path$$1, value);
 }
 
 var set_1 = set;
@@ -2308,13 +2465,13 @@ function getConvFunc(head,i,param){
     }
   }
 }
-function setPath(json, path, value) {
+function setPath(json, path$$1, value) {
   var _set = set_1;
-  var pathArr = path.split('.');
+  var pathArr = path$$1.split('.');
   if (pathArr.length === 1) {
-    json[path] = value;
+    json[path$$1] = value;
   } else {
-    _set(json, path, value);
+    _set(json, path$$1, value);
   }
 }
 
@@ -4998,7 +5155,7 @@ var lodash = createCommonjsModule(function (module, exports) {
           skip = object == null;
 
       while (++index < length) {
-        result[index] = skip ? undefined : get(object, paths[index]);
+        result[index] = skip ? undefined : get$$1(object, paths[index]);
       }
       return result;
     }
@@ -5438,14 +5595,14 @@ var lodash = createCommonjsModule(function (module, exports) {
      * @param {Array|string} path The path of the property to get.
      * @returns {*} Returns the resolved value.
      */
-    function baseGet(object, path) {
-      path = castPath(path, object);
+    function baseGet(object, path$$1) {
+      path$$1 = castPath(path$$1, object);
 
       var index = 0,
-          length = path.length;
+          length = path$$1.length;
 
       while (object != null && index < length) {
-        object = object[toKey(path[index++])];
+        object = object[toKey(path$$1[index++])];
       }
       return (index && index == length) ? object : undefined;
     }
@@ -5623,10 +5780,10 @@ var lodash = createCommonjsModule(function (module, exports) {
      * @param {Array} args The arguments to invoke the method with.
      * @returns {*} Returns the result of the invoked method.
      */
-    function baseInvoke(object, path, args) {
-      path = castPath(path, object);
-      object = parent(object, path);
-      var func = object == null ? object : object[toKey(last(path))];
+    function baseInvoke(object, path$$1, args) {
+      path$$1 = castPath(path$$1, object);
+      object = parent(object, path$$1);
+      var func = object == null ? object : object[toKey(last(path$$1))];
       return func == null ? undefined : apply(func, object, args);
     }
 
@@ -5983,14 +6140,14 @@ var lodash = createCommonjsModule(function (module, exports) {
      * @param {*} srcValue The value to match.
      * @returns {Function} Returns the new spec function.
      */
-    function baseMatchesProperty(path, srcValue) {
-      if (isKey(path) && isStrictComparable(srcValue)) {
-        return matchesStrictComparable(toKey(path), srcValue);
+    function baseMatchesProperty(path$$1, srcValue) {
+      if (isKey(path$$1) && isStrictComparable(srcValue)) {
+        return matchesStrictComparable(toKey(path$$1), srcValue);
       }
       return function(object) {
-        var objValue = get(object, path);
+        var objValue = get$$1(object, path$$1);
         return (objValue === undefined && objValue === srcValue)
-          ? hasIn(object, path)
+          ? hasIn(object, path$$1)
           : baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG);
       };
     }
@@ -6157,8 +6314,8 @@ var lodash = createCommonjsModule(function (module, exports) {
      * @returns {Object} Returns the new object.
      */
     function basePick(object, paths) {
-      return basePickBy(object, paths, function(value, path) {
-        return hasIn(object, path);
+      return basePickBy(object, paths, function(value, path$$1) {
+        return hasIn(object, path$$1);
       });
     }
 
@@ -6177,11 +6334,11 @@ var lodash = createCommonjsModule(function (module, exports) {
           result = {};
 
       while (++index < length) {
-        var path = paths[index],
-            value = baseGet(object, path);
+        var path$$1 = paths[index],
+            value = baseGet(object, path$$1);
 
-        if (predicate(value, path)) {
-          baseSet(result, castPath(path, object), value);
+        if (predicate(value, path$$1)) {
+          baseSet(result, castPath(path$$1, object), value);
         }
       }
       return result;
@@ -6194,9 +6351,9 @@ var lodash = createCommonjsModule(function (module, exports) {
      * @param {Array|string} path The path of the property to get.
      * @returns {Function} Returns the new accessor function.
      */
-    function basePropertyDeep(path) {
+    function basePropertyDeep(path$$1) {
       return function(object) {
-        return baseGet(object, path);
+        return baseGet(object, path$$1);
       };
     }
 
@@ -6375,19 +6532,19 @@ var lodash = createCommonjsModule(function (module, exports) {
      * @param {Function} [customizer] The function to customize path creation.
      * @returns {Object} Returns `object`.
      */
-    function baseSet(object, path, value, customizer) {
+    function baseSet(object, path$$1, value, customizer) {
       if (!isObject(object)) {
         return object;
       }
-      path = castPath(path, object);
+      path$$1 = castPath(path$$1, object);
 
       var index = -1,
-          length = path.length,
+          length = path$$1.length,
           lastIndex = length - 1,
           nested = object;
 
       while (nested != null && ++index < length) {
-        var key = toKey(path[index]),
+        var key = toKey(path$$1[index]),
             newValue = value;
 
         if (index != lastIndex) {
@@ -6396,7 +6553,7 @@ var lodash = createCommonjsModule(function (module, exports) {
           if (newValue === undefined) {
             newValue = isObject(objValue)
               ? objValue
-              : (isIndex(path[index + 1]) ? [] : {});
+              : (isIndex(path$$1[index + 1]) ? [] : {});
           }
         }
         assignValue(nested, key, newValue);
@@ -6719,10 +6876,10 @@ var lodash = createCommonjsModule(function (module, exports) {
      * @param {Array|string} path The property path to unset.
      * @returns {boolean} Returns `true` if the property is deleted, else `false`.
      */
-    function baseUnset(object, path) {
-      path = castPath(path, object);
-      object = parent(object, path);
-      return object == null || delete object[toKey(last(path))];
+    function baseUnset(object, path$$1) {
+      path$$1 = castPath(path$$1, object);
+      object = parent(object, path$$1);
+      return object == null || delete object[toKey(last(path$$1))];
     }
 
     /**
@@ -6735,8 +6892,8 @@ var lodash = createCommonjsModule(function (module, exports) {
      * @param {Function} [customizer] The function to customize path creation.
      * @returns {Object} Returns `object`.
      */
-    function baseUpdate(object, path, updater, customizer) {
-      return baseSet(object, path, updater(baseGet(object, path)), customizer);
+    function baseUpdate(object, path$$1, updater, customizer) {
+      return baseSet(object, path$$1, updater(baseGet(object, path$$1)), customizer);
     }
 
     /**
@@ -8557,15 +8714,15 @@ var lodash = createCommonjsModule(function (module, exports) {
      * @param {Function} hasFunc The function to check properties.
      * @returns {boolean} Returns `true` if `path` exists, else `false`.
      */
-    function hasPath(object, path, hasFunc) {
-      path = castPath(path, object);
+    function hasPath(object, path$$1, hasFunc) {
+      path$$1 = castPath(path$$1, object);
 
       var index = -1,
-          length = path.length,
+          length = path$$1.length,
           result = false;
 
       while (++index < length) {
-        var key = toKey(path[index]);
+        var key = toKey(path$$1[index]);
         if (!(result = object != null && hasFunc(object, key))) {
           break;
         }
@@ -9011,8 +9168,8 @@ var lodash = createCommonjsModule(function (module, exports) {
      * @param {Array} path The path to get the parent value of.
      * @returns {*} Returns the parent value.
      */
-    function parent(object, path) {
-      return path.length < 2 ? object : baseGet(object, baseSlice(path, 0, -1));
+    function parent(object, path$$1) {
+      return path$$1.length < 2 ? object : baseGet(object, baseSlice(path$$1, 0, -1));
     }
 
     /**
@@ -11883,13 +12040,13 @@ var lodash = createCommonjsModule(function (module, exports) {
      * _.invokeMap([123, 456], String.prototype.split, '');
      * // => [['1', '2', '3'], ['4', '5', '6']]
      */
-    var invokeMap = baseRest(function(collection, path, args) {
+    var invokeMap = baseRest(function(collection, path$$1, args) {
       var index = -1,
-          isFunc = typeof path == 'function',
+          isFunc = typeof path$$1 == 'function',
           result = isArrayLike(collection) ? Array(collection.length) : [];
 
       baseEach(collection, function(value) {
-        result[++index] = isFunc ? apply(path, value, args) : baseInvoke(value, path, args);
+        result[++index] = isFunc ? apply(path$$1, value, args) : baseInvoke(value, path$$1, args);
       });
       return result;
     });
@@ -15513,8 +15670,8 @@ var lodash = createCommonjsModule(function (module, exports) {
      * _.get(object, 'a.b.c', 'default');
      * // => 'default'
      */
-    function get(object, path, defaultValue) {
-      var result = object == null ? undefined : baseGet(object, path);
+    function get$$1(object, path$$1, defaultValue) {
+      var result = object == null ? undefined : baseGet(object, path$$1);
       return result === undefined ? defaultValue : result;
     }
 
@@ -15545,8 +15702,8 @@ var lodash = createCommonjsModule(function (module, exports) {
      * _.has(other, 'a');
      * // => false
      */
-    function has(object, path) {
-      return object != null && hasPath(object, path, baseHas);
+    function has(object, path$$1) {
+      return object != null && hasPath(object, path$$1, baseHas);
     }
 
     /**
@@ -15575,8 +15732,8 @@ var lodash = createCommonjsModule(function (module, exports) {
      * _.hasIn(object, 'b');
      * // => false
      */
-    function hasIn(object, path) {
-      return object != null && hasPath(object, path, baseHasIn);
+    function hasIn(object, path$$1) {
+      return object != null && hasPath(object, path$$1, baseHasIn);
     }
 
     /**
@@ -15879,10 +16036,10 @@ var lodash = createCommonjsModule(function (module, exports) {
         return result;
       }
       var isDeep = false;
-      paths = arrayMap(paths, function(path) {
-        path = castPath(path, object);
-        isDeep || (isDeep = path.length > 1);
-        return path;
+      paths = arrayMap(paths, function(path$$1) {
+        path$$1 = castPath(path$$1, object);
+        isDeep || (isDeep = path$$1.length > 1);
+        return path$$1;
       });
       copyObject(object, getAllKeysIn(object), result);
       if (isDeep) {
@@ -15966,8 +16123,8 @@ var lodash = createCommonjsModule(function (module, exports) {
         return [prop];
       });
       predicate = getIteratee(predicate);
-      return basePickBy(object, props, function(value, path) {
-        return predicate(value, path[0]);
+      return basePickBy(object, props, function(value, path$$1) {
+        return predicate(value, path$$1[0]);
       });
     }
 
@@ -16000,11 +16157,11 @@ var lodash = createCommonjsModule(function (module, exports) {
      * _.result(object, 'a[0].b.c3', _.constant('default'));
      * // => 'default'
      */
-    function result(object, path, defaultValue) {
-      path = castPath(path, object);
+    function result(object, path$$1, defaultValue) {
+      path$$1 = castPath(path$$1, object);
 
       var index = -1,
-          length = path.length;
+          length = path$$1.length;
 
       // Ensure the loop is entered when path is empty.
       if (!length) {
@@ -16012,7 +16169,7 @@ var lodash = createCommonjsModule(function (module, exports) {
         object = undefined;
       }
       while (++index < length) {
-        var value = object == null ? undefined : object[toKey(path[index])];
+        var value = object == null ? undefined : object[toKey(path$$1[index])];
         if (value === undefined) {
           index = length;
           value = defaultValue;
@@ -16050,8 +16207,8 @@ var lodash = createCommonjsModule(function (module, exports) {
      * console.log(object.x[0].y.z);
      * // => 5
      */
-    function set(object, path, value) {
-      return object == null ? object : baseSet(object, path, value);
+    function set(object, path$$1, value) {
+      return object == null ? object : baseSet(object, path$$1, value);
     }
 
     /**
@@ -16078,9 +16235,9 @@ var lodash = createCommonjsModule(function (module, exports) {
      * _.setWith(object, '[0][1]', 'a', Object);
      * // => { '0': { '1': 'a' } }
      */
-    function setWith(object, path, value, customizer) {
+    function setWith(object, path$$1, value, customizer) {
       customizer = typeof customizer == 'function' ? customizer : undefined;
-      return object == null ? object : baseSet(object, path, value, customizer);
+      return object == null ? object : baseSet(object, path$$1, value, customizer);
     }
 
     /**
@@ -16215,8 +16372,8 @@ var lodash = createCommonjsModule(function (module, exports) {
      * console.log(object);
      * // => { 'a': [{ 'b': {} }] };
      */
-    function unset(object, path) {
-      return object == null ? true : baseUnset(object, path);
+    function unset(object, path$$1) {
+      return object == null ? true : baseUnset(object, path$$1);
     }
 
     /**
@@ -16246,8 +16403,8 @@ var lodash = createCommonjsModule(function (module, exports) {
      * console.log(object.x[0].y.z);
      * // => 0
      */
-    function update(object, path, updater) {
-      return object == null ? object : baseUpdate(object, path, castFunction(updater));
+    function update(object, path$$1, updater) {
+      return object == null ? object : baseUpdate(object, path$$1, castFunction(updater));
     }
 
     /**
@@ -16274,9 +16431,9 @@ var lodash = createCommonjsModule(function (module, exports) {
      * _.updateWith(object, '[0][1]', _.constant('a'), Object);
      * // => { '0': { '1': 'a' } }
      */
-    function updateWith(object, path, updater, customizer) {
+    function updateWith(object, path$$1, updater, customizer) {
       customizer = typeof customizer == 'function' ? customizer : undefined;
-      return object == null ? object : baseUpdate(object, path, castFunction(updater), customizer);
+      return object == null ? object : baseUpdate(object, path$$1, castFunction(updater), customizer);
     }
 
     /**
@@ -17965,8 +18122,8 @@ var lodash = createCommonjsModule(function (module, exports) {
      * _.find(objects, _.matchesProperty('a', 4));
      * // => { 'a': 4, 'b': 5, 'c': 6 }
      */
-    function matchesProperty(path, srcValue) {
-      return baseMatchesProperty(path, baseClone(srcValue, CLONE_DEEP_FLAG));
+    function matchesProperty(path$$1, srcValue) {
+      return baseMatchesProperty(path$$1, baseClone(srcValue, CLONE_DEEP_FLAG));
     }
 
     /**
@@ -17993,9 +18150,9 @@ var lodash = createCommonjsModule(function (module, exports) {
      * _.map(objects, _.method(['a', 'b']));
      * // => [2, 1]
      */
-    var method = baseRest(function(path, args) {
+    var method = baseRest(function(path$$1, args) {
       return function(object) {
-        return baseInvoke(object, path, args);
+        return baseInvoke(object, path$$1, args);
       };
     });
 
@@ -18023,8 +18180,8 @@ var lodash = createCommonjsModule(function (module, exports) {
      * // => [2, 0]
      */
     var methodOf = baseRest(function(object, args) {
-      return function(path) {
-        return baseInvoke(object, path, args);
+      return function(path$$1) {
+        return baseInvoke(object, path$$1, args);
       };
     });
 
@@ -18257,8 +18414,8 @@ var lodash = createCommonjsModule(function (module, exports) {
      * _.map(_.sortBy(objects, _.property(['a', 'b'])), 'a.b');
      * // => [1, 2]
      */
-    function property(path) {
-      return isKey(path) ? baseProperty(toKey(path)) : basePropertyDeep(path);
+    function property(path$$1) {
+      return isKey(path$$1) ? baseProperty(toKey(path$$1)) : basePropertyDeep(path$$1);
     }
 
     /**
@@ -18283,8 +18440,8 @@ var lodash = createCommonjsModule(function (module, exports) {
      * // => [2, 0]
      */
     function propertyOf(object) {
-      return function(path) {
-        return object == null ? undefined : baseGet(object, path);
+      return function(path$$1) {
+        return object == null ? undefined : baseGet(object, path$$1);
       };
     }
 
@@ -19091,7 +19248,7 @@ var lodash = createCommonjsModule(function (module, exports) {
     lodash.forInRight = forInRight;
     lodash.forOwn = forOwn;
     lodash.forOwnRight = forOwnRight;
-    lodash.get = get;
+    lodash.get = get$$1;
     lodash.gt = gt;
     lodash.gte = gte;
     lodash.has = has;
@@ -19311,12 +19468,12 @@ var lodash = createCommonjsModule(function (module, exports) {
       return this.reverse().find(predicate);
     };
 
-    LazyWrapper.prototype.invokeMap = baseRest(function(path, args) {
-      if (typeof path == 'function') {
+    LazyWrapper.prototype.invokeMap = baseRest(function(path$$1, args) {
+      if (typeof path$$1 == 'function') {
         return new LazyWrapper(this);
       }
       return this.map(function(value) {
-        return baseInvoke(value, path, args);
+        return baseInvoke(value, path$$1, args);
       });
     });
 
@@ -20217,7 +20374,7 @@ function startWebServer (args) {
         port: args.port || '8801',
         urlpath: args.urlpath || '/parseCSV'
     };
-    var server = http.createServer();
+    var server = http__default.createServer();
     server.on("request", function(req, res){
         if (req.url === serverArgs.urlpath && req.method === "POST"){
             req.pipe(new Converter_1({constructResult:false})).pipe(res);
@@ -69919,7 +70076,7 @@ var XSadd = (function () {
         }
     }, {
         key: "random",
-        get: function get() {
+        get: function get$$1() {
             if (!this._random) {
                 this._random = this.getFloat.bind(this);
             }
@@ -88634,32 +88791,59 @@ var rangeRight = createRange$1(true);
 
 var lodash_rangeright = rangeRight;
 
-const scale = (a, d) => a.map(x => (x - avg(a)) / d);
 const avg = src.Stat.array.mean;
 const sum = src.Stat.array.sum;
+const scale = (a, d) => a.map(x => (x - avg(a)) / d);
 const max = a => a.concat([]).sort((x, y) => x < y)[ 0 ];
 const min = a => a.concat([]).sort((x, y) => x > y)[ 0 ];
 const sd = src.Stat.array.standardDeviation;//(a, av) => Math.sqrt(avg(a.map(x => (x - av) * x)));
 
-async function loadCSV(filepath) {
-  const csvData = [];
+async function loadCSVURI(filepath) {
+  const reqMethod = (filepath.search('https', 'gi') > -1) ? https.get : http.get;
   return new Promise((resolve, reject) => {
-    csvtojson()
-    .fromFile(filepath)
-    .on('json', jsonObj => {
-      csvData.push(jsonObj);
-    })
-    .on('error', err => {
-      return reject(err);
-    })
-    .on('done', error => {
-      if (error) {
-        return reject(error);
-      } else {
-        return resolve(csvData);
-      }
+    const csvData = [];
+    const req = reqMethod(filepath, res => {
+      csvtojson().fromStream(res)
+      .on('json', jsonObj => {
+        csvData.push(jsonObj);
+      })
+      .on('error', err => {
+        return reject(err);
+      })
+      .on('done', error => {
+        if (error) {
+          return reject(error);
+        } else {
+          return resolve(csvData);
+        }
+      });
     });
-  });
+    req.on('error', reject);
+  })
+}
+
+async function loadCSV(filepath) {
+  if (validUrl.isUri(filepath)) {
+    return loadCSVURI(filepath);
+  } else {
+    return new Promise((resolve, reject) => {
+      const csvData = [];
+      csvtojson().fromFile(filepath)
+        .on('json', jsonObj => {
+          csvData.push(jsonObj);
+        })
+        .on('error', err => {
+          return reject(err);
+        })
+        .on('done', error => {
+          if (error) {
+            return reject(error);
+          } else {
+            return resolve(csvData);
+          }
+        });
+    });
+  }
 }
 
 const util$1 = {
@@ -88675,7 +88859,6 @@ const util$1 = {
   StandardScaler: (z) => scale(z, sd(z)),//standardization
   MinMaxScaler: (z) => scale(z,(max(z) - min(z))),
 };
-
 
 // https://machinelearningmastery.com/implement-resampling-methods-scratch-python/
 const cross_validation = { 
@@ -88755,7 +88938,7 @@ const preprocessing = {
           let returnVal = (typeof config.replace.test === 'function')
             ? config.replace.test(objVal)
               ? typeof config.replace.value === 'function'
-                ? config.replace.value(result, val, index, arr)
+                ? config.replace.value(result, val, index, arr, name)
                 : config.replace.value
               : objVal
             : objVal;
@@ -88931,6 +89114,7 @@ const preprocessing = {
   }
 };
 
+exports.loadCSVURI = loadCSVURI;
 exports.loadCSV = loadCSV;
 exports.util = util$1;
 exports.cross_validation = cross_validation;

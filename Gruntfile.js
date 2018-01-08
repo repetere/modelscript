@@ -17,9 +17,9 @@ module.exports = function (grunt) {
             statements: 5,
           },
           // root: './lib', // define where the cover task should consider the root of libraries that are covered by tests
-          reportFormats: ['cobertura','lcovonly'],
-        }
-      }
+          reportFormats: ['cobertura', 'lcovonly',],
+        },
+      },
     },
     istanbul_check_coverage: {
       default: {
@@ -41,7 +41,7 @@ module.exports = function (grunt) {
         // an error, to prevent CI builds from failing unnecessarily (e.g. if
         // coveralls.io is down). Optional, defaults to false.
         force: false,
-        excludes: ['**/bin/**']
+        excludes: ['**/bin/**',],
       },
 
       all: {
@@ -54,7 +54,7 @@ module.exports = function (grunt) {
     },
     simplemocha: {
       options: {
-        globals: ['should', 'navigator','x'],
+        globals: ['should', 'navigator', 'x',],
         timeout: 3000,
         ignoreLeaks: true,
         ui: 'bdd',
@@ -66,30 +66,30 @@ module.exports = function (grunt) {
     },
     jsdoc: {
       dist: {
-        src: ['lib/*.js', ],
+        src: ['lib/*.js',],
         options: {
           destination: 'doc/html',
         },
       },
     },
-    browserify: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: __dirname,
-          src: ['./index.js'],
-          dest: 'bin'
-        }],
-        options: {
-          transform: [
-            ["babelify", {
-              presets: ["es2015","es2016","es2017","react"],
-              //plugins: ["proxy"]
-            }]
-          ]
-        }
-      }
-    }
+    // browserify: {
+    //   dist: {
+    //     files: [{
+    //       expand: true,
+    //       cwd: __dirname,
+    //       src: ['./index.js'],
+    //       dest: 'bin'
+    //     }],
+    //     options: {
+    //       transform: [
+    //         ["babelify", {
+    //           presets: ["es2015","es2016","es2017","react"],
+    //           //plugins: ["proxy"]
+    //         }]
+    //       ]
+    //     }
+    //   }
+    // }
   });
 
   // Loading dependencies
