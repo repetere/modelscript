@@ -6,7 +6,7 @@ const csvData = [
     'Country': 'Brazil',
     'Age': '44',
     'Salary': '72000',
-    'Purchased': 'No',
+    'Purchased': 'N',
   },
   {
     'Country': 'Mexico',
@@ -24,7 +24,7 @@ const csvData = [
     'Country': 'Mexico',
     'Age': '38',
     'Salary': '61000',
-    'Purchased': 'No',
+    'Purchased': 'f',
   },
   {
     'Country': 'Ghana',
@@ -42,7 +42,7 @@ const csvData = [
     'Country': 'Mexico',
     'Age': '',
     'Salary': '52000',
-    'Purchased': 'No',
+    'Purchased': 'false',
   },
   {
     'Country': 'Brazil',
@@ -70,6 +70,8 @@ describe('preprocessing', function () {
     const CSVRawData = new jsk.preprocessing.RawData(csvData);
     describe('constructor', () => {
       it('should instantiate a new RawData Class', () => {
+        expect(jsk.preprocessing).to.be.an('object');
+        expect(jsk.preprocessing.RawData).to.be.a('function');
         expect(CSVRawData).to.be.instanceof(jsk.preprocessing.RawData);
       });
     });
@@ -145,6 +147,47 @@ describe('preprocessing', function () {
         expect(parseInt(Math.round(jsk.util.mean(minMaxScaleSalary)))).to.equal(0);
       });
     });
-   
+    describe('labelEncoder', () => { 
+      const purchasedColumn = CSVRawData.columnArray('Purchased');
+      let encodedPurchased;
+      let encodedCountry;
+      it('should binary label encode', () => {
+        const binaryEncodedColumn = CSVRawData.labelEncoder('Purchased', {
+          data: purchasedColumn,
+          binary: true,
+        });
+        encodedPurchased = binaryEncodedColumn;
+        expect(binaryEncodedColumn).to.include.members([ 0, 1 ]);
+      });
+      it('should label encode', () => {
+        const labelEncodedColumn = CSVRawData.labelEncoder('Country');
+        encodedCountry = labelEncodedColumn;
+        // console.log({ CSVRawData }, CSVRawData.data);
+        expect(labelEncodedColumn).to.include.members([ 0, 1, 2 ]);
+        labelEncodedColumn.forEach(lec => expect(lec).to.be.a('number'));
+        expect(CSVRawData.labels.size).equal(2);
+      });
+      it('should decode labels', () => {
+        const decodedCountry = CSVRawData.labelDecode('Country', { data: encodedCountry, });
+        // console.log({ decodedCountry, encodedCountry });
+        expect(decodedCountry[ 0 ]).to.be.a('string');
+        expect(decodedCountry[ 0 ]).to.eql('Brazil');
+        expect(CSVRawData.labels.get('Country').get(decodedCountry[ 0 ])).to.equal(encodedCountry[ 0 ]);
+      });
+    });
+    describe('oneHotEncoder', () => {
+      it('should one hot encode', () => {
+        const oneHotCountry = CSVRawData.oneHotEncoder('Country');
+        // console.log({ oneHotCountry },CSVRawData);
+        expect(Object.keys(oneHotCountry).length).to.equal(3);
+        expect(oneHotCountry).to.haveOwnProperty('Country_Brazil');
+        expect(csvData[ 0 ].Country).to.equal('Brazil');
+        expect(oneHotCountry.Country_Brazil[ 0 ]).to.eql(1);
+        expect(oneHotCountry.Country_Mexico[ 0 ]).to.eql(0);
+        expect(oneHotCountry.Country_Ghana[ 0 ]).to.eql(0);
+        expect(CSVRawData.encoders.size).to.equal(1);
+        expect(CSVRawData.encoders.has('Country')).to.be.true;
+      });
+    });
   });
 });

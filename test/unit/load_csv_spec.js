@@ -6,6 +6,7 @@ const expect = require('chai').expect;
 describe('loadCSV', function () { 
   describe('loading CSV from File', () => {
     it('should load a csv from a filepath', (done) => {
+      expect(jsk.loadCSV).to.be.an('function');
       jsk.loadCSV(path.join(__dirname, '../mock/data.csv'))
         .then(csv => {
           expect(csv.length).to.be.greaterThan(0);
@@ -43,6 +44,7 @@ describe('loadCSV', function () {
         .catch(done); 
     });
     it('should load a csv from a remote URI directly', (done) => {
+      expect(jsk.loadCSVURI).to.be.an('function');
       // jsk.loadCSV('https://www.arttimesjournal.com/data/events-August-2015.csv')
       jsk.loadCSVURI('https://raw.githubusercontent.com/repetere/jskit-learn/master/test/mock/data.csv')
         .then(csv => {

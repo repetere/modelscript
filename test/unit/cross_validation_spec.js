@@ -8,6 +8,7 @@ describe('cross_validation', function () {
   describe('train_test_split', () => {
     const defaultTrainTestSplit = jsk.cross_validation.train_test_split(testArray);
     it('should split dataset with default values', () => {
+      expect(jsk.cross_validation).to.be.an('object');
       expect(defaultTrainTestSplit.train.length).to.equal(8);
       expect(defaultTrainTestSplit.test.length).to.equal(2);
     });

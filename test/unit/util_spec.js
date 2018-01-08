@@ -7,6 +7,7 @@ const testArray = [ 20, 25, 10, 33, 50, 42, 19 ];
 describe('util', function () { 
   describe('max', () => {
     it('should return max value', () => {
+      expect(jsk.util).to.be.an('object');
       expect(jsk.util.max(testArray)).to.equal(50);   
     });
   });
