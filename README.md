@@ -16,7 +16,7 @@ In Python, data preperation is typically done in a DataFrame, jskit-learn encour
 $ npm i jskit-learn
 ```
 
-### [Full Documentation](https://github.com/repetere/jskit-learn/blob/master/doc/api.md)
+### [Full Documentation](https://github.com/repetere/jskit-learn/blob/master/docs/api.md)
 
 ### Usage (basic)
 
@@ -291,7 +291,7 @@ $ jsdoc2md dist/**/*.cjs.js  > docs/api.md
 
 
 ### Notes
-Check out [https://github.com/repetere/jskit-learn](https://github.com/repetere/jskit-learn) for the full Lowkie Documentation
+Check out [https://github.com/repetere/jskit-learn](https://github.com/repetere/jskit-learn) for the full jskit-learn Documentation
 
 #### A quick word about asynchronous JavaScript
 Most machine learning tutorials in Python and R are not using their asynchronous equivalents; however, there is a bias in JavaScript to default to non-blocking operations. 
