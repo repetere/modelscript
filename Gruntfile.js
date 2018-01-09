@@ -66,9 +66,9 @@ module.exports = function(grunt) {
     },
     jsdoc: {
       dist: {
-        src: ['dist/*.cjs.js', ],
+        src: ['dist/*.cjs.js', 'README.md', ],
         options: {
-          destination: 'doc/html',
+          destination: 'docs',
         },
       },
     },

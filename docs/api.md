@@ -8,7 +8,11 @@
 ## Objects
 
 <dl>
+<dt><a href="#util">util</a> : <code>object</code></dt>
+<dd></dd>
 <dt><a href="#cross_validation">cross_validation</a> : <code>object</code></dt>
+<dd></dd>
+<dt><a href="#preprocessing">preprocessing</a> : <code>object</code></dt>
 <dd></dd>
 </dl>
 
@@ -27,6 +31,71 @@
 
 ## RawData
 **Kind**: global class  
+
+* [RawData](#RawData)
+    * [new RawData()](#new_RawData_new)
+    * [.columnArray(name, options)](#RawData+columnArray)
+    * [.labelEncoder(name, options)](#RawData+labelEncoder)
+    * [.labelDecode(name, options)](#RawData+labelDecode)
+    * [.oneHotEncoder(name, options)](#RawData+oneHotEncoder)
+
+<a name="new_RawData_new"></a>
+
+### new RawData()
+class for manipulating an array of objects, typically from CSV data
+
+<a name="RawData+columnArray"></a>
+
+### rawData.columnArray(name, options)
+returns a new array of a selected column from an array of objects, can filter, scale and replace values
+
+**Kind**: instance method of [<code>RawData</code>](#RawData)  
+
+| Param |
+| --- |
+| name | 
+| options | 
+
+<a name="RawData+labelEncoder"></a>
+
+### rawData.labelEncoder(name, options)
+**Kind**: instance method of [<code>RawData</code>](#RawData)  
+**See**: [http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html](http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html)  
+
+| Param |
+| --- |
+| name | 
+| options | 
+
+<a name="RawData+labelDecode"></a>
+
+### rawData.labelDecode(name, options)
+**Kind**: instance method of [<code>RawData</code>](#RawData)  
+
+| Param |
+| --- |
+| name | 
+| options | 
+
+<a name="RawData+oneHotEncoder"></a>
+
+### rawData.oneHotEncoder(name, options)
+**Kind**: instance method of [<code>RawData</code>](#RawData)  
+**See**: [http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html](http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html)  
+
+| Param |
+| --- |
+| name | 
+| options | 
+
+<a name="util"></a>
+
+## util : <code>object</code>
+**Kind**: global namespace  
+<a name="util.StandardScaler"></a>
+
+### util.StandardScaler()
+**Kind**: static method of [<code>util</code>](#util)  
 <a name="cross_validation"></a>
 
 ## cross_validation : <code>object</code>
@@ -35,7 +104,7 @@
 
 * [cross_validation](#cross_validation) : <code>object</code>
     * [.train_test_split(dataset, options)](#cross_validation.train_test_split) ⇒ <code>Object</code> \| <code>array</code>
-    * [.kfolds(dataset, options)](#cross_validation.kfolds) ⇒ <code>array</code>
+    * [.cross_validation_split(dataset, options)](#cross_validation.cross_validation_split) ⇒ <code>array</code>
 
 <a name="cross_validation.train_test_split"></a>
 
@@ -54,9 +123,15 @@ Split arrays into random train and test subsets
 | [options.random_state] | <code>number</code> | <code>0</code> | the seed used by the random number generator |
 | [options.return_array] | <code>boolean</code> | <code>false</code> | will return an object {train,test} of the split dataset by default or [train,test] if returned as an array |
 
-<a name="cross_validation.kfolds"></a>
+**Example**  
+```js
+const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
+// { train: [ 50, 20, 34, 33, 10, 23, 90, 42 ], test: [ 25, 19 ] }
+const trainTestSplit = jsk.cross_validation.train_test_split(testArray,{ test_size:0.2, random_state: 0, });
+```
+<a name="cross_validation.cross_validation_split"></a>
 
-### cross_validation.kfolds(dataset, options) ⇒ <code>array</code>
+### cross_validation.cross_validation_split(dataset, options) ⇒ <code>array</code>
 Provides train/test indices to split data in train/test sets. Split dataset into k consecutive folds.
 Each fold is then used once as a validation while the k - 1 remaining folds form the training set.
 
@@ -70,6 +145,16 @@ Each fold is then used once as a validation while the k - 1 remaining folds form
 | [options.folds] | <code>number</code> | <code>3</code> | Number of folds |
 | [options.random_state] | <code>number</code> | <code>0</code> | the seed used by the random number generator |
 
+**Example**  
+```js
+const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
+// [ [ 50, 20, 34, 33, 10 ], [ 23, 90, 42, 19, 25 ] ] 
+const crossValidationArrayKFolds = jsk.cross_validation.cross_validation_split(testArray, { folds: 2, random_state: 0, });
+```
+<a name="preprocessing"></a>
+
+## preprocessing : <code>object</code>
+**Kind**: global namespace  
 <a name="loadCSVURI"></a>
 
 ## loadCSVURI(filepath) ⇒ <code>Array.&lt;Object&gt;</code>

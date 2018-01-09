@@ -81,6 +81,9 @@ export function loadCSV(filepath) {
   }
 }
 
+/**
+ * @namespace
+ */
 export const util = {
   range,
   rangeRight,
@@ -91,6 +94,9 @@ export const util = {
   max,
   min,
   sd,
+  /**
+   * @memberOf util
+   */
   StandardScaler: (z) => scale(z, sd(z)), //standardization
   MinMaxScaler: (z) => scale(z, (max(z) - min(z))),
 }
@@ -99,6 +105,10 @@ export const util = {
 /**
  * Split arrays into random train and test subsets
  * @memberOf cross_validation
+ * @example
+ * const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
+// { train: [ 50, 20, 34, 33, 10, 23, 90, 42 ], test: [ 25, 19 ] }
+const trainTestSplit = jsk.cross_validation.train_test_split(testArray,{ test_size:0.2, random_state: 0, });
  * @param {array} dataset - array of data to split
  * @param {object} options
  * @param {number} [options.test_size=0.2] - represent the proportion of the dataset to include in the test split, can be overwritten by the train_size 
@@ -136,13 +146,17 @@ function train_test_split(dataset = [], options = {
  * Provides train/test indices to split data in train/test sets. Split dataset into k consecutive folds.
 Each fold is then used once as a validation while the k - 1 remaining folds form the training set.
  * @memberOf cross_validation
+ * @example
+ * const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
+// [ [ 50, 20, 34, 33, 10 ], [ 23, 90, 42, 19, 25 ] ] 
+const crossValidationArrayKFolds = jsk.cross_validation.cross_validation_split(testArray, { folds: 2, random_state: 0, });
  * @param {array} dataset - array of data to split
  * @param {object} options
  * @param {number} [options.folds=3] - Number of folds 
  * @param {number} [options.random_state=0] - the seed used by the random number generator
  * @returns {array} returns  dataset split into k consecutive folds
  */
-function kfolds(dataset = [], options = {
+function cross_validation_split(dataset = [], options = {
   folds: 3,
   random_state: 0,
 }) { //kfolds
@@ -169,18 +183,24 @@ function kfolds(dataset = [], options = {
  */
 export const cross_validation = {
     train_test_split,
-    cross_validation_split: kfolds,
+    cross_validation_split,
   }
   /**
+   * class for manipulating an array of objects, typically from CSV data
    * @class RawData
    */
 export class RawData {
   constructor(data = []) {
-    this.data = [...data];
-    this.labels = new Map();
-    this.encoders = new Map();
-    return this;
-  }
+      this.data = [...data];
+      this.labels = new Map();
+      this.encoders = new Map();
+      return this;
+    }
+    /**
+     * returns a new array of a selected column from an array of objects, can filter, scale and replace values
+     * @param name 
+     * @param options 
+     */
   columnArray(name, options = {}) {
     const config = Object.assign({
       prefilter: () => true,
@@ -220,97 +240,114 @@ export class RawData {
       modifiedColumn;
   }
   columnReplace(name, options = {}) {
-    const config = Object.assign({
-      strategy: 'mean',
-      empty: true,
-      arrayOptions: {
-        parseFloat: true,
-        filter: val => val,
-      },
-      labelOptions: {},
-    }, options);
-    let replaceVal;
-    let replace = {
-      test: val => !val,
-      value: replaceVal,
-    };
-    switch (config.strategy) {
-      case 'label':
-      case 'labelEncoder':
-        replaceVal = this.labelEncoder(name, config.labelOptions);
-        replace = {
-          test: val => true,
-          value: (result, val, index, arr) => replaceVal[index],
-        };
-        break;
-      case 'onehot':
-      case 'oneHot':
-      case 'oneHotEncode':
-      case 'oneHotEncoder':
-        replaceVal = this.oneHotEncoder(name, config.oneHotOptions);
-        replace = {
-          test: val => true,
-          value: (result, val, index, arr) => replaceVal[index],
-        };
-        return replaceVal;
-        break;
-      default:
-        replaceVal = ml.Stat.array[config.strategy](this.columnArray(name, config.arrayOptions));
-        replace.value = replaceVal;
-        break;
+      const config = Object.assign({
+        strategy: 'mean',
+        empty: true,
+        arrayOptions: {
+          parseFloat: true,
+          filter: val => val,
+        },
+        labelOptions: {},
+      }, options);
+      let replaceVal;
+      let replace = {
+        test: val => !val,
+        value: replaceVal,
+      };
+      switch (config.strategy) {
+        case 'label':
+        case 'labelEncoder':
+          replaceVal = this.labelEncoder(name, config.labelOptions);
+          replace = {
+            test: val => true,
+            value: (result, val, index, arr) => replaceVal[index],
+          };
+          break;
+        case 'onehot':
+        case 'oneHot':
+        case 'oneHotEncode':
+        case 'oneHotEncoder':
+          replaceVal = this.oneHotEncoder(name, config.oneHotOptions);
+          replace = {
+            test: val => true,
+            value: (result, val, index, arr) => replaceVal[index],
+          };
+          return replaceVal;
+          break;
+        default:
+          replaceVal = ml.Stat.array[config.strategy](this.columnArray(name, config.arrayOptions));
+          replace.value = replaceVal;
+          break;
+      }
+      return this.columnArray(name, {
+        replace,
+        scale: options.scale,
+      });
     }
-    return this.columnArray(name, {
-      replace,
-      scale: options.scale,
-    });
-  }
+    /**
+     * 
+     * @param name 
+     * @param options
+     * @see {@link http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html} 
+     */
   labelEncoder(name, options) {
-    const config = Object.assign({
-      n_values: "auto",
-      categorical_features: "all",
-      // dtype: np.float64,
-      sparse: true,
-      handle_unknown: 'error',
-      binary: false,
-    }, options);
-    const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
-    const labels = new Map(
-      Array.from(new Set(labelData).values())
-      .reduce((result, val, i, arr) => {
-        result.push([val, i]);
-        result.push([i, val]);
-        return result;
-      }, [])
-    );
-    this.labels.set(name, labels);
-    const labeledData = (config.binary) ?
-      labelData.map(label => {
-        // console.log(label);
-        if (!label) return 0;
-        switch (label) {
-          case false:
-          case 'N':
-          case 'n':
-          case 'NO':
-          case 'No':
-          case 'no':
-          case 'False':
-          case 'False':
-          case 'F':
-          case 'f':
-            return 0;
-          default:
-            return 1;
-        }
-      }) :
-      labelData.map(label => labels.get(label));
-    return labeledData;
-  }
+      const config = Object.assign({
+        n_values: "auto",
+        categorical_features: "all",
+        // dtype: np.float64,
+        sparse: true,
+        handle_unknown: 'error',
+        binary: false,
+      }, options);
+      const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
+      const labels = new Map(
+        Array.from(new Set(labelData).values())
+        .reduce((result, val, i, arr) => {
+          result.push([val, i]);
+          result.push([i, val]);
+          return result;
+        }, [])
+      );
+      this.labels.set(name, labels);
+      const labeledData = (config.binary) ?
+        labelData.map(label => {
+          // console.log(label);
+          if (!label) return 0;
+          switch (label) {
+            case false:
+            case 'N':
+            case 'n':
+            case 'NO':
+            case 'No':
+            case 'no':
+            case 'False':
+            case 'False':
+            case 'F':
+            case 'f':
+              return 0;
+            default:
+              return 1;
+          }
+        }) :
+        labelData.map(label => labels.get(label));
+      return labeledData;
+    }
+    /**
+     * 
+     * @param name 
+     * @param options 
+     */
   labelDecode(name, options) {
-    const config = Object.assign({}, options);
-    const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
-    return labelData.map(val => this.labels.get(name).get(val));
-  }
+      const config = Object.assign({}, options);
+      const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
+      return labelData.map(val => this.labels.get(name).get(val));
+    }
+    /**
+     * 
+     * @param name 
+     * @param options 
+     * @see {@link http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html}
+     */
   oneHotEncoder(name, options) {
     const config = Object.assign({
       // n_values: "auto",
@@ -378,6 +415,9 @@ export class RawData {
     return this.data;
   }
 };
+/**
+ * @namespace
+ */
 export const preprocessing = {
   RawData,
 };
