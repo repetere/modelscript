@@ -87,7 +87,9 @@
 
     
 
-     
+    
+
+    
 
     
 
@@ -101,14 +103,16 @@
 
     
 
-    <h4 class="name" id="appConfig"><span class="type-signature"></span>appConfig<span class="signature">(customProcess)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    
+    <h4 class="name" id="loadCSV"><span class="type-signature"></span>loadCSV<span class="signature">(filepath)</span><span class="type-signature"> &rarr; {Array.&lt;Object>}</span></h4>
+    
 
     
 
 
 
 <div class="description">
-    Takes command line arguments or user specified process arguments for app configuration and creates a standardized application configuration object. Falls back to using .env file if available or the default configuration settings.
+    Asynchronously loads a CSV from either a filepath or remote URL and returns an array of objects
 </div>
 
 
@@ -144,16 +148,13 @@
 
         <tr>
             
-                <td class="name"><code>customProcess</code></td>
+                <td class="name"><code>filepath</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
-|
-
-<span class="param-type">undefined</span>
+<span class="param-type">string</span>
 
 
             
@@ -163,7 +164,7 @@
 
             
 
-            <td class="description last">user specified process with arguments or undefined for using command line arguments</td>
+            <td class="description last">URL to CSV path</td>
         </tr>
 
     
@@ -204,7 +205,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line27">line 27</a>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line66">line 66</a>
     </li></ul></dd>
     
 
@@ -231,7 +232,7 @@
 
         
 <div class="param-desc">
-    resolves to application configuration
+    returns an array of objects from a csv where each column header is the property name
 </div>
 
 
@@ -242,13 +243,182 @@
     </dt>
     <dd>
         
-<span class="param-type">Promise</span>
+<span class="param-type">Array.&lt;Object></span>
 
 
     </dd>
 </dl>
 
     
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// returns [{header:value,header2:value2}]loadCSV('../mock/invalid-file.csv').then(csvData).catch(console.error)</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="loadCSVURI"><span class="type-signature"></span>loadCSVURI<span class="signature">(filepath)</span><span class="type-signature"> &rarr; {Array.&lt;Object>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Asynchronously loads a CSV from a remote URL and returns an array of objects
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>filepath</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">URL to CSV path</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line34">line 34</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    returns an array of objects from a csv where each column header is the property name
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;Object></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// returns [{header:value,header2:value2}]loadCSVURI('https://raw.githubusercontent.com/repetere/jskit-learn/master/test/mock/data.csv').then(csvData).catch(console.error)</code></pre>
 
 
 
@@ -268,13 +438,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#appConfig">appConfig</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="RawData.html">RawData</a></li></ul><h3>Namespaces</h3><ul><li><a href="cross_validation.html">cross_validation</a></li></ul><h3>Global</h3><ul><li><a href="global.html#loadCSV">loadCSV</a></li><li><a href="global.html#loadCSVURI">loadCSVURI</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Jul 15 2017 11:18:46 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Jan 09 2018 09:41:24 GMT-0500 (EST)
 </footer>
 
 <script> prettyPrint(); </script>
