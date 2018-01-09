@@ -64,9 +64,9 @@ const csvData = [
     'Purchased': 'Yes',
   },
 ];
+const unmodifiedCSVData = [...csvData];
 
-
-describe('preprocessing', function () { 
+describe('preprocessing', function () {
   describe('RawData class', () => {
     const CSVRawData = new jsk.preprocessing.RawData(csvData);
     describe('constructor', () => {
@@ -148,7 +148,7 @@ describe('preprocessing', function () {
         expect(parseInt(Math.round(jsk.util.mean(minMaxScaleSalary)))).to.equal(0);
       });
     });
-    describe('labelEncoder', () => { 
+    describe('labelEncoder', () => {
       const purchasedColumn = CSVRawData.columnArray('Purchased');
       let encodedPurchased;
       let encodedCountry;
@@ -158,13 +158,13 @@ describe('preprocessing', function () {
           binary: true,
         });
         encodedPurchased = binaryEncodedColumn;
-        expect(binaryEncodedColumn).to.include.members([ 0, 1 ]);
+        expect(binaryEncodedColumn).to.include.members([0, 1,]);
       });
       it('should label encode', () => {
         const labelEncodedColumn = CSVRawData.labelEncoder('Country');
         encodedCountry = labelEncodedColumn;
         // console.log({ CSVRawData }, CSVRawData.data);
-        expect(labelEncodedColumn).to.include.members([ 0, 1, 2 ]);
+        expect(labelEncodedColumn).to.include.members([0, 1, 2,]);
         labelEncodedColumn.forEach(lec => expect(lec).to.be.a('number'));
         expect(CSVRawData.labels.size).equal(2);
       });
@@ -219,7 +219,7 @@ describe('preprocessing', function () {
         expect(ohCountry).to.deep.eq(oh1Country);
         expect(ohCountry).to.deep.eq(oh2Country);
         expect(ohCountry).to.deep.eq(oh3Country);
-        expect(ohCountry).to.deep.eq(oh4Country);        
+        expect(ohCountry).to.deep.eq(oh4Country);
       });
       it('should replace empty values with mean by default', () => {
         const colSalary = CSVRawData.columnArray('Salary', {
@@ -230,7 +230,6 @@ describe('preprocessing', function () {
         const meanSal = jsk.util.mean(colSalary);
         expect(meanColSalary).to.include(meanSal);
       });
-      
       it('should replace empty values with stat function from ml.js', () => {
         const colSalary = CSVRawData.columnArray('Salary', {
           parseFloat: true,
@@ -239,6 +238,67 @@ describe('preprocessing', function () {
         const standardDeviationColSalary = CSVRawData.columnReplace('Salary', { strategy: 'standardDeviation', });
         const sdSal = jsk.util.sd(colSalary);
         expect(standardDeviationColSalary).to.include(sdSal);
+      });
+      it('should replace values by standard scaling', () => {
+        const salaryColumn = CSVRawData.columnArray('Salary', {
+          prefilter: row => row.Salary,
+          parseInt: true,
+        });
+        const salaryMean = jsk.util.mean(salaryColumn);
+        const formattedSalaryColumn = CSVRawData.columnArray('Salary', {
+          replace: {
+            test: val => !val,
+            value: salaryMean,
+          },
+          parseFloat:true,
+        });
+        const scaledSalaryColumn = jsk.util.StandardScaler(formattedSalaryColumn);
+        const standardScaleSalary = CSVRawData.columnReplace('Salary', {
+          scale: 'standard',
+        });
+        expect(standardScaleSalary).to.include.ordered.members(scaledSalaryColumn);
+      });
+    });
+    describe('fitColumns', () => { 
+      it('should fit multiple columns', () => {
+        const unmodifiedData = new jsk.RawData(unmodifiedCSVData);
+        const fittedOriginalData = new jsk.RawData([...unmodifiedCSVData]);
+
+        fittedOriginalData.fitColumns({
+          columns: [
+            { name: 'Age', },
+            {
+              name: 'Salary',
+              options: {
+                scale: 'standard',
+              },
+            },
+            {
+              name: 'Purchased',
+              options: {
+                strategy: 'label',
+                labelOptions: {
+                  binary: true,
+                },
+              },
+            },
+            {
+              name: 'Country',
+              options: {
+                strategy: 'onehot',
+                labelOptions: {
+                  binary: true,
+                },
+              },
+            },
+          ],
+        });
+        expect(unmodifiedData === fittedOriginalData).to.be.false;
+        expect(fittedOriginalData.data).to.not.eq(unmodifiedCSVData);
+        expect(fittedOriginalData.columnArray('Age')).to.have.ordered.members(unmodifiedData.columnReplace('Age'));
+        expect(fittedOriginalData.columnArray('Salary')).to.have.ordered.members(unmodifiedData.columnReplace('Salary', {
+          scale: 'standard',
+        }));
       });
     });
   });

@@ -28,8 +28,6 @@ function createCommonjsModule(fn, module) {
 
 var validUrl = createCommonjsModule(function (module) {
 (function(module) {
-    'use strict';
-
     module.exports.is_uri = is_iri;
     module.exports.is_http_uri = is_http_iri;
     module.exports.is_https_uri = is_https_iri;
@@ -260,8 +258,6 @@ exports = module.exports = function(bytes)
 };
 });
 
-'use strict';
-
 var Transform$1 = stream.Transform;
 
 function ctor(options, transform) {
@@ -357,9 +353,6 @@ var ctor_1 = ctor;
 firstChunkStream.ctor = ctor_1;
 
 var stripBom_1 = createCommonjsModule(function (module) {
-'use strict';
-
-
 var stripBom = module.exports = function (arg) {
 	if (typeof arg === 'string') {
 		return arg.replace(/^\ufeff/g, '');
@@ -447,6 +440,8 @@ function getEnv(key, def) {
   }
 }
 
+//return eol from a data chunk.
+var eol$1 = os.EOL;
 var getEol = function(data, param) {
   if (!param.eol && data) {
     for (var i = 0, len = data.length; i < len; i++) {
@@ -19625,7 +19620,9 @@ var lodash = createCommonjsModule(function (module, exports) {
 
     // Define as an anonymous module so, through path mapping, it can be
     // referenced as the "underscore" module.
-    
+    undefined(function() {
+      return _;
+    });
   }
   // Check for `exports` after `define` in case a build optimizer adds it.
   else if (freeModule) {
@@ -19647,6 +19644,7 @@ var eom1 = "\x0e";
 var eom2 = "\x0f";
 
 function workerMgr$1() {
+  var spawn = child_process.spawn;
   var exports = {
     initWorker: initWorker,
     sendWorker: sendWorker,
@@ -20164,6 +20162,7 @@ Converter.prototype.processResult = function (result) {
 
 Converter.prototype.emitResult = function (r) {
   var index = r.index;
+  var header = this.param;
   var row = r.row;
   var result = r.json;
   var resultJson = null;
@@ -20367,6 +20366,8 @@ function constructor(param,options) {
   return new module.exports.Converter(param, options);
 }
 });
+
+var core_1 = core$1.Converter;
 
 function startWebServer (args) {
     args = args || {};
@@ -21174,8 +21175,6 @@ SingularValueDecomposition.prototype = {
 };
 
 var array$1 = createCommonjsModule(function (module, exports) {
-'use strict';
-
 function compareNumbers(a, b) {
     return a - b;
 }
@@ -21655,11 +21654,39 @@ exports.cumulativeSum = function cumulativeSum(array) {
 };
 });
 
+var array_1 = array$1.sum;
+var array_2 = array$1.max;
+var array_3 = array$1.min;
+var array_4 = array$1.minMax;
+var array_5 = array$1.arithmeticMean;
+var array_6 = array$1.mean;
+var array_7 = array$1.geometricMean;
+var array_8 = array$1.logMean;
+var array_9 = array$1.grandMean;
+var array_10 = array$1.truncatedMean;
+var array_11 = array$1.harmonicMean;
+var array_12 = array$1.contraHarmonicMean;
+var array_13 = array$1.median;
+var array_14 = array$1.variance;
+var array_15 = array$1.standardDeviation;
+var array_16 = array$1.standardError;
+var array_17 = array$1.robustMeanAndStdev;
+var array_18 = array$1.quartiles;
+var array_19 = array$1.pooledStandardDeviation;
+var array_20 = array$1.pooledVariance;
+var array_21 = array$1.mode;
+var array_22 = array$1.covariance;
+var array_23 = array$1.skewness;
+var array_24 = array$1.kurtosis;
+var array_25 = array$1.entropy;
+var array_26 = array$1.weightedMean;
+var array_27 = array$1.weightedStandardDeviation;
+var array_28 = array$1.weightedVariance;
+var array_29 = array$1.center;
+var array_30 = array$1.standardize;
+var array_31 = array$1.cumulativeSum;
+
 var matrix$1 = createCommonjsModule(function (module, exports) {
-'use strict';
-
-
-
 function compareNumbers(a, b) {
     return a - b;
 }
@@ -22269,7 +22296,30 @@ exports.weightedScatter = function weightedScatter(matrix, weights, means, facto
 };
 });
 
-'use strict';
+var matrix_1 = matrix$1.max;
+var matrix_2 = matrix$1.min;
+var matrix_3 = matrix$1.minMax;
+var matrix_4 = matrix$1.entropy;
+var matrix_5 = matrix$1.mean;
+var matrix_6 = matrix$1.sum;
+var matrix_7 = matrix$1.product;
+var matrix_8 = matrix$1.standardDeviation;
+var matrix_9 = matrix$1.variance;
+var matrix_10 = matrix$1.median;
+var matrix_11 = matrix$1.mode;
+var matrix_12 = matrix$1.skewness;
+var matrix_13 = matrix$1.kurtosis;
+var matrix_14 = matrix$1.standardError;
+var matrix_15 = matrix$1.covariance;
+var matrix_16 = matrix$1.scatter;
+var matrix_17 = matrix$1.correlation;
+var matrix_18 = matrix$1.zScores;
+var matrix_19 = matrix$1.center;
+var matrix_20 = matrix$1.standardize;
+var matrix_21 = matrix$1.weightedVariance;
+var matrix_22 = matrix$1.weightedMean;
+var matrix_23 = matrix$1.weightedCovariance;
+var matrix_24 = matrix$1.weightedScatter;
 
 var array = array$1;
 var matrix = matrix$1;
@@ -22278,8 +22328,6 @@ var mlStat = {
 	array: array,
 	matrix: matrix
 };
-
-'use strict';
 
 const Stat = mlStat.array;
 /**
@@ -22503,8 +22551,6 @@ var ArrayUtils = {
     applyDotProduct: applyDotProduct,
     scale:scale$1
 };
-
-'use strict';
 
 /**
  *
@@ -22764,8 +22810,6 @@ var getEquallySpaced = {
 	integral: integral_1
 };
 
-'use strict';
-
 var SNV_1 = SNV;
 var Stat$2 = mlStat.array;
 
@@ -22798,6 +22842,8 @@ exports.SNV = snv.SNV;
 });
 
 var src_1$1 = src$2.scale;
+var src_2$1 = src$2.getEquallySpacedData;
+var src_3$1 = src$2.SNV;
 
 /**
  * @private
@@ -26032,10 +26078,6 @@ for (var i = 0; i < 256; i++) {
 
 var creator = ans;
 
-'use strict';
-
-
-
 /**
  * Count the number of true values in an array
  * @param {Array} arr
@@ -26273,13 +26315,9 @@ var binarySearch = function(haystack, needle, comparator, low, high) {
   return ~low;
 };
 
-'use strict';
 var numberIsNan = Number.isNaN || function (x) {
 	return x !== x;
 };
-
-'use strict';
-
 
 function assertNum(x) {
 	if (typeof x !== 'number' || numberIsNan(x)) {
@@ -26394,11 +26432,6 @@ var primeFinder = {
 	nextPrime: nextPrime_1,
 	largestPrime: largestPrime_1
 };
-
-'use strict';
-
-
-
 
 const nextPrime = primeFinder.nextPrime;
 const largestPrime = primeFinder.largestPrime;
@@ -26699,8 +26732,6 @@ function chooseShrinkCapacity(size, minLoad, maxLoad) {
     return nextPrime(Math.max(size + 1, (4 * size / (minLoad + 3 * maxLoad)) | 0));
 }
 
-'use strict';
-
 var hasOwn = Object.prototype.hasOwnProperty;
 var toStr = Object.prototype.toString;
 
@@ -26785,10 +26816,6 @@ var extend = function extend() {
 	// Return the modified object
 	return target;
 };
-
-'use strict';
-
-
 
 var defaultOptions$1 = {
     size: 1,
@@ -26879,6 +26906,8 @@ function arrayCase(data, options) {
  * @returns {Array}
  */
 function matrixCase(data, options) {
+    var row = data.length;
+    var col = data[0].length;
     if (options.size[0] === undefined)
         options.size = [options.size, options.size, options.size, options.size];
     throw new Error('matrix not supported yet, sorry');
@@ -41699,8 +41728,6 @@ var src$9 = Object.freeze({
 	QR: QrDecomposition$5
 });
 
-'use strict';
-
 function squaredEuclidean$1(p, q) {
     var d = 0;
     for (var i = 0; i < p.length; i++) {
@@ -41715,8 +41742,6 @@ function euclidean(p, q) {
 
 var euclidean_1 = euclidean;
 euclidean.squared = squaredEuclidean$1;
-
-'use strict';
 
 const squaredEuclidean = euclidean_1.squared;
 
@@ -41738,8 +41763,6 @@ class GaussianKernel {
 }
 
 var gaussianKernel = GaussianKernel;
-
-'use strict';
 
 const defaultOptions$4 = {
     degree: 1,
@@ -41767,8 +41790,6 @@ class PolynomialKernel {
 
 var polynomialKernel = PolynomialKernel;
 
-'use strict';
-
 const defaultOptions$5 = {
     sigma: 1,
     degree: 1
@@ -41794,8 +41815,6 @@ class ANOVAKernel {
 
 var anovaKernel = ANOVAKernel;
 
-'use strict';
-
 const squaredEuclidean$2 = euclidean_1.squared;
 
 const defaultOptions$6 = {
@@ -41814,10 +41833,6 @@ class CauchyKernel {
 }
 
 var cauchyKernel = CauchyKernel;
-
-'use strict';
-
-
 
 const defaultOptions$7 = {
     sigma: 1
@@ -41838,8 +41853,6 @@ class ExponentialKernel {
 
 var exponentialKernel = ExponentialKernel;
 
-'use strict';
-
 class HistogramIntersectionKernel {
     compute(x, y) {
         var min = Math.min(x.length, y.length);
@@ -41853,10 +41866,6 @@ class HistogramIntersectionKernel {
 }
 
 var histogramIntersectionKernel = HistogramIntersectionKernel;
-
-'use strict';
-
-
 
 const defaultOptions$8 = {
     sigma: 1
@@ -41875,8 +41884,6 @@ class LaplacianKernel {
 }
 
 var laplacianKernel = LaplacianKernel;
-
-'use strict';
 
 const squaredEuclidean$3 = euclidean_1.squared;
 
@@ -41897,8 +41904,6 @@ class MultiquadraticKernel {
 
 var multiquadraticKernel = MultiquadraticKernel;
 
-'use strict';
-
 const squaredEuclidean$4 = euclidean_1.squared;
 
 const defaultOptions$10 = {
@@ -41918,8 +41923,6 @@ class RationalQuadraticKernel {
 }
 
 var rationalQuadraticKernel = RationalQuadraticKernel;
-
-'use strict';
 
 const defaultOptions$11 = {
     alpha: 0.01,
@@ -41943,8 +41946,6 @@ class SigmoidKernel {
 }
 
 var sigmoidKernel = SigmoidKernel;
-
-'use strict';
 
 const Matrix$4 = src$9.Matrix;
 
@@ -45993,8 +45994,6 @@ var clark$1 = function clark(a, b) {
     return 2 * d;
 };
 
-'use strict';
-
 var czekanowski$3 = function czekanowskiSimilarity(a, b) {
     var up = 0;
     var down = 0;
@@ -46004,10 +46003,6 @@ var czekanowski$3 = function czekanowskiSimilarity(a, b) {
     }
     return 2 * up / down;
 };
-
-'use strict';
-
-
 
 var czekanowski$1 = function czekanowskiDistance(a, b) {
     return 1 - czekanowski$3(a, b);
@@ -46377,8 +46372,6 @@ var topsoe$1 = function topsoe(a, b) {
     return ans;
 };
 
-"use strict";
-
 /**
  * Function that creates the tree
  * @param {Array <number>} X - chemical shifts of the signal
@@ -46503,8 +46496,6 @@ var waveHedges$1 = function waveHedges(a, b) {
     }
     return ans;
 };
-
-"use strict";
 
 var additiveSymmetric = additiveSymmetric$1;
 var avg$1 = avg$2;
@@ -46631,8 +46622,6 @@ var motyka$4 = function motyka(a, b) {
     return 1 - motyka$1(a,b);
 };
 
-'use strict';
-
 var stat=mlStat.array;
 
 
@@ -46653,8 +46642,6 @@ var pearson$4 = function pearson(a, b) {
 var squaredChord$4 = function squaredChord(a, b) {
     return 1 - squaredChord$1(a, b);
 };
-
-"use strict";
 
 var cosine = cosine$1;
 var czekanowski$5 = czekanowski$3;
@@ -46680,8 +46667,6 @@ var similarities = {
 	tanimoto: tanimoto$5
 };
 
-'use strict';
-
 var distance = distances;
 var similarity = similarities;
 
@@ -46689,9 +46674,6 @@ var src$10 = {
 	distance: distance,
 	similarity: similarity
 };
-
-'use strict';
-
 
 /**
  * Computes a distance/similarity matrix given an array of data and a distance/similarity function.
@@ -46723,15 +46705,9 @@ function distanceMatrix(data, distanceFn) {
 
 var src$14 = distanceMatrix;
 
-'use strict';
-
 if (!Symbol.species) {
     Symbol.species = Symbol.for('@@species');
 }
-
-'use strict';
-
-
 
 // https://github.com/lutzroeder/Mapack/blob/master/Source/LuDecomposition.cs
 function LuDecomposition$7(matrix) {
@@ -46904,8 +46880,6 @@ LuDecomposition$7.prototype = {
 
 var lu = LuDecomposition$7;
 
-'use strict';
-
 var hypotenuse$7 = function hypotenuse(a, b) {
     var r;
     if (Math.abs(a) > Math.abs(b)) {
@@ -46947,10 +46921,6 @@ var util$3 = {
 	getEmpty2DArray: getEmpty2DArray$1,
 	getFilled2DArray: getFilled2DArray$7
 };
-
-'use strict';
-
-
 
 var hypotenuse$6 = util$3.hypotenuse;
 var getFilled2DArray$6 = util$3.getFilled2DArray;
@@ -47461,10 +47431,6 @@ SingularValueDecomposition$6.prototype = {
 
 var svd = SingularValueDecomposition$6;
 
-'use strict';
-
-
-
 /**
  * @private
  * Check that a row index is not out of bounds
@@ -47617,11 +47583,6 @@ var util$5 = {
 	sumAll: sumAll$6
 };
 
-'use strict';
-
-
-
-
 class BaseView$6 extends abstractMatrix_1() {
     constructor(matrix, rows, columns) {
         super();
@@ -47636,10 +47597,6 @@ class BaseView$6 extends abstractMatrix_1() {
 }
 
 var base = BaseView$6;
-
-'use strict';
-
-
 
 class MatrixTransposeView$6 extends base {
     constructor(matrix) {
@@ -47658,10 +47615,6 @@ class MatrixTransposeView$6 extends base {
 
 var transpose$1 = MatrixTransposeView$6;
 
-'use strict';
-
-
-
 class MatrixRowView$6 extends base {
     constructor(matrix, row) {
         super(matrix, 1, matrix.columns);
@@ -47679,11 +47632,6 @@ class MatrixRowView$6 extends base {
 }
 
 var row = MatrixRowView$6;
-
-'use strict';
-
-
-
 
 class MatrixSubView$6 extends base {
     constructor(matrix, startRow, endRow, startColumn, endColumn) {
@@ -47705,11 +47653,6 @@ class MatrixSubView$6 extends base {
 
 var sub = MatrixSubView$6;
 
-'use strict';
-
-
-
-
 class MatrixSelectionView$6 extends base {
     constructor(matrix, rowIndices, columnIndices) {
         var indices = util$5.checkIndices(matrix, rowIndices, columnIndices);
@@ -47730,10 +47673,6 @@ class MatrixSelectionView$6 extends base {
 
 var selection = MatrixSelectionView$6;
 
-'use strict';
-
-
-
 class MatrixColumnView$6 extends base {
     constructor(matrix, column) {
         super(matrix, matrix.rows, 1);
@@ -47752,10 +47691,6 @@ class MatrixColumnView$6 extends base {
 
 var column = MatrixColumnView$6;
 
-'use strict';
-
-
-
 class MatrixFlipRowView$6 extends base {
     constructor(matrix) {
         super(matrix, matrix.rows, matrix.columns);
@@ -47773,10 +47708,6 @@ class MatrixFlipRowView$6 extends base {
 
 var flipRow = MatrixFlipRowView$6;
 
-'use strict';
-
-
-
 class MatrixFlipColumnView$6 extends base {
     constructor(matrix) {
         super(matrix, matrix.rows, matrix.columns);
@@ -47793,8 +47724,6 @@ class MatrixFlipColumnView$6 extends base {
 }
 
 var flipColumn = MatrixFlipColumnView$6;
-
-'use strict';
 
 var abstractMatrix_1 = abstractMatrix;
 
@@ -49606,12 +49535,6 @@ function abstractMatrix(superCtor) {
     return Matrix;
 }
 
-'use strict';
-
-
-
-
-
 class Matrix$7 extends abstractMatrix_1(Array) {
     constructor(nRows, nColumns) {
         var i;
@@ -49751,8 +49674,6 @@ Matrix$7.abstractMatrix = abstractMatrix_1;
 var matrix$3 = {
 	Matrix: Matrix_1
 };
-
-'use strict';
 
 const Matrix$9 = matrix$3.Matrix;
 
@@ -50529,8 +50450,6 @@ function cdiv$6(xr, xi, yr, yi) {
 
 var evd = EigenvalueDecomposition$7;
 
-'use strict';
-
 var Matrix$10 = matrix$3.Matrix;
 var hypotenuse$9 = util$3.hypotenuse;
 
@@ -50682,8 +50601,6 @@ QrDecomposition$7.prototype = {
 
 var qr = QrDecomposition$7;
 
-'use strict';
-
 var Matrix$11 = matrix$3.Matrix;
 
 // https://github.com/lutzroeder/Mapack/blob/master/Source/CholeskyDecomposition.cs
@@ -50773,8 +50690,6 @@ CholeskyDecomposition$7.prototype = {
 
 var cholesky = CholeskyDecomposition$7;
 
-'use strict';
-
 var Matrix$8 = matrix$3.Matrix;
 
 
@@ -50837,17 +50752,12 @@ var decompositions = {
 };
 
 var src$18 = createCommonjsModule(function (module) {
-'use strict';
-
 module.exports = matrix$3.Matrix;
 module.exports.Decompositions = module.exports.DC = decompositions;
 });
 
-'use strict';
-
-
-
-
+var src_1$2 = src$18.Decompositions;
+var src_2$2 = src$18.DC;
 
 var defaultOptions$14 = {
     windowSize: 5,
@@ -51384,15 +51294,9 @@ function fillTemplateFunction(template, values) {
     return template;
 }
 
-'use strict';
-
 if (!Symbol.species) {
     Symbol.species = Symbol.for('@@species');
 }
-
-'use strict';
-
-
 
 // https://github.com/lutzroeder/Mapack/blob/master/Source/LuDecomposition.cs
 function LuDecomposition$9(matrix) {
@@ -51565,8 +51469,6 @@ LuDecomposition$9.prototype = {
 
 var lu$2 = LuDecomposition$9;
 
-'use strict';
-
 var hypotenuse$11 = function hypotenuse(a, b) {
     var r;
     if (Math.abs(a) > Math.abs(b)) {
@@ -51608,10 +51510,6 @@ var util$8 = {
 	getEmpty2DArray: getEmpty2DArray$2,
 	getFilled2DArray: getFilled2DArray$10
 };
-
-'use strict';
-
-
 
 var hypotenuse$10 = util$8.hypotenuse;
 var getFilled2DArray$9 = util$8.getFilled2DArray;
@@ -52122,10 +52020,6 @@ SingularValueDecomposition$8.prototype = {
 
 var svd$2 = SingularValueDecomposition$8;
 
-'use strict';
-
-
-
 /**
  * @private
  * Check that a row index is not out of bounds
@@ -52278,11 +52172,6 @@ var util$10 = {
 	sumAll: sumAll$7
 };
 
-'use strict';
-
-
-
-
 class BaseView$8 extends abstractMatrix_1$2() {
     constructor(matrix, rows, columns) {
         super();
@@ -52297,10 +52186,6 @@ class BaseView$8 extends abstractMatrix_1$2() {
 }
 
 var base$2 = BaseView$8;
-
-'use strict';
-
-
 
 class MatrixTransposeView$8 extends base$2 {
     constructor(matrix) {
@@ -52319,10 +52204,6 @@ class MatrixTransposeView$8 extends base$2 {
 
 var transpose$3 = MatrixTransposeView$8;
 
-'use strict';
-
-
-
 class MatrixRowView$8 extends base$2 {
     constructor(matrix, row) {
         super(matrix, 1, matrix.columns);
@@ -52340,11 +52221,6 @@ class MatrixRowView$8 extends base$2 {
 }
 
 var row$2 = MatrixRowView$8;
-
-'use strict';
-
-
-
 
 class MatrixSubView$8 extends base$2 {
     constructor(matrix, startRow, endRow, startColumn, endColumn) {
@@ -52366,11 +52242,6 @@ class MatrixSubView$8 extends base$2 {
 
 var sub$2 = MatrixSubView$8;
 
-'use strict';
-
-
-
-
 class MatrixSelectionView$8 extends base$2 {
     constructor(matrix, rowIndices, columnIndices) {
         var indices = util$10.checkIndices(matrix, rowIndices, columnIndices);
@@ -52391,10 +52262,6 @@ class MatrixSelectionView$8 extends base$2 {
 
 var selection$2 = MatrixSelectionView$8;
 
-'use strict';
-
-
-
 class MatrixColumnView$8 extends base$2 {
     constructor(matrix, column) {
         super(matrix, matrix.rows, 1);
@@ -52413,10 +52280,6 @@ class MatrixColumnView$8 extends base$2 {
 
 var column$2 = MatrixColumnView$8;
 
-'use strict';
-
-
-
 class MatrixFlipRowView$8 extends base$2 {
     constructor(matrix) {
         super(matrix, matrix.rows, matrix.columns);
@@ -52434,10 +52297,6 @@ class MatrixFlipRowView$8 extends base$2 {
 
 var flipRow$2 = MatrixFlipRowView$8;
 
-'use strict';
-
-
-
 class MatrixFlipColumnView$8 extends base$2 {
     constructor(matrix) {
         super(matrix, matrix.rows, matrix.columns);
@@ -52454,8 +52313,6 @@ class MatrixFlipColumnView$8 extends base$2 {
 }
 
 var flipColumn$2 = MatrixFlipColumnView$8;
-
-'use strict';
 
 var abstractMatrix_1$2 = abstractMatrix$2;
 
@@ -54267,12 +54124,6 @@ function abstractMatrix$2(superCtor) {
     return Matrix;
 }
 
-'use strict';
-
-
-
-
-
 class Matrix$13 extends abstractMatrix_1$2(Array) {
     constructor(nRows, nColumns) {
         var i;
@@ -54412,8 +54263,6 @@ Matrix$13.abstractMatrix = abstractMatrix_1$2;
 var matrix$5 = {
 	Matrix: Matrix_1$1
 };
-
-'use strict';
 
 const Matrix$15 = matrix$5.Matrix;
 
@@ -55190,8 +55039,6 @@ function cdiv$7(xr, xi, yr, yi) {
 
 var evd$2 = EigenvalueDecomposition$9;
 
-'use strict';
-
 var Matrix$16 = matrix$5.Matrix;
 var hypotenuse$13 = util$8.hypotenuse;
 
@@ -55343,8 +55190,6 @@ QrDecomposition$9.prototype = {
 
 var qr$2 = QrDecomposition$9;
 
-'use strict';
-
 var Matrix$17 = matrix$5.Matrix;
 
 // https://github.com/lutzroeder/Mapack/blob/master/Source/CholeskyDecomposition.cs
@@ -55434,8 +55279,6 @@ CholeskyDecomposition$9.prototype = {
 
 var cholesky$2 = CholeskyDecomposition$9;
 
-'use strict';
-
 var Matrix$14 = matrix$5.Matrix;
 
 
@@ -55498,14 +55341,12 @@ var decompositions$2 = {
 };
 
 var src$22 = createCommonjsModule(function (module) {
-'use strict';
-
 module.exports = matrix$5.Matrix;
 module.exports.Decompositions = module.exports.DC = decompositions$2;
 });
 
-'use strict';
-
+var src_1$3 = src$22.Decompositions;
+var src_2$3 = src$22.DC;
 
 const EVD = src$22.DC.EVD;
 const SVD = src$22.DC.SVD;
@@ -55721,9 +55562,6 @@ class PCA {
 var pca = PCA;
 
 var measures = createCommonjsModule(function (module, exports) {
-'use strict';
-
-// Accuracy
 exports.acc = pred => {
     const l = pred.cutoffs.length;
     const result = new Array(l);
@@ -55861,9 +55699,20 @@ exports.threshold = pred => {
 };
 });
 
-'use strict';
-
-
+var measures_1 = measures.acc;
+var measures_2 = measures.err;
+var measures_3 = measures.fpr;
+var measures_4 = measures.tpr;
+var measures_5 = measures.fnr;
+var measures_6 = measures.tnr;
+var measures_7 = measures.ppv;
+var measures_8 = measures.npv;
+var measures_9 = measures.pcfall;
+var measures_10 = measures.pcmiss;
+var measures_11 = measures.lift;
+var measures_12 = measures.rpp;
+var measures_13 = measures.rnp;
+var measures_14 = measures.threshold;
 
 class Performance {
     /**
@@ -56089,15 +55938,9 @@ Performance.names = {
 
 var src$24 = Performance;
 
-'use strict';
-
 if (!Symbol.species) {
     Symbol.species = Symbol.for('@@species');
 }
-
-'use strict';
-
-
 
 // https://github.com/lutzroeder/Mapack/blob/master/Source/LuDecomposition.cs
 function LuDecomposition$11(matrix) {
@@ -56270,8 +56113,6 @@ LuDecomposition$11.prototype = {
 
 var lu$4 = LuDecomposition$11;
 
-'use strict';
-
 var hypotenuse$15 = function hypotenuse(a, b) {
     var r;
     if (Math.abs(a) > Math.abs(b)) {
@@ -56313,10 +56154,6 @@ var util$13 = {
 	getEmpty2DArray: getEmpty2DArray$3,
 	getFilled2DArray: getFilled2DArray$13
 };
-
-'use strict';
-
-
 
 var hypotenuse$14 = util$13.hypotenuse;
 var getFilled2DArray$12 = util$13.getFilled2DArray;
@@ -56827,10 +56664,6 @@ SingularValueDecomposition$10.prototype = {
 
 var svd$4 = SingularValueDecomposition$10;
 
-'use strict';
-
-
-
 /**
  * @private
  * Check that a row index is not out of bounds
@@ -56983,11 +56816,6 @@ var util$15 = {
 	sumAll: sumAll$8
 };
 
-'use strict';
-
-
-
-
 class BaseView$10 extends abstractMatrix_1$4() {
     constructor(matrix, rows, columns) {
         super();
@@ -57002,10 +56830,6 @@ class BaseView$10 extends abstractMatrix_1$4() {
 }
 
 var base$4 = BaseView$10;
-
-'use strict';
-
-
 
 class MatrixTransposeView$10 extends base$4 {
     constructor(matrix) {
@@ -57024,10 +56848,6 @@ class MatrixTransposeView$10 extends base$4 {
 
 var transpose$5 = MatrixTransposeView$10;
 
-'use strict';
-
-
-
 class MatrixRowView$10 extends base$4 {
     constructor(matrix, row) {
         super(matrix, 1, matrix.columns);
@@ -57045,11 +56865,6 @@ class MatrixRowView$10 extends base$4 {
 }
 
 var row$4 = MatrixRowView$10;
-
-'use strict';
-
-
-
 
 class MatrixSubView$10 extends base$4 {
     constructor(matrix, startRow, endRow, startColumn, endColumn) {
@@ -57071,11 +56886,6 @@ class MatrixSubView$10 extends base$4 {
 
 var sub$4 = MatrixSubView$10;
 
-'use strict';
-
-
-
-
 class MatrixSelectionView$10 extends base$4 {
     constructor(matrix, rowIndices, columnIndices) {
         var indices = util$15.checkIndices(matrix, rowIndices, columnIndices);
@@ -57096,10 +56906,6 @@ class MatrixSelectionView$10 extends base$4 {
 
 var selection$4 = MatrixSelectionView$10;
 
-'use strict';
-
-
-
 class MatrixColumnView$10 extends base$4 {
     constructor(matrix, column) {
         super(matrix, matrix.rows, 1);
@@ -57118,10 +56924,6 @@ class MatrixColumnView$10 extends base$4 {
 
 var column$4 = MatrixColumnView$10;
 
-'use strict';
-
-
-
 class MatrixFlipRowView$10 extends base$4 {
     constructor(matrix) {
         super(matrix, matrix.rows, matrix.columns);
@@ -57139,10 +56941,6 @@ class MatrixFlipRowView$10 extends base$4 {
 
 var flipRow$4 = MatrixFlipRowView$10;
 
-'use strict';
-
-
-
 class MatrixFlipColumnView$10 extends base$4 {
     constructor(matrix) {
         super(matrix, matrix.rows, matrix.columns);
@@ -57159,8 +56957,6 @@ class MatrixFlipColumnView$10 extends base$4 {
 }
 
 var flipColumn$4 = MatrixFlipColumnView$10;
-
-'use strict';
 
 var abstractMatrix_1$4 = abstractMatrix$4;
 
@@ -58972,12 +58768,6 @@ function abstractMatrix$4(superCtor) {
     return Matrix;
 }
 
-'use strict';
-
-
-
-
-
 class Matrix$19 extends abstractMatrix_1$4(Array) {
     constructor(nRows, nColumns) {
         var i;
@@ -59117,8 +58907,6 @@ Matrix$19.abstractMatrix = abstractMatrix_1$4;
 var matrix$7 = {
 	Matrix: Matrix_1$2
 };
-
-'use strict';
 
 const Matrix$21 = matrix$7.Matrix;
 
@@ -59895,8 +59683,6 @@ function cdiv$8(xr, xi, yr, yi) {
 
 var evd$4 = EigenvalueDecomposition$11;
 
-'use strict';
-
 var Matrix$22 = matrix$7.Matrix;
 var hypotenuse$17 = util$13.hypotenuse;
 
@@ -60048,8 +59834,6 @@ QrDecomposition$11.prototype = {
 
 var qr$4 = QrDecomposition$11;
 
-'use strict';
-
 var Matrix$23 = matrix$7.Matrix;
 
 // https://github.com/lutzroeder/Mapack/blob/master/Source/CholeskyDecomposition.cs
@@ -60139,8 +59923,6 @@ CholeskyDecomposition$11.prototype = {
 
 var cholesky$4 = CholeskyDecomposition$11;
 
-'use strict';
-
 var Matrix$20 = matrix$7.Matrix;
 
 
@@ -60203,22 +59985,12 @@ var decompositions$4 = {
 };
 
 var src$30 = createCommonjsModule(function (module) {
-'use strict';
-
 module.exports = matrix$7.Matrix;
 module.exports.Decompositions = module.exports.DC = decompositions$4;
 });
 
-/**
- * Created by acastillo on 8/24/15.
- */
-/**
- * Non in-place function definitions, compatible with mathjs code *
- */
-
-'use strict';
-
-
+var src_1$5 = src$30.Decompositions;
+var src_2$4 = src$30.DC;
 
 function matrix$9(A,B){
     return new src$30(A,B);
@@ -60562,8 +60334,11 @@ var LM = {
         //prnt MaxIter  eps1  eps2  epx3  eps4  lam0  lamUP lamDN UpdateType
         opts = opts ||[  3,10*Npar, 1e-3, 1e-3, 1e-3, 1e-2, 1e-2, 11, 9, 1 ];
 
+        var prnt          = opts[0];	// >1 intermediate results; >2 plots
         var MaxIter       = opts[1];	// maximum number of iterations
         var epsilon_1     = opts[2];	// convergence tolerance for gradient
+        var epsilon_2     = opts[3];	// convergence tolerance for parameter
+        var epsilon_3     = opts[4];	// convergence tolerance for Chi-square
         var epsilon_4     = opts[5];	// determines acceptance of a L-M step
         var lambda_0      = opts[6];	// initial value of damping paramter, lambda
         var lambda_UP_fac = opts[7];	// factor for increasing lambda
@@ -60571,6 +60346,9 @@ var LM = {
         var Update_Type   = opts[9];	// 1: Levenberg-Marquardt lambda update
         // 2: Quadratic update
         // 3: Nielsen's lambda update equations
+
+        if ( tensor_parameter && prnt == 3 ) prnt = 2;
+
 
         if(!dp.length || dp.length == 1){
             var dp_array = new Array(Npar);
@@ -60921,6 +60699,7 @@ var LM = {
         //   Press, et al., Numerical Recipes, Cambridge Univ. Press, 1992, Chapter 15.
 
 
+        var Npnt = y_dat.length;		// number of data points
         var Npar = p.length;		// number of parameters
 
         dp = dp || 0.001;
@@ -60969,22 +60748,16 @@ var LM = {
 var LM_1 = LM;
 
 var src$28 = createCommonjsModule(function (module) {
-'use strict';
-
 module.exports = LM_1;
 module.exports.Matrix = src$30;
 module.exports.Matrix.algebra = algebra;
 });
 
-'use strict';
+var src_1$4 = src$28.Matrix;
 
 if (!Symbol.species) {
     Symbol.species = Symbol.for('@@species');
 }
-
-'use strict';
-
-
 
 // https://github.com/lutzroeder/Mapack/blob/master/Source/LuDecomposition.cs
 function LuDecomposition$13(matrix) {
@@ -61157,8 +60930,6 @@ LuDecomposition$13.prototype = {
 
 var lu$6 = LuDecomposition$13;
 
-'use strict';
-
 var hypotenuse$19 = function hypotenuse(a, b) {
     var r;
     if (Math.abs(a) > Math.abs(b)) {
@@ -61200,10 +60971,6 @@ var util$18 = {
 	getEmpty2DArray: getEmpty2DArray$4,
 	getFilled2DArray: getFilled2DArray$16
 };
-
-'use strict';
-
-
 
 var hypotenuse$18 = util$18.hypotenuse;
 var getFilled2DArray$15 = util$18.getFilled2DArray;
@@ -61714,10 +61481,6 @@ SingularValueDecomposition$12.prototype = {
 
 var svd$6 = SingularValueDecomposition$12;
 
-'use strict';
-
-
-
 /**
  * @private
  * Check that a row index is not out of bounds
@@ -61870,11 +61633,6 @@ var util$20 = {
 	sumAll: sumAll$9
 };
 
-'use strict';
-
-
-
-
 class BaseView$12 extends abstractMatrix_1$6() {
     constructor(matrix, rows, columns) {
         super();
@@ -61889,10 +61647,6 @@ class BaseView$12 extends abstractMatrix_1$6() {
 }
 
 var base$6 = BaseView$12;
-
-'use strict';
-
-
 
 class MatrixTransposeView$12 extends base$6 {
     constructor(matrix) {
@@ -61911,10 +61665,6 @@ class MatrixTransposeView$12 extends base$6 {
 
 var transpose$8 = MatrixTransposeView$12;
 
-'use strict';
-
-
-
 class MatrixRowView$12 extends base$6 {
     constructor(matrix, row) {
         super(matrix, 1, matrix.columns);
@@ -61932,11 +61682,6 @@ class MatrixRowView$12 extends base$6 {
 }
 
 var row$6 = MatrixRowView$12;
-
-'use strict';
-
-
-
 
 class MatrixSubView$12 extends base$6 {
     constructor(matrix, startRow, endRow, startColumn, endColumn) {
@@ -61958,11 +61703,6 @@ class MatrixSubView$12 extends base$6 {
 
 var sub$6 = MatrixSubView$12;
 
-'use strict';
-
-
-
-
 class MatrixSelectionView$12 extends base$6 {
     constructor(matrix, rowIndices, columnIndices) {
         var indices = util$20.checkIndices(matrix, rowIndices, columnIndices);
@@ -61983,10 +61723,6 @@ class MatrixSelectionView$12 extends base$6 {
 
 var selection$6 = MatrixSelectionView$12;
 
-'use strict';
-
-
-
 class MatrixColumnView$12 extends base$6 {
     constructor(matrix, column) {
         super(matrix, matrix.rows, 1);
@@ -62005,10 +61741,6 @@ class MatrixColumnView$12 extends base$6 {
 
 var column$6 = MatrixColumnView$12;
 
-'use strict';
-
-
-
 class MatrixFlipRowView$12 extends base$6 {
     constructor(matrix) {
         super(matrix, matrix.rows, matrix.columns);
@@ -62026,10 +61758,6 @@ class MatrixFlipRowView$12 extends base$6 {
 
 var flipRow$6 = MatrixFlipRowView$12;
 
-'use strict';
-
-
-
 class MatrixFlipColumnView$12 extends base$6 {
     constructor(matrix) {
         super(matrix, matrix.rows, matrix.columns);
@@ -62046,8 +61774,6 @@ class MatrixFlipColumnView$12 extends base$6 {
 }
 
 var flipColumn$6 = MatrixFlipColumnView$12;
-
-'use strict';
 
 var abstractMatrix_1$6 = abstractMatrix$6;
 
@@ -63859,12 +63585,6 @@ function abstractMatrix$6(superCtor) {
     return Matrix;
 }
 
-'use strict';
-
-
-
-
-
 class Matrix$25 extends abstractMatrix_1$6(Array) {
     constructor(nRows, nColumns) {
         var i;
@@ -64004,8 +63724,6 @@ Matrix$25.abstractMatrix = abstractMatrix_1$6;
 var matrix$10 = {
 	Matrix: Matrix_1$3
 };
-
-'use strict';
 
 const Matrix$27 = matrix$10.Matrix;
 
@@ -64782,8 +64500,6 @@ function cdiv$9(xr, xi, yr, yi) {
 
 var evd$6 = EigenvalueDecomposition$13;
 
-'use strict';
-
 var Matrix$28 = matrix$10.Matrix;
 var hypotenuse$21 = util$18.hypotenuse;
 
@@ -64935,8 +64651,6 @@ QrDecomposition$13.prototype = {
 
 var qr$6 = QrDecomposition$13;
 
-'use strict';
-
 var Matrix$29 = matrix$10.Matrix;
 
 // https://github.com/lutzroeder/Mapack/blob/master/Source/CholeskyDecomposition.cs
@@ -65026,8 +64740,6 @@ CholeskyDecomposition$13.prototype = {
 
 var cholesky$6 = CholeskyDecomposition$13;
 
-'use strict';
-
 var Matrix$26 = matrix$10.Matrix;
 
 
@@ -65090,14 +64802,12 @@ var decompositions$6 = {
 };
 
 var src$32 = createCommonjsModule(function (module) {
-'use strict';
-
 module.exports = matrix$10.Matrix;
 module.exports.Decompositions = module.exports.DC = decompositions$6;
 });
 
-'use strict';
-
+var src_1$6 = src$32.Decompositions;
+var src_2$5 = src$32.DC;
 
 var math = src$28.Matrix.algebra;
 
@@ -65541,8 +65251,6 @@ var src$26 = {
 	optimizeGaussianTrain: optimizeGaussianTrain_1,
 	optimizeLorentzianTrain: optimizeLorentzianTrain_1
 };
-
-'use strict';
 
 /**
  * Calculate current error
@@ -69840,9 +69548,6 @@ var src$36 = Object.freeze({
 	QR: QrDecomposition$15
 });
 
-'use strict';
-
-
 const Matrix$31 = src$36.Matrix;
 const inv$1 = src$36.inverse;
 
@@ -69927,8 +69632,6 @@ function step(data, params, damping, gradientDifference, parameterizedFunction) 
 
 var step_1 = step;
 
-'use strict';
-
 var checkArguments = function checkArguments(data, parameterizedFunction, options) {
     let msg = '';
     if ((!options) || (!options.damping) || (options.damping <= 0)) {
@@ -69950,12 +69653,6 @@ var checkArguments = function checkArguments(data, parameterizedFunction, option
     }
     return msg;
 };
-
-'use strict';
-
-
-
-
 
 const defaultOptions$21 = {
     damping: undefined,
@@ -70009,8 +69706,6 @@ function levenbergMarquardt(data, parameterizedFunction, options) {
 var src$34 = levenbergMarquardt;
 
 var xsaddEs5 = createCommonjsModule(function (module, exports) {
-"use strict";
-
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
@@ -70514,7 +70209,6 @@ class ConfusionMatrix {
 
 var src$39 = ConfusionMatrix;
 
-'use strict';
 const defaultOptions$22 = {
     mode: 'index'
 };
@@ -70607,10 +70301,6 @@ var src$41 = function *(M, N, options) {
         throw new Error('Invalid mode');
     }
 };
-
-'use strict';
-
-
 
 const CV = {};
 
@@ -70817,8 +70507,6 @@ function getTrainTest(features, labels, testIdx, trainIdx) {
 }
 
 var src$37 = CV;
-
-'use strict';
 
 const stat$1 = mlStat.array;
 
@@ -71554,15 +71242,9 @@ var src$43 = Object.freeze({
 	default: KNN
 });
 
-'use strict';
-
 if (!Symbol.species) {
     Symbol.species = Symbol.for('@@species');
 }
-
-'use strict';
-
-
 
 // https://github.com/lutzroeder/Mapack/blob/master/Source/LuDecomposition.cs
 function LuDecomposition$16(matrix) {
@@ -71735,8 +71417,6 @@ LuDecomposition$16.prototype = {
 
 var lu$8 = LuDecomposition$16;
 
-'use strict';
-
 var hypotenuse$24 = function hypotenuse(a, b) {
     var r;
     if (Math.abs(a) > Math.abs(b)) {
@@ -71778,10 +71458,6 @@ var util$23 = {
 	getEmpty2DArray: getEmpty2DArray$5,
 	getFilled2DArray: getFilled2DArray$20
 };
-
-'use strict';
-
-
 
 var hypotenuse$23 = util$23.hypotenuse;
 var getFilled2DArray$19 = util$23.getFilled2DArray;
@@ -72292,10 +71968,6 @@ SingularValueDecomposition$15.prototype = {
 
 var svd$8 = SingularValueDecomposition$15;
 
-'use strict';
-
-
-
 /**
  * @private
  * Check that a row index is not out of bounds
@@ -72448,11 +72120,6 @@ var util$25 = {
 	sumAll: sumAll$11
 };
 
-'use strict';
-
-
-
-
 class BaseView$15 extends abstractMatrix_1$8() {
     constructor(matrix, rows, columns) {
         super();
@@ -72467,10 +72134,6 @@ class BaseView$15 extends abstractMatrix_1$8() {
 }
 
 var base$8 = BaseView$15;
-
-'use strict';
-
-
 
 class MatrixTransposeView$15 extends base$8 {
     constructor(matrix) {
@@ -72489,10 +72152,6 @@ class MatrixTransposeView$15 extends base$8 {
 
 var transpose$10 = MatrixTransposeView$15;
 
-'use strict';
-
-
-
 class MatrixRowView$15 extends base$8 {
     constructor(matrix, row) {
         super(matrix, 1, matrix.columns);
@@ -72510,11 +72169,6 @@ class MatrixRowView$15 extends base$8 {
 }
 
 var row$8 = MatrixRowView$15;
-
-'use strict';
-
-
-
 
 class MatrixSubView$15 extends base$8 {
     constructor(matrix, startRow, endRow, startColumn, endColumn) {
@@ -72536,11 +72190,6 @@ class MatrixSubView$15 extends base$8 {
 
 var sub$8 = MatrixSubView$15;
 
-'use strict';
-
-
-
-
 class MatrixSelectionView$15 extends base$8 {
     constructor(matrix, rowIndices, columnIndices) {
         var indices = util$25.checkIndices(matrix, rowIndices, columnIndices);
@@ -72561,10 +72210,6 @@ class MatrixSelectionView$15 extends base$8 {
 
 var selection$8 = MatrixSelectionView$15;
 
-'use strict';
-
-
-
 class MatrixColumnView$15 extends base$8 {
     constructor(matrix, column) {
         super(matrix, matrix.rows, 1);
@@ -72583,10 +72228,6 @@ class MatrixColumnView$15 extends base$8 {
 
 var column$8 = MatrixColumnView$15;
 
-'use strict';
-
-
-
 class MatrixFlipRowView$15 extends base$8 {
     constructor(matrix) {
         super(matrix, matrix.rows, matrix.columns);
@@ -72604,10 +72245,6 @@ class MatrixFlipRowView$15 extends base$8 {
 
 var flipRow$8 = MatrixFlipRowView$15;
 
-'use strict';
-
-
-
 class MatrixFlipColumnView$15 extends base$8 {
     constructor(matrix) {
         super(matrix, matrix.rows, matrix.columns);
@@ -72624,8 +72261,6 @@ class MatrixFlipColumnView$15 extends base$8 {
 }
 
 var flipColumn$8 = MatrixFlipColumnView$15;
-
-'use strict';
 
 var abstractMatrix_1$8 = abstractMatrix$8;
 
@@ -74437,12 +74072,6 @@ function abstractMatrix$8(superCtor) {
     return Matrix;
 }
 
-'use strict';
-
-
-
-
-
 class Matrix$33 extends abstractMatrix_1$8(Array) {
     constructor(nRows, nColumns) {
         var i;
@@ -74582,8 +74211,6 @@ Matrix$33.abstractMatrix = abstractMatrix_1$8;
 var matrix$12 = {
 	Matrix: Matrix_1$4
 };
-
-'use strict';
 
 const Matrix$35 = matrix$12.Matrix;
 
@@ -75360,8 +74987,6 @@ function cdiv$11(xr, xi, yr, yi) {
 
 var evd$8 = EigenvalueDecomposition$16;
 
-'use strict';
-
 var Matrix$36 = matrix$12.Matrix;
 var hypotenuse$26 = util$23.hypotenuse;
 
@@ -75513,8 +75138,6 @@ QrDecomposition$16.prototype = {
 
 var qr$8 = QrDecomposition$16;
 
-'use strict';
-
 var Matrix$37 = matrix$12.Matrix;
 
 // https://github.com/lutzroeder/Mapack/blob/master/Source/CholeskyDecomposition.cs
@@ -75604,8 +75227,6 @@ CholeskyDecomposition$16.prototype = {
 
 var cholesky$8 = CholeskyDecomposition$16;
 
-'use strict';
-
 var Matrix$34 = matrix$12.Matrix;
 
 
@@ -75668,16 +75289,12 @@ var decompositions$8 = {
 };
 
 var src$46 = createCommonjsModule(function (module) {
-'use strict';
-
 module.exports = matrix$12.Matrix;
 module.exports.Decompositions = module.exports.DC = decompositions$8;
 });
 
-'use strict';
-
-
-
+var src_1$8 = src$46.Decompositions;
+var src_2$6 = src$46.DC;
 
 var NaiveBayes_1 = NaiveBayes;
 var separateClasses_1 = separateClasses;
@@ -75858,21 +75475,15 @@ var naiveBayes = {
 };
 
 var src$44 = createCommonjsModule(function (module, exports) {
-'use strict';
-
 module.exports = exports = naiveBayes.NaiveBayes;
 exports.separateClasses = naiveBayes.separateClasses;
 });
 
-'use strict';
+var src_1$7 = src$44.separateClasses;
 
 if (!Symbol.species) {
     Symbol.species = Symbol.for('@@species');
 }
-
-'use strict';
-
-
 
 // https://github.com/lutzroeder/Mapack/blob/master/Source/LuDecomposition.cs
 function LuDecomposition$18(matrix) {
@@ -76045,8 +75656,6 @@ LuDecomposition$18.prototype = {
 
 var lu$10 = LuDecomposition$18;
 
-'use strict';
-
 var hypotenuse$28 = function hypotenuse(a, b) {
     var r;
     if (Math.abs(a) > Math.abs(b)) {
@@ -76088,10 +75697,6 @@ var util$28 = {
 	getEmpty2DArray: getEmpty2DArray$6,
 	getFilled2DArray: getFilled2DArray$23
 };
-
-'use strict';
-
-
 
 var hypotenuse$27 = util$28.hypotenuse;
 var getFilled2DArray$22 = util$28.getFilled2DArray;
@@ -76602,10 +76207,6 @@ SingularValueDecomposition$17.prototype = {
 
 var svd$10 = SingularValueDecomposition$17;
 
-'use strict';
-
-
-
 /**
  * @private
  * Check that a row index is not out of bounds
@@ -76758,11 +76359,6 @@ var util$30 = {
 	sumAll: sumAll$12
 };
 
-'use strict';
-
-
-
-
 class BaseView$17 extends abstractMatrix_1$10() {
     constructor(matrix, rows, columns) {
         super();
@@ -76777,10 +76373,6 @@ class BaseView$17 extends abstractMatrix_1$10() {
 }
 
 var base$10 = BaseView$17;
-
-'use strict';
-
-
 
 class MatrixTransposeView$17 extends base$10 {
     constructor(matrix) {
@@ -76799,10 +76391,6 @@ class MatrixTransposeView$17 extends base$10 {
 
 var transpose$12 = MatrixTransposeView$17;
 
-'use strict';
-
-
-
 class MatrixRowView$17 extends base$10 {
     constructor(matrix, row) {
         super(matrix, 1, matrix.columns);
@@ -76820,11 +76408,6 @@ class MatrixRowView$17 extends base$10 {
 }
 
 var row$10 = MatrixRowView$17;
-
-'use strict';
-
-
-
 
 class MatrixSubView$17 extends base$10 {
     constructor(matrix, startRow, endRow, startColumn, endColumn) {
@@ -76846,11 +76429,6 @@ class MatrixSubView$17 extends base$10 {
 
 var sub$10 = MatrixSubView$17;
 
-'use strict';
-
-
-
-
 class MatrixSelectionView$17 extends base$10 {
     constructor(matrix, rowIndices, columnIndices) {
         var indices = util$30.checkIndices(matrix, rowIndices, columnIndices);
@@ -76871,10 +76449,6 @@ class MatrixSelectionView$17 extends base$10 {
 
 var selection$10 = MatrixSelectionView$17;
 
-'use strict';
-
-
-
 class MatrixColumnView$17 extends base$10 {
     constructor(matrix, column) {
         super(matrix, matrix.rows, 1);
@@ -76893,10 +76467,6 @@ class MatrixColumnView$17 extends base$10 {
 
 var column$10 = MatrixColumnView$17;
 
-'use strict';
-
-
-
 class MatrixFlipRowView$17 extends base$10 {
     constructor(matrix) {
         super(matrix, matrix.rows, matrix.columns);
@@ -76914,10 +76484,6 @@ class MatrixFlipRowView$17 extends base$10 {
 
 var flipRow$10 = MatrixFlipRowView$17;
 
-'use strict';
-
-
-
 class MatrixFlipColumnView$17 extends base$10 {
     constructor(matrix) {
         super(matrix, matrix.rows, matrix.columns);
@@ -76934,8 +76500,6 @@ class MatrixFlipColumnView$17 extends base$10 {
 }
 
 var flipColumn$10 = MatrixFlipColumnView$17;
-
-'use strict';
 
 var abstractMatrix_1$10 = abstractMatrix$10;
 
@@ -78747,12 +78311,6 @@ function abstractMatrix$10(superCtor) {
     return Matrix;
 }
 
-'use strict';
-
-
-
-
-
 class Matrix$39 extends abstractMatrix_1$10(Array) {
     constructor(nRows, nColumns) {
         var i;
@@ -78892,8 +78450,6 @@ Matrix$39.abstractMatrix = abstractMatrix_1$10;
 var matrix$14 = {
 	Matrix: Matrix_1$5
 };
-
-'use strict';
 
 const Matrix$41 = matrix$14.Matrix;
 
@@ -79670,8 +79226,6 @@ function cdiv$12(xr, xi, yr, yi) {
 
 var evd$10 = EigenvalueDecomposition$18;
 
-'use strict';
-
 var Matrix$42 = matrix$14.Matrix;
 var hypotenuse$30 = util$28.hypotenuse;
 
@@ -79823,8 +79377,6 @@ QrDecomposition$18.prototype = {
 
 var qr$10 = QrDecomposition$18;
 
-'use strict';
-
 var Matrix$43 = matrix$14.Matrix;
 
 // https://github.com/lutzroeder/Mapack/blob/master/Source/CholeskyDecomposition.cs
@@ -79914,8 +79466,6 @@ CholeskyDecomposition$18.prototype = {
 
 var cholesky$10 = CholeskyDecomposition$18;
 
-'use strict';
-
 var Matrix$40 = matrix$14.Matrix;
 
 
@@ -79978,16 +79528,12 @@ var decompositions$10 = {
 };
 
 var src$50 = createCommonjsModule(function (module) {
-'use strict';
-
 module.exports = matrix$14.Matrix;
 module.exports.Decompositions = module.exports.DC = decompositions$10;
 });
 
-'use strict';
-
-
-
+var src_1$10 = src$50.Decompositions;
+var src_2$8 = src$50.DC;
 
 /**
  * Function that given vector, returns his norm
@@ -80029,11 +79575,6 @@ var utils = {
     pow2array: pow2array,
     featureNormalize: featureNormalize
 };
-
-'use strict';
-
-
-
 
 class PLS {
     constructor(X, Y) {
@@ -80257,11 +79798,6 @@ function maxSumColIndex(data) {
     return maxIndex;
 }
 
-'use strict';
-
-
-
-
 var opls = OPLS;
 
 function OPLS(dataset, predictions, numberOSC) {
@@ -80270,6 +79806,9 @@ function OPLS(dataset, predictions, numberOSC) {
 
     X = utils.featureNormalize(X).result;
     y = utils.featureNormalize(y).result;
+
+    var rows = X.rows;
+    var columns = X.columns;
 
     var sumOfSquaresX = X.clone().mul(X).sum();
     var w = X.transpose().mmul(y);
@@ -80340,7 +79879,8 @@ exports.Utils = utils;
 exports.OPLS = opls;
 });
 
-'use strict';
+var src_1$9 = src$48.Utils;
+var src_2$7 = src$48.OPLS;
 
 const squaredDistance$1 = euclidean_1.squared;
 
@@ -80401,10 +79941,6 @@ function nearestVector(listVectors, vector, options) {
 }
 
 var src$52 = nearestVector;
-
-'use strict';
-
-
 
 /**
  * Calculates the distance matrix for a given array of points
@@ -80518,15 +80054,6 @@ var utils$2 = {
 
 var Picker$1 = createCommonjsModule(function (module) {
 (function(undefined) {
-  'use strict';
-
-  // Node.js usage:
-  //
-  // var Picker = require('RandomSelection').Picker;
-  // var greetingPicker = new Picker(['hello', 'hi', 'howdy']);
-  // var greeting = greetingPicker.pick();
-
-  // Our namespace. Exported members will be attached to this.
   var ns;
 
   // Set our namespace based on whether we are running in Node.js or the browser.
@@ -80572,8 +80099,6 @@ var Picker$1 = createCommonjsModule(function (module) {
 
 }).call(commonjsGlobal);
 });
-
-'use strict';
 
 const Picker = Picker$1.Picker;
 
@@ -80657,9 +80182,6 @@ var initialization = {
 	mostDistant: mostDistant_1
 };
 
-'use strict';
-
-
 const distanceSymbol = Symbol('distance');
 
 /**
@@ -80720,11 +80242,6 @@ KMeansResult.prototype.computeInformation = function (data) {
 };
 
 var KMeansResult_1 = KMeansResult;
-
-'use strict';
-
-
-
 
 const squaredDistance = euclidean_1.squared;
 
@@ -81220,10 +80737,6 @@ var heap$2 = createCommonjsModule(function (module, exports) {
 
 var heap = heap$2;
 
-'use strict';
-
-
-
 function Cluster() {
     this.children = [];
     this.distance = -1;
@@ -81302,11 +80815,6 @@ Cluster.prototype.traverse = function (cb) {
 
 var Cluster_1 = Cluster;
 
-'use strict';
-
-
-
-
 function ClusterLeaf(index) {
     Cluster_1.call(this);
     this.index = index;
@@ -81317,13 +80825,6 @@ function ClusterLeaf(index) {
 util.inherits(ClusterLeaf, Cluster_1);
 
 var ClusterLeaf_1 = ClusterLeaf;
-
-'use strict';
-
-
-
-
-
 
 /**
  * @private
@@ -81561,12 +81062,6 @@ function agnes$1(data, options) {
 }
 
 var agnes_1 = agnes$1;
-
-'use strict';
-
-
-
-
 
 /**
  * @private
@@ -81869,8 +81364,6 @@ function diana$1(data, options) {
 
 var diana_1 = diana$1;
 
-'use strict';
-
 var agnes = agnes_1;
 var diana = diana_1;
 //exports.birch = require('./birch');
@@ -82017,10 +81510,6 @@ NodeHexagonal.prototype.getPosition = function getPosition() {
 };
 
 var nodeHexagonal = NodeHexagonal;
-
-'use strict';
-
-
 
 var defaultOptions$30 = {
     fields: 3,
@@ -82439,15 +81928,9 @@ function getMaxDistance(distance, numWeights) {
 
 var src$56 = SOM;
 
-'use strict';
-
 if (!Symbol.species) {
     Symbol.species = Symbol.for('@@species');
 }
-
-'use strict';
-
-
 
 // https://github.com/lutzroeder/Mapack/blob/master/Source/LuDecomposition.cs
 function LuDecomposition$20(matrix) {
@@ -82620,8 +82103,6 @@ LuDecomposition$20.prototype = {
 
 var lu$12 = LuDecomposition$20;
 
-'use strict';
-
 var hypotenuse$32 = function hypotenuse(a, b) {
     var r;
     if (Math.abs(a) > Math.abs(b)) {
@@ -82663,10 +82144,6 @@ var util$33 = {
 	getEmpty2DArray: getEmpty2DArray$7,
 	getFilled2DArray: getFilled2DArray$26
 };
-
-'use strict';
-
-
 
 var hypotenuse$31 = util$33.hypotenuse;
 var getFilled2DArray$25 = util$33.getFilled2DArray;
@@ -83177,10 +82654,6 @@ SingularValueDecomposition$19.prototype = {
 
 var svd$12 = SingularValueDecomposition$19;
 
-'use strict';
-
-
-
 /**
  * @private
  * Check that a row index is not out of bounds
@@ -83333,11 +82806,6 @@ var util$35 = {
 	sumAll: sumAll$13
 };
 
-'use strict';
-
-
-
-
 class BaseView$19 extends abstractMatrix_1$12() {
     constructor(matrix, rows, columns) {
         super();
@@ -83352,10 +82820,6 @@ class BaseView$19 extends abstractMatrix_1$12() {
 }
 
 var base$12 = BaseView$19;
-
-'use strict';
-
-
 
 class MatrixTransposeView$19 extends base$12 {
     constructor(matrix) {
@@ -83374,10 +82838,6 @@ class MatrixTransposeView$19 extends base$12 {
 
 var transpose$14 = MatrixTransposeView$19;
 
-'use strict';
-
-
-
 class MatrixRowView$19 extends base$12 {
     constructor(matrix, row) {
         super(matrix, 1, matrix.columns);
@@ -83395,11 +82855,6 @@ class MatrixRowView$19 extends base$12 {
 }
 
 var row$12 = MatrixRowView$19;
-
-'use strict';
-
-
-
 
 class MatrixSubView$19 extends base$12 {
     constructor(matrix, startRow, endRow, startColumn, endColumn) {
@@ -83421,11 +82876,6 @@ class MatrixSubView$19 extends base$12 {
 
 var sub$12 = MatrixSubView$19;
 
-'use strict';
-
-
-
-
 class MatrixSelectionView$19 extends base$12 {
     constructor(matrix, rowIndices, columnIndices) {
         var indices = util$35.checkIndices(matrix, rowIndices, columnIndices);
@@ -83446,10 +82896,6 @@ class MatrixSelectionView$19 extends base$12 {
 
 var selection$12 = MatrixSelectionView$19;
 
-'use strict';
-
-
-
 class MatrixColumnView$19 extends base$12 {
     constructor(matrix, column) {
         super(matrix, matrix.rows, 1);
@@ -83468,10 +82914,6 @@ class MatrixColumnView$19 extends base$12 {
 
 var column$12 = MatrixColumnView$19;
 
-'use strict';
-
-
-
 class MatrixFlipRowView$19 extends base$12 {
     constructor(matrix) {
         super(matrix, matrix.rows, matrix.columns);
@@ -83489,10 +82931,6 @@ class MatrixFlipRowView$19 extends base$12 {
 
 var flipRow$12 = MatrixFlipRowView$19;
 
-'use strict';
-
-
-
 class MatrixFlipColumnView$19 extends base$12 {
     constructor(matrix) {
         super(matrix, matrix.rows, matrix.columns);
@@ -83509,8 +82947,6 @@ class MatrixFlipColumnView$19 extends base$12 {
 }
 
 var flipColumn$12 = MatrixFlipColumnView$19;
-
-'use strict';
 
 var abstractMatrix_1$12 = abstractMatrix$12;
 
@@ -85322,12 +84758,6 @@ function abstractMatrix$12(superCtor) {
     return Matrix;
 }
 
-'use strict';
-
-
-
-
-
 class Matrix$45 extends abstractMatrix_1$12(Array) {
     constructor(nRows, nColumns) {
         var i;
@@ -85467,8 +84897,6 @@ Matrix$45.abstractMatrix = abstractMatrix_1$12;
 var matrix$16 = {
 	Matrix: Matrix_1$6
 };
-
-'use strict';
 
 const Matrix$47 = matrix$16.Matrix;
 
@@ -86245,8 +85673,6 @@ function cdiv$13(xr, xi, yr, yi) {
 
 var evd$12 = EigenvalueDecomposition$20;
 
-'use strict';
-
 var Matrix$48 = matrix$16.Matrix;
 var hypotenuse$34 = util$33.hypotenuse;
 
@@ -86398,8 +85824,6 @@ QrDecomposition$20.prototype = {
 
 var qr$12 = QrDecomposition$20;
 
-'use strict';
-
 var Matrix$49 = matrix$16.Matrix;
 
 // https://github.com/lutzroeder/Mapack/blob/master/Source/CholeskyDecomposition.cs
@@ -86489,8 +85913,6 @@ CholeskyDecomposition$20.prototype = {
 
 var cholesky$12 = CholeskyDecomposition$20;
 
-'use strict';
-
 var Matrix$46 = matrix$16.Matrix;
 
 
@@ -86553,15 +85975,12 @@ var decompositions$12 = {
 };
 
 var src$58 = createCommonjsModule(function (module) {
-'use strict';
-
 module.exports = matrix$16.Matrix;
 module.exports.Decompositions = module.exports.DC = decompositions$12;
 });
 
-'use strict';
-
-
+var src_1$11 = src$58.Decompositions;
+var src_2$9 = src$58.DC;
 
 /**
  * Retrieves the sum at each row of the given matrix.
@@ -86620,8 +86039,6 @@ var utils$5 = {
     sumCol: sumCol,
     sumRow: sumRow
 };
-
-'use strict';
 
 function logistic(val) {
     return 1 / (1 + Math.exp(-val));
@@ -86709,13 +86126,6 @@ const ACTIVATION_FUNCTIONS = {
 };
 
 var activationFunctions = ACTIVATION_FUNCTIONS;
-
-'use strict';
-
-
-
-
-
 
 class Layer {
     /**
@@ -86834,10 +86244,6 @@ class Layer {
 
 var Layer_1 = Layer;
 
-'use strict';
-
-
-
 class OutputLayer extends Layer_1 {
     constructor(options) {
         super(options);
@@ -86857,15 +86263,6 @@ class OutputLayer extends Layer_1 {
 }
 
 var OutputLayer_1 = OutputLayer;
-
-'use strict';
-
-
-
-
-
-
-
 
 class FeedForwardNeuralNetworks {
 
@@ -87076,11 +86473,6 @@ var FeedForwardNeuralNetwork = FeedForwardNeuralNetworks;
 var require$$21 = ( src$43 && KNN ) || src$43;
 
 var src = createCommonjsModule(function (module, exports) {
-'use strict';
-
-
-
-// Root packages
 exports.ArrayUtils = exports.AU = src$2;
 exports.BitArray = src$4;
 exports.HashTable = HashTable_1;
@@ -87151,11 +86543,27 @@ NN.SOM = src$56;
 NN.FNN = FeedForwardNeuralNetwork;
 });
 
+var src_1 = src.ArrayUtils;
+var src_2 = src.AU;
+var src_3 = src.BitArray;
+var src_4 = src.HashTable;
+var src_5 = src.Matrix;
+var src_6 = src.PadArray;
+var src_7 = src.Regression;
+var src_8 = src.binarySearch;
+var src_9 = src.numSort;
+var src_10 = src.Math;
+var src_11 = src.Stat;
+var src_12 = src.Optimization;
+var src_13 = src.RNG;
+var src_14 = src.SL;
+var src_15 = src.Clust;
+var src_16 = src.NN;
+var src_17 = src.nn;
+
 var random$2 = createCommonjsModule(function (module) {
 /*jshint eqnull:true*/
 (function (root) {
-  "use strict";
-
   var GLOBAL_KEY = "Random";
 
   var imul = (typeof Math.imul !== "function" || Math.imul(0xffffffff, 5) !== -5 ?
@@ -88798,7 +88206,7 @@ const max = a => a.concat([]).sort((x, y) => x < y)[ 0 ];
 const min = a => a.concat([]).sort((x, y) => x > y)[ 0 ];
 const sd = src.Stat.array.standardDeviation;//(a, av) => Math.sqrt(avg(a.map(x => (x - av) * x)));
 
-async function loadCSVURI(filepath) {
+function loadCSVURI(filepath) {
   const reqMethod = (filepath.search('https', 'gi') > -1) ? https.get : http.get;
   return new Promise((resolve, reject) => {
     const csvData = [];
@@ -88822,7 +88230,7 @@ async function loadCSVURI(filepath) {
   })
 }
 
-async function loadCSV(filepath) {
+function loadCSV(filepath) {
   if (validUrl.isUri(filepath)) {
     return loadCSVURI(filepath);
   } else {
@@ -88909,215 +88317,218 @@ const cross_validation = {
     return dataset_split;
   }
 };
-
-const preprocessing = {
-  RawData: class RawData {
-    constructor(data=[]) {
-      this.data = data;
-      this.labels = new Map();
-      this.encoders = new Map();
-    }
-    columnArray(name, options = {}) {
-      const config = Object.assign({
-        prefilter: () => true,
-        filter: () => true,
-        replace: {
-          test: undefined,
-          value: undefined,
-        },
-        parseInt: false,
-        parseIntBase: 10,
-        parseFloat: (options.scale) ? true : false,
-        scale: false,
-      }, options);
-      // console.log({name,config})
-      const modifiedColumn = this.data
-        .filter(config.prefilter)
-        .reduce((result, val, index, arr) => { 
-          let objVal = val[ name ];
-          let returnVal = (typeof config.replace.test === 'function')
-            ? config.replace.test(objVal)
-              ? typeof config.replace.value === 'function'
-                ? config.replace.value(result, val, index, arr, name)
-                : config.replace.value
-              : objVal
-            : objVal;
-          if (config.filter(returnVal)) {
-            if (config.parseInt) result.push(parseInt(returnVal, config.parseIntBase));
-            else  if (config.parseFloat) result.push(parseFloat(returnVal));
-            else result.push(returnVal);
-          }
-        return result;
-        }, []);
-      return (config.scale)
-        ? (config.scale === 'standard') 
-          ? util$1.StandardScaler(modifiedColumn)
-          : util$1.MinMaxScaler(modifiedColumn)
-        : modifiedColumn;
-    }
-    columnReplace(name, options = {}) {
-      const config = Object.assign({
-        strategy: 'mean',
-        empty: true,
-        arrayOptions: {
-          parseFloat: true,
-          filter: val => val,
-        },
-        labelOptions:{},
-      }, options);
-      let replaceVal;
-      let replace = {
-        test: val => !val,
-        value: replaceVal,
-      };
-      switch (config.strategy) {
-        case 'label':
-        case 'labelEncoder':
-          replaceVal = this.labelEncoder(name, config.labelOptions);
-          replace = {
-            test: val => true,
-            value: (result, val, index, arr) => replaceVal[ index ],
-          };
-          break;
-        case 'onehot':
-        case 'oneHot':
-        case 'oneHotEncode':
-        case 'oneHotEncoder':
-          replaceVal = this.oneHotEncoder(name, config.oneHotOptions);
-          replace = {
-            test: val => true,
-            value: (result, val, index, arr) => replaceVal[ index ],
-          };
-          return replaceVal;
-          break;
-        default:
-          replaceVal = src.Stat.array[ config.strategy ](this.columnArray(name, config.arrayOptions));
-          replace.value = replaceVal;
-          break;  
-      }
-      return this.columnArray(name, {
-        replace,
-        scale: options.scale,
-      });
-    }
-    labelEncoder(name, options) {
-      const config = Object.assign({
-        n_values: "auto",
-        categorical_features: "all",
-        // dtype: np.float64,
-        sparse: true,
-        handle_unknown: 'error',
-        binary: false,
-      }, options);
-      const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
-      const labels = new Map(
-        Array.from(new Set(labelData).values())
-          .reduce((result, val, i, arr) => {
-            result.push([ val, i ]);
-            result.push([ i, val ]);
-            return result;
-          }, [])
-      );
-      this.labels.set(name, labels);
-      const labeledData = (config.binary)
-        ? labelData.map(label => {
-          // console.log(label);
-          if (!label) return 0;
-          switch (label) {
-            case 'N':
-            case 'n':
-            case 'NO':
-            case 'No':
-            case 'no':
-            case 'False':
-            case 'False':
-            case 'F':
-            case 'f':
-              return 0;
-            default:
-              return 1;  
-          }
-        })
-        : labelData.map(label => labels.get(label));
-      return labeledData;
-    }
-    labelDecode(name, options) {
-      const config = Object.assign({
-      }, options);
-      const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
-      return labelData.map(val => this.labels.get(name).get(val));
-    }
-    oneHotEncoder(name, options) {
-      const config = Object.assign({
-        // n_values: "auto",
-        categorical_features: "all",
-        prefix: true,
-        // dtype: np.float64,
-        // sparse: True,
-        // handle_unknown: 'error'
-      }, options);
-      const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
-      const labels = Array.from(new Set(labelData).values());
-      const encodedData = labelData.reduce(
-        (result, val, index, arr) => { 
-          labels.forEach(encodedLabel => {
-            const oneHotLabelArrayName = `${name}_${encodedLabel}`;
-            const oneHotVal = (val === encodedLabel) ? 1 : 0;
-            if (Array.isArray(result[ oneHotLabelArrayName ])) {
-              result[ oneHotLabelArrayName ].push(oneHotVal);
-            } else {
-              result[ oneHotLabelArrayName ] = [oneHotVal];
-            }
-          });
-          return result;
-        },
-        {});
-      this.encoders.set(name, {
-        labels,
-        prefix: `${name}_`,
-      });
-      return encodedData;
-    }
-    fitColumns(options) {
-      const config = Object.assign({
-        columns: [
-        ],
-      }, options);
-      const fittedColumns = config.columns
-        .reduce((result, val, index, arr) => { 
-          let replacedColumn = this.columnReplace(val.name, val.options);
-          if (Array.isArray(replacedColumn)) {
-            replacedColumn = replacedColumn.map(columnVal => ({ [ val.name ]: columnVal }));
-            result[ val.name ] = replacedColumn;
-          } else {
-            Object.keys(replacedColumn).forEach(repColName => {
-              result[ repColName ] = replacedColumn[ repColName ].map(columnVal => ({ [ repColName]: columnVal }));
-            });
-          }
-          return result;
-        }, {});
-      if (Object.keys(fittedColumns)) {
-        const columnNames = Object.keys(fittedColumns);
-        const fittedData = fittedColumns[ config.columns[ 0 ].name ]
-          .reduce((result, val, index, arr) => {
-            const returnObj = {};
-            columnNames.forEach(colName => {
-              returnObj[ colName ] = fittedColumns[ colName ][ index ][colName];
-            });
-            result.push(returnObj);
-            return result;
-          }, []);
-        this.data = this.data.map((val, index) => Object.assign(val,fittedData[index]));
-      }
-      return this.data;
-    }
+class RawData {
+  constructor(data=[]) {
+    this.data = [...data];
+    this.labels = new Map();
+    this.encoders = new Map();
+    return this;
   }
+  columnArray(name, options = {}) {
+    const config = Object.assign({
+      prefilter: () => true,
+      filter: () => true,
+      replace: {
+        test: undefined,
+        value: undefined,
+      },
+      parseInt: false,
+      parseIntBase: 10,
+      parseFloat: (options.scale) ? true : false,
+      scale: false,
+    }, options);
+    // console.log({name,config})
+    const modifiedColumn = this.data
+      .filter(config.prefilter)
+      .reduce((result, val, index, arr) => { 
+        let objVal = val[ name ];
+        let returnVal = (typeof config.replace.test === 'function')
+          ? config.replace.test(objVal)
+            ? typeof config.replace.value === 'function'
+              ? config.replace.value(result, val, index, arr, name)
+              : config.replace.value
+            : objVal
+          : objVal;
+        if (config.filter(returnVal)) {
+          if (config.parseInt) result.push(parseInt(returnVal, config.parseIntBase));
+          else  if (config.parseFloat) result.push(parseFloat(returnVal));
+          else result.push(returnVal);
+        }
+      return result;
+      }, []);
+    return (config.scale)
+      ? (config.scale === 'standard') 
+        ? util$1.StandardScaler(modifiedColumn)
+        : util$1.MinMaxScaler(modifiedColumn)
+      : modifiedColumn;
+  }
+  columnReplace(name, options = {}) {
+    const config = Object.assign({
+      strategy: 'mean',
+      empty: true,
+      arrayOptions: {
+        parseFloat: true,
+        filter: val => val,
+      },
+      labelOptions:{},
+    }, options);
+    let replaceVal;
+    let replace = {
+      test: val => !val,
+      value: replaceVal,
+    };
+    switch (config.strategy) {
+      case 'label':
+      case 'labelEncoder':
+        replaceVal = this.labelEncoder(name, config.labelOptions);
+        replace = {
+          test: val => true,
+          value: (result, val, index, arr) => replaceVal[ index ],
+        };
+        break;
+      case 'onehot':
+      case 'oneHot':
+      case 'oneHotEncode':
+      case 'oneHotEncoder':
+        replaceVal = this.oneHotEncoder(name, config.oneHotOptions);
+        replace = {
+          test: val => true,
+          value: (result, val, index, arr) => replaceVal[ index ],
+        };
+        return replaceVal;
+        break;
+      default:
+        replaceVal = src.Stat.array[ config.strategy ](this.columnArray(name, config.arrayOptions));
+        replace.value = replaceVal;
+        break;  
+    }
+    return this.columnArray(name, {
+      replace,
+      scale: options.scale,
+    });
+  }
+  labelEncoder(name, options) {
+    const config = Object.assign({
+      n_values: "auto",
+      categorical_features: "all",
+      // dtype: np.float64,
+      sparse: true,
+      handle_unknown: 'error',
+      binary: false,
+    }, options);
+    const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
+    const labels = new Map(
+      Array.from(new Set(labelData).values())
+        .reduce((result, val, i, arr) => {
+          result.push([ val, i ]);
+          result.push([ i, val ]);
+          return result;
+        }, [])
+    );
+    this.labels.set(name, labels);
+    const labeledData = (config.binary)
+      ? labelData.map(label => {
+        // console.log(label);
+        if (!label) return 0;
+        switch (label) {
+          case false:
+          case 'N':
+          case 'n':
+          case 'NO':
+          case 'No':
+          case 'no':
+          case 'False':
+          case 'False':
+          case 'F':
+          case 'f':
+            return 0;
+          default:
+            return 1;  
+        }
+      })
+      : labelData.map(label => labels.get(label));
+    return labeledData;
+  }
+  labelDecode(name, options) {
+    const config = Object.assign({
+    }, options);
+    const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
+    return labelData.map(val => this.labels.get(name).get(val));
+  }
+  oneHotEncoder(name, options) {
+    const config = Object.assign({
+      // n_values: "auto",
+      categorical_features: "all",
+      prefix: true,
+      // dtype: np.float64,
+      // sparse: True,
+      // handle_unknown: 'error'
+    }, options);
+    const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
+    const labels = Array.from(new Set(labelData).values());
+    const encodedData = labelData.reduce(
+      (result, val, index, arr) => { 
+        labels.forEach(encodedLabel => {
+          const oneHotLabelArrayName = `${name}_${encodedLabel}`;
+          const oneHotVal = (val === encodedLabel) ? 1 : 0;
+          if (Array.isArray(result[ oneHotLabelArrayName ])) {
+            result[ oneHotLabelArrayName ].push(oneHotVal);
+          } else {
+            result[ oneHotLabelArrayName ] = [oneHotVal];
+          }
+        });
+        return result;
+      },
+      {});
+    this.encoders.set(name, {
+      labels,
+      prefix: `${name}_`,
+    });
+    return encodedData;
+  }
+  fitColumns(options) {
+    const config = Object.assign({
+      columns: [
+      ],
+    }, options);
+    const fittedColumns = config.columns
+      .reduce((result, val, index, arr) => { 
+        let replacedColumn = this.columnReplace(val.name, val.options);
+        if (Array.isArray(replacedColumn)) {
+          replacedColumn = replacedColumn.map(columnVal => ({ [ val.name ]: columnVal }));
+          result[ val.name ] = replacedColumn;
+        } else {
+          Object.keys(replacedColumn).forEach(repColName => {
+            result[ repColName ] = replacedColumn[ repColName ].map(columnVal => ({ [ repColName]: columnVal }));
+          });
+        }
+        return result;
+      }, {});
+    if (Object.keys(fittedColumns)) {
+      const columnNames = Object.keys(fittedColumns);
+      const fittedData = fittedColumns[ config.columns[ 0 ].name ]
+        .reduce((result, val, index, arr) => {
+          const returnObj = {};
+          columnNames.forEach(colName => {
+            returnObj[ colName ] = fittedColumns[ colName ][ index ][colName];
+          });
+          result.push(returnObj);
+          return result;
+        }, []);
+      this.data = this.data.map((val, index) => Object.assign({},val,fittedData[index]));
+    }
+    return this.data;
+  }
+}
+const preprocessing = {
+  RawData, 
 };
 
 exports.loadCSVURI = loadCSVURI;
 exports.loadCSV = loadCSV;
 exports.util = util$1;
 exports.cross_validation = cross_validation;
+exports.RawData = RawData;
 exports.preprocessing = preprocessing;
 
 Object.defineProperty(exports, '__esModule', { value: true });
