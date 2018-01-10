@@ -7,10 +7,6 @@
 In Python, data preperation is typically done in a DataFrame, jskit-learn encourages a more R like workflow where the data prepration is in it's native structure.
 
 
-
-##### Python
-
-
 ### Installation
 ```sh
 $ npm i jskit-learn
