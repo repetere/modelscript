@@ -2,7 +2,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/repetere/jskit-learn/badge.svg?branch=master)](https://coveralls.io/github/repetere/jskit-learn?branch=master) [![Build Status](https://travis-ci.org/repetere/jskit-learn.svg?branch=master)](https://travis-ci.org/repetere/jskit-learn)
 
 ### Description
-jskit-learn is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When jskit-learn can be used with ML.js, pandas-js, and numjs, to approximate the equialent R/Python tool chain in JavaScript.
+**JSkit-learn** is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. **JSkit-learn** can be used with [ML.js](https://github.com/mljs/ml), [pandas-js](https://github.com/StratoDem/pandas-js), and [numjs](https://github.com/numjs/numjs), to approximate the equialent R/Python tool chain in JavaScript.
 
 In Python, data preperation is typically done in a DataFrame, jskit-learn encourages a more R like workflow where the data prepration is in it's native structure.
 
