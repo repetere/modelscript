@@ -2,13 +2,9 @@
 [![Coverage Status](https://coveralls.io/repos/github/repetere/jskit-learn/badge.svg?branch=master)](https://coveralls.io/github/repetere/jskit-learn?branch=master) [![Build Status](https://travis-ci.org/repetere/jskit-learn.svg?branch=master)](https://travis-ci.org/repetere/jskit-learn)
 
 ### Description
-jskit-learn is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When jskit-learn used with ML.js, pandas-js, and numjs, you're left with the equialent R/Python toolset in JavaScript.
+**JSkit-learn** is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. **JSkit-learn** can be used with [ML.js](https://github.com/mljs/ml), [pandas-js](https://github.com/StratoDem/pandas-js), and [numjs](https://github.com/numjs/numjs), to approximate the equialent R/Python tool chain in JavaScript.
 
 In Python, data preperation is typically done in a DataFrame, jskit-learn encourages a more R like workflow where the data prepration is in it's native structure.
-
-
-
-##### Python
 
 
 ### Installation
@@ -16,9 +12,44 @@ In Python, data preperation is typically done in a DataFrame, jskit-learn encour
 $ npm i jskit-learn
 ```
 
-### [Full Documentation](https://github.com/repetere/jskit-learn/blob/master/doc/api.md)
+### [Full Documentation](https://github.com/repetere/jskit-learn/blob/master/docs/api.md)
 
 ### Usage (basic)
+
+```javascript
+"jskit-learn" : { 
+  loadCSV: [Function: loadCSV], //asynchronously loads CSVs, either a filepath or a remote URI
+  cross_validation: { 
+    train_test_split: [Function: train_test_split], // splits data into training and testing sets
+    cross_validation_split: [Function: kfolds], //splits data into k-folds
+  },
+  preprocessing: { 
+    Class RawData: [ //class for manipulating an array of objects (typically from CSV data)      
+      columnArray(columnName,options), // - returns a new array of a selected column from an array of objects, can filter, scale and replace values
+      columnReplace(columnName,options), // - returns a new array of a selected column from an array of objects and replaces empty values, encodes values and scales values
+      labelEncoder(columnName,options), // - returns a new array and label encodes a selected column
+      labelDecode(columnName,options), // - returns a new array and decodes an encoded column back to the original array values
+      oneHotEncoder(columnName,options), // - returns a new object of one hot encoded values
+      fitColumns(options), // - mutates data property of RawData by replacing multiple columns in a single command
+    ]
+  },
+  util: { 
+    range: [Function], // range helper function
+    rangeRight: [Function], //range right helper function
+    scale: [Function: scale], //scale / normalize data
+    avg: [Function: arithmeticMean], // aritmatic mean
+    mean: [Function: arithmeticMean], // aritmatic mean
+    sum: [Function: sum],
+    max: [Function: max],
+    min: [Function: min],
+    sd: [Function: standardDeviation], // standard deviation
+    StandardScaler: [Function: StandardScaler], // standardization (z-scores)
+    MinMaxScaler: [Function: MinMaxScaler], // min-max scaling
+  },
+}
+```
+
+### Examples (JavaScript / Python / R)
 
 #### Loading CSV Data
 
@@ -250,13 +281,13 @@ $ npm i -g grunt-cli jsdoc-to-markdown
 For generating documentation
 ```sh
 $ grunt doc
-$ jsdoc2md lib/**/*.js index.js > doc/api.md
+$ jsdoc2md dist/**/*.cjs.js  > docs/api.md
 ```
 
 
 
 ### Notes
-Check out [https://github.com/repetere/jskit-learn](https://github.com/repetere/jskit-learn) for the full Lowkie Documentation
+Check out [https://github.com/repetere/jskit-learn](https://github.com/repetere/jskit-learn) for the full jskit-learn Documentation
 
 #### A quick word about asynchronous JavaScript
 Most machine learning tutorials in Python and R are not using their asynchronous equivalents; however, there is a bias in JavaScript to default to non-blocking operations. 

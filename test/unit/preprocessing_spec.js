@@ -2,8 +2,7 @@
 const jsk = require('../../dist/jskit-learn.cjs');
 const ml = require('ml');
 const expect = require('chai').expect;
-const csvData = [
-  {
+const csvData = [{
     'Country': 'Brazil',
     'Age': '44',
     'Salary': '72000',
@@ -66,7 +65,7 @@ const csvData = [
 ];
 const unmodifiedCSVData = [...csvData];
 
-describe('preprocessing', function () {
+describe('preprocessing', function() {
   describe('RawData class', () => {
     const CSVRawData = new jsk.preprocessing.RawData(csvData);
     describe('constructor', () => {
@@ -80,7 +79,7 @@ describe('preprocessing', function () {
       const countryColumn = CSVRawData.columnArray('Country');
       it('should select a column from CSV Data by name', () => {
         expect(countryColumn.length).to.equal(10);
-        expect(countryColumn[ 0 ]).to.equal(csvData[ 0 ].Country);
+        expect(countryColumn[0]).to.equal(csvData[0].Country);
       });
       it('should prefilter the dataset', () => {
         const countryColumnPreFiltered = CSVRawData.columnArray('Country', {
@@ -90,7 +89,7 @@ describe('preprocessing', function () {
       });
       it('should filter the dataset', () => {
         const countryColumnPostFiltered = CSVRawData.columnArray('Country', {
-          filter: val=> val === 'Brazil',
+          filter: val => val === 'Brazil',
         });
         expect(countryColumnPostFiltered.length).to.equal(4);
       });
@@ -104,7 +103,7 @@ describe('preprocessing', function () {
         const ageColumnReplacedFuncVal = CSVRawData.columnArray('Age', {
           replace: {
             test: val => val,
-            value: (result, val, index, arr, name) => parseInt(val[ name ]) * 10,
+            value: (result, val, index, arr, name) => parseInt(val[name]) * 10,
           },
         });
         expect(ageColumnReplacedFuncVal[0]).to.equal(440);
@@ -112,10 +111,10 @@ describe('preprocessing', function () {
       });
       it('should convert vals to numbers', () => {
         const ageColumnInt = CSVRawData.columnArray('Age', {
-          parseInt:true,
+          parseInt: true,
         });
         const ageColumnFloat = CSVRawData.columnArray('Age', {
-          parseFloat:true,
+          parseFloat: true,
         });
         expect(ageColumnInt[0]).to.be.a('number');
         expect(ageColumnFloat[0]).to.be.a('number');
@@ -123,7 +122,7 @@ describe('preprocessing', function () {
       it('should standardize scale values', () => {
         const salaryColumn = CSVRawData.columnArray('Salary', {
           prefilter: row => row.Salary,
-          parseInt:true,
+          parseInt: true,
         });
         const standardScaleSalary = CSVRawData.columnArray('Salary', {
           prefilter: row => row.Salary,
@@ -136,7 +135,7 @@ describe('preprocessing', function () {
       it('should z-score / MinMax scale values', () => {
         const salaryColumn = CSVRawData.columnArray('Salary', {
           prefilter: row => row.Salary,
-          parseInt:true,
+          parseInt: true,
         });
         const minMaxScaleSalary = CSVRawData.columnArray('Salary', {
           prefilter: row => row.Salary,
@@ -158,22 +157,22 @@ describe('preprocessing', function () {
           binary: true,
         });
         encodedPurchased = binaryEncodedColumn;
-        expect(binaryEncodedColumn).to.include.members([0, 1,]);
+        expect(binaryEncodedColumn).to.include.members([0, 1, ]);
       });
       it('should label encode', () => {
         const labelEncodedColumn = CSVRawData.labelEncoder('Country');
         encodedCountry = labelEncodedColumn;
         // console.log({ CSVRawData }, CSVRawData.data);
-        expect(labelEncodedColumn).to.include.members([0, 1, 2,]);
+        expect(labelEncodedColumn).to.include.members([0, 1, 2, ]);
         labelEncodedColumn.forEach(lec => expect(lec).to.be.a('number'));
         expect(CSVRawData.labels.size).equal(2);
       });
       it('should decode labels', () => {
         const decodedCountry = CSVRawData.labelDecode('Country', { data: encodedCountry, });
         // console.log({ decodedCountry, encodedCountry });
-        expect(decodedCountry[ 0 ]).to.be.a('string');
-        expect(decodedCountry[ 0 ]).to.eql('Brazil');
-        expect(CSVRawData.labels.get('Country').get(decodedCountry[ 0 ])).to.equal(encodedCountry[ 0 ]);
+        expect(decodedCountry[0]).to.be.a('string');
+        expect(decodedCountry[0]).to.eql('Brazil');
+        expect(CSVRawData.labels.get('Country').get(decodedCountry[0])).to.equal(encodedCountry[0]);
       });
     });
     describe('oneHotEncoder', () => {
@@ -182,10 +181,10 @@ describe('preprocessing', function () {
         // console.log({ oneHotCountry },CSVRawData);
         expect(Object.keys(oneHotCountry).length).to.equal(3);
         expect(oneHotCountry).to.haveOwnProperty('Country_Brazil');
-        expect(csvData[ 0 ].Country).to.equal('Brazil');
-        expect(oneHotCountry.Country_Brazil[ 0 ]).to.eql(1);
-        expect(oneHotCountry.Country_Mexico[ 0 ]).to.eql(0);
-        expect(oneHotCountry.Country_Ghana[ 0 ]).to.eql(0);
+        expect(csvData[0].Country).to.equal('Brazil');
+        expect(oneHotCountry.Country_Brazil[0]).to.eql(1);
+        expect(oneHotCountry.Country_Mexico[0]).to.eql(0);
+        expect(oneHotCountry.Country_Ghana[0]).to.eql(0);
         expect(CSVRawData.encoders.size).to.equal(1);
         expect(CSVRawData.encoders.has('Country')).to.be.true;
       });
@@ -250,7 +249,7 @@ describe('preprocessing', function () {
             test: val => !val,
             value: salaryMean,
           },
-          parseFloat:true,
+          parseFloat: true,
         });
         const scaledSalaryColumn = jsk.util.StandardScaler(formattedSalaryColumn);
         const standardScaleSalary = CSVRawData.columnReplace('Salary', {
@@ -259,7 +258,7 @@ describe('preprocessing', function () {
         expect(standardScaleSalary).to.include.ordered.members(scaledSalaryColumn);
       });
     });
-    describe('fitColumns', () => { 
+    describe('fitColumns', () => {
       it('should fit multiple columns', () => {
         const unmodifiedData = new jsk.RawData(unmodifiedCSVData);
         const fittedOriginalData = new jsk.RawData([...unmodifiedCSVData]);

@@ -2,14 +2,14 @@
 const path = require('path');
 const testPaths = 'test/**/*.js';
 
-module.exports = function (grunt) {
+module.exports = function(grunt) {
   grunt.initConfig({
     mocha_istanbul: {
       coveralls: {
         src: testPaths, // multiple folders also works
         options: {
           coverageFolder: 'coverage', // will check both coverage folders and merge the coverage results
-          coverage:true, // this will make the grunt.event.on('coverage') event listener to be triggered
+          coverage: true, // this will make the grunt.event.on('coverage') event listener to be triggered
           check: {
             lines: 5,
             branches: 5,
@@ -17,7 +17,7 @@ module.exports = function (grunt) {
             statements: 5,
           },
           // root: './lib', // define where the cover task should consider the root of libraries that are covered by tests
-          reportFormats: ['cobertura', 'lcovonly',],
+          reportFormats: ['cobertura', 'lcovonly', ],
         },
       },
     },
@@ -35,13 +35,13 @@ module.exports = function (grunt) {
       },
     },
     coveralls: {
-    // Options relevant to all targets
+      // Options relevant to all targets
       options: {
         // When true, grunt-coveralls will only print a warning rather than
         // an error, to prevent CI builds from failing unnecessarily (e.g. if
         // coveralls.io is down). Optional, defaults to false.
         force: false,
-        excludes: ['**/bin/**',],
+        excludes: ['**/bin/**', ],
       },
 
       all: {
@@ -54,7 +54,7 @@ module.exports = function (grunt) {
     },
     simplemocha: {
       options: {
-        globals: ['should', 'navigator', 'x',],
+        globals: ['should', 'navigator', 'x', ],
         timeout: 3000,
         ignoreLeaks: true,
         ui: 'bdd',
@@ -66,9 +66,9 @@ module.exports = function (grunt) {
     },
     jsdoc: {
       dist: {
-        src: ['lib/*.js',],
+        src: ['dist/*.cjs.js', 'README.md', ],
         options: {
-          destination: 'doc/html',
+          destination: 'docs',
         },
       },
     },
