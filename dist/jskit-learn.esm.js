@@ -369,6 +369,9 @@ const ReplacedAgeMeanColumn = dataset.columnReplace('Age',{strategy:'mean'});
         case 'reduce':
           replaceVal = this.columnReducer(name, config.reducerOptions); 
           return replaceVal;  
+        case 'merge':
+          replaceVal = this.columnMerge(name, config.mergeData); 
+          return replaceVal;  
         default:
           replaceVal = ml.Stat.array[config.strategy](this.columnArray(name, config.arrayOptions));
           replace.value = replaceVal;
@@ -520,6 +523,20 @@ CSVDataSet.columnReducer('DoubleAge', {
       [ name ]: this.columnArray(options.columnName, options.columnOptions).reduce(options.reducer, []),
     };
     return newColumn;
+  }
+  /**
+   * it returns a new column that is merged onto the data set
+   * @example 
+CSVDataSet.columnMerge('DoubleAge', [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ]); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }
+   * @param {String} name - name of new Column 
+   * @param {Array} data - new dataset data  
+   * @returns {Object} 
+   */
+  columnMerge(name, data=[]) {
+    if (this.data.length !== data.length) throw new RangeError(`Merged data column must have the same length(${data.length}) as the DataSet's length (${this.data.length})`);
+    return {
+      [name]: data,
+    };
   }
     /**
      * mutates data property of DataSet by replacing multiple columns in a single command

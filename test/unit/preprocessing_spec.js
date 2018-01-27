@@ -312,6 +312,36 @@ describe('preprocessing', function() {
       });
     });
     describe('fitColumns', () => {
+      const extraColumn = [ 89, 12, 32, 45, 53, 52, 56, 21, 34, 56 ];
+      it('should merge columns', () => {
+        const fittedOriginalData = new jsk.DataSet([...unmodifiedCSVData,]);
+        fittedOriginalData.fitColumns({
+          columns: [
+            { name: 'Age', },
+            {
+              name: 'Extra',
+              options: {
+                strategy: 'merge',
+                mergeData: extraColumn,
+              },
+            },
+          ],
+        });
+        expect(fittedOriginalData.columnArray('Extra')).to.eql(extraColumn);
+      });
+      it('should only merge columns if data length matches', () => { 
+        const fittedOriginalData = new jsk.DataSet([ ...unmodifiedCSVData, ]);
+        const newColumn = fittedOriginalData.columnMerge('err', [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 ]);
+        expect(newColumn).to.be.an('Object');
+        expect(newColumn).to.haveOwnProperty('err');
+        expect(newColumn.err).to.be.an('array');
+        try {
+          fittedOriginalData.columnMerge('err', [ 1, 2 ]);
+        } catch (e) {
+          expect(e).to.be.an('error');
+          expect(e.toString()).to.eql(`RangeError: Merged data column must have the same length(2) as the DataSet's length (${10})`);
+        }
+      });
       it('should fit multiple columns', () => {
         const unmodifiedData = new jsk.DataSet(unmodifiedCSVData);
         const fittedOriginalData = new jsk.DataSet([...unmodifiedCSVData,]);
