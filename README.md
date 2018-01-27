@@ -24,7 +24,7 @@ $ npm i jskit-learn
     cross_validation_split: [Function: kfolds], //splits data into k-folds
   },
   preprocessing: { 
-    Class RawData: [ //class for manipulating an array of objects (typically from CSV data)      
+    Class DataSet: [ //class for manipulating an array of objects (typically from CSV data)      
       columnArray(columnName,options), // - returns a new array of a selected column from an array of objects, can filter, scale and replace values
       columnReplace(columnName,options), // - returns a new array of a selected column from an array of objects and replaces empty values, encodes values and scales values
       labelEncoder(columnName,options), // - returns a new array and label encodes a selected column
@@ -32,7 +32,7 @@ $ npm i jskit-learn
       oneHotEncoder(columnName,options), // - returns a new object of one hot encoded values
       columnMatrix(columnName,options), // - returns a matrix of values from multiple columns
       columnReducer(newColumnName,options), // - returns a new array of a selected column that is passed a reducer function, this is used to create new columns for aggregate statistics
-      fitColumns(options), // - mutates data property of RawData by replacing multiple columns in a single command
+      fitColumns(options), // - mutates data property of DataSet by replacing multiple columns in a single command
     ]
   },
   util: { 
@@ -65,7 +65,7 @@ let dataset;
 //In JavaScript, by default most I/O Operations are asynchronous, see the notes section for more
 jsk.loadCSV('/some/file/path.csv')
   .then(csvData=>{
-    dataset = new jsk.RawData(csvData);
+    dataset = new jsk.DataSet(csvData);
     console.log({csvData});
     /* csvData [{
       'Country': 'Brazil',
@@ -120,7 +120,7 @@ dataset.fitColumns({
 });
 /*
 dataset
-class RawData
+class DataSet
   data:[
     {
       'Country': 'Brazil',
@@ -309,7 +309,7 @@ const plt = mpn.plot;
 
 void async () => {
   const csvData = await loadCSV('../Data.csv');
-  const rawData = new preprocessing.RawData(csvData);
+  const rawData = new preprocessing.DataSet(csvData);
   const fittedData = rawData.fitColumns({
     columns: [
       { name: 'Age' },

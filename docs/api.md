@@ -1,9 +1,9 @@
 ## Classes
 
 <dl>
-<dt><a href="#RawData">RawData</a></dt>
+<dt><a href="#DataSet">DataSet</a></dt>
 <dd></dd>
-<dt><a href="#RawData">RawData</a></dt>
+<dt><a href="#DataSet">DataSet</a></dt>
 <dd></dd>
 </dl>
 
@@ -29,30 +29,31 @@
 </dd>
 </dl>
 
-<a name="RawData"></a>
+<a name="DataSet"></a>
 
-## RawData
+## DataSet
 **Kind**: global class  
 
-* [RawData](#RawData)
-    * [new RawData()](#new_RawData_new)
-    * [new RawData(dataset)](#new_RawData_new)
-    * [.columnMatrix([vectors])](#RawData+columnMatrix) ⇒ <code>Array</code>
-    * [.columnArray(name, options)](#RawData+columnArray) ⇒ <code>array</code>
-    * [.columnReplace(name, options)](#RawData+columnReplace) ⇒ <code>array</code> \| <code>Array.&lt;Object&gt;</code>
-    * [.labelEncoder(name, options)](#RawData+labelEncoder) ⇒ <code>array</code>
-    * [.labelDecode(name, options)](#RawData+labelDecode) ⇒ <code>array</code>
-    * [.oneHotEncoder(name, options)](#RawData+oneHotEncoder) ⇒ <code>Object</code>
-    * [.fitColumns(options)](#RawData+fitColumns) ⇒ <code>Array.&lt;Object&gt;</code>
+* [DataSet](#DataSet)
+    * [new DataSet()](#new_DataSet_new)
+    * [new DataSet(dataset)](#new_DataSet_new)
+    * [.columnMatrix([vectors])](#DataSet+columnMatrix) ⇒ <code>Array</code>
+    * [.columnArray(name, options)](#DataSet+columnArray) ⇒ <code>array</code>
+    * [.columnReplace(name, options)](#DataSet+columnReplace) ⇒ <code>array</code> \| <code>Array.&lt;Object&gt;</code>
+    * [.labelEncoder(name, options)](#DataSet+labelEncoder) ⇒ <code>array</code>
+    * [.labelDecode(name, options)](#DataSet+labelDecode) ⇒ <code>array</code>
+    * [.oneHotEncoder(name, options)](#DataSet+oneHotEncoder) ⇒ <code>Object</code>
+    * [.columnReducer(name, options)](#DataSet+columnReducer) ⇒ <code>Object</code>
+    * [.fitColumns(options)](#DataSet+fitColumns) ⇒ <code>Array.&lt;Object&gt;</code>
 
-<a name="new_RawData_new"></a>
+<a name="new_DataSet_new"></a>
 
-### new RawData()
+### new DataSet()
 class for manipulating an array of objects, typically from CSV data
 
-<a name="new_RawData_new"></a>
+<a name="new_DataSet_new"></a>
 
-### new RawData(dataset)
+### new DataSet(dataset)
 creates a new raw data instance for preprocessing data for machine learning
 
 
@@ -62,14 +63,14 @@ creates a new raw data instance for preprocessing data for machine learning
 
 **Example**  
 ```js
-const dataset = new jsk.RawData(csvData);
+const dataset = new jsk.DataSet(csvData);
 ```
-<a name="RawData+columnMatrix"></a>
+<a name="DataSet+columnMatrix"></a>
 
-### rawData.columnMatrix([vectors]) ⇒ <code>Array</code>
+### dataSet.columnMatrix([vectors]) ⇒ <code>Array</code>
 returns a matrix of values by combining column arrays into a matrix
 
-**Kind**: instance method of [<code>RawData</code>](#RawData)  
+**Kind**: instance method of [<code>DataSet</code>](#DataSet)  
 **Returns**: <code>Array</code> - a matrix of column values  
 
 | Param | Type | Default | Description |
@@ -78,19 +79,19 @@ returns a matrix of values by combining column arrays into a matrix
 
 **Example**  
 ```js
-const csvObj = new RawData([{col1:1,col2:5},{col1:2,col2:6}]);
+const csvObj = new DataSet([{col1:1,col2:5},{col1:2,col2:6}]);
 csvObj.columnMatrix([['col1',{parseInt:true}],['col2]]); // =>
 //[ 
 //  [1,5], 
 //  [2,6], 
 //]
 ```
-<a name="RawData+columnArray"></a>
+<a name="DataSet+columnArray"></a>
 
-### rawData.columnArray(name, options) ⇒ <code>array</code>
+### dataSet.columnArray(name, options) ⇒ <code>array</code>
 returns a new array of a selected column from an array of objects, can filter, scale and replace values
 
-**Kind**: instance method of [<code>RawData</code>](#RawData)  
+**Kind**: instance method of [<code>DataSet</code>](#DataSet)  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -111,12 +112,12 @@ returns a new array of a selected column from an array of objects, can filter, s
 // [ '44','27','30','38','40','35','','48','50', '37' ]
 const OringalAgeColumn = dataset.columnArray('Age'); 
 ```
-<a name="RawData+columnReplace"></a>
+<a name="DataSet+columnReplace"></a>
 
-### rawData.columnReplace(name, options) ⇒ <code>array</code> \| <code>Array.&lt;Object&gt;</code>
+### dataSet.columnReplace(name, options) ⇒ <code>array</code> \| <code>Array.&lt;Object&gt;</code>
 returns a new array of a selected column from an array of objects and replaces empty values, encodes values and scales values
 
-**Kind**: instance method of [<code>RawData</code>](#RawData)  
+**Kind**: instance method of [<code>DataSet</code>](#DataSet)  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -131,12 +132,12 @@ returns a new array of a selected column from an array of objects and replaces e
 //[ '44','27','30','38','40','35',38.77777777777778,'48','50','37' ]
 const ReplacedAgeMeanColumn = dataset.columnReplace('Age',{strategy:'mean'});
 ```
-<a name="RawData+labelEncoder"></a>
+<a name="DataSet+labelEncoder"></a>
 
-### rawData.labelEncoder(name, options) ⇒ <code>array</code>
+### dataSet.labelEncoder(name, options) ⇒ <code>array</code>
 returns a new array and label encodes a selected column
 
-**Kind**: instance method of [<code>RawData</code>](#RawData)  
+**Kind**: instance method of [<code>DataSet</code>](#DataSet)  
 **See**: [http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html](http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html)  
 
 | Param | Type | Default | Description |
@@ -156,24 +157,24 @@ const encodedBinaryPurchasedColumn = dataset.labelEncoder('Purchased',{ binary:t
 // [ 0, 1, 2, 3, 1, 1, 4, 1, 2, 1 ]
 const encodedPurchasedColumn = dataset.labelEncoder('Purchased'); 
 ```
-<a name="RawData+labelDecode"></a>
+<a name="DataSet+labelDecode"></a>
 
-### rawData.labelDecode(name, options) ⇒ <code>array</code>
+### dataSet.labelDecode(name, options) ⇒ <code>array</code>
 returns a new array and decodes an encoded column back to the original array values
 
-**Kind**: instance method of [<code>RawData</code>](#RawData)  
+**Kind**: instance method of [<code>DataSet</code>](#DataSet)  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | csv column header, or JSON object property name |
 | options |  |  |
 
-<a name="RawData+oneHotEncoder"></a>
+<a name="DataSet+oneHotEncoder"></a>
 
-### rawData.oneHotEncoder(name, options) ⇒ <code>Object</code>
+### dataSet.oneHotEncoder(name, options) ⇒ <code>Object</code>
 returns a new object of one hot encoded values
 
-**Kind**: instance method of [<code>RawData</code>](#RawData)  
+**Kind**: instance method of [<code>DataSet</code>](#DataSet)  
 **See**: [http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html](http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html)  
 
 | Param | Type | Description |
@@ -193,12 +194,39 @@ const originalCountry = dataset.columnArray('Country');
 //     }
 const oneHotCountryColumn = dataset.oneHotEncoder('Country'); 
 ```
-<a name="RawData+fitColumns"></a>
+<a name="DataSet+columnReducer"></a>
 
-### rawData.fitColumns(options) ⇒ <code>Array.&lt;Object&gt;</code>
-mutates data property of RawData by replacing multiple columns in a single command
+### dataSet.columnReducer(name, options) ⇒ <code>Object</code>
+it returns a new column that reduces a column into a new column object, this is used in data prep to create new calculated columns for aggregrate statistics
 
-**Kind**: instance method of [<code>RawData</code>](#RawData)  
+**Kind**: instance method of [<code>DataSet</code>](#DataSet)  
+**Returns**: <code>Object</code> - a new object that has reduced array as the value  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>String</code> | name of new Column |
+| options | <code>Object</code> |  |
+| options.columnName | <code>String</code> | name property for columnArray selection |
+| options.columnOptions | <code>Object</code> | options property for columnArray |
+| options.reducer | <code>function</code> | reducer function to reduce into new array, it should push values into the resulting array |
+
+**Example**  
+```js
+const reducer = (result, value, index, arr) => {
+  result.push(value * 2);
+  return result;
+};
+CSVDataSet.columnReducer('DoubleAge', {
+  columnName: 'Age',
+  reducer,
+}); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }
+```
+<a name="DataSet+fitColumns"></a>
+
+### dataSet.fitColumns(options) ⇒ <code>Array.&lt;Object&gt;</code>
+mutates data property of DataSet by replacing multiple columns in a single command
+
+**Kind**: instance method of [<code>DataSet</code>](#DataSet)  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -209,10 +237,10 @@ mutates data property of RawData by replacing multiple columns in a single comma
 ```js
 //fit Columns, mutates dataset
 dataset.fitColumns({
-  columns:[{name:'Age',strategy:'mean'}]
+  columns:[{name:'Age',options:{ strategy:'mean'} }]
 });
 // dataset
-// class RawData
+// class DataSet
 //   data:[
 //     {
 //       'Country': 'Brazil',
@@ -223,30 +251,31 @@ dataset.fitColumns({
 //     ...
 //   ]
 ```
-<a name="RawData"></a>
+<a name="DataSet"></a>
 
-## RawData
+## DataSet
 **Kind**: global class  
 
-* [RawData](#RawData)
-    * [new RawData()](#new_RawData_new)
-    * [new RawData(dataset)](#new_RawData_new)
-    * [.columnMatrix([vectors])](#RawData+columnMatrix) ⇒ <code>Array</code>
-    * [.columnArray(name, options)](#RawData+columnArray) ⇒ <code>array</code>
-    * [.columnReplace(name, options)](#RawData+columnReplace) ⇒ <code>array</code> \| <code>Array.&lt;Object&gt;</code>
-    * [.labelEncoder(name, options)](#RawData+labelEncoder) ⇒ <code>array</code>
-    * [.labelDecode(name, options)](#RawData+labelDecode) ⇒ <code>array</code>
-    * [.oneHotEncoder(name, options)](#RawData+oneHotEncoder) ⇒ <code>Object</code>
-    * [.fitColumns(options)](#RawData+fitColumns) ⇒ <code>Array.&lt;Object&gt;</code>
+* [DataSet](#DataSet)
+    * [new DataSet()](#new_DataSet_new)
+    * [new DataSet(dataset)](#new_DataSet_new)
+    * [.columnMatrix([vectors])](#DataSet+columnMatrix) ⇒ <code>Array</code>
+    * [.columnArray(name, options)](#DataSet+columnArray) ⇒ <code>array</code>
+    * [.columnReplace(name, options)](#DataSet+columnReplace) ⇒ <code>array</code> \| <code>Array.&lt;Object&gt;</code>
+    * [.labelEncoder(name, options)](#DataSet+labelEncoder) ⇒ <code>array</code>
+    * [.labelDecode(name, options)](#DataSet+labelDecode) ⇒ <code>array</code>
+    * [.oneHotEncoder(name, options)](#DataSet+oneHotEncoder) ⇒ <code>Object</code>
+    * [.columnReducer(name, options)](#DataSet+columnReducer) ⇒ <code>Object</code>
+    * [.fitColumns(options)](#DataSet+fitColumns) ⇒ <code>Array.&lt;Object&gt;</code>
 
-<a name="new_RawData_new"></a>
+<a name="new_DataSet_new"></a>
 
-### new RawData()
+### new DataSet()
 class for manipulating an array of objects, typically from CSV data
 
-<a name="new_RawData_new"></a>
+<a name="new_DataSet_new"></a>
 
-### new RawData(dataset)
+### new DataSet(dataset)
 creates a new raw data instance for preprocessing data for machine learning
 
 
@@ -256,14 +285,14 @@ creates a new raw data instance for preprocessing data for machine learning
 
 **Example**  
 ```js
-const dataset = new jsk.RawData(csvData);
+const dataset = new jsk.DataSet(csvData);
 ```
-<a name="RawData+columnMatrix"></a>
+<a name="DataSet+columnMatrix"></a>
 
-### rawData.columnMatrix([vectors]) ⇒ <code>Array</code>
+### dataSet.columnMatrix([vectors]) ⇒ <code>Array</code>
 returns a matrix of values by combining column arrays into a matrix
 
-**Kind**: instance method of [<code>RawData</code>](#RawData)  
+**Kind**: instance method of [<code>DataSet</code>](#DataSet)  
 **Returns**: <code>Array</code> - a matrix of column values  
 
 | Param | Type | Default | Description |
@@ -272,19 +301,19 @@ returns a matrix of values by combining column arrays into a matrix
 
 **Example**  
 ```js
-const csvObj = new RawData([{col1:1,col2:5},{col1:2,col2:6}]);
+const csvObj = new DataSet([{col1:1,col2:5},{col1:2,col2:6}]);
 csvObj.columnMatrix([['col1',{parseInt:true}],['col2]]); // =>
 //[ 
 //  [1,5], 
 //  [2,6], 
 //]
 ```
-<a name="RawData+columnArray"></a>
+<a name="DataSet+columnArray"></a>
 
-### rawData.columnArray(name, options) ⇒ <code>array</code>
+### dataSet.columnArray(name, options) ⇒ <code>array</code>
 returns a new array of a selected column from an array of objects, can filter, scale and replace values
 
-**Kind**: instance method of [<code>RawData</code>](#RawData)  
+**Kind**: instance method of [<code>DataSet</code>](#DataSet)  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -305,12 +334,12 @@ returns a new array of a selected column from an array of objects, can filter, s
 // [ '44','27','30','38','40','35','','48','50', '37' ]
 const OringalAgeColumn = dataset.columnArray('Age'); 
 ```
-<a name="RawData+columnReplace"></a>
+<a name="DataSet+columnReplace"></a>
 
-### rawData.columnReplace(name, options) ⇒ <code>array</code> \| <code>Array.&lt;Object&gt;</code>
+### dataSet.columnReplace(name, options) ⇒ <code>array</code> \| <code>Array.&lt;Object&gt;</code>
 returns a new array of a selected column from an array of objects and replaces empty values, encodes values and scales values
 
-**Kind**: instance method of [<code>RawData</code>](#RawData)  
+**Kind**: instance method of [<code>DataSet</code>](#DataSet)  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -325,12 +354,12 @@ returns a new array of a selected column from an array of objects and replaces e
 //[ '44','27','30','38','40','35',38.77777777777778,'48','50','37' ]
 const ReplacedAgeMeanColumn = dataset.columnReplace('Age',{strategy:'mean'});
 ```
-<a name="RawData+labelEncoder"></a>
+<a name="DataSet+labelEncoder"></a>
 
-### rawData.labelEncoder(name, options) ⇒ <code>array</code>
+### dataSet.labelEncoder(name, options) ⇒ <code>array</code>
 returns a new array and label encodes a selected column
 
-**Kind**: instance method of [<code>RawData</code>](#RawData)  
+**Kind**: instance method of [<code>DataSet</code>](#DataSet)  
 **See**: [http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html](http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html)  
 
 | Param | Type | Default | Description |
@@ -350,24 +379,24 @@ const encodedBinaryPurchasedColumn = dataset.labelEncoder('Purchased',{ binary:t
 // [ 0, 1, 2, 3, 1, 1, 4, 1, 2, 1 ]
 const encodedPurchasedColumn = dataset.labelEncoder('Purchased'); 
 ```
-<a name="RawData+labelDecode"></a>
+<a name="DataSet+labelDecode"></a>
 
-### rawData.labelDecode(name, options) ⇒ <code>array</code>
+### dataSet.labelDecode(name, options) ⇒ <code>array</code>
 returns a new array and decodes an encoded column back to the original array values
 
-**Kind**: instance method of [<code>RawData</code>](#RawData)  
+**Kind**: instance method of [<code>DataSet</code>](#DataSet)  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | csv column header, or JSON object property name |
 | options |  |  |
 
-<a name="RawData+oneHotEncoder"></a>
+<a name="DataSet+oneHotEncoder"></a>
 
-### rawData.oneHotEncoder(name, options) ⇒ <code>Object</code>
+### dataSet.oneHotEncoder(name, options) ⇒ <code>Object</code>
 returns a new object of one hot encoded values
 
-**Kind**: instance method of [<code>RawData</code>](#RawData)  
+**Kind**: instance method of [<code>DataSet</code>](#DataSet)  
 **See**: [http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html](http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html)  
 
 | Param | Type | Description |
@@ -387,12 +416,39 @@ const originalCountry = dataset.columnArray('Country');
 //     }
 const oneHotCountryColumn = dataset.oneHotEncoder('Country'); 
 ```
-<a name="RawData+fitColumns"></a>
+<a name="DataSet+columnReducer"></a>
 
-### rawData.fitColumns(options) ⇒ <code>Array.&lt;Object&gt;</code>
-mutates data property of RawData by replacing multiple columns in a single command
+### dataSet.columnReducer(name, options) ⇒ <code>Object</code>
+it returns a new column that reduces a column into a new column object, this is used in data prep to create new calculated columns for aggregrate statistics
 
-**Kind**: instance method of [<code>RawData</code>](#RawData)  
+**Kind**: instance method of [<code>DataSet</code>](#DataSet)  
+**Returns**: <code>Object</code> - a new object that has reduced array as the value  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>String</code> | name of new Column |
+| options | <code>Object</code> |  |
+| options.columnName | <code>String</code> | name property for columnArray selection |
+| options.columnOptions | <code>Object</code> | options property for columnArray |
+| options.reducer | <code>function</code> | reducer function to reduce into new array, it should push values into the resulting array |
+
+**Example**  
+```js
+const reducer = (result, value, index, arr) => {
+  result.push(value * 2);
+  return result;
+};
+CSVDataSet.columnReducer('DoubleAge', {
+  columnName: 'Age',
+  reducer,
+}); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }
+```
+<a name="DataSet+fitColumns"></a>
+
+### dataSet.fitColumns(options) ⇒ <code>Array.&lt;Object&gt;</code>
+mutates data property of DataSet by replacing multiple columns in a single command
+
+**Kind**: instance method of [<code>DataSet</code>](#DataSet)  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -403,10 +459,10 @@ mutates data property of RawData by replacing multiple columns in a single comma
 ```js
 //fit Columns, mutates dataset
 dataset.fitColumns({
-  columns:[{name:'Age',strategy:'mean'}]
+  columns:[{name:'Age',options:{ strategy:'mean'} }]
 });
 // dataset
-// class RawData
+// class DataSet
 //   data:[
 //     {
 //       'Country': 'Brazil',

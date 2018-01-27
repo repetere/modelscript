@@ -204,13 +204,13 @@ export const cross_validation = {
   }
   /**
    * class for manipulating an array of objects, typically from CSV data
-   * @class RawData
+   * @class DataSet
    */
-export class RawData {
+export class DataSet {
   /**
    * creates a new raw data instance for preprocessing data for machine learning
    * @example
-   * const dataset = new jsk.RawData(csvData);
+   * const dataset = new jsk.DataSet(csvData);
    * @param {Object[]} dataset
    * @returns {this} 
    */
@@ -222,7 +222,7 @@ export class RawData {
   }
   /**
    * returns a matrix of values by combining column arrays into a matrix
-   * @example const csvObj = new RawData([{col1:1,col2:5},{col1:2,col2:6}]);
+   * @example const csvObj = new DataSet([{col1:1,col2:5},{col1:2,col2:6}]);
 csvObj.columnMatrix([['col1',{parseInt:true}],['col2]]); // =>
 //[ 
 //  [1,5], 
@@ -500,7 +500,7 @@ const reducer = (result, value, index, arr) => {
   result.push(value * 2);
   return result;
 };
-CSVRawData.columnReducer('DoubleAge', {
+CSVDataSet.columnReducer('DoubleAge', {
   columnName: 'Age',
   reducer,
 }); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }
@@ -518,14 +518,14 @@ CSVRawData.columnReducer('DoubleAge', {
     return newColumn;
   }
     /**
-     * mutates data property of RawData by replacing multiple columns in a single command
+     * mutates data property of DataSet by replacing multiple columns in a single command
      * @example
      * //fit Columns, mutates dataset
 dataset.fitColumns({
   columns:[{name:'Age',options:{ strategy:'mean'} }]
 });
 // dataset
-// class RawData
+// class DataSet
 //   data:[
 //     {
 //       'Country': 'Brazil',
@@ -581,5 +581,5 @@ dataset.fitColumns({
  * @namespace
  */
 export const preprocessing = {
-  RawData,
+  DataSet,
 };
