@@ -37,6 +37,7 @@
 * [RawData](#RawData)
     * [new RawData()](#new_RawData_new)
     * [new RawData(dataset)](#new_RawData_new)
+    * [.columnMatrix([vectors])](#RawData+columnMatrix) ⇒ <code>Array</code>
     * [.columnArray(name, options)](#RawData+columnArray) ⇒ <code>array</code>
     * [.columnReplace(name, options)](#RawData+columnReplace) ⇒ <code>array</code> \| <code>Array.&lt;Object&gt;</code>
     * [.labelEncoder(name, options)](#RawData+labelEncoder) ⇒ <code>array</code>
@@ -62,6 +63,27 @@ creates a new raw data instance for preprocessing data for machine learning
 **Example**  
 ```js
 const dataset = new jsk.RawData(csvData);
+```
+<a name="RawData+columnMatrix"></a>
+
+### rawData.columnMatrix([vectors]) ⇒ <code>Array</code>
+returns a matrix of values by combining column arrays into a matrix
+
+**Kind**: instance method of [<code>RawData</code>](#RawData)  
+**Returns**: <code>Array</code> - a matrix of column values  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [vectors] | <code>Array</code> | <code>[]</code> | array of arguments for columnArray to merge columns into a matrix |
+
+**Example**  
+```js
+const csvObj = new RawData([{col1:1,col2:5},{col1:2,col2:6}]);
+csvObj.columnMatrix([['col1',{parseInt:true}],['col2]]); // =>
+//[ 
+//  [1,5], 
+//  [2,6], 
+//]
 ```
 <a name="RawData+columnArray"></a>
 
@@ -209,6 +231,7 @@ dataset.fitColumns({
 * [RawData](#RawData)
     * [new RawData()](#new_RawData_new)
     * [new RawData(dataset)](#new_RawData_new)
+    * [.columnMatrix([vectors])](#RawData+columnMatrix) ⇒ <code>Array</code>
     * [.columnArray(name, options)](#RawData+columnArray) ⇒ <code>array</code>
     * [.columnReplace(name, options)](#RawData+columnReplace) ⇒ <code>array</code> \| <code>Array.&lt;Object&gt;</code>
     * [.labelEncoder(name, options)](#RawData+labelEncoder) ⇒ <code>array</code>
@@ -234,6 +257,27 @@ creates a new raw data instance for preprocessing data for machine learning
 **Example**  
 ```js
 const dataset = new jsk.RawData(csvData);
+```
+<a name="RawData+columnMatrix"></a>
+
+### rawData.columnMatrix([vectors]) ⇒ <code>Array</code>
+returns a matrix of values by combining column arrays into a matrix
+
+**Kind**: instance method of [<code>RawData</code>](#RawData)  
+**Returns**: <code>Array</code> - a matrix of column values  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [vectors] | <code>Array</code> | <code>[]</code> | array of arguments for columnArray to merge columns into a matrix |
+
+**Example**  
+```js
+const csvObj = new RawData([{col1:1,col2:5},{col1:2,col2:6}]);
+csvObj.columnMatrix([['col1',{parseInt:true}],['col2]]); // =>
+//[ 
+//  [1,5], 
+//  [2,6], 
+//]
 ```
 <a name="RawData+columnArray"></a>
 

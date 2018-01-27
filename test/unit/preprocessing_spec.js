@@ -3,67 +3,67 @@ const jsk = require('../../dist/jskit-learn.cjs');
 const ml = require('ml');
 const expect = require('chai').expect;
 const csvData = [{
-    'Country': 'Brazil',
-    'Age': '44',
-    'Salary': '72000',
-    'Purchased': 'N',
-  },
-  {
-    'Country': 'Mexico',
-    'Age': '27',
-    'Salary': '48000',
-    'Purchased': 'Yes',
-  },
-  {
-    'Country': 'Ghana',
-    'Age': '30',
-    'Salary': '54000',
-    'Purchased': 'No',
-  },
-  {
-    'Country': 'Mexico',
-    'Age': '38',
-    'Salary': '61000',
-    'Purchased': 'f',
-  },
-  {
-    'Country': 'Ghana',
-    'Age': '40',
-    'Salary': '',
-    'Purchased': 'Yes',
-  },
-  {
-    'Country': 'Brazil',
-    'Age': '35',
-    'Salary': '58000',
-    'Purchased': 'Yes',
-  },
-  {
-    'Country': 'Mexico',
-    'Age': '',
-    'Salary': '52000',
-    'Purchased': 'false',
-  },
-  {
-    'Country': 'Brazil',
-    'Age': '48',
-    'Salary': '79000',
-    'Purchased': 'Yes',
-  },
-  {
-    'Country': 'Ghana',
-    'Age': '50',
-    'Salary': '83000',
-    'Purchased': 'No',
-  },
-  {
-    'Country': 'Brazil',
-    'Age': '37',
-    'Salary': '67000',
-    'Purchased': 'Yes',
-  },
+  'Country': 'Brazil',
+  'Age': '44',
+  'Salary': '72000',
+  'Purchased': 'N',
+},
+{
+  'Country': 'Mexico',
+  'Age': '27',
+  'Salary': '48000',
+  'Purchased': 'Yes',
+},
+{
+  'Country': 'Ghana',
+  'Age': '30',
+  'Salary': '54000',
+  'Purchased': 'No',
+},
+{
+  'Country': 'Mexico',
+  'Age': '38',
+  'Salary': '61000',
+  'Purchased': 'f',
+},
+{
+  'Country': 'Ghana',
+  'Age': '40',
+  'Salary': '',
+  'Purchased': 'Yes',
+},
+{
+  'Country': 'Brazil',
+  'Age': '35',
+  'Salary': '58000',
+  'Purchased': 'Yes',
+},
+{
+  'Country': 'Mexico',
+  'Age': '',
+  'Salary': '52000',
+  'Purchased': 'false',
+},
+{
+  'Country': 'Brazil',
+  'Age': '48',
+  'Salary': '79000',
+  'Purchased': 'Yes',
+},
+{
+  'Country': 'Ghana',
+  'Age': '50',
+  'Salary': '83000',
+  'Purchased': 'No',
+},
+{
+  'Country': 'Brazil',
+  'Age': '37',
+  'Salary': '67000',
+  'Purchased': 'Yes',
+},
 ];
-const unmodifiedCSVData = [...csvData];
+const unmodifiedCSVData = [...csvData,];
 
 describe('preprocessing', function() {
   describe('RawData class', () => {
@@ -73,6 +73,21 @@ describe('preprocessing', function() {
         expect(jsk.preprocessing).to.be.an('object');
         expect(jsk.preprocessing.RawData).to.be.a('function');
         expect(CSVRawData).to.be.instanceof(jsk.preprocessing.RawData);
+      });
+    });
+    describe('columnMatrix', () => { 
+      it('should create a matrix of values from columns', () => {
+        const AgeSalMatrix = CSVRawData.columnMatrix([ [ 'Age', ], [ 'Salary', ], ]);
+        const AgeArray = CSVRawData.columnArray('Age');
+        expect(AgeSalMatrix).to.be.lengthOf(AgeArray.length);
+        expect(AgeSalMatrix[ 0 ][0]).to.eql(AgeArray[0]);
+      });
+      it('should handle invalid columns', () => {
+        const invalidMatrix = CSVRawData.columnMatrix([
+          ['iojf',],
+        ]);
+        expect(invalidMatrix).to.be.an('Array');
+        expect(invalidMatrix[ 0 ][ 0 ]).to.be.undefined;
       });
     });
     describe('columnArray', () => {
@@ -146,6 +161,28 @@ describe('preprocessing', function() {
         expect(parseInt(Math.round(jsk.util.sd(minMaxScaleSalary)))).to.equal(0);
         expect(parseInt(Math.round(jsk.util.mean(minMaxScaleSalary)))).to.equal(0);
       });
+      it('should log scale values', () => {
+        const salaryColumn = CSVRawData.columnArray('Salary', {
+          prefilter: row => row.Salary,
+          parseInt: true,
+        });
+        const logScaleSalary = CSVRawData.columnArray('Salary', {
+          prefilter: row => row.Salary,
+          scale: 'log',
+        });
+        expect(JSON.stringify(logScaleSalary)).to.equal(JSON.stringify(jsk.util.LogScaler(salaryColumn)));
+      });
+      it('should exp scale values', () => {
+        const salaryColumn = CSVRawData.columnArray('Salary', {
+          prefilter: row => row.Salary,
+          parseInt: true,
+        });
+        const logScaleSalary = CSVRawData.columnArray('Salary', {
+          prefilter: row => row.Salary,
+          scale: 'exp',
+        });
+        expect(JSON.stringify(logScaleSalary)).to.equal(JSON.stringify(jsk.util.ExpScaler(salaryColumn)));
+      });
     });
     describe('labelEncoder', () => {
       const purchasedColumn = CSVRawData.columnArray('Purchased');
@@ -157,13 +194,13 @@ describe('preprocessing', function() {
           binary: true,
         });
         encodedPurchased = binaryEncodedColumn;
-        expect(binaryEncodedColumn).to.include.members([0, 1, ]);
+        expect(binaryEncodedColumn).to.include.members([0, 1,]);
       });
       it('should label encode', () => {
         const labelEncodedColumn = CSVRawData.labelEncoder('Country');
         encodedCountry = labelEncodedColumn;
         // console.log({ CSVRawData }, CSVRawData.data);
-        expect(labelEncodedColumn).to.include.members([0, 1, 2, ]);
+        expect(labelEncodedColumn).to.include.members([0, 1, 2,]);
         labelEncodedColumn.forEach(lec => expect(lec).to.be.a('number'));
         expect(CSVRawData.labels.size).equal(2);
       });
@@ -261,7 +298,7 @@ describe('preprocessing', function() {
     describe('fitColumns', () => {
       it('should fit multiple columns', () => {
         const unmodifiedData = new jsk.RawData(unmodifiedCSVData);
-        const fittedOriginalData = new jsk.RawData([...unmodifiedCSVData]);
+        const fittedOriginalData = new jsk.RawData([...unmodifiedCSVData,]);
 
         fittedOriginalData.fitColumns({
           columns: [

@@ -1,5 +1,8 @@
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
+// import async from 'rollup-plugin-async';
+import builtins from 'rollup-plugin-node-builtins';
+import globals from 'rollup-plugin-node-globals';
 import pkg from './package.json';
 
 export default [
@@ -8,11 +11,13 @@ export default [
 		input: 'src/main.js',
 		output: {
 			file: pkg.browser,
+			name: 'jskit-learn',
 			format: 'umd'
 		},
-		name: 'jskit-learn',
 		plugins: [
-			resolve(), // so Rollup can find `ms`
+			resolve({
+				preferBuiltins: true,
+			}), // so Rollup can find `ms`
       commonjs({
         namedExports: {
           // left-hand side can be an absolute path, a path
@@ -20,7 +25,11 @@ export default [
           // of a module in node_modules
           'node_modules/ml-array-utils/src/index.js': [ 'scale' ]
         }
-      }) // so Rollup can convert `ms` to an ES module
+			}), // so Rollup can convert `ms` to an ES module
+			builtins({
+      }),
+			globals({
+      }),
 		]
 	},
 
@@ -34,8 +43,16 @@ export default [
 		input: 'src/main.js',
 		// external: ['ms'],
 		output: [
-			{ file: pkg.main, format: 'cjs' },
-			{ file: pkg.module, format: 'es' }
+			{
+				file: pkg.main,
+				name: 'jskit-learn',
+				format: 'cjs'
+			},
+			{
+				file: pkg.module,
+				name: 'jskit-learn',
+				format: 'es'
+			}
 		]
 	}
 ];

@@ -45,6 +45,8 @@ $ npm i jskit-learn
     sd: [Function: standardDeviation], // standard deviation
     StandardScaler: [Function: StandardScaler], // standardization (z-scores)
     MinMaxScaler: [Function: MinMaxScaler], // min-max scaling
+    ExpScaler: [Function: ExpScaler], // exponent scaling
+    LogScaler: [Function: LogScaler], // natual log scaling
   },
 }
 ```

@@ -6,7 +6,8 @@ import ml from 'ml';
 import Random from 'random-js';
 import range from 'lodash.range';
 import rangeRight from 'lodash.rangeright';
-import path from 'path';
+
+// import { default as path } from 'path';
 
 const avg = ml.Stat.array.mean;
 const sum = ml.Stat.array.sum;
@@ -114,6 +115,8 @@ This estimator scales and translates each feature individually such that it is i
    * @returns {number[]}
    */
   MinMaxScaler: (z) => scale(z, (max(z) - min(z))),
+  LogScaler: (z) => z.map(Math.log),
+  ExpScaler: (z) => z.map(Math.exp),
 };
 
 
@@ -217,7 +220,34 @@ class RawData {
       this.labels = new Map();
       this.encoders = new Map();
       return this;
+  }
+  /**
+   * returns a matrix of values by combining column arrays into a matrix
+   * @example const csvObj = new RawData([{col1:1,col2:5},{col1:2,col2:6}]);
+csvObj.columnMatrix([['col1',{parseInt:true}],['col2]]); // =>
+//[ 
+//  [1,5], 
+//  [2,6], 
+//]
+   * @param {Array} [vectors=[]] - array of arguments for columnArray to merge columns into a matrix
+   * @returns {Array} a matrix of column values 
+   */
+  columnMatrix(vectors = []) {
+    const vectorArrays = vectors
+      .map(vec => this.columnArray(...vec));
+    
+    if (vectorArrays.length) {
+      return vectorArrays[ 0 ].map((vectorItem, index) => {
+        const returnArray = [];
+        vectorArrays.forEach((v, i) => {
+          returnArray.push(vectorArrays[ i ][ index ]);
+        });
+        return returnArray;
+      })
+    } else {
+      return vectors;
     }
+  }
     /**
      * returns a new array of a selected column from an array of objects, can filter, scale and replace values
      * @example 
@@ -237,41 +267,53 @@ const OringalAgeColumn = dataset.columnArray('Age');
      * @returns {array}
      */
   columnArray(name, options = {}) {
-      const config = Object.assign({
-        prefilter: () => true,
-        filter: () => true,
-        replace: {
-          test: undefined,
-          value: undefined,
-        },
-        parseInt: false,
-        parseIntBase: 10,
-        parseFloat: (options.scale) ? true : false,
-        scale: false,
-      }, options);
-      const modifiedColumn = this.data
-        .filter(config.prefilter)
-        .reduce((result, val, index, arr) => {
-          let objVal = val[name];
-          let returnVal = (typeof config.replace.test === 'function') ?
-            config.replace.test(objVal) ?
+    const config = Object.assign({
+      prefilter: () => true,
+      filter: () => true,
+      replace: {
+        test: undefined,
+        value: undefined,
+      },
+      parseInt: false,
+      parseIntBase: 10,
+      parseFloat: (options.scale) ? true : false,
+      scale: false,
+    }, options);
+    const modifiedColumn = this.data
+      .filter(config.prefilter)
+      .reduce((result, val, index, arr) => {
+        let objVal = val[ name ];
+        let returnVal = (typeof config.replace.test === 'function') ?
+          config.replace.test(objVal) ?
             typeof config.replace.value === 'function' ?
-            config.replace.value(result, val, index, arr, name) :
-            config.replace.value :
+              config.replace.value(result, val, index, arr, name) :
+              config.replace.value :
             objVal :
-            objVal;
-          if (config.filter(returnVal)) {
-            if (config.parseInt) result.push(parseInt(returnVal, config.parseIntBase));
-            else if (config.parseFloat) result.push(parseFloat(returnVal));
-            else result.push(returnVal);
-          }
-          return result;
-        }, []);
-      return (config.scale) ?
-        (config.scale === 'standard') ?
-        util.StandardScaler(modifiedColumn) :
-        util.MinMaxScaler(modifiedColumn) :
-        modifiedColumn;
+          objVal;
+        if (config.filter(returnVal)) {
+          if (config.parseInt) result.push(parseInt(returnVal, config.parseIntBase));
+          else if (config.parseFloat) result.push(parseFloat(returnVal));
+          else result.push(returnVal);
+        }
+        return result;
+      }, []);
+    if (typeof config.scale==='function') {
+      return modifiedColumn.map(config.scale);
+    } else if (config.scale) {
+      switch (config.scale) {
+        case 'standard':
+          return util.StandardScaler(modifiedColumn);
+        case 'log':
+          return util.LogScaler(modifiedColumn);
+        case 'exp':
+          return util.ExpScaler(modifiedColumn);
+        case 'normalize':
+        default:
+          return util.MinMaxScaler(modifiedColumn);
+        }
+      } else {
+        return modifiedColumn;
+      }
     }
     /**
      * returns a new array of a selected column from an array of objects and replaces empty values, encodes values and scales values
