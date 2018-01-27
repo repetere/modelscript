@@ -226,6 +226,22 @@ describe('preprocessing', function() {
         expect(CSVRawData.encoders.has('Country')).to.be.true;
       });
     });
+    describe('columnReducer', () => { 
+      it('should reduce column and greate a new column', () => {
+        const reducer = (result, value, index, arr) => {
+          result.push(value * 2);
+          return result;
+        };
+        const DoubleAgeColumn = CSVRawData.columnReducer('DoubleAge', {
+          columnName: 'Age',
+          reducer,
+        });
+        const AgeColumn = CSVRawData.columnArray('Age');
+        // console.log({ DoubleAgeColumn, AgeColumn, });
+        expect(AgeColumn[ 0 ] * 2).to.eql(DoubleAgeColumn.DoubleAge[ 0 ]);
+        expect(DoubleAgeColumn.DoubleAge).to.eql(AgeColumn.reduce(reducer, []));
+      });
+    });
     describe('columnReplace', () => {
       it('should label encode', () => {
         const leCountry = CSVRawData.labelEncoder('Country');
@@ -299,14 +315,28 @@ describe('preprocessing', function() {
       it('should fit multiple columns', () => {
         const unmodifiedData = new jsk.RawData(unmodifiedCSVData);
         const fittedOriginalData = new jsk.RawData([...unmodifiedCSVData,]);
+        const reducer = (result, value, index, arr) => {
+          result.push(value * 2);
+          return result;
+        };
 
-        fittedOriginalData.fitColumns({
+        const fitdata = fittedOriginalData.fitColumns({
           columns: [
             { name: 'Age', },
             {
               name: 'Salary',
               options: {
                 scale: 'standard',
+              },
+            },
+            {
+              name: 'DoubleSalary',
+              options: {
+                strategy:'reduce',
+                reducerOptions: {
+                  columnName: 'Salary',
+                  reducer,
+                },
               },
             },
             {
@@ -329,6 +359,23 @@ describe('preprocessing', function() {
             },
           ],
         });
+        expect(fitdata).to.eql(fittedOriginalData.data);
+        const fitObject = fittedOriginalData.fitColumns({
+          returnData: false,
+          columns: [
+            {
+              name: 'DoubleAge',
+              options: {
+                strategy:'reduce',
+                reducerOptions: {
+                  columnName: 'Age',
+                  reducer,
+                },
+              },
+            },
+          ],
+        });
+        expect(fitObject).to.eql(fittedOriginalData);
         expect(unmodifiedData === fittedOriginalData).to.be.false;
         expect(fittedOriginalData.data).to.not.eq(unmodifiedCSVData);
         expect(fittedOriginalData.columnArray('Age')).to.have.ordered.members(unmodifiedData.columnReplace('Age'));

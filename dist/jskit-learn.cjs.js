@@ -368,15 +368,20 @@ const ReplacedAgeMeanColumn = dataset.columnReplace('Age',{strategy:'mean'});
           };
           return replaceVal;
           break;
+        case 'reducer':
+        case 'reduce':
+          replaceVal = this.columnReducer(name, config.reducerOptions); 
+          return replaceVal;  
         default:
           replaceVal = ml.Stat.array[config.strategy](this.columnArray(name, config.arrayOptions));
           replace.value = replaceVal;
           break;
       }
-      return this.columnArray(name, {
+    return this.columnArray(name,
+      Object.assign({}, {
         replace,
         scale: options.scale,
-      });
+      }, options.columnOptions));
     }
     /**
      * returns a new array and label encodes a selected column
@@ -492,15 +497,39 @@ const oneHotCountryColumn = dataset.oneHotEncoder('Country');
       this.encoders.set(name, {
         labels,
         prefix: `${name}_`,
-      });
-      return encodedData;
-    }
+    });
+    return encodedData;
+  }
+  /**
+   * it returns a new column that reduces a column into a new column object, this is used in data prep to create new calculated columns for aggregrate statistics
+   * @example 
+const reducer = (result, value, index, arr) => {
+  result.push(value * 2);
+  return result;
+};
+CSVRawData.columnReducer('DoubleAge', {
+  columnName: 'Age',
+  reducer,
+}); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }
+   * @param {String} name - name of new Column 
+   * @param {Object} options 
+   * @param {String} options.columnName - name property for columnArray selection 
+   * @param {Object} options.columnOptions - options property for columnArray  
+   * @param {Function} options.reducer - reducer function to reduce into new array, it should push values into the resulting array  
+   * @returns {Object} a new object that has reduced array as the value
+   */
+  columnReducer(name, options) {
+    const newColumn = {
+      [ name ]: this.columnArray(options.columnName, options.columnOptions).reduce(options.reducer, []),
+    };
+    return newColumn;
+  }
     /**
      * mutates data property of RawData by replacing multiple columns in a single command
      * @example
      * //fit Columns, mutates dataset
 dataset.fitColumns({
-  columns:[{name:'Age',strategy:'mean'}]
+  columns:[{name:'Age',options:{ strategy:'mean'} }]
 });
 // dataset
 // class RawData
@@ -519,6 +548,7 @@ dataset.fitColumns({
      */
   fitColumns(options) {
     const config = Object.assign({
+      returnData:true,
       columns: [],
     }, options);
     const fittedColumns = config.columns
@@ -551,7 +581,7 @@ dataset.fitColumns({
         }, []);
       this.data = this.data.map((val, index) => Object.assign({}, val, fittedData[index]));
     }
-    return this.data;
+    return config.returnData ? this.data : this;
   }
 }
 /**

@@ -30,6 +30,8 @@ $ npm i jskit-learn
       labelEncoder(columnName,options), // - returns a new array and label encodes a selected column
       labelDecode(columnName,options), // - returns a new array and decodes an encoded column back to the original array values
       oneHotEncoder(columnName,options), // - returns a new object of one hot encoded values
+      columnMatrix(columnName,options), // - returns a matrix of values from multiple columns
+      columnReducer(newColumnName,options), // - returns a new array of a selected column that is passed a reducer function, this is used to create new columns for aggregate statistics
       fitColumns(options), // - mutates data property of RawData by replacing multiple columns in a single command
     ]
   },

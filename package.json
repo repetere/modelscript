@@ -1,7 +1,7 @@
 {
   "name": "jskit-learn",
   "description": "jskit-learn is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When jskit-learn used with ML.js, pandas-js, and numjs, you're left with the equialent R/Python toolset in JavaScript.",
-  "version": "0.3.0",
+  "version": "0.3.2",
   "main": "dist/jskit-learn.cjs.js",
   "module": "dist/jskit-learn.esm.js",
   "browser": "dist/jskit-learn.umd.js",
