@@ -493,7 +493,7 @@ const oneHotCountryColumn = dataset.oneHotEncoder('Country');
      * @example
      * //fit Columns, mutates dataset
 dataset.fitColumns({
-  columns:[{name:'Age',strategy:'mean'}]
+  columns:[{name:'Age',options:{ strategy:'mean'} }]
 });
 // dataset
 // class RawData
