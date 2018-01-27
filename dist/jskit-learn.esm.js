@@ -140,13 +140,16 @@ function train_test_split(dataset = [], options = {
   train_size: 0.8,
   random_state: 0,
   return_array: false,
+  parse_int_train_size: true,
 }) {
   const engine = Random.engines.mt19937().seed(options.random_state || 0);
   const training_set = [];
-  const train_size =
-    (options.train_size) ?
-    options.train_size * dataset.length :
-    (1 - (options.test_size || 0.2)) * dataset.length;
+  const train_size_length = (options.train_size)
+    ? options.train_size * dataset.length
+    : (1 - (options.test_size || 0.2)) * dataset.length;
+  const train_size = options.parse_int_train_size
+    ? parseInt(train_size_length, 10)
+    : train_size_length;
   const dataset_copy = [].concat(dataset);
 
   while (training_set.length < train_size) {
