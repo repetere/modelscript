@@ -17,25 +17,26 @@ $ npm i jskit-learn
 ### Usage (basic)
 
 ```javascript
-"jskit-learn" : { 
+"jskit-learn" : {
   loadCSV: [Function: loadCSV], //asynchronously loads CSVs, either a filepath or a remote URI
-  cross_validation: { 
+  cross_validation: {
     train_test_split: [Function: train_test_split], // splits data into training and testing sets
     cross_validation_split: [Function: kfolds], //splits data into k-folds
   },
-  preprocessing: { 
-    Class DataSet: [ //class for manipulating an array of objects (typically from CSV data)      
-      columnArray(columnName,options), // - returns a new array of a selected column from an array of objects, can filter, scale and replace values
-      columnReplace(columnName,options), // - returns a new array of a selected column from an array of objects and replaces empty values, encodes values and scales values
-      labelEncoder(columnName,options), // - returns a new array and label encodes a selected column
-      labelDecode(columnName,options), // - returns a new array and decodes an encoded column back to the original array values
-      oneHotEncoder(columnName,options), // - returns a new object of one hot encoded values
-      columnMatrix(columnName,options), // - returns a matrix of values from multiple columns
-      columnReducer(newColumnName,options), // - returns a new array of a selected column that is passed a reducer function, this is used to create new columns for aggregate statistics
+  preprocessing: {
+    Class DataSet: [ //class for manipulating an array of objects (typically from CSV data)
+      columnArray(columnName, options), // - returns a new array of a selected column from an array of objects, can filter, scale and replace values
+      columnReplace(columnName, options), // - returns a new array of a selected column from an array of objects and replaces empty values, encodes values and scales values
+      labelEncoder(columnName, options), // - returns a new array and label encodes a selected column
+      labelDecode(columnName, options), // - returns a new array and decodes an encoded column back to the original array values
+      oneHotEncoder(columnName, options), // - returns a new object of one hot encoded values
+      columnMatrix(columnName, options), // - returns a matrix of values from multiple columns
+      columnReducer(newColumnName, options), // - returns a new array of a selected column that is passed a reducer function, this is used to create new columns for aggregate statistics
+      columnMerge(name, data), // - returns a new column that is merged onto the data set
       fitColumns(options), // - mutates data property of DataSet by replacing multiple columns in a single command
     ]
   },
-  util: { 
+  util: {
     range: [Function], // range helper function
     rangeRight: [Function], //range right helper function
     scale: [Function: scale], //scale / normalize data
@@ -49,6 +50,12 @@ $ npm i jskit-learn
     MinMaxScaler: [Function: MinMaxScaler], // min-max scaling
     ExpScaler: [Function: ExpScaler], // exponent scaling
     LogScaler: [Function: LogScaler], // natual log scaling
+    squaredDifference: [Function: squaredDifference], // Returns an array of the squared different of two arrays
+    standardError: [Function: standardError], // The standard error of the estimate is a measure of the accuracy of predictions made with a regression line
+    coefficientOfDetermination: [Function: coefficientOfDetermination], // r^2
+    rSquared: [Function: coefficientOfDetermination], // alias for coefficientOfDetermination
+    pivotVector: [Function: pivotVector], // returns an array of vectors as an array of arrays
+    pivotArrays: [Function: pivotArrays], // returns a matrix of values by combining arrays into a matrix
   },
 }
 ```

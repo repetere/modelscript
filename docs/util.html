@@ -70,7 +70,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line94">line 94</a>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line93">line 93</a>
     </li></ul></dd>
     
 
@@ -102,6 +102,201 @@
 
     
         <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".coefficientOfDetermination"><span class="type-signature">(static) </span>coefficientOfDetermination<span class="signature">(actuals, estimates)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    In statistics, the coefficient of determination, denoted R2 or r2 and pronounced "R squared", is the proportion of the variance in the dependent variable that is predictable from the independent variable(s).{\bar {y}}={\frac {1}{n}}\sum _{i=1}^{n}y_{i}
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>actuals</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Number></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">numerical samples</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>estimates</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Number></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">estimates values</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line180">line 180</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://en.wikipedia.org/wiki/Coefficient_of_determination">https://en.wikipedia.org/wiki/Coefficient_of_determination</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    r^2
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const actuals = [ 2, 4, 5, 4, 5, ];
+const estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];
+const r2 = jsk.util.coefficientOfDetermination(actuals, estimates); 
+r2.toFixed(1) // => 0.6</code></pre>
+
+
 
         
             
@@ -212,7 +407,7 @@ This estimator scales and translates each feature individually such that it is i
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line123">line 123</a>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line122">line 122</a>
     </li></ul></dd>
     
 
@@ -255,6 +450,540 @@ This estimator scales and translates each feature individually such that it is i
     
 
 
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".pivotVector"><span class="type-signature">(static) </span>pivotVector<span class="signature">(vectors)</span><span class="type-signature"> &rarr; {Array.&lt;Array>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    returns an array of vectors as an array of arrays
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>vectors</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Array></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line198">line 198</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;Array></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const vectors = [ [1,2,3], [1,2,3], [3,3,4], [3,3,3] ];
+const arrays = pivotVector(vectors); // => [ [1,2,3,3], [2,2,3,3], [3,3,4,3] ];</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".squaredDifference"><span class="type-signature">(static) </span>squaredDifference<span class="signature">(left, right)</span><span class="type-signature"> &rarr; {Array.&lt;Number>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Returns an array of the squared different of two arrays
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>left</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Number></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>right</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Number></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line140">line 140</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Squared difference of left minus right array
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;Number></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".standardError"><span class="type-signature">(static) </span>standardError<span class="signature">(actuals, estimates)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    The standard error of the estimate is a measure of the accuracy of predictions made with a regression line
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>actuals</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Number></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">numerical samples</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>estimates</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Number></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">estimates values</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line160">line 160</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="http://onlinestatbook.com/2/regression/accuracy.html">http://onlinestatbook.com/2/regression/accuracy.html</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Standard Error of the Estimate
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const actuals = [ 2, 4, 5, 4, 5, ];
+const estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];
+const SE = jsk.util.standardError(actuals, estimates);
+SE.toFixed(2) // => 0.89</code></pre>
 
 
 
@@ -369,7 +1098,7 @@ Standardization of a dataset is a common requirement for many machine learning e
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line114">line 114</a>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line113">line 113</a>
     </li></ul></dd>
     
 
@@ -437,7 +1166,7 @@ Standardization of a dataset is a common requirement for many machine learning e
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Jan 27 2018 14:43:51 GMT-0500 (EST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Jan 28 2018 09:44:55 GMT-0500 (EST)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -93,7 +93,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line212">line 212</a>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line307">line 307</a>
     </li></ul></dd>
     
 
@@ -610,7 +610,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line275">line 275</a>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line371">line 371</a>
     </li></ul></dd>
     
 
@@ -790,7 +790,7 @@ const OringalAgeColumn = dataset.columnArray('Age'); </code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line241">line 241</a>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line336">line 336</a>
     </li></ul></dd>
     
 
@@ -847,6 +847,187 @@ csvObj.columnMatrix([['col1',{parseInt:true}],['col2]]); // =>
 //  [1,5], 
 //  [2,6], 
 //]</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="columnMerge"><span class="type-signature"></span>columnMerge<span class="signature">(name, data)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    it returns a new column that is merged onto the data set
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">name of new Column</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">new dataset data</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line634">line 634</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>CSVDataSet.columnMerge('DoubleAge', [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ]); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }</code></pre>
 
 
 
@@ -1075,7 +1256,7 @@ csvObj.columnMatrix([['col1',{parseInt:true}],['col2]]); // =>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line521">line 521</a>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line620">line 620</a>
     </li></ul></dd>
     
 
@@ -1370,7 +1551,7 @@ CSVDataSet.columnReducer('DoubleAge', {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line336">line 336</a>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line432">line 432</a>
     </li></ul></dd>
     
 
@@ -1577,7 +1758,7 @@ const ReplacedAgeMeanColumn = dataset.columnReplace('Age',{strategy:'mean'});</c
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line549">line 549</a>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line662">line 662</a>
     </li></ul></dd>
     
 
@@ -1767,7 +1948,7 @@ dataset.fitColumns({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line451">line 451</a>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line550">line 550</a>
     </li></ul></dd>
     
 
@@ -2007,7 +2188,7 @@ dataset.fitColumns({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line403">line 403</a>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line502">line 502</a>
     </li></ul></dd>
     
 
@@ -2197,7 +2378,7 @@ const encodedPurchasedColumn = dataset.labelEncoder('Purchased'); </code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line473">line 473</a>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line572">line 572</a>
     </li></ul></dd>
     
 
@@ -2397,7 +2578,7 @@ const oneHotCountryColumn = dataset.oneHotEncoder('Country'); </code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line224">line 224</a>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line319">line 319</a>
     </li></ul></dd>
     
 
@@ -2937,7 +3118,7 @@ const oneHotCountryColumn = dataset.oneHotEncoder('Country'); </code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line275">line 275</a>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line371">line 371</a>
     </li></ul></dd>
     
 
@@ -3117,7 +3298,7 @@ const OringalAgeColumn = dataset.columnArray('Age'); </code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line241">line 241</a>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line336">line 336</a>
     </li></ul></dd>
     
 
@@ -3174,6 +3355,187 @@ csvObj.columnMatrix([['col1',{parseInt:true}],['col2]]); // =>
 //  [1,5], 
 //  [2,6], 
 //]</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="columnMerge"><span class="type-signature"></span>columnMerge<span class="signature">(name, data)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    it returns a new column that is merged onto the data set
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">name of new Column</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">new dataset data</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line634">line 634</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>CSVDataSet.columnMerge('DoubleAge', [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ]); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }</code></pre>
 
 
 
@@ -3402,7 +3764,7 @@ csvObj.columnMatrix([['col1',{parseInt:true}],['col2]]); // =>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line521">line 521</a>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line620">line 620</a>
     </li></ul></dd>
     
 
@@ -3697,7 +4059,7 @@ CSVDataSet.columnReducer('DoubleAge', {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line336">line 336</a>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line432">line 432</a>
     </li></ul></dd>
     
 
@@ -3904,7 +4266,7 @@ const ReplacedAgeMeanColumn = dataset.columnReplace('Age',{strategy:'mean'});</c
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line549">line 549</a>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line662">line 662</a>
     </li></ul></dd>
     
 
@@ -4094,7 +4456,7 @@ dataset.fitColumns({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line451">line 451</a>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line550">line 550</a>
     </li></ul></dd>
     
 
@@ -4334,7 +4696,7 @@ dataset.fitColumns({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line403">line 403</a>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line502">line 502</a>
     </li></ul></dd>
     
 
@@ -4524,7 +4886,7 @@ const encodedPurchasedColumn = dataset.labelEncoder('Purchased'); </code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line473">line 473</a>
+        <a href="jskit-learn.cjs.js.html">jskit-learn.cjs.js</a>, <a href="jskit-learn.cjs.js.html#line572">line 572</a>
     </li></ul></dd>
     
 
@@ -4612,7 +4974,7 @@ const oneHotCountryColumn = dataset.oneHotEncoder('Country'); </code></pre>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Jan 27 2018 14:43:51 GMT-0500 (EST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Jan 28 2018 09:44:55 GMT-0500 (EST)
 </footer>
 
 <script> prettyPrint(); </script>

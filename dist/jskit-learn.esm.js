@@ -10,13 +10,12 @@ import rangeRight from 'lodash.rangeright';
 // import { default as path } from 'path';
 
 const avg = ml.Stat.array.mean;
+const mean = avg;
 const sum = ml.Stat.array.sum;
 const scale = (a, d) => a.map(x => (x - avg(a)) / d);
 const max = a => a.concat([]).sort((x, y) => x < y)[0];
 const min = a => a.concat([]).sort((x, y) => x > y)[0];
 const sd = ml.Stat.array.standardDeviation; //(a, av) => Math.sqrt(avg(a.map(x => (x - av) * x)));
-
-
 
 /**
  * Asynchronously loads a CSV from a remote URL and returns an array of objects
@@ -117,8 +116,101 @@ This estimator scales and translates each feature individually such that it is i
   MinMaxScaler: (z) => scale(z, (max(z) - min(z))),
   LogScaler: (z) => z.map(Math.log),
   ExpScaler: (z) => z.map(Math.exp),
+  squaredDifference,
+  standardError,
+  coefficientOfDetermination,
+  rSquared: coefficientOfDetermination,
+  pivotVector,
+  pivotArrays,
 };
 
+/**
+ * Returns an array of the squared different of two arrays
+ * @memberOf util
+ * @param {Number[]} left 
+ * @param {Number[]} right 
+ * @returns {Number[]} Squared difference of left minus right array
+ */
+function squaredDifference(left,right) {
+  return left.reduce((result, val, index, arr) => { 
+    result.push(Math.pow((right[index]-val), 2));
+    return result;
+  }, []);
+}
+
+/**
+ * The standard error of the estimate is a measure of the accuracy of predictions made with a regression line
+ * @memberOf util
+ * @see {@link http://onlinestatbook.com/2/regression/accuracy.html}
+ * @example
+const actuals = [ 2, 4, 5, 4, 5, ];
+const estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];
+const SE = jsk.util.standardError(actuals, estimates);
+SE.toFixed(2) // => 0.89
+ * @param {Number[]} actuals - numerical samples 
+ * @param {Number[]} estimates - estimates values
+ * @returns {Number} Standard Error of the Estimate
+ */
+function standardError(actuals=[], estimates=[]) {
+  if (actuals.length !== estimates.length) throw new RangeError('arrays must have the same length');
+  const squaredDiff = squaredDifference(actuals,estimates);
+  return Math.sqrt((sum(squaredDiff)) / (actuals.length - 2));
+}
+
+/**
+ * In statistics, the coefficient of determination, denoted R2 or r2 and pronounced "R squared", is the proportion of the variance in the dependent variable that is predictable from the independent variable(s).
+ * {\bar {y}}={\frac {1}{n}}\sum _{i=1}^{n}y_{i}
+ * @example
+const actuals = [ 2, 4, 5, 4, 5, ];
+const estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];
+const r2 = jsk.util.coefficientOfDetermination(actuals, estimates); 
+r2.toFixed(1) // => 0.6
+ * @memberOf util
+ * @see {@link https://en.wikipedia.org/wiki/Coefficient_of_determination}
+ * @param {Number[]} actuals - numerical samples 
+ * @param {Number[]} estimates - estimates values
+ * @returns {Number} r^2
+ */
+function coefficientOfDetermination(actuals=[], estimates=[]) {
+  if (actuals.length !== estimates.length) throw new RangeError('arrays must have the same length');
+  const actualsMean = mean(actuals);
+  const estimatesMean = mean(estimates);
+  const meanActualsDiffSquared = actuals.map(a => Math.pow(a - actualsMean,2));
+  const meanEstimatesDiffSquared = estimates.map(e => Math.pow(e - estimatesMean, 2));
+  return (sum(meanEstimatesDiffSquared) / sum(meanActualsDiffSquared));
+}
+
+/**
+ * returns an array of vectors as an array of arrays
+ * @example
+const vectors = [ [1,2,3], [1,2,3], [3,3,4], [3,3,3] ];
+const arrays = pivotVector(vectors); // => [ [1,2,3,3], [2,2,3,3], [3,3,4,3] ];
+ * @memberOf util
+ * @param {Array[]} vectors 
+ * @returns {Array[]}
+ */
+function pivotVector(vectors=[]) {
+  return vectors.reduce((result, val, index/*, arr*/) => {
+    val.forEach((vecVal, i) => {
+      (index === 0)
+        ? (result.push([ vecVal ]))
+        : (result[ i ].push(vecVal));
+    });
+    return result;
+  }, []);
+} 
+
+function pivotArrays(arrays = []) {
+  return (arrays.length)
+    ? arrays[ 0 ].map((vectorItem, index) => {
+        const returnArray = [];
+        arrays.forEach((v, i) => {
+          returnArray.push(arrays[ i ][ index ]);
+        });
+        return returnArray;
+      })
+    : arrays;
+}
 
 /**
  * Split arrays into random train and test subsets
@@ -238,18 +330,19 @@ csvObj.columnMatrix([['col1',{parseInt:true}],['col2]]); // =>
   columnMatrix(vectors = []) {
     const vectorArrays = vectors
       .map(vec => this.columnArray(...vec));
-    
-    if (vectorArrays.length) {
-      return vectorArrays[ 0 ].map((vectorItem, index) => {
-        const returnArray = [];
-        vectorArrays.forEach((v, i) => {
-          returnArray.push(vectorArrays[ i ][ index ]);
-        });
-        return returnArray;
-      })
-    } else {
-      return vectors;
-    }
+       
+    return pivotArrays(vectorArrays);
+    // if (vectorArrays.length) {
+    //   return vectorArrays[ 0 ].map((vectorItem, index) => {
+    //     const returnArray = [];
+    //     vectorArrays.forEach((v, i) => {
+    //       returnArray.push(vectorArrays[ i ][ index ]);
+    //     })
+    //     return returnArray;
+    //   })
+    // } else {
+    //   return vectors;
+    // }
   }
     /**
      * returns a new array of a selected column from an array of objects, can filter, scale and replace values
@@ -605,4 +698,4 @@ const preprocessing = {
   DataSet,
 };
 
-export { loadCSVURI, loadCSV, util, cross_validation, DataSet, preprocessing };
+export { loadCSVURI, loadCSV, util, squaredDifference, standardError, coefficientOfDetermination, pivotVector, pivotArrays, cross_validation, DataSet, preprocessing };

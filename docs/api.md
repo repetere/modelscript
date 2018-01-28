@@ -44,6 +44,7 @@
     * [.labelDecode(name, options)](#DataSet+labelDecode) ⇒ <code>array</code>
     * [.oneHotEncoder(name, options)](#DataSet+oneHotEncoder) ⇒ <code>Object</code>
     * [.columnReducer(name, options)](#DataSet+columnReducer) ⇒ <code>Object</code>
+    * [.columnMerge(name, data)](#DataSet+columnMerge) ⇒ <code>Object</code>
     * [.fitColumns(options)](#DataSet+fitColumns) ⇒ <code>Array.&lt;Object&gt;</code>
 
 <a name="new_DataSet_new"></a>
@@ -220,6 +221,22 @@ CSVDataSet.columnReducer('DoubleAge', {
   columnName: 'Age',
   reducer,
 }); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }
+```
+<a name="DataSet+columnMerge"></a>
+
+### dataSet.columnMerge(name, data) ⇒ <code>Object</code>
+it returns a new column that is merged onto the data set
+
+**Kind**: instance method of [<code>DataSet</code>](#DataSet)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>String</code> | name of new Column |
+| data | <code>Array</code> | new dataset data |
+
+**Example**  
+```js
+CSVDataSet.columnMerge('DoubleAge', [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ]); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }
 ```
 <a name="DataSet+fitColumns"></a>
 
@@ -266,6 +283,7 @@ dataset.fitColumns({
     * [.labelDecode(name, options)](#DataSet+labelDecode) ⇒ <code>array</code>
     * [.oneHotEncoder(name, options)](#DataSet+oneHotEncoder) ⇒ <code>Object</code>
     * [.columnReducer(name, options)](#DataSet+columnReducer) ⇒ <code>Object</code>
+    * [.columnMerge(name, data)](#DataSet+columnMerge) ⇒ <code>Object</code>
     * [.fitColumns(options)](#DataSet+fitColumns) ⇒ <code>Array.&lt;Object&gt;</code>
 
 <a name="new_DataSet_new"></a>
@@ -443,6 +461,22 @@ CSVDataSet.columnReducer('DoubleAge', {
   reducer,
 }); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }
 ```
+<a name="DataSet+columnMerge"></a>
+
+### dataSet.columnMerge(name, data) ⇒ <code>Object</code>
+it returns a new column that is merged onto the data set
+
+**Kind**: instance method of [<code>DataSet</code>](#DataSet)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>String</code> | name of new Column |
+| data | <code>Array</code> | new dataset data |
+
+**Example**  
+```js
+CSVDataSet.columnMerge('DoubleAge', [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ]); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }
+```
 <a name="DataSet+fitColumns"></a>
 
 ### dataSet.fitColumns(options) ⇒ <code>Array.&lt;Object&gt;</code>
@@ -481,6 +515,10 @@ dataset.fitColumns({
 * [util](#util) : <code>object</code>
     * [.StandardScaler(z)](#util.StandardScaler) ⇒ <code>Array.&lt;number&gt;</code>
     * [.MinMaxScaler(z)](#util.MinMaxScaler) ⇒ <code>Array.&lt;number&gt;</code>
+    * [.squaredDifference(left, right)](#util.squaredDifference) ⇒ <code>Array.&lt;Number&gt;</code>
+    * [.standardError(actuals, estimates)](#util.standardError) ⇒ <code>Number</code>
+    * [.coefficientOfDetermination(actuals, estimates)](#util.coefficientOfDetermination) ⇒ <code>Number</code>
+    * [.pivotVector(vectors)](#util.pivotVector) ⇒ <code>Array.&lt;Array&gt;</code>
 
 <a name="util.StandardScaler"></a>
 
@@ -510,6 +548,77 @@ This estimator scales and translates each feature individually such that it is i
 | --- | --- | --- |
 | z | <code>Array.&lt;number&gt;</code> | array of integers or floats |
 
+<a name="util.squaredDifference"></a>
+
+### util.squaredDifference(left, right) ⇒ <code>Array.&lt;Number&gt;</code>
+Returns an array of the squared different of two arrays
+
+**Kind**: static method of [<code>util</code>](#util)  
+**Returns**: <code>Array.&lt;Number&gt;</code> - Squared difference of left minus right array  
+
+| Param | Type |
+| --- | --- |
+| left | <code>Array.&lt;Number&gt;</code> | 
+| right | <code>Array.&lt;Number&gt;</code> | 
+
+<a name="util.standardError"></a>
+
+### util.standardError(actuals, estimates) ⇒ <code>Number</code>
+The standard error of the estimate is a measure of the accuracy of predictions made with a regression line
+
+**Kind**: static method of [<code>util</code>](#util)  
+**Returns**: <code>Number</code> - Standard Error of the Estimate  
+**See**: [http://onlinestatbook.com/2/regression/accuracy.html](http://onlinestatbook.com/2/regression/accuracy.html)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| actuals | <code>Array.&lt;Number&gt;</code> | numerical samples |
+| estimates | <code>Array.&lt;Number&gt;</code> | estimates values |
+
+**Example**  
+```js
+const actuals = [ 2, 4, 5, 4, 5, ];
+const estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];
+const SE = jsk.util.standardError(actuals, estimates);
+SE.toFixed(2) // => 0.89
+```
+<a name="util.coefficientOfDetermination"></a>
+
+### util.coefficientOfDetermination(actuals, estimates) ⇒ <code>Number</code>
+In statistics, the coefficient of determination, denoted R2 or r2 and pronounced "R squared", is the proportion of the variance in the dependent variable that is predictable from the independent variable(s).{\bar {y}}={\frac {1}{n}}\sum _{i=1}^{n}y_{i}
+
+**Kind**: static method of [<code>util</code>](#util)  
+**Returns**: <code>Number</code> - r^2  
+**See**: [https://en.wikipedia.org/wiki/Coefficient_of_determination](https://en.wikipedia.org/wiki/Coefficient_of_determination)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| actuals | <code>Array.&lt;Number&gt;</code> | numerical samples |
+| estimates | <code>Array.&lt;Number&gt;</code> | estimates values |
+
+**Example**  
+```js
+const actuals = [ 2, 4, 5, 4, 5, ];
+const estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];
+const r2 = jsk.util.coefficientOfDetermination(actuals, estimates); 
+r2.toFixed(1) // => 0.6
+```
+<a name="util.pivotVector"></a>
+
+### util.pivotVector(vectors) ⇒ <code>Array.&lt;Array&gt;</code>
+returns an array of vectors as an array of arrays
+
+**Kind**: static method of [<code>util</code>](#util)  
+
+| Param | Type |
+| --- | --- |
+| vectors | <code>Array.&lt;Array&gt;</code> | 
+
+**Example**  
+```js
+const vectors = [ [1,2,3], [1,2,3], [3,3,4], [3,3,3] ];
+const arrays = pivotVector(vectors); // => [ [1,2,3,3], [2,2,3,3], [3,3,4,3] ];
+```
 <a name="cross_validation"></a>
 
 ## cross_validation : <code>object</code>
