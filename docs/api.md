@@ -10,25 +10,24 @@
 ## Objects
 
 <dl>
-<dt><a href="#util">util</a> : <code>object</code></dt>
-<dd></dd>
-<dt><a href="#cross_validation">cross_validation</a> : <code>object</code></dt>
+<dt><a href="#util$1">util$1</a> : <code>object</code></dt>
 <dd></dd>
 <dt><a href="#preprocessing">preprocessing</a> : <code>object</code></dt>
+<dd></dd>
+<dt><a href="#util$$1">util$$1</a> : <code>object</code></dt>
+<dd></dd>
+<dt><a href="#cross_validation">cross_validation</a> : <code>object</code></dt>
 <dd></dd>
 </dl>
 
 ## Functions
 
 <dl>
-<dt><a href="#loadCSVURI">loadCSVURI(filepath)</a> ⇒ <code>Array.&lt;Object&gt;</code></dt>
+<dt><a href="#loadCSVURI$1">loadCSVURI$1(filepath)</a> ⇒ <code>Array.&lt;Object&gt;</code></dt>
 <dd><p>Asynchronously loads a CSV from a remote URL and returns an array of objects</p>
 </dd>
-<dt><a href="#loadCSV">loadCSV(filepath)</a> ⇒ <code>Array.&lt;Object&gt;</code></dt>
+<dt><a href="#loadCSV$1">loadCSV$1(filepath)</a> ⇒ <code>Array.&lt;Object&gt;</code></dt>
 <dd><p>Asynchronously loads a CSV from either a filepath or remote URL and returns an array of objects</p>
-</dd>
-<dt><a href="#pivotArrays">pivotArrays([vectors])</a> ⇒ <code>Array</code></dt>
-<dd><p>returns a matrix of values by combining arrays into a matrix</p>
 </dd>
 </dl>
 
@@ -217,12 +216,12 @@ it returns a new column that reduces a column into a new column object, this is 
 **Example**  
 ```js
 const reducer = (result, value, index, arr) => {
-  result.push(value * 2);
-  return result;
+result.push(value * 2);
+return result;
 };
 CSVDataSet.columnReducer('DoubleAge', {
-  columnName: 'Age',
-  reducer,
+columnName: 'Age',
+reducer,
 }); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }
 ```
 <a name="DataSet+columnMerge"></a>
@@ -456,12 +455,12 @@ it returns a new column that reduces a column into a new column object, this is 
 **Example**  
 ```js
 const reducer = (result, value, index, arr) => {
-  result.push(value * 2);
-  return result;
+result.push(value * 2);
+return result;
 };
 CSVDataSet.columnReducer('DoubleAge', {
-  columnName: 'Age',
-  reducer,
+columnName: 'Age',
+reducer,
 }); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }
 ```
 <a name="DataSet+columnMerge"></a>
@@ -510,118 +509,18 @@ dataset.fitColumns({
 //     ...
 //   ]
 ```
-<a name="util"></a>
+<a name="util$1"></a>
 
-## util : <code>object</code>
+## util$1 : <code>object</code>
 **Kind**: global namespace  
+<a name="preprocessing"></a>
 
-* [util](#util) : <code>object</code>
-    * [.StandardScaler(z)](#util.StandardScaler) ⇒ <code>Array.&lt;number&gt;</code>
-    * [.MinMaxScaler(z)](#util.MinMaxScaler) ⇒ <code>Array.&lt;number&gt;</code>
-    * [.squaredDifference(left, right)](#util.squaredDifference) ⇒ <code>Array.&lt;Number&gt;</code>
-    * [.standardError(actuals, estimates)](#util.standardError) ⇒ <code>Number</code>
-    * [.coefficientOfDetermination(actuals, estimates)](#util.coefficientOfDetermination) ⇒ <code>Number</code>
-    * [.pivotVector(vectors)](#util.pivotVector) ⇒ <code>Array.&lt;Array&gt;</code>
+## preprocessing : <code>object</code>
+**Kind**: global namespace  
+<a name="util$$1"></a>
 
-<a name="util.StandardScaler"></a>
-
-### util.StandardScaler(z) ⇒ <code>Array.&lt;number&gt;</code>
-Standardize features by removing the mean and scaling to unit variance
-
-Centering and scaling happen independently on each feature by computing the relevant statistics on the samples in the training set. Mean and standard deviation are then stored to be used on later data using the transform method.
-
-Standardization of a dataset is a common requirement for many machine learning estimators: they might behave badly if the individual feature do not more or less look like standard normally distributed data (e.g. Gaussian with 0 mean and unit variance)
-
-**Kind**: static method of [<code>util</code>](#util)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| z | <code>Array.&lt;number&gt;</code> | array of integers or floats |
-
-<a name="util.MinMaxScaler"></a>
-
-### util.MinMaxScaler(z) ⇒ <code>Array.&lt;number&gt;</code>
-Transforms features by scaling each feature to a given range.
-
-This estimator scales and translates each feature individually such that it is in the given range on the training set, i.e. between zero and one.
-
-**Kind**: static method of [<code>util</code>](#util)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| z | <code>Array.&lt;number&gt;</code> | array of integers or floats |
-
-<a name="util.squaredDifference"></a>
-
-### util.squaredDifference(left, right) ⇒ <code>Array.&lt;Number&gt;</code>
-Returns an array of the squared different of two arrays
-
-**Kind**: static method of [<code>util</code>](#util)  
-**Returns**: <code>Array.&lt;Number&gt;</code> - Squared difference of left minus right array  
-
-| Param | Type |
-| --- | --- |
-| left | <code>Array.&lt;Number&gt;</code> | 
-| right | <code>Array.&lt;Number&gt;</code> | 
-
-<a name="util.standardError"></a>
-
-### util.standardError(actuals, estimates) ⇒ <code>Number</code>
-The standard error of the estimate is a measure of the accuracy of predictions made with a regression line
-
-**Kind**: static method of [<code>util</code>](#util)  
-**Returns**: <code>Number</code> - Standard Error of the Estimate  
-**See**: [http://onlinestatbook.com/2/regression/accuracy.html](http://onlinestatbook.com/2/regression/accuracy.html)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| actuals | <code>Array.&lt;Number&gt;</code> | numerical samples |
-| estimates | <code>Array.&lt;Number&gt;</code> | estimates values |
-
-**Example**  
-```js
-const actuals = [ 2, 4, 5, 4, 5, ];
-const estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];
-const SE = jsk.util.standardError(actuals, estimates);
-SE.toFixed(2) // => 0.89
-```
-<a name="util.coefficientOfDetermination"></a>
-
-### util.coefficientOfDetermination(actuals, estimates) ⇒ <code>Number</code>
-In statistics, the coefficient of determination, denoted R2 or r2 and pronounced "R squared", is the proportion of the variance in the dependent variable that is predictable from the independent variable(s).{\bar {y}}={\frac {1}{n}}\sum _{i=1}^{n}y_{i}
-
-**Kind**: static method of [<code>util</code>](#util)  
-**Returns**: <code>Number</code> - r^2  
-**See**: [https://en.wikipedia.org/wiki/Coefficient_of_determination](https://en.wikipedia.org/wiki/Coefficient_of_determination)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| actuals | <code>Array.&lt;Number&gt;</code> | numerical samples |
-| estimates | <code>Array.&lt;Number&gt;</code> | estimates values |
-
-**Example**  
-```js
-const actuals = [ 2, 4, 5, 4, 5, ];
-const estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];
-const r2 = jsk.util.coefficientOfDetermination(actuals, estimates); 
-r2.toFixed(1) // => 0.6
-```
-<a name="util.pivotVector"></a>
-
-### util.pivotVector(vectors) ⇒ <code>Array.&lt;Array&gt;</code>
-returns an array of vectors as an array of arrays
-
-**Kind**: static method of [<code>util</code>](#util)  
-
-| Param | Type |
-| --- | --- |
-| vectors | <code>Array.&lt;Array&gt;</code> | 
-
-**Example**  
-```js
-const vectors = [ [1,2,3], [1,2,3], [3,3,4], [3,3,3] ];
-const arrays = pivotVector(vectors); // => [ [1,2,3,3], [2,2,3,3], [3,3,4,3] ];
-```
+## util$$1 : <code>object</code>
+**Kind**: global namespace  
 <a name="cross_validation"></a>
 
 ## cross_validation : <code>object</code>
@@ -677,13 +576,9 @@ const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
 // [ [ 50, 20, 34, 33, 10 ], [ 23, 90, 42, 19, 25 ] ] 
 const crossValidationArrayKFolds = jsk.cross_validation.cross_validation_split(testArray, { folds: 2, random_state: 0, });
 ```
-<a name="preprocessing"></a>
+<a name="loadCSVURI$1"></a>
 
-## preprocessing : <code>object</code>
-**Kind**: global namespace  
-<a name="loadCSVURI"></a>
-
-## loadCSVURI(filepath) ⇒ <code>Array.&lt;Object&gt;</code>
+## loadCSVURI$1(filepath) ⇒ <code>Array.&lt;Object&gt;</code>
 Asynchronously loads a CSV from a remote URL and returns an array of objects
 
 **Kind**: global function  
@@ -697,9 +592,9 @@ Asynchronously loads a CSV from a remote URL and returns an array of objects
 ```js
 // returns [{header:value,header2:value2}]loadCSVURI('https://raw.githubusercontent.com/repetere/jskit-learn/master/test/mock/data.csv').then(csvData).catch(console.error)
 ```
-<a name="loadCSV"></a>
+<a name="loadCSV$1"></a>
 
-## loadCSV(filepath) ⇒ <code>Array.&lt;Object&gt;</code>
+## loadCSV$1(filepath) ⇒ <code>Array.&lt;Object&gt;</code>
 Asynchronously loads a CSV from either a filepath or remote URL and returns an array of objects
 
 **Kind**: global function  
@@ -712,31 +607,4 @@ Asynchronously loads a CSV from either a filepath or remote URL and returns an a
 **Example**  
 ```js
 // returns [{header:value,header2:value2}]loadCSV('../mock/invalid-file.csv').then(csvData).catch(console.error)
-```
-<a name="pivotArrays"></a>
-
-## pivotArrays([vectors]) ⇒ <code>Array</code>
-returns a matrix of values by combining arrays into a matrix
-
-**Kind**: global function  
-**Returns**: <code>Array</code> - a matrix of column values  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [vectors] | <code>Array</code> | <code>[]</code> | array of arguments for columnArray to merge columns into a matrix |
-
-**Example**  
-```js
-const arrays = [
-  [ 1, 1, 3, 3 ],
-  [ 2, 2, 3, 3 ],
-  [ 3, 3, 4, 3 ],
-];
-pivotArrays(arrays); //=>
-// [
-//   [1, 2, 3,],
-//   [1, 2, 3,],
-//   [3, 3, 4,],
-//   [3, 3, 3,],
-// ];
 ```

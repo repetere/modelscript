@@ -58,6 +58,7 @@ $ npm i jskit-learn
     pivotArrays: [Function: pivotArrays], // returns a matrix of values by combining arrays into a matrix
     standardScore: [Function: standardScore], // Calculates the z score of each value in the sample, relative to the sample mean and standard deviation.
     zScore: [Function: standardScore], // alias for standardScore.
+    approximateZPercentile: [Function: approximateZPercentile], // approximate the p value from a z score
   },
 }
 ```

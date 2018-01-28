@@ -94,7 +94,7 @@ const sd = ml.Stat.array.standardDeviation; //(a, av) => Math.sqrt(avg(a.map(x =
  * @param {Number[]} right 
  * @returns {Number[]} Squared difference of left minus right array
  */
-function squaredDifference(left,right) {
+function squaredDifference(left, right) {
   return left.reduce((result, val, index, arr) => { 
     result.push(Math.pow((right[index]-val), 2));
     return result;
@@ -116,7 +116,7 @@ SE.toFixed(2) // => 0.89
  */
 function standardError(actuals=[], estimates=[]) {
   if (actuals.length !== estimates.length) throw new RangeError('arrays must have the same length');
-  const squaredDiff = squaredDifference(actuals,estimates);
+  const squaredDiff = squaredDifference(actuals, estimates);
   return Math.sqrt((sum(squaredDiff)) / (actuals.length - 2));
 }
 
@@ -151,7 +151,7 @@ function coefficientOfDetermination(actuals=[], estimates=[]) {
   if (actuals.length !== estimates.length) throw new RangeError('arrays must have the same length');
   const actualsMean = mean(actuals);
   const estimatesMean = mean(estimates);
-  const meanActualsDiffSquared = actuals.map(a => Math.pow(a - actualsMean,2));
+  const meanActualsDiffSquared = actuals.map(a => Math.pow(a - actualsMean, 2));
   const meanEstimatesDiffSquared = estimates.map(e => Math.pow(e - estimatesMean, 2));
   return (sum(meanEstimatesDiffSquared) / sum(meanActualsDiffSquared));
 }
@@ -169,7 +169,7 @@ function pivotVector(vectors=[]) {
   return vectors.reduce((result, val, index/*, arr*/) => {
     val.forEach((vecVal, i) => {
       (index === 0)
-        ? (result.push([ vecVal ]))
+        ? (result.push([vecVal,]))
         : (result[ i ].push(vecVal));
     });
     return result;
@@ -198,14 +198,95 @@ pivotArrays(arrays); //=>
 function pivotArrays(arrays = []) {
   return (arrays.length)
     ? arrays[ 0 ].map((vectorItem, index) => {
-        const returnArray = [];
-        arrays.forEach((v, i) => {
-          returnArray.push(arrays[ i ][ index ]);
-        });
-        return returnArray;
-      })
+      const returnArray = [];
+      arrays.forEach((v, i) => {
+        returnArray.push(arrays[ i ][ index ]);
+      });
+      return returnArray;
+    })
     : arrays;
 }
+
+/**
+* Standardize features by removing the mean and scaling to unit variance
+
+Centering and scaling happen independently on each feature by computing the relevant statistics on the samples in the training set. Mean and standard deviation are then stored to be used on later data using the transform method.
+
+Standardization of a dataset is a common requirement for many machine learning estimators: they might behave badly if the individual feature do not more or less look like standard normally distributed data (e.g. Gaussian with 0 mean and unit variance)
+* @memberOf util
+* @param {number[]} z - array of integers or floats
+* @returns {number[]}
+*/
+const StandardScaler = (z) => scale(z, sd(z));
+
+
+/**
+ * Transforms features by scaling each feature to a given range.
+This estimator scales and translates each feature individually such that it is in the given range on the training set, i.e. between zero and one.
+  * @memberOf util
+  * @param {number[]} z - array of integers or floats
+  * @returns {number[]}
+  */
+const MinMaxScaler= (z) => scale(z, (max(z) - min(z)));
+
+/**
+  * Converts z-score into the probability
+  * @memberOf util
+  * @see {@link https://stackoverflow.com/questions/36575743/how-do-i-convert-probability-into-z-score}
+  * @param {number} z - Number of standard deviations from the mean.
+  * @returns {number} p  - p-value
+  */
+function approximateZPercentile(z, alpha=true) {
+  // If z is greater than 6.5 standard deviations from the mean
+  // the number of significant digits will be outside of a reasonable 
+  // range.
+  if (z < -6.5)
+    return 0.0;
+
+  if (z > 6.5)
+    return 1.0;
+
+  let factK    = 1;
+  let sum      = 0;
+  let term     = 1;
+  let k        = 0;
+  let loopStop = Math.exp(-23);
+   
+  while (Math.abs(term) > loopStop) {
+    term = 0.3989422804 * Math.pow(-1, k) * Math.pow(z, k) / (2 * k + 1) /
+            Math.pow(2, k) * Math.pow(z, k + 1) / factK;
+    sum += term;
+    k++;
+    factK *= k;
+  }
+
+  sum += 0.5;
+
+  return (alpha) ? 1 - sum : sum;
+}
+
+// /**
+//   * Converts probabilty into the z-score
+//   * @memberOf util
+//   * @see {@link https://stackoverflow.com/questions/36575743/how-do-i-convert-probability-into-z-score}
+//   * @param {number} p - p-value
+//   * @returns {number} z - Number of standard deviations from the mean.
+//   */
+// export function approximatePercentileZ(p) {
+//   // var a0= 2.5066282,  a1=-18.6150006,  a2= 41.3911977,   a3=-25.4410605,
+//   //   b1=-8.4735109,  b2= 23.0833674,  b3=-21.0622410,   b4=  3.1308291,
+//   //   c0=-2.7871893,  c1= -2.2979648,  c2=  4.8501413,   c3=  2.3212128,
+//   //   d1= 3.5438892,  d2=  1.6370678, r, z;
+
+//   // if (p>0.42) {
+//   //   r=Math.sqrt(-Math.log(0.5-p));
+//   //   z=(((c3*r+c2)*r+c1)*r+c0)/((d2*r+d1)*r+1);
+//   // } else {
+//   //   r=p*p;
+//   //   z=p*(((a3*r+a2)*r+a1)*r+a0)/((((b4*r+b3)*r+b2)*r+b1)*r+1);
+//   // }
+//   // return z;ca
+// }
 
 /**
  * @namespace
@@ -220,26 +301,8 @@ const util$1 = {
   max,
   min,
   sd,
-  /**
-   * Standardize features by removing the mean and scaling to unit variance
-
-Centering and scaling happen independently on each feature by computing the relevant statistics on the samples in the training set. Mean and standard deviation are then stored to be used on later data using the transform method.
-
-Standardization of a dataset is a common requirement for many machine learning estimators: they might behave badly if the individual feature do not more or less look like standard normally distributed data (e.g. Gaussian with 0 mean and unit variance)
-   * @memberOf util
-   * @param {number[]} z - array of integers or floats
-   * @returns {number[]}
-   */
-  StandardScaler: (z) => scale(z, sd(z)),
-  /**
-   * Transforms features by scaling each feature to a given range.
-
-This estimator scales and translates each feature individually such that it is in the given range on the training set, i.e. between zero and one.
-   * @memberOf util
-   * @param {number[]} z - array of integers or floats
-   * @returns {number[]}
-   */
-  MinMaxScaler: (z) => scale(z, (max(z) - min(z))),
+  StandardScaler,
+  MinMaxScaler,
   LogScaler: (z) => z.map(Math.log),
   ExpScaler: (z) => z.map(Math.exp),
   squaredDifference,
@@ -250,6 +313,8 @@ This estimator scales and translates each feature individually such that it is i
   pivotArrays,
   standardScore,
   zScore: standardScore,
+  approximateZPercentile,
+  // approximatePercentileZ,
 };
 
 /**
@@ -714,6 +779,13 @@ function cross_validation_split(dataset = [], options = {
 
 const loadCSV = loadCSV$1;
 const loadCSVURI = loadCSVURI$1;
+
+/**
+ * @namespace
+ */
+const preprocessing = {
+  DataSet,
+};
 /**
  * @namespace
  */
@@ -727,16 +799,9 @@ const cross_validation = {
   cross_validation_split,
 };
 
-/**
- * @namespace
- */
-const preprocessing = {
-  DataSet,
-};
-
 exports.loadCSV = loadCSV;
 exports.loadCSVURI = loadCSVURI;
+exports.preprocessing = preprocessing;
 exports.util = util$$1;
 exports.cross_validation = cross_validation;
-exports.preprocessing = preprocessing;
 exports.DataSet = DataSet;
