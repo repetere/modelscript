@@ -27,6 +27,9 @@
 <dt><a href="#loadCSV">loadCSV(filepath)</a> ⇒ <code>Array.&lt;Object&gt;</code></dt>
 <dd><p>Asynchronously loads a CSV from either a filepath or remote URL and returns an array of objects</p>
 </dd>
+<dt><a href="#pivotArrays">pivotArrays([vectors])</a> ⇒ <code>Array</code></dt>
+<dd><p>returns a matrix of values by combining arrays into a matrix</p>
+</dd>
 </dl>
 
 <a name="DataSet"></a>
@@ -709,4 +712,31 @@ Asynchronously loads a CSV from either a filepath or remote URL and returns an a
 **Example**  
 ```js
 // returns [{header:value,header2:value2}]loadCSV('../mock/invalid-file.csv').then(csvData).catch(console.error)
+```
+<a name="pivotArrays"></a>
+
+## pivotArrays([vectors]) ⇒ <code>Array</code>
+returns a matrix of values by combining arrays into a matrix
+
+**Kind**: global function  
+**Returns**: <code>Array</code> - a matrix of column values  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [vectors] | <code>Array</code> | <code>[]</code> | array of arguments for columnArray to merge columns into a matrix |
+
+**Example**  
+```js
+const arrays = [
+  [ 1, 1, 3, 3 ],
+  [ 2, 2, 3, 3 ],
+  [ 3, 3, 4, 3 ],
+];
+pivotArrays(arrays); //=>
+// [
+//   [1, 2, 3,],
+//   [1, 2, 3,],
+//   [3, 3, 4,],
+//   [3, 3, 3,],
+// ];
 ```

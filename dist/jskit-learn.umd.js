@@ -95690,6 +95690,24 @@ function pivotVector(vectors=[]) {
   }, []);
 } 
 
+/**
+ * returns a matrix of values by combining arrays into a matrix
+ * @example 
+const arrays = [
+  [ 1, 1, 3, 3 ],
+  [ 2, 2, 3, 3 ],
+  [ 3, 3, 4, 3 ],
+];
+pivotArrays(arrays); //=>
+// [
+//   [1, 2, 3,],
+//   [1, 2, 3,],
+//   [3, 3, 4,],
+//   [3, 3, 3,],
+// ];
+* @param {Array} [vectors=[]] - array of arguments for columnArray to merge columns into a matrix
+* @returns {Array} a matrix of column values 
+*/
 function pivotArrays(arrays = []) {
   return (arrays.length)
     ? arrays[ 0 ].map((vectorItem, index) => {
@@ -95822,17 +95840,6 @@ csvObj.columnMatrix([['col1',{parseInt:true}],['col2]]); // =>
       .map(vec => this.columnArray(...vec));
        
     return pivotArrays(vectorArrays);
-    // if (vectorArrays.length) {
-    //   return vectorArrays[ 0 ].map((vectorItem, index) => {
-    //     const returnArray = [];
-    //     vectorArrays.forEach((v, i) => {
-    //       returnArray.push(vectorArrays[ i ][ index ]);
-    //     })
-    //     return returnArray;
-    //   })
-    // } else {
-    //   return vectors;
-    // }
   }
     /**
      * returns a new array of a selected column from an array of objects, can filter, scale and replace values
