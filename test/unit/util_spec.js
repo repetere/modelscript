@@ -92,4 +92,15 @@ describe('util', function () {
       expect(translatedVectors).to.eql(vectors);
     });
   });
+  describe('Z Scores / Standard Scores', () => {
+    it('should calculate standard scores', () => {
+      const observations = [
+        7, 8, 8, 7.5, 9
+      ];
+      const zscores = jsk.util.standardScore(observations);
+      const roundedZScores = zscores.map(z => parseFloat(z.toFixed(2), 10));
+      expect(roundedZScores[ 3 ]).to.eql(-0.54);
+      // console.log({ zscores,roundedZScores });
+    })
+  })
 });

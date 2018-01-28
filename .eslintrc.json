@@ -2,6 +2,7 @@
   "extends": "eslint:recommended",
   "plugins": [],
   "parserOptions": {
+    "sourceType": "module",
     "ecmaFeatures": {
       "ecmaVersion": 6,
       "jsx": true
@@ -30,6 +31,7 @@
     "browser": true,
     "commonjs": true,
     "es6": true,
-    "node": true
+    "node": true,
+    "mocha": true
   }
 }

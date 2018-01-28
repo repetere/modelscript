@@ -3,19 +3,9 @@ import { get as get$1 } from 'https';
 import validURL from 'valid-url';
 import csv from 'csvtojson';
 import ml from 'ml';
-import Random from 'random-js';
 import range from 'lodash.range';
 import rangeRight from 'lodash.rangeright';
-
-// import { default as path } from 'path';
-
-const avg = ml.Stat.array.mean;
-const mean = avg;
-const sum = ml.Stat.array.sum;
-const scale = (a, d) => a.map(x => (x - avg(a)) / d);
-const max = a => a.concat([]).sort((x, y) => x < y)[0];
-const min = a => a.concat([]).sort((x, y) => x > y)[0];
-const sd = ml.Stat.array.standardDeviation; //(a, av) => Math.sqrt(avg(a.map(x => (x - av) * x)));
+import Random from 'random-js';
 
 /**
  * Asynchronously loads a CSV from a remote URL and returns an array of objects
@@ -25,7 +15,7 @@ const sd = ml.Stat.array.standardDeviation; //(a, av) => Math.sqrt(avg(a.map(x =
  * @param {string} filepath URL to CSV path
  * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
  */
-function loadCSVURI(filepath) {
+function loadCSVURI$1(filepath) {
   const reqMethod = (filepath.search('https', 'gi') > -1) ? get$1 : get;
   return new Promise((resolve, reject) => {
     const csvData = [];
@@ -49,6 +39,7 @@ function loadCSVURI(filepath) {
   })
 }
 
+
 /**
  * Asynchronously loads a CSV from either a filepath or remote URL and returns an array of objects
  * @example
@@ -57,9 +48,9 @@ function loadCSVURI(filepath) {
  * @param {string} filepath URL to CSV path
  * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
  */
-function loadCSV(filepath) {
+function loadCSV$1(filepath) {
   if (validURL.isUri(filepath)) {
-    return loadCSVURI(filepath);
+    return loadCSVURI$1(filepath);
   } else {
     return new Promise((resolve, reject) => {
       const csvData = [];
@@ -81,48 +72,14 @@ function loadCSV(filepath) {
   }
 }
 
-/**
- * @namespace
- */
-const util = {
-  range,
-  rangeRight,
-  scale,
-  avg,
-  mean: avg,
-  sum,
-  max,
-  min,
-  sd,
-  /**
-   * Standardize features by removing the mean and scaling to unit variance
+const avg = ml.Stat.array.mean;
+const mean = avg;
+const sum = ml.Stat.array.sum;
+const scale = (a, d) => a.map(x => (x - avg(a)) / d);
+const max = a => a.concat([]).sort((x, y) => x < y)[0];
+const min = a => a.concat([]).sort((x, y) => x > y)[0];
+const sd = ml.Stat.array.standardDeviation; //(a, av) => Math.sqrt(avg(a.map(x => (x - av) * x)));
 
-Centering and scaling happen independently on each feature by computing the relevant statistics on the samples in the training set. Mean and standard deviation are then stored to be used on later data using the transform method.
-
-Standardization of a dataset is a common requirement for many machine learning estimators: they might behave badly if the individual feature do not more or less look like standard normally distributed data (e.g. Gaussian with 0 mean and unit variance)
-   * @memberOf util
-   * @param {number[]} z - array of integers or floats
-   * @returns {number[]}
-   */
-  StandardScaler: (z) => scale(z, sd(z)),
-  /**
-   * Transforms features by scaling each feature to a given range.
-
-This estimator scales and translates each feature individually such that it is in the given range on the training set, i.e. between zero and one.
-   * @memberOf util
-   * @param {number[]} z - array of integers or floats
-   * @returns {number[]}
-   */
-  MinMaxScaler: (z) => scale(z, (max(z) - min(z))),
-  LogScaler: (z) => z.map(Math.log),
-  ExpScaler: (z) => z.map(Math.exp),
-  squaredDifference,
-  standardError,
-  coefficientOfDetermination,
-  rSquared: coefficientOfDetermination,
-  pivotVector,
-  pivotArrays,
-};
 
 /**
  * Returns an array of the squared different of two arrays
@@ -155,6 +112,19 @@ function standardError(actuals=[], estimates=[]) {
   if (actuals.length !== estimates.length) throw new RangeError('arrays must have the same length');
   const squaredDiff = squaredDifference(actuals,estimates);
   return Math.sqrt((sum(squaredDiff)) / (actuals.length - 2));
+}
+
+/**
+ * Calculates the z score of each value in the sample, relative to the sample mean and standard deviation.
+ * @memberOf util
+ * @see {@link https://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.stats.mstats.zscore.html}
+ * @param {Number[]} observations - An array like object containing the sample data.
+ * @returns {Number[]} The z-scores, standardized by mean and standard deviation of input array 
+ */
+function standardScore(observations = []) {
+  const mean = avg(observations);
+  const stdDev = sd(observations);
+  return observations.map(x => ((x - mean) / stdDev));
 }
 
 /**
@@ -202,6 +172,7 @@ function pivotVector(vectors=[]) {
 
 /**
  * returns a matrix of values by combining arrays into a matrix
+ * @memberOf util
  * @example 
 const arrays = [
   [ 1, 1, 3, 3 ],
@@ -228,6 +199,433 @@ function pivotArrays(arrays = []) {
         return returnArray;
       })
     : arrays;
+}
+
+/**
+ * @namespace
+ */
+const util$1 = {
+  range,
+  rangeRight,
+  scale,
+  avg,
+  mean: avg,
+  sum,
+  max,
+  min,
+  sd,
+  /**
+   * Standardize features by removing the mean and scaling to unit variance
+
+Centering and scaling happen independently on each feature by computing the relevant statistics on the samples in the training set. Mean and standard deviation are then stored to be used on later data using the transform method.
+
+Standardization of a dataset is a common requirement for many machine learning estimators: they might behave badly if the individual feature do not more or less look like standard normally distributed data (e.g. Gaussian with 0 mean and unit variance)
+   * @memberOf util
+   * @param {number[]} z - array of integers or floats
+   * @returns {number[]}
+   */
+  StandardScaler: (z) => scale(z, sd(z)),
+  /**
+   * Transforms features by scaling each feature to a given range.
+
+This estimator scales and translates each feature individually such that it is in the given range on the training set, i.e. between zero and one.
+   * @memberOf util
+   * @param {number[]} z - array of integers or floats
+   * @returns {number[]}
+   */
+  MinMaxScaler: (z) => scale(z, (max(z) - min(z))),
+  LogScaler: (z) => z.map(Math.log),
+  ExpScaler: (z) => z.map(Math.exp),
+  squaredDifference,
+  standardError,
+  coefficientOfDetermination,
+  rSquared: coefficientOfDetermination,
+  pivotVector,
+  pivotArrays,
+  standardScore,
+  zScore: standardScore,
+};
+
+/**
+ * class for manipulating an array of objects, typically from CSV data
+ * @class DataSet
+ */
+class DataSet {
+  /**
+   * creates a new raw data instance for preprocessing data for machine learning
+   * @example
+   * const dataset = new jsk.DataSet(csvData);
+   * @param {Object[]} dataset
+   * @returns {this} 
+   */
+  constructor(data = []) {
+    this.data = [...data, ];
+    this.labels = new Map();
+    this.encoders = new Map();
+    return this;
+  }
+  /**
+   * returns a matrix of values by combining column arrays into a matrix
+   * @example const csvObj = new DataSet([{col1:1,col2:5},{col1:2,col2:6}]);
+csvObj.columnMatrix([['col1',{parseInt:true}],['col2]]); // =>
+//[ 
+//  [1,5], 
+//  [2,6], 
+//]
+  * @param {Array} [vectors=[]] - array of arguments for columnArray to merge columns into a matrix
+  * @returns {Array} a matrix of column values 
+  */
+  columnMatrix(vectors = []) {
+    const vectorArrays = vectors
+      .map(vec => this.columnArray(...vec));
+        
+    return util$1.pivotArrays(vectorArrays);
+  }
+  /**
+   * returns a new array of a selected column from an array of objects, can filter, scale and replace values
+   * @example 
+   * //column Array returns column of data by name
+// [ '44','27','30','38','40','35','','48','50', '37' ]
+const OringalAgeColumn = dataset.columnArray('Age'); 
+  * @param {string} name - csv column header, or JSON object property name 
+  * @param options 
+  * @param {function} [options.prefilter=(arr[val])=>true] - prefilter values to return
+  * @param {function} [options.filter=(arr[val])=>true] - filter values to return
+  * @param {function} [options.replace.test=undefined] - test function for replacing values (arr[val])
+  * @param {(string|number|function)} [options.replace.value=undefined] - value to replace (arr[val]) if replace test is true, if a function (result,val,index,arr,name)=>your custom value
+  * @param {number} [options.parseIntBase=10] - radix value for parseInt
+  * @param {boolean} [options.parseFloat=false] - convert values to floats 
+  * @param {boolean} [options.parseInt=false] - converts values to ints 
+  * @param {boolean} [options.scale=false] - standard or minmax feature scale values 
+  * @returns {array}
+  */
+  columnArray(name, options = {}) {
+    const config = Object.assign({
+      prefilter: () => true,
+      filter: () => true,
+      replace: {
+        test: undefined,
+        value: undefined,
+      },
+      parseInt: false,
+      parseIntBase: 10,
+      parseFloat: (options.scale) ? true : false,
+      scale: false,
+    }, options);
+    const modifiedColumn = this.data
+      .filter(config.prefilter)
+      .reduce((result, val, index, arr) => {
+        let objVal = val[ name ];
+        let returnVal = (typeof config.replace.test === 'function') ?
+          config.replace.test(objVal) ?
+            typeof config.replace.value === 'function' ?
+              config.replace.value(result, val, index, arr, name) :
+              config.replace.value :
+            objVal :
+          objVal;
+        if (config.filter(returnVal)) {
+          if (config.parseInt) result.push(parseInt(returnVal, config.parseIntBase));
+          else if (config.parseFloat) result.push(parseFloat(returnVal));
+          else result.push(returnVal);
+        }
+        return result;
+      }, []);
+    if (typeof config.scale==='function') {
+      return modifiedColumn.map(config.scale);
+    } else if (config.scale) {
+      switch (config.scale) {
+      case 'standard':
+        return util$1.StandardScaler(modifiedColumn);
+      case 'log':
+        return util$1.LogScaler(modifiedColumn);
+      case 'exp':
+        return util$1.ExpScaler(modifiedColumn);
+      case 'normalize':
+      default:
+        return util$1.MinMaxScaler(modifiedColumn);
+      }
+    } else {
+      return modifiedColumn;
+    }
+  }
+  /**
+   * returns a new array of a selected column from an array of objects and replaces empty values, encodes values and scales values
+   * @example
+   * //column Replace returns new Array with replaced missing data
+//[ '44','27','30','38','40','35',38.77777777777778,'48','50','37' ]
+const ReplacedAgeMeanColumn = dataset.columnReplace('Age',{strategy:'mean'});
+  * @param {string} name - csv column header, or JSON object property name 
+  * @param options 
+  * @param {boolean} [options.empty=true] - replace empty values 
+  * @param {boolean} [options.strategy="mean"] - strategy for replacing value, any array stat method from ml.js (mean, standardDeviation, median) or (label,labelEncoder,onehot,oneHotEncoder)
+  * @returns {array|Object[]}
+  */
+  columnReplace(name, options = {}) {
+    const config = Object.assign({
+      strategy: 'mean',
+      empty: true,
+      arrayOptions: {
+        parseFloat: true,
+        filter: val => val,
+      },
+      labelOptions: {},
+    }, options);
+    let replaceVal;
+    let replace = {
+      test: val => !val,
+      value: replaceVal,
+    };
+    switch (config.strategy) {
+    case 'label':
+    case 'labelEncoder':
+      replaceVal = this.labelEncoder(name, config.labelOptions);
+      replace = {
+        test: val => true,
+        value: (result, val, index, arr) => replaceVal[index],
+      };
+      break;
+    case 'onehot':
+    case 'oneHot':
+    case 'oneHotEncode':
+    case 'oneHotEncoder':
+      replaceVal = this.oneHotEncoder(name, config.oneHotOptions);
+      replace = {
+        test: val => true,
+        value: (result, val, index, arr) => replaceVal[index],
+      };
+      return replaceVal;
+      break;
+    case 'reducer':
+    case 'reduce':
+      replaceVal = this.columnReducer(name, config.reducerOptions); 
+      return replaceVal;  
+    case 'merge':
+      replaceVal = this.columnMerge(name, config.mergeData); 
+      return replaceVal;  
+    default:
+      replaceVal = ml.Stat.array[config.strategy](this.columnArray(name, config.arrayOptions));
+      replace.value = replaceVal;
+      break;
+    }
+    return this.columnArray(name,
+      Object.assign({}, {
+        replace,
+        scale: options.scale,
+      }, options.columnOptions));
+  }
+  /**
+   * returns a new array and label encodes a selected column
+   * @example
+   * const oneHotCountryColumn = dataset.oneHotEncoder('Country'); 
+
+// [ 'N', 'Yes', 'No', 'f', 'Yes', 'Yes', 'false', 'Yes', 'No', 'Yes' ] 
+const originalPurchasedColumn = dataset.labelEncoder('Purchased');
+// [ 0, 1, 0, 0, 1, 1, 1, 1, 0, 1 ]
+const encodedBinaryPurchasedColumn = dataset.labelEncoder('Purchased',{ binary:true });
+// [ 0, 1, 2, 3, 1, 1, 4, 1, 2, 1 ]
+const encodedPurchasedColumn = dataset.labelEncoder('Purchased'); 
+  * @param {string} name - csv column header, or JSON object property name 
+  * @param options
+  * @param {boolean} [options.binary=false] - only replace with (0,1) with binary values 
+  * @see {@link http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html} 
+  * @returns {array}
+  */
+  labelEncoder(name, options) {
+    const config = Object.assign({
+      // n_values: "auto",
+      // categorical_features: "all",
+      // // dtype: np.float64,
+      // sparse: true,
+      // handle_unknown: 'error',
+      binary: false,
+    }, options);
+    const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
+    const labels = new Map(
+      Array.from(new Set(labelData).values())
+        .reduce((result, val, i, arr) => {
+          result.push([val, i, ]);
+          result.push([i, val, ]);
+          return result;
+        }, [])
+    );
+    this.labels.set(name, labels);
+    const labeledData = (config.binary) ?
+      labelData.map(label => {
+        // console.log(label);
+        if (!label) return 0;
+        switch (label) {
+        case false:
+        case 'N':
+        case 'n':
+        case 'NO':
+        case 'No':
+        case 'no':
+        case 'False':
+        case 'F':
+        case 'f':
+          return 0;
+        default:
+          return 1;
+        }
+      }) :
+      labelData.map(label => labels.get(label));
+    return labeledData;
+  }
+  /**
+     * returns a new array and decodes an encoded column back to the original array values
+     * @param {string} name - csv column header, or JSON object property name 
+     * @param options
+     * @returns {array}
+     */
+  labelDecode(name, options) {
+    const config = Object.assign({}, options);
+    const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
+    return labelData.map(val => this.labels.get(name).get(val));
+  }
+  /**
+ * returns a new object of one hot encoded values
+ * @example
+ * // [ 'Brazil','Mexico','Ghana','Mexico','Ghana','Brazil','Mexico','Brazil','Ghana', 'Brazil' ]
+const originalCountry = dataset.columnArray('Country'); 
+
+// { originalCountry:
+//    { Country_Brazil: [ 1, 0, 0, 0, 0, 1, 0, 1, 0, 1 ],
+//      Country_Mexico: [ 0, 1, 0, 1, 0, 0, 1, 0, 0, 0 ],
+//      Country_Ghana: [ 0, 0, 1, 0, 1, 0, 0, 0, 1, 0 ] },
+//     }
+const oneHotCountryColumn = dataset.oneHotEncoder('Country'); 
+  * @param {string} name - csv column header, or JSON object property name 
+  * @param options 
+  * @see {@link http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html}
+  * @return {Object}
+  */
+  oneHotEncoder(name, options) {
+    const config = Object.assign({
+      // n_values: "auto",
+      // categorical_features: "all",
+      // prefix: true,
+      // dtype: np.float64,
+      // sparse: True,
+      // handle_unknown: 'error'
+    }, options);
+    const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
+    const labels = Array.from(new Set(labelData).values());
+    const encodedData = labelData.reduce(
+      (result, val, index, arr) => {
+        labels.forEach(encodedLabel => {
+          const oneHotLabelArrayName = `${name}_${encodedLabel}`;
+          const oneHotVal = (val === encodedLabel) ? 1 : 0;
+          if (Array.isArray(result[oneHotLabelArrayName])) {
+            result[oneHotLabelArrayName].push(oneHotVal);
+          } else {
+            result[oneHotLabelArrayName] = [oneHotVal, ];
+          }
+        });
+        return result;
+      }, {});
+    this.encoders.set(name, {
+      labels,
+      prefix: `${name}_`,
+    });
+    return encodedData;
+  }
+  /**
+ * it returns a new column that reduces a column into a new column object, this is used in data prep to create new calculated columns for aggregrate statistics
+ * @example 
+const reducer = (result, value, index, arr) => {
+result.push(value * 2);
+return result;
+};
+CSVDataSet.columnReducer('DoubleAge', {
+columnName: 'Age',
+reducer,
+}); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }
+  * @param {String} name - name of new Column 
+  * @param {Object} options 
+  * @param {String} options.columnName - name property for columnArray selection 
+  * @param {Object} options.columnOptions - options property for columnArray  
+  * @param {Function} options.reducer - reducer function to reduce into new array, it should push values into the resulting array  
+  * @returns {Object} a new object that has reduced array as the value
+  */
+  columnReducer(name, options) {
+    const newColumn = {
+      [ name ]: this.columnArray(options.columnName, options.columnOptions).reduce(options.reducer, []),
+    };
+    return newColumn;
+  }
+  /**
+   * it returns a new column that is merged onto the data set
+   * @example 
+CSVDataSet.columnMerge('DoubleAge', [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ]); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }
+    * @param {String} name - name of new Column 
+    * @param {Array} data - new dataset data  
+    * @returns {Object} 
+    */
+  columnMerge(name, data=[]) {
+    if (this.data.length !== data.length) throw new RangeError(`Merged data column must have the same length(${data.length}) as the DataSet's length (${this.data.length})`);
+    return {
+      [name]: data,
+    };
+  }
+  /**
+     * mutates data property of DataSet by replacing multiple columns in a single command
+     * @example
+     * //fit Columns, mutates dataset
+dataset.fitColumns({
+  columns:[{name:'Age',options:{ strategy:'mean'} }]
+});
+// dataset
+// class DataSet
+//   data:[
+//     {
+//       'Country': 'Brazil',
+//       'Age': '38.77777777777778',
+//       'Salary': '72000',
+//       'Purchased': 'N',
+//     }
+//     ...
+//   ]
+  * @param options 
+  * @param {Object[]} options.columns - {name:'columnName',options:{strategy:'mean',labelOoptions:{}},}
+  * @returns {Object[]}
+  */
+  fitColumns(options) {
+    const config = Object.assign({
+      returnData:true,
+      columns: [],
+    }, options);
+    const fittedColumns = config.columns
+      .reduce((result, val, index, arr) => {
+        let replacedColumn = this.columnReplace(val.name, val.options);
+        if (Array.isArray(replacedColumn)) {
+          replacedColumn = replacedColumn.map(columnVal => ({
+            [val.name]: columnVal,
+          }));
+          result[val.name] = replacedColumn;
+        } else {
+          Object.keys(replacedColumn).forEach(repColName => {
+            result[repColName] = replacedColumn[repColName].map(columnVal => ({
+              [repColName]: columnVal,
+            }));
+          });
+        }
+        return result;
+      }, {});
+    if (Object.keys(fittedColumns)) {
+      const columnNames = Object.keys(fittedColumns);
+      const fittedData = fittedColumns[config.columns[0].name]
+        .reduce((result, val, index, arr) => {
+          const returnObj = {};
+          columnNames.forEach(colName => {
+            returnObj[colName] = fittedColumns[colName][index][colName];
+          });
+          result.push(returnObj);
+          return result;
+        }, []);
+      this.data = this.data.map((val, index) => Object.assign({}, val, fittedData[index]));
+    }
+    return config.returnData ? this.data : this;
+  }
 }
 
 /**
@@ -308,396 +706,21 @@ function cross_validation_split(dataset = [], options = {
   return dataset_split;
 }
 
+const loadCSV = loadCSV$1;
+const loadCSVURI = loadCSVURI$1;
+/**
+ * @namespace
+ */
+const util$$1 = util$1;
 /**
  * @namespace
  * @see {@link https://machinelearningmastery.com/implement-resampling-methods-scratch-python/}
  */
 const cross_validation = {
-    train_test_split,
-    cross_validation_split,
-  };
-  /**
-   * class for manipulating an array of objects, typically from CSV data
-   * @class DataSet
-   */
-class DataSet {
-  /**
-   * creates a new raw data instance for preprocessing data for machine learning
-   * @example
-   * const dataset = new jsk.DataSet(csvData);
-   * @param {Object[]} dataset
-   * @returns {this} 
-   */
-  constructor(data = []) {
-      this.data = [...data];
-      this.labels = new Map();
-      this.encoders = new Map();
-      return this;
-  }
-  /**
-   * returns a matrix of values by combining column arrays into a matrix
-   * @example const csvObj = new DataSet([{col1:1,col2:5},{col1:2,col2:6}]);
-csvObj.columnMatrix([['col1',{parseInt:true}],['col2]]); // =>
-//[ 
-//  [1,5], 
-//  [2,6], 
-//]
-   * @param {Array} [vectors=[]] - array of arguments for columnArray to merge columns into a matrix
-   * @returns {Array} a matrix of column values 
-   */
-  columnMatrix(vectors = []) {
-    const vectorArrays = vectors
-      .map(vec => this.columnArray(...vec));
-       
-    return pivotArrays(vectorArrays);
-  }
-    /**
-     * returns a new array of a selected column from an array of objects, can filter, scale and replace values
-     * @example 
-     * //column Array returns column of data by name
-// [ '44','27','30','38','40','35','','48','50', '37' ]
-const OringalAgeColumn = dataset.columnArray('Age'); 
-     * @param {string} name - csv column header, or JSON object property name 
-     * @param options 
-     * @param {function} [options.prefilter=(arr[val])=>true] - prefilter values to return
-     * @param {function} [options.filter=(arr[val])=>true] - filter values to return
-     * @param {function} [options.replace.test=undefined] - test function for replacing values (arr[val])
-     * @param {(string|number|function)} [options.replace.value=undefined] - value to replace (arr[val]) if replace test is true, if a function (result,val,index,arr,name)=>your custom value
-     * @param {number} [options.parseIntBase=10] - radix value for parseInt
-     * @param {boolean} [options.parseFloat=false] - convert values to floats 
-     * @param {boolean} [options.parseInt=false] - converts values to ints 
-     * @param {boolean} [options.scale=false] - standard or minmax feature scale values 
-     * @returns {array}
-     */
-  columnArray(name, options = {}) {
-    const config = Object.assign({
-      prefilter: () => true,
-      filter: () => true,
-      replace: {
-        test: undefined,
-        value: undefined,
-      },
-      parseInt: false,
-      parseIntBase: 10,
-      parseFloat: (options.scale) ? true : false,
-      scale: false,
-    }, options);
-    const modifiedColumn = this.data
-      .filter(config.prefilter)
-      .reduce((result, val, index, arr) => {
-        let objVal = val[ name ];
-        let returnVal = (typeof config.replace.test === 'function') ?
-          config.replace.test(objVal) ?
-            typeof config.replace.value === 'function' ?
-              config.replace.value(result, val, index, arr, name) :
-              config.replace.value :
-            objVal :
-          objVal;
-        if (config.filter(returnVal)) {
-          if (config.parseInt) result.push(parseInt(returnVal, config.parseIntBase));
-          else if (config.parseFloat) result.push(parseFloat(returnVal));
-          else result.push(returnVal);
-        }
-        return result;
-      }, []);
-    if (typeof config.scale==='function') {
-      return modifiedColumn.map(config.scale);
-    } else if (config.scale) {
-      switch (config.scale) {
-        case 'standard':
-          return util.StandardScaler(modifiedColumn);
-        case 'log':
-          return util.LogScaler(modifiedColumn);
-        case 'exp':
-          return util.ExpScaler(modifiedColumn);
-        case 'normalize':
-        default:
-          return util.MinMaxScaler(modifiedColumn);
-        }
-      } else {
-        return modifiedColumn;
-      }
-    }
-    /**
-     * returns a new array of a selected column from an array of objects and replaces empty values, encodes values and scales values
-     * @example
-     * //column Replace returns new Array with replaced missing data
-//[ '44','27','30','38','40','35',38.77777777777778,'48','50','37' ]
-const ReplacedAgeMeanColumn = dataset.columnReplace('Age',{strategy:'mean'});
-     * @param {string} name - csv column header, or JSON object property name 
-     * @param options 
-     * @param {boolean} [options.empty=true] - replace empty values 
-     * @param {boolean} [options.strategy="mean"] - strategy for replacing value, any array stat method from ml.js (mean, standardDeviation, median) or (label,labelEncoder,onehot,oneHotEncoder)
-     * @returns {array|Object[]}
-     */
-  columnReplace(name, options = {}) {
-      const config = Object.assign({
-        strategy: 'mean',
-        empty: true,
-        arrayOptions: {
-          parseFloat: true,
-          filter: val => val,
-        },
-        labelOptions: {},
-      }, options);
-      let replaceVal;
-      let replace = {
-        test: val => !val,
-        value: replaceVal,
-      };
-      switch (config.strategy) {
-        case 'label':
-        case 'labelEncoder':
-          replaceVal = this.labelEncoder(name, config.labelOptions);
-          replace = {
-            test: val => true,
-            value: (result, val, index, arr) => replaceVal[index],
-          };
-          break;
-        case 'onehot':
-        case 'oneHot':
-        case 'oneHotEncode':
-        case 'oneHotEncoder':
-          replaceVal = this.oneHotEncoder(name, config.oneHotOptions);
-          replace = {
-            test: val => true,
-            value: (result, val, index, arr) => replaceVal[index],
-          };
-          return replaceVal;
-          break;
-        case 'reducer':
-        case 'reduce':
-          replaceVal = this.columnReducer(name, config.reducerOptions); 
-          return replaceVal;  
-        case 'merge':
-          replaceVal = this.columnMerge(name, config.mergeData); 
-          return replaceVal;  
-        default:
-          replaceVal = ml.Stat.array[config.strategy](this.columnArray(name, config.arrayOptions));
-          replace.value = replaceVal;
-          break;
-      }
-    return this.columnArray(name,
-      Object.assign({}, {
-        replace,
-        scale: options.scale,
-      }, options.columnOptions));
-    }
-    /**
-     * returns a new array and label encodes a selected column
-     * @example
-     * const oneHotCountryColumn = dataset.oneHotEncoder('Country'); 
-
-// [ 'N', 'Yes', 'No', 'f', 'Yes', 'Yes', 'false', 'Yes', 'No', 'Yes' ] 
-const originalPurchasedColumn = dataset.labelEncoder('Purchased');
-// [ 0, 1, 0, 0, 1, 1, 1, 1, 0, 1 ]
-const encodedBinaryPurchasedColumn = dataset.labelEncoder('Purchased',{ binary:true });
-// [ 0, 1, 2, 3, 1, 1, 4, 1, 2, 1 ]
-const encodedPurchasedColumn = dataset.labelEncoder('Purchased'); 
-     * @param {string} name - csv column header, or JSON object property name 
-     * @param options
-     * @param {boolean} [options.binary=false] - only replace with (0,1) with binary values 
-     * @see {@link http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html} 
-     * @returns {array}
-     */
-  labelEncoder(name, options) {
-      const config = Object.assign({
-        // n_values: "auto",
-        // categorical_features: "all",
-        // // dtype: np.float64,
-        // sparse: true,
-        // handle_unknown: 'error',
-        binary: false,
-      }, options);
-      const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
-      const labels = new Map(
-        Array.from(new Set(labelData).values())
-        .reduce((result, val, i, arr) => {
-          result.push([val, i]);
-          result.push([i, val]);
-          return result;
-        }, [])
-      );
-      this.labels.set(name, labels);
-      const labeledData = (config.binary) ?
-        labelData.map(label => {
-          // console.log(label);
-          if (!label) return 0;
-          switch (label) {
-            case false:
-            case 'N':
-            case 'n':
-            case 'NO':
-            case 'No':
-            case 'no':
-            case 'False':
-            case 'False':
-            case 'F':
-            case 'f':
-              return 0;
-            default:
-              return 1;
-          }
-        }) :
-        labelData.map(label => labels.get(label));
-      return labeledData;
-    }
-    /**
-     * returns a new array and decodes an encoded column back to the original array values
-     * @param {string} name - csv column header, or JSON object property name 
-     * @param options
-     * @returns {array}
-     */
-  labelDecode(name, options) {
-      const config = Object.assign({}, options);
-      const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
-      return labelData.map(val => this.labels.get(name).get(val));
-    }
-    /**
-     * returns a new object of one hot encoded values
-     * @example
-     * // [ 'Brazil','Mexico','Ghana','Mexico','Ghana','Brazil','Mexico','Brazil','Ghana', 'Brazil' ]
-const originalCountry = dataset.columnArray('Country'); 
-
-// { originalCountry:
-//    { Country_Brazil: [ 1, 0, 0, 0, 0, 1, 0, 1, 0, 1 ],
-//      Country_Mexico: [ 0, 1, 0, 1, 0, 0, 1, 0, 0, 0 ],
-//      Country_Ghana: [ 0, 0, 1, 0, 1, 0, 0, 0, 1, 0 ] },
-//     }
-const oneHotCountryColumn = dataset.oneHotEncoder('Country'); 
-     * @param {string} name - csv column header, or JSON object property name 
-     * @param options 
-     * @see {@link http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html}
-     * @return {Object}
-     */
-  oneHotEncoder(name, options) {
-      const config = Object.assign({
-        // n_values: "auto",
-        // categorical_features: "all",
-        // prefix: true,
-        // dtype: np.float64,
-        // sparse: True,
-        // handle_unknown: 'error'
-      }, options);
-      const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
-      const labels = Array.from(new Set(labelData).values());
-      const encodedData = labelData.reduce(
-        (result, val, index, arr) => {
-          labels.forEach(encodedLabel => {
-            const oneHotLabelArrayName = `${name}_${encodedLabel}`;
-            const oneHotVal = (val === encodedLabel) ? 1 : 0;
-            if (Array.isArray(result[oneHotLabelArrayName])) {
-              result[oneHotLabelArrayName].push(oneHotVal);
-            } else {
-              result[oneHotLabelArrayName] = [oneHotVal];
-            }
-          });
-          return result;
-        }, {});
-      this.encoders.set(name, {
-        labels,
-        prefix: `${name}_`,
-    });
-    return encodedData;
-  }
-  /**
-   * it returns a new column that reduces a column into a new column object, this is used in data prep to create new calculated columns for aggregrate statistics
-   * @example 
-const reducer = (result, value, index, arr) => {
-  result.push(value * 2);
-  return result;
+  train_test_split,
+  cross_validation_split,
 };
-CSVDataSet.columnReducer('DoubleAge', {
-  columnName: 'Age',
-  reducer,
-}); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }
-   * @param {String} name - name of new Column 
-   * @param {Object} options 
-   * @param {String} options.columnName - name property for columnArray selection 
-   * @param {Object} options.columnOptions - options property for columnArray  
-   * @param {Function} options.reducer - reducer function to reduce into new array, it should push values into the resulting array  
-   * @returns {Object} a new object that has reduced array as the value
-   */
-  columnReducer(name, options) {
-    const newColumn = {
-      [ name ]: this.columnArray(options.columnName, options.columnOptions).reduce(options.reducer, []),
-    };
-    return newColumn;
-  }
-  /**
-   * it returns a new column that is merged onto the data set
-   * @example 
-CSVDataSet.columnMerge('DoubleAge', [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ]); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }
-   * @param {String} name - name of new Column 
-   * @param {Array} data - new dataset data  
-   * @returns {Object} 
-   */
-  columnMerge(name, data=[]) {
-    if (this.data.length !== data.length) throw new RangeError(`Merged data column must have the same length(${data.length}) as the DataSet's length (${this.data.length})`);
-    return {
-      [name]: data,
-    };
-  }
-    /**
-     * mutates data property of DataSet by replacing multiple columns in a single command
-     * @example
-     * //fit Columns, mutates dataset
-dataset.fitColumns({
-  columns:[{name:'Age',options:{ strategy:'mean'} }]
-});
-// dataset
-// class DataSet
-//   data:[
-//     {
-//       'Country': 'Brazil',
-//       'Age': '38.77777777777778',
-//       'Salary': '72000',
-//       'Purchased': 'N',
-//     }
-//     ...
-//   ]
-     * @param options 
-     * @param {Object[]} options.columns - {name:'columnName',options:{strategy:'mean',labelOoptions:{}},}
-     * @returns {Object[]}
-     */
-  fitColumns(options) {
-    const config = Object.assign({
-      returnData:true,
-      columns: [],
-    }, options);
-    const fittedColumns = config.columns
-      .reduce((result, val, index, arr) => {
-        let replacedColumn = this.columnReplace(val.name, val.options);
-        if (Array.isArray(replacedColumn)) {
-          replacedColumn = replacedColumn.map(columnVal => ({
-            [val.name]: columnVal
-          }));
-          result[val.name] = replacedColumn;
-        } else {
-          Object.keys(replacedColumn).forEach(repColName => {
-            result[repColName] = replacedColumn[repColName].map(columnVal => ({
-              [repColName]: columnVal
-            }));
-          });
-        }
-        return result;
-      }, {});
-    if (Object.keys(fittedColumns)) {
-      const columnNames = Object.keys(fittedColumns);
-      const fittedData = fittedColumns[config.columns[0].name]
-        .reduce((result, val, index, arr) => {
-          const returnObj = {};
-          columnNames.forEach(colName => {
-            returnObj[colName] = fittedColumns[colName][index][colName];
-          });
-          result.push(returnObj);
-          return result;
-        }, []);
-      this.data = this.data.map((val, index) => Object.assign({}, val, fittedData[index]));
-    }
-    return config.returnData ? this.data : this;
-  }
-}
+
 /**
  * @namespace
  */
@@ -705,4 +728,4 @@ const preprocessing = {
   DataSet,
 };
 
-export { loadCSVURI, loadCSV, util, squaredDifference, standardError, coefficientOfDetermination, pivotVector, pivotArrays, cross_validation, DataSet, preprocessing };
+export { loadCSV, loadCSVURI, util$$1 as util, cross_validation, preprocessing, DataSet };

@@ -56,6 +56,8 @@ $ npm i jskit-learn
     rSquared: [Function: coefficientOfDetermination], // alias for coefficientOfDetermination
     pivotVector: [Function: pivotVector], // returns an array of vectors as an array of arrays
     pivotArrays: [Function: pivotArrays], // returns a matrix of values by combining arrays into a matrix
+    standardScore: [Function: standardScore], // Calculates the z score of each value in the sample, relative to the sample mean and standard deviation.
+    zScore: [Function: standardScore], // alias for standardScore.
   },
 }
 ```
