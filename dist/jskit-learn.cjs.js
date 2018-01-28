@@ -106,10 +106,10 @@ function squaredDifference(left, right) {
  * @memberOf util
  * @see {@link http://onlinestatbook.com/2/regression/accuracy.html}
  * @example
-const actuals = [ 2, 4, 5, 4, 5, ];
-const estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];
-const SE = jsk.util.standardError(actuals, estimates);
-SE.toFixed(2) // => 0.89
+  const actuals = [ 2, 4, 5, 4, 5, ];
+  const estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];
+  const SE = jsk.util.standardError(actuals, estimates);
+  SE.toFixed(2) // => 0.89
  * @param {Number[]} actuals - numerical samples 
  * @param {Number[]} estimates - estimates values
  * @returns {Number} Standard Error of the Estimate
@@ -142,7 +142,7 @@ const estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];
 const r2 = jsk.util.coefficientOfDetermination(actuals, estimates); 
 r2.toFixed(1) // => 0.6
  * @memberOf util
- * @see {@link https://en.wikipedia.org/wiki/Coefficient_of_determination}
+ * @see {@link https://en.wikipedia.org/wiki/Coefficient_of_determination} {@link http://statisticsbyjim.com/regression/standard-error-regression-vs-r-squared/}
  * @param {Number[]} actuals - numerical samples 
  * @param {Number[]} estimates - estimates values
  * @returns {Number} r^2
@@ -150,9 +150,8 @@ r2.toFixed(1) // => 0.6
 function coefficientOfDetermination(actuals=[], estimates=[]) {
   if (actuals.length !== estimates.length) throw new RangeError('arrays must have the same length');
   const actualsMean = mean(actuals);
-  const estimatesMean = mean(estimates);
   const meanActualsDiffSquared = actuals.map(a => Math.pow(a - actualsMean, 2));
-  const meanEstimatesDiffSquared = estimates.map(e => Math.pow(e - estimatesMean, 2));
+  const meanEstimatesDiffSquared = estimates.map(e => Math.pow(e - actualsMean, 2));
   return (sum(meanEstimatesDiffSquared) / sum(meanActualsDiffSquared));
 }
 
@@ -180,21 +179,21 @@ function pivotVector(vectors=[]) {
  * returns a matrix of values by combining arrays into a matrix
  * @memberOf util
  * @example 
-const arrays = [
-  [ 1, 1, 3, 3 ],
-  [ 2, 2, 3, 3 ],
-  [ 3, 3, 4, 3 ],
-];
-pivotArrays(arrays); //=>
-// [
-//   [1, 2, 3,],
-//   [1, 2, 3,],
-//   [3, 3, 4,],
-//   [3, 3, 3,],
-// ];
-* @param {Array} [vectors=[]] - array of arguments for columnArray to merge columns into a matrix
-* @returns {Array} a matrix of column values 
-*/
+  const arrays = [
+    [ 1, 1, 3, 3 ],
+    [ 2, 2, 3, 3 ],
+    [ 3, 3, 4, 3 ],
+  ];
+  pivotArrays(arrays); //=>
+  // [
+  //   [1, 2, 3,],
+  //   [1, 2, 3,],
+  //   [3, 3, 4,],
+  //   [3, 3, 3,],
+  // ];
+  * @param {Array} [vectors=[]] - array of arguments for columnArray to merge columns into a matrix
+  * @returns {Array} a matrix of column values 
+  */
 function pivotArrays(arrays = []) {
   return (arrays.length)
     ? arrays[ 0 ].map((vectorItem, index) => {
@@ -208,21 +207,21 @@ function pivotArrays(arrays = []) {
 }
 
 /**
-* Standardize features by removing the mean and scaling to unit variance
+  * Standardize features by removing the mean and scaling to unit variance
 
-Centering and scaling happen independently on each feature by computing the relevant statistics on the samples in the training set. Mean and standard deviation are then stored to be used on later data using the transform method.
+  Centering and scaling happen independently on each feature by computing the relevant statistics on the samples in the training set. Mean and standard deviation are then stored to be used on later data using the transform method.
 
-Standardization of a dataset is a common requirement for many machine learning estimators: they might behave badly if the individual feature do not more or less look like standard normally distributed data (e.g. Gaussian with 0 mean and unit variance)
-* @memberOf util
-* @param {number[]} z - array of integers or floats
-* @returns {number[]}
-*/
+  Standardization of a dataset is a common requirement for many machine learning estimators: they might behave badly if the individual feature do not more or less look like standard normally distributed data (e.g. Gaussian with 0 mean and unit variance)
+  * @memberOf util
+  * @param {number[]} z - array of integers or floats
+  * @returns {number[]}
+  */
 const StandardScaler = (z) => scale(z, sd(z));
 
 
 /**
  * Transforms features by scaling each feature to a given range.
-This estimator scales and translates each feature individually such that it is in the given range on the training set, i.e. between zero and one.
+  This estimator scales and translates each feature individually such that it is in the given range on the training set, i.e. between zero and one.
   * @memberOf util
   * @param {number[]} z - array of integers or floats
   * @returns {number[]}
@@ -264,29 +263,6 @@ function approximateZPercentile(z, alpha=true) {
 
   return (alpha) ? 1 - sum : sum;
 }
-
-// /**
-//   * Converts probabilty into the z-score
-//   * @memberOf util
-//   * @see {@link https://stackoverflow.com/questions/36575743/how-do-i-convert-probability-into-z-score}
-//   * @param {number} p - p-value
-//   * @returns {number} z - Number of standard deviations from the mean.
-//   */
-// export function approximatePercentileZ(p) {
-//   // var a0= 2.5066282,  a1=-18.6150006,  a2= 41.3911977,   a3=-25.4410605,
-//   //   b1=-8.4735109,  b2= 23.0833674,  b3=-21.0622410,   b4=  3.1308291,
-//   //   c0=-2.7871893,  c1= -2.2979648,  c2=  4.8501413,   c3=  2.3212128,
-//   //   d1= 3.5438892,  d2=  1.6370678, r, z;
-
-//   // if (p>0.42) {
-//   //   r=Math.sqrt(-Math.log(0.5-p));
-//   //   z=(((c3*r+c2)*r+c1)*r+c0)/((d2*r+d1)*r+1);
-//   // } else {
-//   //   r=p*p;
-//   //   z=p*(((a3*r+a2)*r+a1)*r+a0)/((((b4*r+b3)*r+b2)*r+b1)*r+1);
-//   // }
-//   // return z;ca
-// }
 
 /**
  * @namespace
