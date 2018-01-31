@@ -311,11 +311,18 @@ function getTransactions(data, options) {
   const valuesMap = new Map();
   const transactions = data
     .map(csvRow => {
-      values.add(...Object.values(csvRow));
+      [
+        ...Object.values(csvRow),
+      ].forEach(csvVal => {
+        values.add(csvVal);
+      });
       values.forEach(val => {
         if (!valuesMap.get(val)) {
-          valuesMap.set(val, valuesMap.size.toString());
-          valuesMap.set((valuesMap.size - 1).toString(), val);
+          const index = (valuesMap.size < 0)
+            ? 0
+            : parseInt(valuesMap.size / 2, 10);
+          valuesMap.set(val, index.toString());
+          valuesMap.set(index.toString(), val);
         }
       });
       return Object.values(csvRow)
@@ -323,7 +330,6 @@ function getTransactions(data, options) {
           valuesMap.get(csvCell))
         .filter(val => val !== undefined);
     });
-  
   return {
     values,
     valuesMap,

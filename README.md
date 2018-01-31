@@ -37,6 +37,10 @@ $ npm i jskit-learn
       fitColumns(options), // - mutates data property of DataSet by replacing multiple columns in a single command
     ]
   },
+  calc:{
+    getTransactions: [Function getTransactions], // Formats an array of transactions into a sparse matrix like format for Apriori/Eclat
+    assocationRuleLearning: [async Function assocationRuleLearning], // returns association rule learning results using apriori
+  },
   util: {
     range: [Function], // range helper function
     rangeRight: [Function], //range right helper function

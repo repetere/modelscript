@@ -12,11 +12,15 @@
 <dl>
 <dt><a href="#util$1">util$1</a> : <code>object</code></dt>
 <dd></dd>
+<dt><a href="#calc$1">calc$1</a> : <code>object</code></dt>
+<dd></dd>
 <dt><a href="#preprocessing">preprocessing</a> : <code>object</code></dt>
 <dd></dd>
 <dt><a href="#util$$1">util$$1</a> : <code>object</code></dt>
 <dd></dd>
 <dt><a href="#cross_validation">cross_validation</a> : <code>object</code></dt>
+<dd></dd>
+<dt><a href="#calc$$1">calc$$1</a> : <code>object</code></dt>
 <dd></dd>
 </dl>
 
@@ -555,6 +559,10 @@ dataset.fitColumns({
 
 ## util$1 : <code>object</code>
 **Kind**: global namespace  
+<a name="calc$1"></a>
+
+## calc$1 : <code>object</code>
+**Kind**: global namespace  
 <a name="preprocessing"></a>
 
 ## preprocessing : <code>object</code>
@@ -618,6 +626,10 @@ const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
 // [ [ 50, 20, 34, 33, 10 ], [ 23, 90, 42, 19, 25 ] ] 
 const crossValidationArrayKFolds = jsk.cross_validation.cross_validation_split(testArray, { folds: 2, random_state: 0, });
 ```
+<a name="calc$$1"></a>
+
+## calc$$1 : <code>object</code>
+**Kind**: global namespace  
 <a name="loadCSVURI$1"></a>
 
 ## loadCSVURI$1(filepath) ⇒ <code>Array.&lt;Object&gt;</code>
