@@ -3375,6 +3375,12 @@ function unwrapListeners(arr) {
   return ret;
 }
 
+
+var events = Object.freeze({
+	default: EventEmitter,
+	EventEmitter: EventEmitter
+});
+
 function BufferList$1() {
   this.head = null;
   this.tail = null;
@@ -27773,12 +27779,12 @@ var csvtojson = csv2json;
  * @param {string} filepath URL to CSV path
  * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
  */
-function loadCSVURI$1(filepath) {
+function loadCSVURI$1(filepath, options) {
   const reqMethod = (filepath.search('https', 'gi') > -1) ? get : get;
   return new Promise((resolve, reject) => {
     const csvData = [];
     const req = reqMethod(filepath, res => {
-      csvtojson().fromStream(res)
+      csvtojson(options).fromStream(res)
         .on('json', jsonObj => {
           csvData.push(jsonObj);
         })
@@ -27806,13 +27812,13 @@ function loadCSVURI$1(filepath) {
  * @param {string} filepath URL to CSV path
  * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
  */
-function loadCSV$1(filepath) {
+function loadCSV$1(filepath, options) {
   if (validUrl.isUri(filepath)) {
-    return loadCSVURI$1(filepath);
+    return loadCSVURI$1(filepath, options);
   } else {
     return new Promise((resolve, reject) => {
       const csvData = [];
-      csvtojson().fromFile(filepath)
+      csvtojson(options).fromFile(filepath)
         .on('json', jsonObj => {
           csvData.push(jsonObj);
         })
@@ -95060,6 +95066,624 @@ const util$4 = {
   // approximatePercentileZ,
 };
 
+var fpnode = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports, "__esModule", { value: true });
+var FPNode = /** @class */ (function () {
+    /**
+     * FPNode composes an FPTree and represents a given item a item-prefix subtree.
+     * It keeps track of its parent if it has any, and lists his children FPNodes.
+     *
+     * @param  {T}         item   The item it represents.
+     * @param  {FPNode<T>} parent His parent, if it has any.
+     */
+    function FPNode(item, parent) {
+        if (item === void 0) { item = null; }
+        if (parent === void 0) { parent = null; }
+        this.item = item;
+        this.parent = parent;
+        /**
+         * Support of the FPNode. (a.k.a. "count" as defined by Han).
+         */
+        this.support = 1;
+        /**
+         * nextSameItemNode (a.k.a. "Node-link" as defined by Han):
+         * Links to the next node in the FP-tree carrying the same
+         * item, or null if there is none.
+         */
+        this.nextSameItemNode = null;
+        /**
+         * PUBLIC READONLY. Children of the FPNode in an array. Empty array if there is none.
+         */
+        this._children = [];
+    }
+    Object.defineProperty(FPNode.prototype, "children", {
+        get: function () {
+            return this._children;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * Adds a given item to its current children FPNodes.
+     * If no child yet represents the given item, it creates a new node.
+     *
+     * @param  {T}         item       The item to add as a children.
+     * @param  {FPNode<T>} onNewChild Callback function to call if a child is actually created for the first time. It helps keeping track of Node-Links
+     * @return {[type]}               The FPNode representing the given item.
+     */
+    FPNode.prototype.upsertChild = function (item, onNewChild) {
+        var child = this.getChild(item);
+        // If no child exists, creating a new node.
+        if (!child) {
+            child = new FPNode(item, this);
+            this._children.push(child);
+            // Calls callback function if any.
+            if (onNewChild)
+                onNewChild(child);
+        }
+        else
+            child.support++;
+        return child;
+    };
+    /**
+     * Returns the child FPNode representing a given item, if any. Returns undefined if it does not exist.
+     *
+     * @param  {T}         item The item.
+     * @return {FPNode<T>}      The FPNode you expect, or undefined.
+     */
+    FPNode.prototype.getChild = function (item) {
+        return this._children.find(function (child) { return child.item == item; });
+    };
+    return FPNode;
+}());
+exports.FPNode = FPNode;
+});
+
+unwrapExports(fpnode);
+var fpnode_1 = fpnode.FPNode;
+
+var fptree = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports, "__esModule", { value: true });
+
+var FPTree = /** @class */ (function () {
+    /**
+     * FPTree is a frequent-pattern tree implementation. It consists in a compact
+     * data structure that stores quantitative information about frequent patterns in
+     * a set of transactions.
+     *
+     * @param  {ItemsCount} supports     The support count of each unique items to be inserted the FPTree.
+     * @param  {number}     support      The minimum support of each frequent itemset we want to mine.
+     */
+    function FPTree(supports, _support) {
+        this.supports = supports;
+        this._support = _support;
+        /**
+         * Whether or not the tree has been built
+         */
+        this._isInit = false;
+        /**
+         * Root node of the FPTree
+         */
+        this.root = new fpnode.FPNode();
+        /**
+         * All first nodes (of different items) inserted in the FPTree (Heads of node-links).
+         */
+        this._firstInserted = {};
+        /**
+         * All last nodes (of different items) inserted in the FPTree (Foots of node-links).
+         */
+        this._lastInserted = {};
+    }
+    Object.defineProperty(FPTree.prototype, "headers", {
+        get: function () {
+            return this._headers;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * Builds the tree from a set of transactions.
+     *
+     * @param  {T[][]}      transactions The unsorted transactions.
+     * @return {FPTree<T>}               Method chaining.
+     */
+    FPTree.prototype.fromTransactions = function (transactions) {
+        var _this = this;
+        if (this._isInit)
+            throw new Error('Error building the FPTree');
+        // Sorting the items of each transaction by their support, descendingly.
+        // Items not meeting the minimum support are pruned.
+        transactions.forEach(function (transaction) {
+            var items = transaction
+                .filter(function (item) { return _this.supports[JSON.stringify(item)] >= _this._support; })
+                .sort(function (a, b) {
+                var res = _this.supports[JSON.stringify(b)] - _this.supports[JSON.stringify(a)];
+                if (res == 0)
+                    return JSON.stringify(b).localeCompare(JSON.stringify(a));
+                return res;
+            });
+            // Pushing formatted transaction to the tree.
+            _this._addTransaction(items);
+        });
+        // Generating headers.
+        this._headers = this._getHeaderList();
+        this._isInit = true;
+        return this;
+    };
+    /**
+     * Builds the tree from a set of prefix paths.
+     *
+     * @param  {IPrefixPath<T>[]} prefixPaths The prefix paths.
+     * @return {FPTree<T>}                    Method chaining.
+     */
+    FPTree.prototype.fromPrefixPaths = function (prefixPaths) {
+        var _this = this;
+        if (this._isInit)
+            throw new Error('Error building the FPTree');
+        prefixPaths.forEach(function (prefixPath) {
+            var items = prefixPath.path
+                .filter(function (item) { return _this.supports[JSON.stringify(item)] >= _this._support; });
+            /*
+            //Not mandatory, actually for displaying purposes only.
+            .sort( (a: T, b: T) => {
+                let res: number = this.supports[JSON.stringify(b)] - this.supports[JSON.stringify(a)];
+                if(res == 0) return JSON.stringify(b).localeCompare(JSON.stringify(a));
+                return res;
+            });
+            */
+            // Pushing each prefix path to the tree.
+            _this._addTransaction(items);
+        });
+        // Generating headers.
+        this._headers = this._getHeaderList();
+        this._isInit = true;
+        return this;
+    };
+    /**
+     * Returns a new conditional FPTree from a given item.
+     * If item is not included in the current tree, or if the resulting tree is empty, returns null.
+     *
+     * @param  {T}         item The conditional item.
+     * @return {FPTree<T>}      The result you expect.
+     */
+    FPTree.prototype.getConditionalFPTree = function (item) {
+        var start = this._firstInserted[JSON.stringify(item)];
+        // Trivial pre-condition.
+        if (!start)
+            return null;
+        // In order to make the conditional FPTree of the given item, we need both the prefix
+        // paths of the item, as well as the support of each item which composes this sub-tree.
+        var conditionalTreeSupports = {};
+        // Getting all prefixPaths of the given item. On pushing a new item to a prefix path, a callback
+        // function is called, allowing us to update the item support.
+        var prefixPaths = this._getPrefixPaths(start, start.support, function (i, count) {
+            conditionalTreeSupports[JSON.stringify(i)] = (conditionalTreeSupports[JSON.stringify(i)] || 0) + count;
+        });
+        // FP-Tree is built from the conditional tree supports and the processed prefix paths.
+        var ret = new FPTree(conditionalTreeSupports, this._support).fromPrefixPaths(prefixPaths);
+        // If tree is not empty, return the tree.
+        if (ret.root.children.length)
+            return ret;
+        // Else return null.
+        return null;
+    };
+    /**
+     * Returns all the prefix paths of a given item in the tree.
+     * Returns an empty array if item cannot be found in the current tree.
+     *
+     * @param  {T}              item The item you want the prefix paths.
+     * @return {IPrefixPath<T>}      The result you expect.
+     */
+    FPTree.prototype.getPrefixPaths = function (item) {
+        if (!this._isInit)
+            throw new Error('Error building the FPTree');
+        var start = this._firstInserted[JSON.stringify(item)];
+        if (!start)
+            return [];
+        return this._getPrefixPaths(start, start.support);
+    };
+    /**
+     * Return the prefix path of a given node.
+     * Callback functions allows to keep track of items added to the prefix path.
+     *
+     * @param  {FPNode<T>} node             The node you want the prefix path.
+     * @param  {Function}  onPushingNewItem Callback function to keep track of items added to the prefix path.
+     * @return {[type]}                     The result you expect.
+     */
+    FPTree.prototype.getPrefixPath = function (node, onPushingNewItem) {
+        if (!this._isInit)
+            throw new Error('Error building the FPTree');
+        var path = this._getPrefixPath(node, node.support, onPushingNewItem);
+        if (path.length === 0)
+            return;
+        return {
+            support: node.support,
+            path: path
+        };
+    };
+    /**
+     * Returns whether or not this FPTree is single pathed.
+     *
+     * @return {boolean} The result you expect.
+     */
+    FPTree.prototype.isSinglePath = function () {
+        if (!this._isInit)
+            throw new Error('Error building the FPTree');
+        if (!this.getSinglePath())
+            return false;
+        return true;
+    };
+    /**
+     * Returns the single path of the tree, if it is one. Else, it returns null.
+     *
+     * @return {FPNode<T>[]} The result you expect.
+     */
+    FPTree.prototype.getSinglePath = function () {
+        if (!this._isInit)
+            throw new Error('Error building the FPTree');
+        return this._getSinglePath(this.root);
+    };
+    /**
+     * Inserts a sorted transaction to the FPTree.
+     *
+     * @param {T[]} transaction The set of item you want to add.
+     */
+    FPTree.prototype._addTransaction = function (transaction) {
+        var _this = this;
+        // For each transaction, we start up from the root element.
+        var current = this.root;
+        // Keep in mind items are sorted by their support descendingly.
+        transaction.forEach(function (item) {
+            // If current item is a child of current node, updating its support and returning the child.
+            // Else creating a new item element and returing this new element.
+            current = current.upsertChild(item, function (child) {
+                var itemKey = JSON.stringify(item);
+                // Keeping track of first and last inserted elements of this type on Node creation.
+                _this._updateLastInserted(itemKey, child);
+                _this._updateFirstInserted(itemKey, child);
+            });
+        });
+    };
+    /**
+     * RECURSIVE CALL - Returns the prefix path of each node of the same type until there is no node-link anymore.
+     *
+     * @param  {FPNode<T>} node             The node of which you want the prefix path.
+     * @param  {number}    count            The support of the stating node (which is node).
+     * @param  {Function}  onPushingNewItem Callback function to keep track of items added to the prefix path.
+     * @return {IPrefixPath<T>[]}           The result you expect.
+     */
+    FPTree.prototype._getPrefixPaths = function (node, count, onPushingNewItem, prefixPaths) {
+        if (prefixPaths === void 0) { prefixPaths = []; }
+        var prefixPath = this.getPrefixPath(node, onPushingNewItem);
+        if (prefixPath)
+            prefixPaths.push(prefixPath);
+        if (!node.nextSameItemNode)
+            return prefixPaths;
+        return this._getPrefixPaths(node.nextSameItemNode, count, onPushingNewItem, prefixPaths);
+    };
+    /**
+     * RECURSIVE CALL - Returns the prefix path (as a set of items) of the tree from a given node.
+     *
+     * @param  {FPNode<T>}   node               The node to start the prefix.
+     * @param  {number}      count              The support of the stating node (which is node).
+     * @param  {Function}    onPushingNewItem   Callback function to keep track of items added to the prefix path.
+     * @return {T[]}                            The result you expect.
+     */
+    FPTree.prototype._getPrefixPath = function (node, count, onPushingNewItem) {
+        if (node.parent && node.parent.parent) {
+            if (onPushingNewItem)
+                onPushingNewItem(node.parent.item, count);
+            return [node.parent.item].concat(this._getPrefixPath(node.parent, count, onPushingNewItem));
+        }
+        return [];
+    };
+    /**
+     * RECURSIVE CALL - Returns the single path of the tree, if it is one. Else, it returns null.
+     *
+     * @param  {FPNode<T>}   node          The node to test for single path.
+     * @param  {FPNode<T>[]} currentPath   The current saved path.
+     * @return {FPNode<T>[]}               The path to return.
+     */
+    FPTree.prototype._getSinglePath = function (node, currentPath) {
+        if (currentPath === void 0) { currentPath = []; }
+        // If current node is a tree leaf, that's a win.
+        if (node.children.length == 0)
+            return currentPath;
+        // If it has more than child, tree has more than one single path.
+        if (node.children.length > 1)
+            return null;
+        // Else test next child for single path.
+        currentPath.push(node.children[0]);
+        return this._getSinglePath(node.children[0], currentPath);
+    };
+    /**
+     * Keep track of the each last inserted item of different types.
+     *
+     * @param {string}    key   The key as stringified item.
+     * @param {FPNode<T>} child The child FPNode it represtents.
+     */
+    FPTree.prototype._updateLastInserted = function (key, child) {
+        var last = this._lastInserted[key];
+        if (last)
+            last.nextSameItemNode = child;
+        this._lastInserted[key] = child;
+    };
+    /**
+     * Keep track of the first item of different type we inserted in the FPTree.
+     *
+     * @param {string}    key   The key as stringified item.
+     * @param {FPNode<T>} child The child FPNode it represtents.
+     */
+    FPTree.prototype._updateFirstInserted = function (key, child) {
+        var first = this._firstInserted[key];
+        if (!first)
+            this._firstInserted[key] = child;
+    };
+    /**
+     * Returns the tree's headers as a list, sorted ASCENDINGLY by their support.
+     *
+     * @param  {ItemsCount} supports The support count of each items.
+     * @return {T[]}                 [description]
+     */
+    FPTree.prototype._getHeaderList = function () {
+        var _this = this;
+        return Object.keys(this._firstInserted)
+            .sort(function (a, b) { return _this.supports[a] - _this.supports[b]; })
+            .map(function (key) { return JSON.parse(key); });
+    };
+    return FPTree;
+}());
+exports.FPTree = FPTree;
+});
+
+unwrapExports(fptree);
+var fptree_1 = fptree.FPTree;
+
+var events_1 = ( events && EventEmitter ) || events;
+
+var fpgrowth = createCommonjsModule(function (module, exports) {
+var __extends = (commonjsGlobal && commonjsGlobal.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+
+
+var FPGrowth = /** @class */ (function (_super) {
+    __extends(FPGrowth, _super);
+    /**
+     * FPGrowth is an algorithm for frequent item set mining and association rule
+     * earning over transactional databases.
+     * It was proposed by Han et al. (2000). FPGrowth is a very fast and memory efficient algorithm. It uses a special internal structure called an FP-Tree.
+     *
+     * @param  {number} _support 0 < _support < 1. Minimum support of itemsets to mine.
+     */
+    function FPGrowth(_support /*, private _confidence: number*/) {
+        var _this = _super.call(this) || this;
+        _this._support = _support; /*, private _confidence: number*/
+        /**
+         * Output of the algorithm: The mined frequent itemsets.
+         */
+        _this._itemsets = [];
+        return _this;
+    }
+    /**
+     * Executes the FPGrowth Algorithm.
+     * You can keep track of frequent itemsets as they are mined by listening to the 'data' event on the FPGrowth object.
+     * All mined itemsets, as well as basic execution stats, are returned at the end of the execution through a callback function or a Promise.
+     *
+     * @param  {T[][]}              transactions The transactions from which you want to mine itemsets.
+     * @param  {IAprioriResults<T>} cb           Callback function returning the results.
+     * @return {Promise<IAprioriResults<T>>}     Promise returning the results.
+     */
+    FPGrowth.prototype.exec = function (transactions, cb) {
+        var _this = this;
+        // Starting execution timer.
+        var time = process.hrtime();
+        this._transactions = transactions;
+        // Relative support.
+        this._support = Math.ceil(this._support * transactions.length);
+        // First scan to determine the occurence of each unique item.
+        var supports = this._getDistinctItemsCount(this._transactions);
+        return new Promise(function (resolve, reject) {
+            var time = process.hrtime();
+            // Building the FP-Tree...
+            var tree = new fptree.FPTree(supports, _this._support).fromTransactions(_this._transactions);
+            // Running the algorithm on the main tree.
+            // All the frequent itemsets are returned at the end of the execution.
+            var frequentItemsets = _this._fpGrowth(tree, _this._transactions.length);
+            var elapsedTime = process.hrtime(time);
+            // Formatting results.
+            var result = {
+                itemsets: frequentItemsets,
+                executionTime: Math.round((elapsedTime[0] * 1000) + (elapsedTime[1] / 1000000))
+            };
+            if (cb)
+                cb(result);
+            resolve(result);
+        });
+    };
+    /**
+     * RECURSIVE CALL - Returns mined itemset from each conditional sub-FPTree of the given FPtree.
+     *
+     * @param  {FPTree<T>}  tree          The FPTree you want to mine.
+     * @param  {number}     prefixSupport The support of the FPTree's current prefix.
+     * @param  {T[]}        prefix        The current prefix associated with the FPTree.
+     * @return {Itemset<T>}               The mined itemsets.
+     */
+    FPGrowth.prototype._fpGrowth = function (tree, prefixSupport, prefix) {
+        var _this = this;
+        if (prefix === void 0) { prefix = []; }
+        // Test whether or not the FP-Tree is single path.
+        // If it is, we can short-cut the mining process pretty efficiently.
+        var singlePath = tree.getSinglePath();
+        // TODO: if(singlePath) return this._handleSinglePath(singlePath, prefix);
+        // For each header, ordered ascendingly by their support, determining the prefix paths.
+        // of each each they represent.
+        // These prefix paths represent new transactions to mine in a new FPTree.
+        // If no prefix path can be found, the algorithm stops.
+        return tree.headers.reduce(function (itemsets, item) {
+            var support = Math.min(tree.supports[JSON.stringify(item)], prefixSupport);
+            // Array copy.
+            var currentPrefix = prefix.slice(0);
+            currentPrefix.push(item);
+            // Prefix is a mined itemset.
+            itemsets.push(_this._getFrequentItemset(currentPrefix, support));
+            // Method below generates the prefix paths of the current item, as well as the support of
+            // each item composing the prefix paths, and returns a new conditional FPTree if one can be created.
+            var childTree = tree.getConditionalFPTree(item);
+            // If a conditional tree can be mined... mine it recursively.
+            if (childTree)
+                return itemsets.concat(_this._fpGrowth(childTree, support, currentPrefix));
+            return itemsets;
+        }, []);
+    };
+    /**
+     * Handles the mining of frequent itemsets over a single path tree.
+     *
+     * @param  {FPNode<T>[]} singlePath The given single path.
+     * @param  {T[]}         prefix     The prefix associated with the path.
+     * @return {Itemset<T>}             The mined itemsets.
+     */
+    FPGrowth.prototype._handleSinglePath = function (singlePath, prefix) {
+        // TODO
+        return [];
+    };
+    /**
+     * Returns and emit through an event a formatted mined frequent itemset.
+     *
+     * @param  {T[]}        itemset The items of the frequent itemset.
+     * @param  {number}     support The support of the itemset.
+     * @return {Itemset<T>}         The formatted itemset.
+     */
+    FPGrowth.prototype._getFrequentItemset = function (itemset, support) {
+        var ret = {
+            items: itemset,
+            support: support
+        };
+        this.emit('data', ret);
+        return ret;
+    };
+    /**
+     * Returns the occurence of single items in a given set of transactions.
+     *
+     * @param  {T[][]}      transactions The set of transaction.
+     * @return {ItemsCount}              Count of items (stringified items as keys).
+     */
+    FPGrowth.prototype._getDistinctItemsCount = function (transactions) {
+        return transactions.reduce(function (count, arr) {
+            return arr.reduce(function (count, item) {
+                count[JSON.stringify(item)] = (count[JSON.stringify(item)] || 0) + 1;
+                return count;
+            }, count);
+        }, {});
+    };
+    return FPGrowth;
+}(events_1.EventEmitter));
+exports.FPGrowth = FPGrowth;
+});
+
+unwrapExports(fpgrowth);
+var fpgrowth_1 = fpgrowth.FPGrowth;
+
+/**
+ * Formats an array of transactions into a sparse matrix like format for Apriori/Eclat
+ * @memberOf calc
+ * @see {@link https://github.com/alexisfacques/Node-FPGrowth}
+ * @param {Array} data - CSV data of transactions 
+ * @param {Object} options 
+ * @param {Boolean} [options.exludeEmptyTranscations=true] - exclude empty rows of transactions 
+ * @returns {Object} {values - unique list of all values, valuesMap - map of values and labels, transactions - formatted sparse array}
+ */
+function getTransactions(data, options) {
+  const config = Object.assign({}, {
+    exludeEmptyTranscations: true,
+  }, options);
+  const values = new Set();
+  const valuesMap = new Map();
+  const transactions = data
+    .map(csvRow => {
+      values.add(...Object.values(csvRow));
+      values.forEach(val => {
+        if (!valuesMap.get(val)) {
+          valuesMap.set(val, valuesMap.size.toString());
+          valuesMap.set((valuesMap.size - 1).toString(), val);
+        }
+      });
+      return Object.values(csvRow)
+        .map(csvCell =>
+          valuesMap.get(csvCell))
+        .filter(val => val !== undefined);
+    });
+  
+  return {
+    values,
+    valuesMap,
+    transactions: (config.exludeEmptyTranscations)
+      ? transactions.filter(csvRow => csvRow.length)
+      : transactions,
+  };
+}
+
+/**
+ * returns association rule learning results
+ * @memberOf calc
+ * @see {@link https://github.com/alexisfacques/Node-FPGrowth}
+ * @param {Array} transactions - sparse matrix of transactions 
+ * @param {Object} options 
+ * @param {Number} [options.support=0.4] - support level
+ * @param {Number} [options.minLength=2] - minimum assocation array size
+ * @param {Boolean} [options.summary=true] - return summarized results
+ * @param {Map} [options.valuesMap=new Map()] - map of values and labels (used for summary results)
+ * @returns {Object} Returns the result from Node-FPGrowth or a summary of support and strong associations
+ */
+function assocationRuleLearning(transactions =[], options) {
+  return new Promise((resolve, reject) => {
+    try {
+      const config = Object.assign({}, {
+        support: 0.4,
+        minLength: 2,
+        summary: true,
+        valuesMap: new Map(),
+      }, options);
+      const fpgrowth$$1 = new fpgrowth_1(config.support);
+      fpgrowth$$1.exec(transactions)
+        .then(results => {
+          if (config.summary) {
+            resolve(results.itemsets
+              .map(itemset => ({
+                items_labels: itemset.items.map(item => config.valuesMap.get(item)),
+                items: itemset.items,
+                support: itemset.support,
+                support_percent: itemset.support / transactions.length,
+              }))
+              .filter(itemset => itemset.items.length > 1)
+              .sort((a, b) => b.support - a.support));
+          } else {
+            resolve(results);
+          }
+        })
+        .catch(reject);
+    } catch (e) {
+      reject(e);
+    }
+  });
+}
+
+/**
+ * @namespace
+ */
+const calc$1 = {
+  getTransactions,
+  assocationRuleLearning,
+};
+
 /**
  * class for manipulating an array of objects, typically from CSV data
  * @class DataSet
@@ -96271,12 +96895,17 @@ const cross_validation = {
   train_test_split,
   cross_validation_split,
 };
+/**
+ * @namespace
+ */
+const calc$$1 = calc$1;
 
 exports.loadCSV = loadCSV;
 exports.loadCSVURI = loadCSVURI;
 exports.preprocessing = preprocessing;
 exports.util = util$$1;
 exports.cross_validation = cross_validation;
+exports.calc = calc$$1;
 exports.DataSet = DataSet;
 
 Object.defineProperty(exports, '__esModule', { value: true });

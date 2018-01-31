@@ -2,6 +2,7 @@
 
 import * as csvUtils from './csv';
 import { util as utils, } from './util';
+import { calc as calcs, } from './calc';
 import { DataSet, } from './DataSet';
 import { train_test_split, cross_validation_split, } from './cross_validation';
 
@@ -27,4 +28,7 @@ export const cross_validation = {
   train_test_split,
   cross_validation_split,
 };
- 
+/**
+ * @namespace
+ */
+export const calc = calcs;

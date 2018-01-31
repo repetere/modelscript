@@ -11,6 +11,7 @@ var csv = _interopDefault(require('csvtojson'));
 var ml = _interopDefault(require('ml'));
 var range = _interopDefault(require('lodash.range'));
 var rangeRight = _interopDefault(require('lodash.rangeright'));
+var nodeFpgrowth = require('node-fpgrowth');
 var Random = _interopDefault(require('random-js'));
 
 /**
@@ -21,12 +22,12 @@ var Random = _interopDefault(require('random-js'));
  * @param {string} filepath URL to CSV path
  * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
  */
-function loadCSVURI$1(filepath) {
+function loadCSVURI$1(filepath, options) {
   const reqMethod = (filepath.search('https', 'gi') > -1) ? https.get : http.get;
   return new Promise((resolve, reject) => {
     const csvData = [];
     const req = reqMethod(filepath, res => {
-      csv().fromStream(res)
+      csv(options).fromStream(res)
         .on('json', jsonObj => {
           csvData.push(jsonObj);
         })
@@ -54,13 +55,13 @@ function loadCSVURI$1(filepath) {
  * @param {string} filepath URL to CSV path
  * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
  */
-function loadCSV$1(filepath) {
+function loadCSV$1(filepath, options) {
   if (validURL.isUri(filepath)) {
-    return loadCSVURI$1(filepath);
+    return loadCSVURI$1(filepath, options);
   } else {
     return new Promise((resolve, reject) => {
       const csvData = [];
-      csv().fromFile(filepath)
+      csv(options).fromFile(filepath)
         .on('json', jsonObj => {
           csvData.push(jsonObj);
         })
@@ -291,6 +292,98 @@ const util$1 = {
   zScore: standardScore,
   approximateZPercentile,
   // approximatePercentileZ,
+};
+
+/**
+ * Formats an array of transactions into a sparse matrix like format for Apriori/Eclat
+ * @memberOf calc
+ * @see {@link https://github.com/alexisfacques/Node-FPGrowth}
+ * @param {Array} data - CSV data of transactions 
+ * @param {Object} options 
+ * @param {Boolean} [options.exludeEmptyTranscations=true] - exclude empty rows of transactions 
+ * @returns {Object} {values - unique list of all values, valuesMap - map of values and labels, transactions - formatted sparse array}
+ */
+function getTransactions(data, options) {
+  const config = Object.assign({}, {
+    exludeEmptyTranscations: true,
+  }, options);
+  const values = new Set();
+  const valuesMap = new Map();
+  const transactions = data
+    .map(csvRow => {
+      values.add(...Object.values(csvRow));
+      values.forEach(val => {
+        if (!valuesMap.get(val)) {
+          valuesMap.set(val, valuesMap.size.toString());
+          valuesMap.set((valuesMap.size - 1).toString(), val);
+        }
+      });
+      return Object.values(csvRow)
+        .map(csvCell =>
+          valuesMap.get(csvCell))
+        .filter(val => val !== undefined);
+    });
+  
+  return {
+    values,
+    valuesMap,
+    transactions: (config.exludeEmptyTranscations)
+      ? transactions.filter(csvRow => csvRow.length)
+      : transactions,
+  };
+}
+
+/**
+ * returns association rule learning results
+ * @memberOf calc
+ * @see {@link https://github.com/alexisfacques/Node-FPGrowth}
+ * @param {Array} transactions - sparse matrix of transactions 
+ * @param {Object} options 
+ * @param {Number} [options.support=0.4] - support level
+ * @param {Number} [options.minLength=2] - minimum assocation array size
+ * @param {Boolean} [options.summary=true] - return summarized results
+ * @param {Map} [options.valuesMap=new Map()] - map of values and labels (used for summary results)
+ * @returns {Object} Returns the result from Node-FPGrowth or a summary of support and strong associations
+ */
+function assocationRuleLearning(transactions =[], options) {
+  return new Promise((resolve, reject) => {
+    try {
+      const config = Object.assign({}, {
+        support: 0.4,
+        minLength: 2,
+        summary: true,
+        valuesMap: new Map(),
+      }, options);
+      const fpgrowth = new nodeFpgrowth.FPGrowth(config.support);
+      fpgrowth.exec(transactions)
+        .then(results => {
+          if (config.summary) {
+            resolve(results.itemsets
+              .map(itemset => ({
+                items_labels: itemset.items.map(item => config.valuesMap.get(item)),
+                items: itemset.items,
+                support: itemset.support,
+                support_percent: itemset.support / transactions.length,
+              }))
+              .filter(itemset => itemset.items.length > 1)
+              .sort((a, b) => b.support - a.support));
+          } else {
+            resolve(results);
+          }
+        })
+        .catch(reject);
+    } catch (e) {
+      reject(e);
+    }
+  });
+}
+
+/**
+ * @namespace
+ */
+const calc$1 = {
+  getTransactions,
+  assocationRuleLearning,
 };
 
 /**
@@ -787,10 +880,15 @@ const cross_validation = {
   train_test_split,
   cross_validation_split,
 };
+/**
+ * @namespace
+ */
+const calc$$1 = calc$1;
 
 exports.loadCSV = loadCSV;
 exports.loadCSVURI = loadCSVURI;
 exports.preprocessing = preprocessing;
 exports.util = util$$1;
 exports.cross_validation = cross_validation;
+exports.calc = calc$$1;
 exports.DataSet = DataSet;

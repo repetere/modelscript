@@ -10,12 +10,12 @@ import { default as csv } from 'csvtojson';
  * @param {string} filepath URL to CSV path
  * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
  */
-export function loadCSVURI(filepath) {
+export function loadCSVURI(filepath, options) {
   const reqMethod = (filepath.search('https', 'gi') > -1) ? requestHTTPS : request;
   return new Promise((resolve, reject) => {
     const csvData = [];
     const req = reqMethod(filepath, res => {
-      csv().fromStream(res)
+      csv(options).fromStream(res)
         .on('json', jsonObj => {
           csvData.push(jsonObj);
         })
@@ -43,13 +43,13 @@ export function loadCSVURI(filepath) {
  * @param {string} filepath URL to CSV path
  * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
  */
-export function loadCSV(filepath) {
+export function loadCSV(filepath, options) {
   if (validURL.isUri(filepath)) {
-    return loadCSVURI(filepath);
+    return loadCSVURI(filepath, options);
   } else {
     return new Promise((resolve, reject) => {
       const csvData = [];
-      csv().fromFile(filepath)
+      csv(options).fromFile(filepath)
         .on('json', jsonObj => {
           csvData.push(jsonObj);
         })
