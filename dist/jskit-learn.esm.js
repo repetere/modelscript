@@ -96,7 +96,7 @@ function squaredDifference(left, right) {
 }
 
 /**
- * The standard error of the estimate is a measure of the accuracy of predictions made with a regression line
+ * The standard error of the estimate is a measure of the accuracy of predictions made with a regression line. Compares the estimate to the actual value
  * @memberOf util
  * @see {@link http://onlinestatbook.com/2/regression/accuracy.html}
  * @example
@@ -128,7 +128,7 @@ function standardScore(observations = []) {
 }
 
 /**
- * In statistics, the coefficient of determination, denoted R2 or r2 and pronounced "R squared", is the proportion of the variance in the dependent variable that is predictable from the independent variable(s).
+ * In statistics, the coefficient of determination, denoted R2 or r2 and pronounced "R squared", is the proportion of the variance in the dependent variable that is predictable from the independent variable(s). Compares distance of estimated values to the mean.
  * {\bar {y}}={\frac {1}{n}}\sum _{i=1}^{n}y_{i}
  * @example
 const actuals = [ 2, 4, 5, 4, 5, ];
@@ -304,6 +304,19 @@ class DataSet {
     this.labels = new Map();
     this.encoders = new Map();
     return this;
+  }
+  /**
+   * returns filtered rows of data 
+   * @example const csvObj = new DataSet([{col1:1,col2:5},{col1:2,col2:6}]);
+csvObj.filterColumn((row)=>row.col1>=2); // =>
+//[ 
+//  [2,6], 
+//]
+  * @param {Function} [filter=()=>true] - filter function
+  * @returns {Array} filtered array of data 
+  */
+  filterColumn(filter = () => true) {
+    return this.data.filter(filter);
   }
   /**
    * returns a matrix of values by combining column arrays into a matrix

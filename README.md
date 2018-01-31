@@ -33,6 +33,7 @@ $ npm i jskit-learn
       columnMatrix(columnName, options), // - returns a matrix of values from multiple columns
       columnReducer(newColumnName, options), // - returns a new array of a selected column that is passed a reducer function, this is used to create new columns for aggregate statistics
       columnMerge(name, data), // - returns a new column that is merged onto the data set
+      filterColumn(options), // - filtered rows of data,
       fitColumns(options), // - mutates data property of DataSet by replacing multiple columns in a single command
     ]
   },

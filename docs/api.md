@@ -39,6 +39,7 @@
 * [DataSet](#DataSet)
     * [new DataSet()](#new_DataSet_new)
     * [new DataSet(dataset)](#new_DataSet_new)
+    * [.filterColumn([filter])](#DataSet+filterColumn) ⇒ <code>Array</code>
     * [.columnMatrix([vectors])](#DataSet+columnMatrix) ⇒ <code>Array</code>
     * [.columnArray(name, options)](#DataSet+columnArray) ⇒ <code>array</code>
     * [.columnReplace(name, options)](#DataSet+columnReplace) ⇒ <code>array</code> \| <code>Array.&lt;Object&gt;</code>
@@ -67,6 +68,26 @@ creates a new raw data instance for preprocessing data for machine learning
 **Example**  
 ```js
 const dataset = new jsk.DataSet(csvData);
+```
+<a name="DataSet+filterColumn"></a>
+
+### dataSet.filterColumn([filter]) ⇒ <code>Array</code>
+returns filtered rows of data
+
+**Kind**: instance method of [<code>DataSet</code>](#DataSet)  
+**Returns**: <code>Array</code> - filtered array of data  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [filter] | <code>function</code> | <code>()=&gt;true</code> | filter function |
+
+**Example**  
+```js
+const csvObj = new DataSet([{col1:1,col2:5},{col1:2,col2:6}]);
+csvObj.filterColumn((row)=>row.col1>=2); // =>
+//[ 
+//  [2,6], 
+//]
 ```
 <a name="DataSet+columnMatrix"></a>
 
@@ -100,8 +121,8 @@ returns a new array of a selected column from an array of objects, can filter, s
 | --- | --- | --- | --- |
 | name | <code>string</code> |  | csv column header, or JSON object property name |
 | options |  |  |  |
-| [options.prefilter] | <code>function</code> | <code>(arr[val])&#x3D;&gt;true</code> | prefilter values to return |
-| [options.filter] | <code>function</code> | <code>(arr[val])&#x3D;&gt;true</code> | filter values to return |
+| [options.prefilter] | <code>function</code> | <code>(arr[val])=&gt;true</code> | prefilter values to return |
+| [options.filter] | <code>function</code> | <code>(arr[val])=&gt;true</code> | filter values to return |
 | [options.replace.test] | <code>function</code> |  | test function for replacing values (arr[val]) |
 | [options.replace.value] | <code>string</code> \| <code>number</code> \| <code>function</code> |  | value to replace (arr[val]) if replace test is true, if a function (result,val,index,arr,name)=>your custom value |
 | [options.parseIntBase] | <code>number</code> | <code>10</code> | radix value for parseInt |
@@ -278,6 +299,7 @@ dataset.fitColumns({
 * [DataSet](#DataSet)
     * [new DataSet()](#new_DataSet_new)
     * [new DataSet(dataset)](#new_DataSet_new)
+    * [.filterColumn([filter])](#DataSet+filterColumn) ⇒ <code>Array</code>
     * [.columnMatrix([vectors])](#DataSet+columnMatrix) ⇒ <code>Array</code>
     * [.columnArray(name, options)](#DataSet+columnArray) ⇒ <code>array</code>
     * [.columnReplace(name, options)](#DataSet+columnReplace) ⇒ <code>array</code> \| <code>Array.&lt;Object&gt;</code>
@@ -306,6 +328,26 @@ creates a new raw data instance for preprocessing data for machine learning
 **Example**  
 ```js
 const dataset = new jsk.DataSet(csvData);
+```
+<a name="DataSet+filterColumn"></a>
+
+### dataSet.filterColumn([filter]) ⇒ <code>Array</code>
+returns filtered rows of data
+
+**Kind**: instance method of [<code>DataSet</code>](#DataSet)  
+**Returns**: <code>Array</code> - filtered array of data  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [filter] | <code>function</code> | <code>()=&gt;true</code> | filter function |
+
+**Example**  
+```js
+const csvObj = new DataSet([{col1:1,col2:5},{col1:2,col2:6}]);
+csvObj.filterColumn((row)=>row.col1>=2); // =>
+//[ 
+//  [2,6], 
+//]
 ```
 <a name="DataSet+columnMatrix"></a>
 
@@ -339,8 +381,8 @@ returns a new array of a selected column from an array of objects, can filter, s
 | --- | --- | --- | --- |
 | name | <code>string</code> |  | csv column header, or JSON object property name |
 | options |  |  |  |
-| [options.prefilter] | <code>function</code> | <code>(arr[val])&#x3D;&gt;true</code> | prefilter values to return |
-| [options.filter] | <code>function</code> | <code>(arr[val])&#x3D;&gt;true</code> | filter values to return |
+| [options.prefilter] | <code>function</code> | <code>(arr[val])=&gt;true</code> | prefilter values to return |
+| [options.filter] | <code>function</code> | <code>(arr[val])=&gt;true</code> | filter values to return |
 | [options.replace.test] | <code>function</code> |  | test function for replacing values (arr[val]) |
 | [options.replace.value] | <code>string</code> \| <code>number</code> \| <code>function</code> |  | value to replace (arr[val]) if replace test is true, if a function (result,val,index,arr,name)=>your custom value |
 | [options.parseIntBase] | <code>number</code> | <code>10</code> | radix value for parseInt |

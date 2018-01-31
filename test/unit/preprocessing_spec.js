@@ -75,6 +75,14 @@ describe('preprocessing', function() {
         expect(CSVDataSet).to.be.instanceof(jsk.preprocessing.DataSet);
       });
     });
+    describe('filterColumn', () => {
+      it('should by default return full dataset', () => {
+        expect(CSVDataSet.filterColumn()).to.eql(CSVDataSet.data);
+      });
+      it('should filter data by a filter function', () => {
+        expect(CSVDataSet.filterColumn(row => row.Salary.toString() === '83000')).to.have.lengthOf(1);
+      });
+    })
     describe('columnMatrix', () => { 
       it('should create a matrix of values from columns', () => {
         const AgeSalMatrix = CSVDataSet.columnMatrix([ [ 'Age', ], [ 'Salary', ], ]);

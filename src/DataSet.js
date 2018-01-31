@@ -20,6 +20,19 @@ export class DataSet {
     return this;
   }
   /**
+   * returns filtered rows of data 
+   * @example const csvObj = new DataSet([{col1:1,col2:5},{col1:2,col2:6}]);
+csvObj.filterColumn((row)=>row.col1>=2); // =>
+//[ 
+//  [2,6], 
+//]
+  * @param {Function} [filter=()=>true] - filter function
+  * @returns {Array} filtered array of data 
+  */
+  filterColumn(filter = () => true) {
+    return this.data.filter(filter);
+  }
+  /**
    * returns a matrix of values by combining column arrays into a matrix
    * @example const csvObj = new DataSet([{col1:1,col2:5},{col1:2,col2:6}]);
 csvObj.columnMatrix([['col1',{parseInt:true}],['col2]]); // =>
