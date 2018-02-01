@@ -16,9 +16,6 @@ export const preprocessing = {
   DataSet,
 };
 export { DataSet, } from './DataSet';
-/**
- * @namespace
- */
 export const util = utils;
 /**
  * @namespace
@@ -28,7 +25,4 @@ export const cross_validation = {
   train_test_split,
   cross_validation_split,
 };
-/**
- * @namespace
- */
 export const calc = calcs;

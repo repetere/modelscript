@@ -300,7 +300,7 @@ $ npm i -g grunt-cli jsdoc-to-markdown
 For generating documentation
 ```sh
 $ grunt doc
-$ jsdoc2md dist/**/*.cjs.js  > docs/api.md
+$ jsdoc2md src/**/*.js  > docs/api.md
 ```
 
 

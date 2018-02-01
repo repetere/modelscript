@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Namespace: cross_validation</title>
+    <title>JSDoc: Namespace: calc</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Namespace: cross_validation</h1>
+    <h1 class="page-title">Namespace: calc</h1>
 
     
 
@@ -28,7 +28,7 @@
 
 <header>
     
-        <h2>cross_validation</h2>
+        <h2>calc</h2>
         
     
 </header>
@@ -70,19 +70,12 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line24">line 24</a>
+        <a href="calc.js.html">calc.js</a>, <a href="calc.js.html#line100">line 100</a>
     </li></ul></dd>
     
 
     
 
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://machinelearningmastery.com/implement-resampling-methods-scratch-python/">https://machinelearningmastery.com/implement-resampling-methods-scratch-python/</a></li>
-        </ul>
-    </dd>
     
 
     
@@ -116,7 +109,7 @@
     
 
     
-    <h4 class="name" id=".exports.cross_validation_split"><span class="type-signature">(static) </span>exports.cross_validation_split<span class="signature">(dataset, options)</span><span class="type-signature"> &rarr; {array}</span></h4>
+    <h4 class="name" id=".exports.assocationRuleLearning"><span class="type-signature">(static) </span>exports.assocationRuleLearning<span class="signature">(transactions, options)</span><span class="type-signature"> &rarr; {Object}</span></h4>
     
 
     
@@ -124,8 +117,7 @@
 
 
 <div class="description">
-    Provides train/test indices to split data in train/test sets. Split dataset into k consecutive folds.
-Each fold is then used once as a validation while the k - 1 remaining folds form the training set.
+    returns association rule learning results
 </div>
 
 
@@ -161,13 +153,13 @@ Each fold is then used once as a validation while the k - 1 remaining folds form
 
         <tr>
             
-                <td class="name"><code>dataset</code></td>
+                <td class="name"><code>transactions</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">array</span>
+<span class="param-type">Array</span>
 
 
             
@@ -177,7 +169,7 @@ Each fold is then used once as a validation while the k - 1 remaining folds form
 
             
 
-            <td class="description last">array of data to split</td>
+            <td class="description last">sparse matrix of transactions</td>
         </tr>
 
     
@@ -190,7 +182,7 @@ Each fold is then used once as a validation while the k - 1 remaining folds form
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">Object</span>
 
 
             
@@ -230,13 +222,13 @@ Each fold is then used once as a validation while the k - 1 remaining folds form
 
         <tr>
             
-                <td class="name"><code>folds</code></td>
+                <td class="name"><code>support</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">Number</span>
 
 
             
@@ -257,25 +249,25 @@ Each fold is then used once as a validation while the k - 1 remaining folds form
             
                 <td class="default">
                 
-                    3
+                    0.4
                 
                 </td>
             
 
-            <td class="description last">Number of folds</td>
+            <td class="description last">support level</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>random_state</code></td>
+                <td class="name"><code>minLength</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">Number</span>
 
 
             
@@ -296,12 +288,90 @@ Each fold is then used once as a validation while the k - 1 remaining folds form
             
                 <td class="default">
                 
-                    0
+                    2
                 
                 </td>
             
 
-            <td class="description last">the seed used by the random number generator</td>
+            <td class="description last">minimum assocation array size</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>summary</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last">return summarized results</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>valuesMap</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Map</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    new Map()
+                
+                </td>
+            
+
+            <td class="description last">map of values and labels (used for summary results)</td>
         </tr>
 
     
@@ -349,385 +419,19 @@ Each fold is then used once as a validation while the k - 1 remaining folds form
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="cross_validation.js.html">cross_validation.js</a>, <a href="cross_validation.js.html#line61">line 61</a>
+        <a href="calc.js.html">calc.js</a>, <a href="calc.js.html#line64">line 64</a>
     </li></ul></dd>
     
 
     
 
     
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    returns  dataset split into k consecutive folds
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">array</span>
-
-
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://github.com/alexisfacques/Node-FPGrowth">https://github.com/alexisfacques/Node-FPGrowth</a></li>
+        </ul>
     </dd>
-</dl>
-
-    
-
-
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
-// [ [ 50, 20, 34, 33, 10 ], [ 23, 90, 42, 19, 25 ] ] 
-const crossValidationArrayKFolds = jsk.cross_validation.cross_validation_split(testArray, { folds: 2, random_state: 0, });</code></pre>
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id=".exports.train_test_split"><span class="type-signature">(static) </span>exports.train_test_split<span class="signature">(dataset, options)</span><span class="type-signature"> &rarr; {Object|array}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Split arrays into random train and test subsets
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>dataset</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">array of data to split</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <h6>Properties</h6>
-                
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>test_size</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    0.2
-                
-                </td>
-            
-
-            <td class="description last">represent the proportion of the dataset to include in the test split, can be overwritten by the train_size</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>train_size</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    0.8
-                
-                </td>
-            
-
-            <td class="description last">represent the proportion of the dataset to include in the train split</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>random_state</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    0
-                
-                </td>
-            
-
-            <td class="description last">the seed used by the random number generator</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>return_array</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-
-            <td class="description last">will return an object {train,test} of the split dataset by default or [train,test] if returned as an array</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="cross_validation.js.html">cross_validation.js</a>, <a href="cross_validation.js.html#line19">line 19</a>
-    </li></ul></dd>
-    
-
-    
-
     
 
     
@@ -749,7 +453,7 @@ const crossValidationArrayKFolds = jsk.cross_validation.cross_validation_split(t
 
         
 <div class="param-desc">
-    returns training and test arrays either as an object or arrays
+    Returns the result from Node-FPGrowth or a summary of support and strong associations
 </div>
 
 
@@ -761,9 +465,6 @@ const crossValidationArrayKFolds = jsk.cross_validation.cross_validation_split(t
     <dd>
         
 <span class="param-type">Object</span>
-|
-
-<span class="param-type">array</span>
 
 
     </dd>
@@ -774,11 +475,260 @@ const crossValidationArrayKFolds = jsk.cross_validation.cross_validation_split(t
 
 
 
-    <h5>Example</h5>
+
+        
+            
+
     
-    <pre class="prettyprint"><code>const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
-// { train: [ 50, 20, 34, 33, 10, 23, 90, 42 ], test: [ 25, 19 ] }
-const trainTestSplit = jsk.cross_validation.train_test_split(testArray,{ test_size:0.2, random_state: 0, });</code></pre>
+
+    
+    <h4 class="name" id=".exports.getTransactions"><span class="type-signature">(static) </span>exports.getTransactions<span class="signature">(data, options)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Formats an array of transactions into a sparse matrix like format for Apriori/Eclat
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">CSV data of transactions</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>exludeEmptyTranscations</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last">exclude empty rows of transactions</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="calc.js.html">calc.js</a>, <a href="calc.js.html#line16">line 16</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://github.com/alexisfacques/Node-FPGrowth">https://github.com/alexisfacques/Node-FPGrowth</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    {values - unique list of all values, valuesMap - map of values and labels, transactions - formatted sparse array}
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
 
 
 
