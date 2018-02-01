@@ -7,7 +7,8 @@ import { default as csv } from 'csvtojson';
  * @example
  * // returns [{header:value,header2:value2}]
  * loadCSVURI('https://raw.githubusercontent.com/repetere/jskit-learn/master/test/mock/data.csv').then(csvData).catch(console.error)
- * @param {string} filepath URL to CSV path
+ * @param {string} filepath - URL to CSV path
+ * @param {Object} options - options passed to csvtojson
  * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
  */
 export function loadCSVURI(filepath, options) {
@@ -40,7 +41,8 @@ export function loadCSVURI(filepath, options) {
  * @example
  * // returns [{header:value,header2:value2}]
  * loadCSV('../mock/invalid-file.csv').then(csvData).catch(console.error)
- * @param {string} filepath URL to CSV path
+ * @param {string} filepath - URL to CSV path
+ * @param {Object} options - options passed to csvtojson
  * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
  */
 export function loadCSV(filepath, options) {
