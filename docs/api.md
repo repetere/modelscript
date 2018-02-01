@@ -23,10 +23,10 @@
 ## Functions
 
 <dl>
-<dt><a href="#loadCSVURI">loadCSVURI(filepath, options)</a> ⇒ <code>Array.&lt;Object&gt;</code></dt>
+<dt><a href="#loadCSVURI">loadCSVURI(filepath, [options])</a> ⇒ <code>Array.&lt;Object&gt;</code></dt>
 <dd><p>Asynchronously loads a CSV from a remote URL and returns an array of objects</p>
 </dd>
-<dt><a href="#loadCSV">loadCSV(filepath, options)</a> ⇒ <code>Array.&lt;Object&gt;</code></dt>
+<dt><a href="#loadCSV">loadCSV(filepath, [options])</a> ⇒ <code>Array.&lt;Object&gt;</code></dt>
 <dd><p>Asynchronously loads a CSV from either a filepath or remote URL and returns an array of objects</p>
 </dd>
 </dl>
@@ -821,7 +821,7 @@ Converts z-score into the probability
 
 <a name="loadCSVURI"></a>
 
-## loadCSVURI(filepath, options) ⇒ <code>Array.&lt;Object&gt;</code>
+## loadCSVURI(filepath, [options]) ⇒ <code>Array.&lt;Object&gt;</code>
 Asynchronously loads a CSV from a remote URL and returns an array of objects
 
 **Kind**: global function  
@@ -830,7 +830,7 @@ Asynchronously loads a CSV from a remote URL and returns an array of objects
 | Param | Type | Description |
 | --- | --- | --- |
 | filepath | <code>string</code> | URL to CSV path |
-| options | <code>Object</code> | options passed to csvtojson |
+| [options] | <code>Object</code> | options passed to csvtojson |
 
 **Example**  
 ```js
@@ -838,7 +838,7 @@ Asynchronously loads a CSV from a remote URL and returns an array of objects
 ```
 <a name="loadCSV"></a>
 
-## loadCSV(filepath, options) ⇒ <code>Array.&lt;Object&gt;</code>
+## loadCSV(filepath, [options]) ⇒ <code>Array.&lt;Object&gt;</code>
 Asynchronously loads a CSV from either a filepath or remote URL and returns an array of objects
 
 **Kind**: global function  
@@ -847,7 +847,7 @@ Asynchronously loads a CSV from either a filepath or remote URL and returns an a
 | Param | Type | Description |
 | --- | --- | --- |
 | filepath | <code>string</code> | URL to CSV path |
-| options | <code>Object</code> | options passed to csvtojson |
+| [options] | <code>Object</code> | options passed to csvtojson |
 
 **Example**  
 ```js
