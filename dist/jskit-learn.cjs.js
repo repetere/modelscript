@@ -12,6 +12,7 @@ var ml = _interopDefault(require('ml'));
 var range = _interopDefault(require('lodash.range'));
 var rangeRight = _interopDefault(require('lodash.rangeright'));
 var nodeFpgrowth = require('node-fpgrowth');
+var ObjectValues = _interopDefault(require('object.values'));
 var Random = _interopDefault(require('random-js'));
 
 /**
@@ -293,6 +294,10 @@ const util$1 = {
   approximateZPercentile,
   // approximatePercentileZ,
 };
+
+if (!Object.values) {
+  ObjectValues.shim();
+}
 
 /**
  * Formats an array of transactions into a sparse matrix like format for Apriori/Eclat

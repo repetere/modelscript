@@ -1,14 +1,18 @@
 
 const jsk = require('../../dist/jskit-learn.cjs');
+const ObjectValues = require('object.values');
 const expect = require('chai').expect;
 const rawTransactions = [
-  ['Cookies', 'Milk', 'Plates',],
-  ['Cups', 'Milk', 'Silverware',],
-  ['Cookies', 'Cups', 'Milk', 'Silverware',],
-  ['Cups', 'Silverware',],
-  ['Cookies', 'Cups', 'Milk', 'Silverware',],
+  ['Cookies', 'Milk', 'Plates', ],
+  ['Cups', 'Milk', 'Silverware', ],
+  ['Cookies', 'Cups', 'Milk', 'Silverware', ],
+  ['Cups', 'Silverware', ],
+  ['Cookies', 'Cups', 'Milk', 'Silverware', ],
 ];
 
+if (!Object.values) {
+  ObjectValues.shim();
+}
 describe('calc', function () { 
   describe('getTransactions', () => {
     const gt = jsk.calc.getTransactions(rawTransactions);

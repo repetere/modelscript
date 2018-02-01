@@ -6,6 +6,7 @@ import ml from 'ml';
 import range from 'lodash.range';
 import rangeRight from 'lodash.rangeright';
 import { FPGrowth } from 'node-fpgrowth';
+import ObjectValues from 'object.values';
 import Random from 'random-js';
 
 /**
@@ -287,6 +288,10 @@ const util$1 = {
   approximateZPercentile,
   // approximatePercentileZ,
 };
+
+if (!Object.values) {
+  ObjectValues.shim();
+}
 
 /**
  * Formats an array of transactions into a sparse matrix like format for Apriori/Eclat

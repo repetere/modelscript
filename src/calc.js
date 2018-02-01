@@ -1,4 +1,8 @@
 import { FPGrowth, } from 'node-fpgrowth';
+import { default as ObjectValues, } from 'object.values';
+if (!Object.values) {
+  ObjectValues.shim();
+}
 
 /**
  * Formats an array of transactions into a sparse matrix like format for Apriori/Eclat
