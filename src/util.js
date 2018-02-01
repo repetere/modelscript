@@ -18,7 +18,7 @@ const sd = ml.Stat.array.standardDeviation; //(a, av) => Math.sqrt(avg(a.map(x =
  * @param {Number[]} right 
  * @returns {Number[]} Squared difference of left minus right array
  */
-export function squaredDifference(left, right) {
+function squaredDifference(left, right) {
   return left.reduce((result, val, index, arr) => { 
     result.push(Math.pow((right[index]-val), 2));
     return result;
@@ -38,7 +38,7 @@ export function squaredDifference(left, right) {
  * @param {Number[]} estimates - estimates values
  * @returns {Number} Standard Error of the Estimate
  */
-export function standardError(actuals=[], estimates=[]) {
+function standardError(actuals=[], estimates=[]) {
   if (actuals.length !== estimates.length) throw new RangeError('arrays must have the same length');
   const squaredDiff = squaredDifference(actuals, estimates);
   return Math.sqrt((sum(squaredDiff)) / (actuals.length - 2));
@@ -51,7 +51,7 @@ export function standardError(actuals=[], estimates=[]) {
  * @param {Number[]} observations - An array like object containing the sample data.
  * @returns {Number[]} The z-scores, standardized by mean and standard deviation of input array 
  */
-export function standardScore(observations = []) {
+function standardScore(observations = []) {
   const mean = avg(observations);
   const stdDev = sd(observations);
   return observations.map(x => ((x - mean) / stdDev));
@@ -71,7 +71,7 @@ r2.toFixed(1) // => 0.6
  * @param {Number[]} estimates - estimates values
  * @returns {Number} r^2
  */
-export function coefficientOfDetermination(actuals=[], estimates=[]) {
+function coefficientOfDetermination(actuals=[], estimates=[]) {
   if (actuals.length !== estimates.length) throw new RangeError('arrays must have the same length');
   const actualsMean = mean(actuals);
   const meanActualsDiffSquared = actuals.map(a => Math.pow(a - actualsMean, 2));
@@ -88,11 +88,11 @@ const arrays = pivotVector(vectors); // => [ [1,2,3,3], [2,2,3,3], [3,3,4,3] ];
  * @param {Array[]} vectors 
  * @returns {Array[]}
  */
-export function pivotVector(vectors=[]) {
+function pivotVector(vectors=[]) {
   return vectors.reduce((result, val, index/*, arr*/) => {
     val.forEach((vecVal, i) => {
       (index === 0)
-        ? (result.push([vecVal,]))
+        ? (result.push([vecVal, ]))
         : (result[ i ].push(vecVal));
     });
     return result;
@@ -118,7 +118,7 @@ export function pivotVector(vectors=[]) {
   * @param {Array} [vectors=[]] - array of arguments for columnArray to merge columns into a matrix
   * @returns {Array} a matrix of column values 
   */
-export function pivotArrays(arrays = []) {
+function pivotArrays(arrays = []) {
   return (arrays.length)
     ? arrays[ 0 ].map((vectorItem, index) => {
       const returnArray = [];
@@ -159,7 +159,7 @@ const MinMaxScaler= (z) => scale(z, (max(z) - min(z)));
   * @param {number} z - Number of standard deviations from the mean.
   * @returns {number} p  - p-value
   */
-export function approximateZPercentile(z, alpha=true) {
+function approximateZPercentile(z, alpha=true) {
   // If z is greater than 6.5 standard deviations from the mean
   // the number of significant digits will be outside of a reasonable 
   // range.

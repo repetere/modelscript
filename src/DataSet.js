@@ -35,7 +35,7 @@ csvObj.filterColumn((row)=>row.col1>=2); // =>
   /**
    * returns a matrix of values by combining column arrays into a matrix
    * @example const csvObj = new DataSet([{col1:1,col2:5},{col1:2,col2:6}]);
-csvObj.columnMatrix([['col1',{parseInt:true}],['col2]]); // =>
+csvObj.columnMatrix([['col1',{parseInt:true}],['col2']]); // =>
 //[ 
 //  [1,5], 
 //  [2,6], 

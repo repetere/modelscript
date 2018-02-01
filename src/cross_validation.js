@@ -1,5 +1,5 @@
-import { default as Random } from 'random-js';
-import { default as range } from 'lodash.range';
+import { default as Random, } from 'random-js';
+import { default as range, } from 'lodash.range';
 
 /**
  * Split arrays into random train and test subsets
@@ -16,7 +16,7 @@ const trainTestSplit = jsk.cross_validation.train_test_split(testArray,{ test_si
  * @param {boolean} [options.return_array=false] - will return an object {train,test} of the split dataset by default or [train,test] if returned as an array
  * @returns {(Object|array)} returns training and test arrays either as an object or arrays
  */
-export function train_test_split(dataset = [], options = {
+function train_test_split(dataset = [], options = {
   test_size: 0.2,
   train_size: 0.8,
   random_state: 0,
@@ -38,7 +38,7 @@ export function train_test_split(dataset = [], options = {
     // console.log({ index });
     training_set.push(dataset_copy.splice(index, 1)[0]);
   }
-  return (options.return_array) ? [training_set, dataset_copy] : {
+  return (options.return_array) ? [training_set, dataset_copy,] : {
     train: training_set,
     test: dataset_copy,
   };
@@ -58,7 +58,7 @@ const crossValidationArrayKFolds = jsk.cross_validation.cross_validation_split(t
  * @param {number} [options.random_state=0] - the seed used by the random number generator
  * @returns {array} returns  dataset split into k consecutive folds
  */
-export function cross_validation_split(dataset = [], options = {
+function cross_validation_split(dataset = [], options = {
   folds: 3,
   random_state: 0,
 }) { //kfolds
@@ -78,3 +78,12 @@ export function cross_validation_split(dataset = [], options = {
 
   return dataset_split;
 }
+
+/**
+ * @namespace
+ * @see {@link https://machinelearningmastery.com/implement-resampling-methods-scratch-python/}
+ */
+export const cross_validation = {
+  train_test_split,
+  cross_validation_split,
+};

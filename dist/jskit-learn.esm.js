@@ -164,7 +164,7 @@ function pivotVector(vectors=[]) {
   return vectors.reduce((result, val, index/*, arr*/) => {
     val.forEach((vecVal, i) => {
       (index === 0)
-        ? (result.push([vecVal,]))
+        ? (result.push([vecVal, ]))
         : (result[ i ].push(vecVal));
     });
     return result;
@@ -425,7 +425,7 @@ csvObj.filterColumn((row)=>row.col1>=2); // =>
   /**
    * returns a matrix of values by combining column arrays into a matrix
    * @example const csvObj = new DataSet([{col1:1,col2:5},{col1:2,col2:6}]);
-csvObj.columnMatrix([['col1',{parseInt:true}],['col2]]); // =>
+csvObj.columnMatrix([['col1',{parseInt:true}],['col2']]); // =>
 //[ 
 //  [1,5], 
 //  [2,6], 
@@ -823,7 +823,7 @@ function train_test_split(dataset = [], options = {
     // console.log({ index });
     training_set.push(dataset_copy.splice(index, 1)[0]);
   }
-  return (options.return_array) ? [training_set, dataset_copy] : {
+  return (options.return_array) ? [training_set, dataset_copy,] : {
     train: training_set,
     test: dataset_copy,
   };
@@ -864,6 +864,15 @@ function cross_validation_split(dataset = [], options = {
   return dataset_split;
 }
 
+/**
+ * @namespace
+ * @see {@link https://machinelearningmastery.com/implement-resampling-methods-scratch-python/}
+ */
+const cross_validation$1 = {
+  train_test_split,
+  cross_validation_split,
+};
+
 const loadCSV = loadCSV$1;
 const loadCSVURI = loadCSVURI$1;
 
@@ -873,21 +882,8 @@ const loadCSVURI = loadCSVURI$1;
 const preprocessing = {
   DataSet,
 };
-/**
- * @namespace
- */
 const util$$1 = util$1;
-/**
- * @namespace
- * @see {@link https://machinelearningmastery.com/implement-resampling-methods-scratch-python/}
- */
-const cross_validation = {
-  train_test_split,
-  cross_validation_split,
-};
-/**
- * @namespace
- */
+const cross_validation$$1 = cross_validation$1;
 const calc$$1 = calc$1;
 
-export { loadCSV, loadCSVURI, preprocessing, util$$1 as util, cross_validation, calc$$1 as calc, DataSet };
+export { loadCSV, loadCSVURI, preprocessing, util$$1 as util, cross_validation$$1 as cross_validation, calc$$1 as calc, DataSet };

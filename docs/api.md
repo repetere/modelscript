@@ -12,9 +12,9 @@
 <dl>
 <dt><a href="#calc">calc</a> : <code>object</code></dt>
 <dd></dd>
-<dt><a href="#preprocessing">preprocessing</a> : <code>object</code></dt>
-<dd></dd>
 <dt><a href="#cross_validation">cross_validation</a> : <code>object</code></dt>
+<dd></dd>
+<dt><a href="#preprocessing">preprocessing</a> : <code>object</code></dt>
 <dd></dd>
 <dt><a href="#util">util</a> : <code>object</code></dt>
 <dd></dd>
@@ -104,7 +104,7 @@ returns a matrix of values by combining column arrays into a matrix
 **Example**  
 ```js
 const csvObj = new DataSet([{col1:1,col2:5},{col1:2,col2:6}]);
-csvObj.columnMatrix([['col1',{parseInt:true}],['col2]]); // =>
+csvObj.columnMatrix([['col1',{parseInt:true}],['col2']]); // =>
 //[ 
 //  [1,5], 
 //  [2,6], 
@@ -364,7 +364,7 @@ returns a matrix of values by combining column arrays into a matrix
 **Example**  
 ```js
 const csvObj = new DataSet([{col1:1,col2:5},{col1:2,col2:6}]);
-csvObj.columnMatrix([['col1',{parseInt:true}],['col2]]); // =>
+csvObj.columnMatrix([['col1',{parseInt:true}],['col2']]); // =>
 //[ 
 //  [1,5], 
 //  [2,6], 
@@ -593,10 +593,6 @@ returns association rule learning results
 | [options.summary] | <code>Boolean</code> | <code>true</code> | return summarized results |
 | [options.valuesMap] | <code>Map</code> | <code>new Map()</code> | map of values and labels (used for summary results) |
 
-<a name="preprocessing"></a>
-
-## preprocessing : <code>object</code>
-**Kind**: global namespace  
 <a name="cross_validation"></a>
 
 ## cross_validation : <code>object</code>
@@ -604,12 +600,12 @@ returns association rule learning results
 **See**: [https://machinelearningmastery.com/implement-resampling-methods-scratch-python/](https://machinelearningmastery.com/implement-resampling-methods-scratch-python/)  
 
 * [cross_validation](#cross_validation) : <code>object</code>
-    * [.exports.train_test_split(dataset, options)](#cross_validation.exports.train_test_split) ⇒ <code>Object</code> \| <code>array</code>
-    * [.exports.cross_validation_split(dataset, options)](#cross_validation.exports.cross_validation_split) ⇒ <code>array</code>
+    * [.train_test_split(dataset, options)](#cross_validation.train_test_split) ⇒ <code>Object</code> \| <code>array</code>
+    * [.cross_validation_split(dataset, options)](#cross_validation.cross_validation_split) ⇒ <code>array</code>
 
-<a name="cross_validation.exports.train_test_split"></a>
+<a name="cross_validation.train_test_split"></a>
 
-### cross_validation.exports.train_test_split(dataset, options) ⇒ <code>Object</code> \| <code>array</code>
+### cross_validation.train_test_split(dataset, options) ⇒ <code>Object</code> \| <code>array</code>
 Split arrays into random train and test subsets
 
 **Kind**: static method of [<code>cross_validation</code>](#cross_validation)  
@@ -630,9 +626,9 @@ const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
 // { train: [ 50, 20, 34, 33, 10, 23, 90, 42 ], test: [ 25, 19 ] }
 const trainTestSplit = jsk.cross_validation.train_test_split(testArray,{ test_size:0.2, random_state: 0, });
 ```
-<a name="cross_validation.exports.cross_validation_split"></a>
+<a name="cross_validation.cross_validation_split"></a>
 
-### cross_validation.exports.cross_validation_split(dataset, options) ⇒ <code>array</code>
+### cross_validation.cross_validation_split(dataset, options) ⇒ <code>array</code>
 Provides train/test indices to split data in train/test sets. Split dataset into k consecutive folds.
 Each fold is then used once as a validation while the k - 1 remaining folds form the training set.
 
@@ -652,25 +648,29 @@ const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
 // [ [ 50, 20, 34, 33, 10 ], [ 23, 90, 42, 19, 25 ] ] 
 const crossValidationArrayKFolds = jsk.cross_validation.cross_validation_split(testArray, { folds: 2, random_state: 0, });
 ```
+<a name="preprocessing"></a>
+
+## preprocessing : <code>object</code>
+**Kind**: global namespace  
 <a name="util"></a>
 
 ## util : <code>object</code>
 **Kind**: global namespace  
 
 * [util](#util) : <code>object</code>
-    * [.exports.squaredDifference(left, right)](#util.exports.squaredDifference) ⇒ <code>Array.&lt;Number&gt;</code>
-    * [.exports.standardError(actuals, estimates)](#util.exports.standardError) ⇒ <code>Number</code>
-    * [.exports.standardScore(observations)](#util.exports.standardScore) ⇒ <code>Array.&lt;Number&gt;</code>
-    * [.exports.coefficientOfDetermination(actuals, estimates)](#util.exports.coefficientOfDetermination) ⇒ <code>Number</code>
-    * [.exports.pivotVector(vectors)](#util.exports.pivotVector) ⇒ <code>Array.&lt;Array&gt;</code>
-    * [.exports.pivotArrays([vectors])](#util.exports.pivotArrays) ⇒ <code>Array</code>
+    * [.squaredDifference(left, right)](#util.squaredDifference) ⇒ <code>Array.&lt;Number&gt;</code>
+    * [.standardError(actuals, estimates)](#util.standardError) ⇒ <code>Number</code>
+    * [.standardScore(observations)](#util.standardScore) ⇒ <code>Array.&lt;Number&gt;</code>
+    * [.coefficientOfDetermination(actuals, estimates)](#util.coefficientOfDetermination) ⇒ <code>Number</code>
+    * [.pivotVector(vectors)](#util.pivotVector) ⇒ <code>Array.&lt;Array&gt;</code>
+    * [.pivotArrays([vectors])](#util.pivotArrays) ⇒ <code>Array</code>
     * [.StandardScaler(z)](#util.StandardScaler) ⇒ <code>Array.&lt;number&gt;</code>
     * [.MinMaxScaler(z)](#util.MinMaxScaler) ⇒ <code>Array.&lt;number&gt;</code>
-    * [.exports.approximateZPercentile(z)](#util.exports.approximateZPercentile) ⇒ <code>number</code>
+    * [.approximateZPercentile(z)](#util.approximateZPercentile) ⇒ <code>number</code>
 
-<a name="util.exports.squaredDifference"></a>
+<a name="util.squaredDifference"></a>
 
-### util.exports.squaredDifference(left, right) ⇒ <code>Array.&lt;Number&gt;</code>
+### util.squaredDifference(left, right) ⇒ <code>Array.&lt;Number&gt;</code>
 Returns an array of the squared different of two arrays
 
 **Kind**: static method of [<code>util</code>](#util)  
@@ -681,9 +681,9 @@ Returns an array of the squared different of two arrays
 | left | <code>Array.&lt;Number&gt;</code> | 
 | right | <code>Array.&lt;Number&gt;</code> | 
 
-<a name="util.exports.standardError"></a>
+<a name="util.standardError"></a>
 
-### util.exports.standardError(actuals, estimates) ⇒ <code>Number</code>
+### util.standardError(actuals, estimates) ⇒ <code>Number</code>
 The standard error of the estimate is a measure of the accuracy of predictions made with a regression line. Compares the estimate to the actual value
 
 **Kind**: static method of [<code>util</code>](#util)  
@@ -702,9 +702,9 @@ const actuals = [ 2, 4, 5, 4, 5, ];
   const SE = jsk.util.standardError(actuals, estimates);
   SE.toFixed(2) // => 0.89
 ```
-<a name="util.exports.standardScore"></a>
+<a name="util.standardScore"></a>
 
-### util.exports.standardScore(observations) ⇒ <code>Array.&lt;Number&gt;</code>
+### util.standardScore(observations) ⇒ <code>Array.&lt;Number&gt;</code>
 Calculates the z score of each value in the sample, relative to the sample mean and standard deviation.
 
 **Kind**: static method of [<code>util</code>](#util)  
@@ -715,9 +715,9 @@ Calculates the z score of each value in the sample, relative to the sample mean 
 | --- | --- | --- |
 | observations | <code>Array.&lt;Number&gt;</code> | An array like object containing the sample data. |
 
-<a name="util.exports.coefficientOfDetermination"></a>
+<a name="util.coefficientOfDetermination"></a>
 
-### util.exports.coefficientOfDetermination(actuals, estimates) ⇒ <code>Number</code>
+### util.coefficientOfDetermination(actuals, estimates) ⇒ <code>Number</code>
 In statistics, the coefficient of determination, denoted R2 or r2 and pronounced "R squared", is the proportion of the variance in the dependent variable that is predictable from the independent variable(s). Compares distance of estimated values to the mean.{\bar {y}}={\frac {1}{n}}\sum _{i=1}^{n}y_{i}
 
 **Kind**: static method of [<code>util</code>](#util)  
@@ -736,9 +736,9 @@ const estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];
 const r2 = jsk.util.coefficientOfDetermination(actuals, estimates); 
 r2.toFixed(1) // => 0.6
 ```
-<a name="util.exports.pivotVector"></a>
+<a name="util.pivotVector"></a>
 
-### util.exports.pivotVector(vectors) ⇒ <code>Array.&lt;Array&gt;</code>
+### util.pivotVector(vectors) ⇒ <code>Array.&lt;Array&gt;</code>
 returns an array of vectors as an array of arrays
 
 **Kind**: static method of [<code>util</code>](#util)  
@@ -752,9 +752,9 @@ returns an array of vectors as an array of arrays
 const vectors = [ [1,2,3], [1,2,3], [3,3,4], [3,3,3] ];
 const arrays = pivotVector(vectors); // => [ [1,2,3,3], [2,2,3,3], [3,3,4,3] ];
 ```
-<a name="util.exports.pivotArrays"></a>
+<a name="util.pivotArrays"></a>
 
-### util.exports.pivotArrays([vectors]) ⇒ <code>Array</code>
+### util.pivotArrays([vectors]) ⇒ <code>Array</code>
 returns a matrix of values by combining arrays into a matrix
 
 **Kind**: static method of [<code>util</code>](#util)  
@@ -806,9 +806,9 @@ Transforms features by scaling each feature to a given range.
 | --- | --- | --- |
 | z | <code>Array.&lt;number&gt;</code> | array of integers or floats |
 
-<a name="util.exports.approximateZPercentile"></a>
+<a name="util.approximateZPercentile"></a>
 
-### util.exports.approximateZPercentile(z) ⇒ <code>number</code>
+### util.approximateZPercentile(z) ⇒ <code>number</code>
 Converts z-score into the probability
 
 **Kind**: static method of [<code>util</code>](#util)  

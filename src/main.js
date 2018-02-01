@@ -4,7 +4,7 @@ import * as csvUtils from './csv';
 import { util as utils, } from './util';
 import { calc as calcs, } from './calc';
 import { DataSet, } from './DataSet';
-import { train_test_split, cross_validation_split, } from './cross_validation';
+import { cross_validation as cross_validations, } from './cross_validation';
 
 export const loadCSV = csvUtils.loadCSV;
 export const loadCSVURI = csvUtils.loadCSVURI;
@@ -17,12 +17,5 @@ export const preprocessing = {
 };
 export { DataSet, } from './DataSet';
 export const util = utils;
-/**
- * @namespace
- * @see {@link https://machinelearningmastery.com/implement-resampling-methods-scratch-python/}
- */
-export const cross_validation = {
-  train_test_split,
-  cross_validation_split,
-};
+export const cross_validation = cross_validations;
 export const calc = calcs;

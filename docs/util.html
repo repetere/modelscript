@@ -109,7 +109,7 @@
     
 
     
-    <h4 class="name" id=".exports.approximateZPercentile"><span class="type-signature">(static) </span>exports.approximateZPercentile<span class="signature">(z)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id=".approximateZPercentile"><span class="type-signature">(static) </span>approximateZPercentile<span class="signature">(z)</span><span class="type-signature"> &rarr; {number}</span></h4>
     
 
     
@@ -273,7 +273,7 @@
     
 
     
-    <h4 class="name" id=".exports.coefficientOfDetermination"><span class="type-signature">(static) </span>exports.coefficientOfDetermination<span class="signature">(actuals, estimates)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+    <h4 class="name" id=".coefficientOfDetermination"><span class="type-signature">(static) </span>coefficientOfDetermination<span class="signature">(actuals, estimates)</span><span class="type-signature"> &rarr; {Number}</span></h4>
     
 
     
@@ -468,7 +468,161 @@ r2.toFixed(1) // => 0.6</code></pre>
     
 
     
-    <h4 class="name" id=".exports.pivotArrays"><span class="type-signature">(static) </span>exports.pivotArrays<span class="signature">(vectors<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    <h4 class="name" id=".MinMaxScaler"><span class="type-signature">(static) </span>MinMaxScaler<span class="signature">(z)</span><span class="type-signature"> &rarr; {Array.&lt;number>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Transforms features by scaling each feature to a given range.
+  This estimator scales and translates each feature individually such that it is in the given range on the training set, i.e. between zero and one.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>z</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;number></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">array of integers or floats</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="util.js.html">util.js</a>, <a href="util.js.html#line153">line 153</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;number></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".pivotArrays"><span class="type-signature">(static) </span>pivotArrays<span class="signature">(vectors<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
     
 
     
@@ -661,7 +815,7 @@ r2.toFixed(1) // => 0.6</code></pre>
     
 
     
-    <h4 class="name" id=".exports.pivotVector"><span class="type-signature">(static) </span>exports.pivotVector<span class="signature">(vectors)</span><span class="type-signature"> &rarr; {Array.&lt;Array>}</span></h4>
+    <h4 class="name" id=".pivotVector"><span class="type-signature">(static) </span>pivotVector<span class="signature">(vectors)</span><span class="type-signature"> &rarr; {Array.&lt;Array>}</span></h4>
     
 
     
@@ -820,7 +974,7 @@ const arrays = pivotVector(vectors); // => [ [1,2,3,3], [2,2,3,3], [3,3,4,3] ];<
     
 
     
-    <h4 class="name" id=".exports.squaredDifference"><span class="type-signature">(static) </span>exports.squaredDifference<span class="signature">(left, right)</span><span class="type-signature"> &rarr; {Array.&lt;Number>}</span></h4>
+    <h4 class="name" id=".squaredDifference"><span class="type-signature">(static) </span>squaredDifference<span class="signature">(left, right)</span><span class="type-signature"> &rarr; {Array.&lt;Number>}</span></h4>
     
 
     
@@ -1000,7 +1154,7 @@ const arrays = pivotVector(vectors); // => [ [1,2,3,3], [2,2,3,3], [3,3,4,3] ];<
     
 
     
-    <h4 class="name" id=".exports.standardError"><span class="type-signature">(static) </span>exports.standardError<span class="signature">(actuals, estimates)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+    <h4 class="name" id=".standardError"><span class="type-signature">(static) </span>standardError<span class="signature">(actuals, estimates)</span><span class="type-signature"> &rarr; {Number}</span></h4>
     
 
     
@@ -1195,7 +1349,164 @@ const arrays = pivotVector(vectors); // => [ [1,2,3,3], [2,2,3,3], [3,3,4,3] ];<
     
 
     
-    <h4 class="name" id=".exports.standardScore"><span class="type-signature">(static) </span>exports.standardScore<span class="signature">(observations)</span><span class="type-signature"> &rarr; {Array.&lt;Number>}</span></h4>
+    <h4 class="name" id=".StandardScaler"><span class="type-signature">(static) </span>StandardScaler<span class="signature">(z)</span><span class="type-signature"> &rarr; {Array.&lt;number>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Standardize features by removing the mean and scaling to unit variance
+
+  Centering and scaling happen independently on each feature by computing the relevant statistics on the samples in the training set. Mean and standard deviation are then stored to be used on later data using the transform method.
+
+  Standardization of a dataset is a common requirement for many machine learning estimators: they might behave badly if the individual feature do not more or less look like standard normally distributed data (e.g. Gaussian with 0 mean and unit variance)
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>z</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;number></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">array of integers or floats</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="util.js.html">util.js</a>, <a href="util.js.html#line143">line 143</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;number></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".standardScore"><span class="type-signature">(static) </span>standardScore<span class="signature">(observations)</span><span class="type-signature"> &rarr; {Array.&lt;Number>}</span></h4>
     
 
     
@@ -1354,317 +1665,6 @@ const arrays = pivotVector(vectors); // => [ [1,2,3,3], [2,2,3,3], [3,3,4,3] ];<
 
 
         
-            
-
-    
-
-    
-    <h4 class="name" id=".MinMaxScaler"><span class="type-signature">(static) </span>MinMaxScaler<span class="signature">(z)</span><span class="type-signature"> &rarr; {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Transforms features by scaling each feature to a given range.
-  This estimator scales and translates each feature individually such that it is in the given range on the training set, i.e. between zero and one.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>z</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;number></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">array of integers or floats</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line153">line 153</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id=".StandardScaler"><span class="type-signature">(static) </span>StandardScaler<span class="signature">(z)</span><span class="type-signature"> &rarr; {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Standardize features by removing the mean and scaling to unit variance
-
-  Centering and scaling happen independently on each feature by computing the relevant statistics on the samples in the training set. Mean and standard deviation are then stored to be used on later data using the transform method.
-
-  Standardization of a dataset is a common requirement for many machine learning estimators: they might behave badly if the individual feature do not more or less look like standard normally distributed data (e.g. Gaussian with 0 mean and unit variance)
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>z</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;number></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">array of integers or floats</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line143">line 143</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
     
 
     
@@ -1686,7 +1686,7 @@ const arrays = pivotVector(vectors); // => [ [1,2,3,3], [2,2,3,3], [3,3,4,3] ];<
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Feb 01 2018 09:58:30 GMT-0500 (EST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Feb 01 2018 10:06:20 GMT-0500 (EST)
 </footer>
 
 <script> prettyPrint(); </script>
