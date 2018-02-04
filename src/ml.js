@@ -14,5 +14,6 @@ MachineLearning.SL.RandomForestClassifier = RandomForestClassifier;
 
 /**
  * @namespace
+ * @see {@link https://github.com/mljs/ml} 
  */
 export const ml = MachineLearning;

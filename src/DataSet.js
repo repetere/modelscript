@@ -4,6 +4,7 @@ import { util as utils, } from './util';
 /**
  * class for manipulating an array of objects, typically from CSV data
  * @class DataSet
+ * @memberOf preprocessing
  */
 export class DataSet {
   /**
