@@ -1,7 +1,7 @@
-import { get as request } from 'http';
-import { get as requestHTTPS } from 'https';
-import { default as validURL } from 'valid-url';
-import { default as csv } from 'csvtojson';
+import { get as request, } from 'http';
+import { get as requestHTTPS, } from 'https';
+import { default as validURL, } from 'valid-url';
+import { default as csv, } from 'csvtojson';
 /**
  * Asynchronously loads a CSV from a remote URL and returns an array of objects
  * @example
@@ -32,7 +32,7 @@ export function loadCSVURI(filepath, options) {
         });
     });
     req.on('error', reject);
-  })
+  });
 }
 
 

@@ -2,11 +2,16 @@ import { get } from 'http';
 import { get as get$1 } from 'https';
 import validURL from 'valid-url';
 import csv from 'csvtojson';
-import ml from 'ml';
+import MachineLearning from 'ml';
 import range from 'lodash.range';
 import rangeRight from 'lodash.rangeright';
 import { FPGrowth } from 'node-fpgrowth';
 import ObjectValues from 'object.values';
+import { RandomForestClassifier, RandomForestRegression } from 'ml-random-forest';
+import LogisticRegression from 'ml-logistic-regression';
+import { DecisionTreeClassifier, DecisionTreeRegression } from 'ml-cart';
+import { GaussianNB } from 'ml-naivebayes';
+import natural from 'natural';
 import Random from 'random-js';
 
 /**
@@ -14,7 +19,8 @@ import Random from 'random-js';
  * @example
  * // returns [{header:value,header2:value2}]
  * loadCSVURI('https://raw.githubusercontent.com/repetere/jskit-learn/master/test/mock/data.csv').then(csvData).catch(console.error)
- * @param {string} filepath URL to CSV path
+ * @param {string} filepath - URL to CSV path
+ * @param {Object} [options] - options passed to csvtojson
  * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
  */
 function loadCSVURI$1(filepath, options) {
@@ -38,7 +44,7 @@ function loadCSVURI$1(filepath, options) {
         });
     });
     req.on('error', reject);
-  })
+  });
 }
 
 
@@ -47,7 +53,8 @@ function loadCSVURI$1(filepath, options) {
  * @example
  * // returns [{header:value,header2:value2}]
  * loadCSV('../mock/invalid-file.csv').then(csvData).catch(console.error)
- * @param {string} filepath URL to CSV path
+ * @param {string} filepath - URL to CSV path
+ * @param {Object} [options] - options passed to csvtojson
  * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
  */
 function loadCSV$1(filepath, options) {
@@ -74,13 +81,13 @@ function loadCSV$1(filepath, options) {
   }
 }
 
-const avg = ml.Stat.array.mean;
+const avg = MachineLearning.Stat.array.mean;
 const mean = avg;
-const sum = ml.Stat.array.sum;
+const sum = MachineLearning.Stat.array.sum;
 const scale = (a, d) => a.map(x => (x - avg(a)) / d);
 const max = a => a.concat([]).sort((x, y) => x < y)[0];
 const min = a => a.concat([]).sort((x, y) => x > y)[0];
-const sd = ml.Stat.array.standardDeviation; //(a, av) => Math.sqrt(avg(a.map(x => (x - av) * x)));
+const sd = MachineLearning.Stat.array.standardDeviation; //(a, av) => Math.sqrt(avg(a.map(x => (x - av) * x)));
 
 
 /**
@@ -391,6 +398,25 @@ const calc$1 = {
   assocationRuleLearning,
 };
 
+MachineLearning.Regression.DecisionTreeRegression = DecisionTreeRegression;
+MachineLearning.Regression.RandomForestRegression = RandomForestRegression;
+
+MachineLearning.SL.GaussianNB = GaussianNB;
+MachineLearning.SL.LogisticRegression = LogisticRegression;
+MachineLearning.SL.DecisionTreeClassifier = DecisionTreeClassifier;
+MachineLearning.SL.RandomForestClassifier = RandomForestClassifier;
+
+/**
+ * @namespace
+ */
+const ml$1 = MachineLearning;
+
+console.log({ natural });
+/**
+ * @namespace
+ */
+const nlp$1 = natural;
+
 /**
  * class for manipulating an array of objects, typically from CSV data
  * @class DataSet
@@ -561,7 +587,7 @@ const ReplacedAgeMeanColumn = dataset.columnReplace('Age',{strategy:'mean'});
       replaceVal = this.columnMerge(name, config.mergeData); 
       return replaceVal;  
     default:
-      replaceVal = ml.Stat.array[config.strategy](this.columnArray(name, config.arrayOptions));
+      replaceVal = ml$1.Stat.array[config.strategy](this.columnArray(name, config.arrayOptions));
       replace.value = replaceVal;
       break;
     }
@@ -810,10 +836,11 @@ function train_test_split(dataset = [], options = {
 }) {
   const engine = Random.engines.mt19937().seed(options.random_state || 0);
   const training_set = [];
+  const parse_int_train_size = (typeof options.parse_int_train_size === 'boolean') ? options.parse_int_train_size : true;
   const train_size_length = (options.train_size)
     ? options.train_size * dataset.length
     : (1 - (options.test_size || 0.2)) * dataset.length;
-  const train_size = options.parse_int_train_size
+  const train_size = parse_int_train_size
     ? parseInt(train_size_length, 10)
     : train_size_length;
   const dataset_copy = [].concat(dataset);
@@ -885,5 +912,7 @@ const preprocessing = {
 const util$$1 = util$1;
 const cross_validation$$1 = cross_validation$1;
 const calc$$1 = calc$1;
+const ml$$1 = ml$1;
+const nlp$$1 = nlp$1;
 
-export { loadCSV, loadCSVURI, preprocessing, util$$1 as util, cross_validation$$1 as cross_validation, calc$$1 as calc, DataSet };
+export { loadCSV, loadCSVURI, preprocessing, util$$1 as util, cross_validation$$1 as cross_validation, calc$$1 as calc, ml$$1 as ml, nlp$$1 as nlp, DataSet };

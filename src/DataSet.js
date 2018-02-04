@@ -1,4 +1,4 @@
-import { default as ml, } from 'ml';
+import { ml, } from './ml';
 import { util as utils, } from './util';
 
 /**

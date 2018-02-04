@@ -3,6 +3,8 @@
 import * as csvUtils from './csv';
 import { util as utils, } from './util';
 import { calc as calcs, } from './calc';
+import { ml as mls, } from './ml';
+import { nlp as nlps, } from './nlp';
 import { DataSet, } from './DataSet';
 import { cross_validation as cross_validations, } from './cross_validation';
 
@@ -19,3 +21,5 @@ export { DataSet, } from './DataSet';
 export const util = utils;
 export const cross_validation = cross_validations;
 export const calc = calcs;
+export const ml = mls;
+export const nlp = nlps;
