@@ -16,6 +16,10 @@
 <dd></dd>
 <dt><a href="#preprocessing">preprocessing</a> : <code>object</code></dt>
 <dd></dd>
+<dt><a href="#ml">ml</a> : <code>object</code></dt>
+<dd></dd>
+<dt><a href="#nlp">nlp</a> : <code>object</code></dt>
+<dd></dd>
 <dt><a href="#util">util</a> : <code>object</code></dt>
 <dd></dd>
 </dl>
@@ -651,6 +655,14 @@ const crossValidationArrayKFolds = jsk.cross_validation.cross_validation_split(t
 <a name="preprocessing"></a>
 
 ## preprocessing : <code>object</code>
+**Kind**: global namespace  
+<a name="ml"></a>
+
+## ml : <code>object</code>
+**Kind**: global namespace  
+<a name="nlp"></a>
+
+## nlp : <code>object</code>
 **Kind**: global namespace  
 <a name="util"></a>
 
