@@ -414,18 +414,20 @@ MachineLearning.SL.RandomForestClassifier = mlRandomForest.RandomForestClassifie
 
 /**
  * @namespace
+ * @see {@link https://github.com/mljs/ml} 
  */
 const ml$1 = MachineLearning;
 
-console.log({ natural });
 /**
  * @namespace
+ * @see {@link https://github.com/NaturalNode/natural} 
  */
 const nlp$1 = natural;
 
 /**
  * class for manipulating an array of objects, typically from CSV data
  * @class DataSet
+ * @memberOf preprocessing
  */
 class DataSet {
   /**
