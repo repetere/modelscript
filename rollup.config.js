@@ -54,6 +54,7 @@ export default [
       'object.values',
       'ml-random-forest',
       'ml-logistic-regression',
+      'ml-regression-multivariate-linear',
       'ml-cart',
       'ml-naivebayes',
       'random-js',

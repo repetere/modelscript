@@ -3,7 +3,7 @@ import { RandomForestRegression, RandomForestClassifier, } from 'ml-random-fores
 import { default as LogisticRegression, } from 'ml-logistic-regression';
 import { DecisionTreeRegression, DecisionTreeClassifier, } from 'ml-cart';
 import { GaussianNB, } from 'ml-naivebayes';
-import { MultivariateLinearRegression, } from 'ml-regression-multivariate-linear';
+import { default as MultivariateLinearRegression, } from 'ml-regression-multivariate-linear';
 
 MachineLearning.Regression.DecisionTreeRegression = DecisionTreeRegression;
 MachineLearning.Regression.RandomForestRegression = RandomForestRegression;
