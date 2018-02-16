@@ -12,6 +12,7 @@ import LogisticRegression from 'ml-logistic-regression';
 import { DecisionTreeClassifier, DecisionTreeRegression } from 'ml-cart';
 import { GaussianNB } from 'ml-naivebayes';
 import MultivariateLinearRegression from 'ml-regression-multivariate-linear';
+import PCA from 'ml-pca';
 import natural from 'natural';
 import Random from 'random-js';
 
@@ -401,13 +402,14 @@ const calc$1 = {
 
 MachineLearning.Regression.DecisionTreeRegression = DecisionTreeRegression;
 MachineLearning.Regression.RandomForestRegression = RandomForestRegression;
-
 MachineLearning.Regression.MultivariateLinearRegression = MultivariateLinearRegression;
 
 MachineLearning.SL.GaussianNB = GaussianNB;
 MachineLearning.SL.LogisticRegression = LogisticRegression;
 MachineLearning.SL.DecisionTreeClassifier = DecisionTreeClassifier;
 MachineLearning.SL.RandomForestClassifier = RandomForestClassifier;
+
+MachineLearning.Stat.PCA = PCA;
 
 /**
  * @namespace

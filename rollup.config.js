@@ -56,6 +56,7 @@ export default [
       'ml-logistic-regression',
       'ml-regression-multivariate-linear',
       'ml-cart',
+      'ml-pca',
       'ml-naivebayes',
       'random-js',
       'natural',

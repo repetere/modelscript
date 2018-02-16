@@ -18,6 +18,7 @@ var LogisticRegression = _interopDefault(require('ml-logistic-regression'));
 var mlCart = require('ml-cart');
 var mlNaivebayes = require('ml-naivebayes');
 var MultivariateLinearRegression = _interopDefault(require('ml-regression-multivariate-linear'));
+var PCA = _interopDefault(require('ml-pca'));
 var natural = _interopDefault(require('natural'));
 var Random = _interopDefault(require('random-js'));
 
@@ -407,13 +408,14 @@ const calc$1 = {
 
 MachineLearning.Regression.DecisionTreeRegression = mlCart.DecisionTreeRegression;
 MachineLearning.Regression.RandomForestRegression = mlRandomForest.RandomForestRegression;
-
 MachineLearning.Regression.MultivariateLinearRegression = MultivariateLinearRegression;
 
 MachineLearning.SL.GaussianNB = mlNaivebayes.GaussianNB;
 MachineLearning.SL.LogisticRegression = LogisticRegression;
 MachineLearning.SL.DecisionTreeClassifier = mlCart.DecisionTreeClassifier;
 MachineLearning.SL.RandomForestClassifier = mlRandomForest.RandomForestClassifier;
+
+MachineLearning.Stat.PCA = PCA;
 
 /**
  * @namespace
