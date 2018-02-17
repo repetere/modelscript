@@ -20,6 +20,7 @@ export const preprocessing = {
 export { DataSet, } from './DataSet';
 export const util = utils;
 export const cross_validation = cross_validations;
+export const model_selection = cross_validations;
 export const calc = calcs;
 export const ml = mls;
 export const nlp = nlps;

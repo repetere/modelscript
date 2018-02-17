@@ -2,13 +2,13 @@ import { default as ml, } from 'ml';
 import { default as range, } from 'lodash.range';
 import { default as rangeRight, } from 'lodash.rangeright';
 
-const avg = ml.Stat.array.mean;
+const avg = ml.ArrayStat.mean;
 const mean = avg;
-const sum = ml.Stat.array.sum;
+const sum = ml.ArrayStat.sum;
 const scale = (a, d) => a.map(x => (x - avg(a)) / d);
 const max = a => a.concat([]).sort((x, y) => x < y)[0];
 const min = a => a.concat([]).sort((x, y) => x > y)[0];
-const sd = ml.Stat.array.standardDeviation; //(a, av) => Math.sqrt(avg(a.map(x => (x - av) * x)));
+const sd = ml.ArrayStat.standardDeviation; //(a, av) => Math.sqrt(avg(a.map(x => (x - av) * x)));
 
 
 /**

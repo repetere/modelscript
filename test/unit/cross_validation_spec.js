@@ -1,8 +1,10 @@
 'use strict';
 const jsk = require('../../dist/jskit-learn.cjs');
 const expect = require('chai').expect;
-const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
-
+const testArray = [ 20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
+const path = require('path');
+const ml = jsk.ml;
+const DTClassifier = ml.SL.DecisionTreeClassifier;
 
 describe('cross_validation', function () { 
   describe('train_test_split', () => {
@@ -60,6 +62,104 @@ describe('cross_validation', function () {
       
       expect(JSON.stringify(defaultCrossValidationSeed0)).to.equal(JSON.stringify(defaultCrossValidationSeed0a));
       expect(JSON.stringify(defaultCrossValidationSeed0)).to.not.equal(JSON.stringify(defaultCrossValidationSeed1));
+    });
+  });
+  describe('cross_validate_score', () => {
+    const dependentFeatures = [['Age', ], ['EstimatedSalary', ], ];
+    const independentFeatures = [ [ 'Purchased', ], ];
+    const regressionDependentFeatures = [ [ 'R&D Spend' ], [ 'Administration' ], [ 'Marketing Spend' ],  ];
+    const regressionIndependentFeatures = [ [ 'Profit' ] ];
+    let SNA_csv;
+    let Start50_csv;
+    before((done) => {
+      Promise.all([
+        jsk.loadCSV(path.join(__dirname, '../mock/Social_Network_ads.csv'), {
+          colParser: {
+            Age: 'number',
+            EstimatedSalary: 'number',
+            Purchased: 'number',
+          },
+        }),
+        jsk.loadCSV(path.join(__dirname, '../mock/50_Startups.csv'), {
+          colParser: {
+            'Administration':'number',
+            'R&D Spend':'number',
+            'Marketing Spend':'number',
+            'Profit':'number',
+          },
+        }),
+      ])
+        .then(csvs => {
+          const [ SNA_csv_list, S50_csv_list, ] = csvs;
+          SNA_csv = SNA_csv_list;
+          Start50_csv = S50_csv_list;
+          done();
+        })
+        .catch(done);
+    })
+    it('should validate classification', () => {
+      // console.log({ SNA_csv });
+      const { train, test, } = jsk.cross_validation.train_test_split(SNA_csv, {
+        test_size: 0.25,
+        random_state: 0,
+        parse_int_train_size: true,
+      });
+      const classifier = new DTClassifier({
+        gainFunction: 'gini',
+        minNumSamples: 4,
+      });
+      const accuracy = jsk.cross_validation.cross_validate_score({
+        dataset: train,
+        testingset: test,
+        classifier,
+        dependentFeatures,
+        independentFeatures,
+      });
+      expect(accuracy).to.have.lengthOf(10);
+      expect(jsk.util.mean(accuracy)).to.be.greaterThan(0.75);
+      expect(jsk.util.sd(accuracy)).to.be.lessThan(0.08);
+      console.log('accuracy', accuracy);
+      console.log('acc avg', jsk.util.mean(accuracy));
+      console.log('acc sd', jsk.util.sd(accuracy));   
+    });
+    it('should validate regression with train method', () => {
+      // console.log({ Start50_csv });
+      const RFRegression = ml.Regression.RandomForestRegression;
+
+      const Start50DataSet = new jsk.DataSet(Start50_csv)
+        .fitColumns({
+          columns: [
+            {
+              name: 'State',
+              options: {
+                strategy: 'onehot',
+              },
+            },
+          ],
+        });
+      // console.log('Start50DataSet',Start50DataSet)
+      const { train, test, } = jsk.cross_validation.train_test_split(Start50DataSet, {
+        test_size: 0.25,
+        random_state: 0,
+        parse_int_train_size: true,
+      });
+      // console.log({ test });
+      const regression = new RFRegression({
+        seed: 3,
+        maxFeatures: 2,
+        replacement: false,
+        nEstimators: 300
+      });
+      const accuracy = jsk.cross_validation.cross_validate_score({
+        dataset: train,
+        testingset: test,
+        regression,
+        dependentFeatures: regressionDependentFeatures,
+        independentFeatures: regressionIndependentFeatures,
+      });
+      // console.log('accuracy', accuracy);
+      // console.log('acc avg', jsk.util.mean(accuracy));
+      // console.log('acc sd', jsk.util.sd(accuracy));   
     });
   });
 });

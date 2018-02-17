@@ -1,5 +1,10 @@
 import { default as Random, } from 'random-js';
 import { default as range, } from 'lodash.range';
+import { ml, } from './ml';
+import { util, } from './util';
+import { DataSet, } from './DataSet';
+const Matrix = ml.Matrix;
+const ConfusionMatrix = ml.ConfusionMatrix;
 
 /**
  * Split arrays into random train and test subsets
@@ -80,6 +85,57 @@ function cross_validation_split(dataset = [], options = {
   return dataset_split;
 }
 
+function cross_validate_score(options = {}) {
+  const config = Object.assign({}, {
+    // classifier,
+    // regression,
+    // dataset,
+    // testingset,
+    dependentFeatures: [ ['X'], ],
+    independentFeatures: [ ['Y'], ],
+    // random_state,
+    folds: 10,
+    // accuracy: 'mean',
+    use_train_x_matrix: true,
+    use_train_y_matrix: false,
+  }, options);
+  const classifier = config.classifier;
+  const regression = config.regression;
+  const folds = cross_validation_split(config.dataset, {
+    folds: config.folds,
+    random_state: config.random_state,
+  });
+  const testingDataSet = new DataSet(config.testingset);
+  const y_test_matrix = testingDataSet.columnMatrix(config.independentFeatures);
+  const x_test_matrix = testingDataSet.columnMatrix(config.dependentFeatures);
+  const actuals = util.pivotVector(y_test_matrix)[ 0 ];
+  const prediction_accuracies = folds.map(fold => { 
+    const trainingDataSet = new DataSet(fold);
+    const x_train = trainingDataSet.columnMatrix(config.dependentFeatures);
+    const y_train = trainingDataSet.columnMatrix(config.independentFeatures);
+    const x_train_matrix = (config.use_train_x_matrix) ? new Matrix(x_train) : x_train;
+    const y_train_matrix = (config.use_train_y_matrix) ? new Matrix(y_train) : y_train;
+
+    if (regression) {
+      
+    } else {
+      classifier.train(x_train_matrix, y_train_matrix);
+      const estimates = classifier.predict(x_test_matrix);
+      const CM = ConfusionMatrix.fromLabels(actuals, estimates);
+      return CM.getAccuracy();
+    }
+  });
+  return prediction_accuracies;
+}
+
+function grid_search(options = {}) {
+  const config = Object.assign({}, {
+    parameters :[],
+    search : () => { },
+  }, options);
+  
+}
+
 /**
  * @namespace
  * @see {@link https://machinelearningmastery.com/implement-resampling-methods-scratch-python/}
@@ -87,4 +143,7 @@ function cross_validation_split(dataset = [], options = {
 export const cross_validation = {
   train_test_split,
   cross_validation_split,
+  kfolds: cross_validation_split,
+  cross_validate_score,
+  grid_search,
 };

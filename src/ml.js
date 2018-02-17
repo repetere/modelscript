@@ -6,6 +6,13 @@ import { GaussianNB, } from 'ml-naivebayes';
 import { default as MultivariateLinearRegression, } from 'ml-regression-multivariate-linear';
 import { default as PCA, } from 'ml-pca';
 
+MachineLearning.Regression = Object.assign({},
+  MachineLearning.Regression);
+MachineLearning.SL = Object.assign({},
+  MachineLearning.SL);
+MachineLearning.Stat = Object.assign({},
+  MachineLearning.Stat);
+
 MachineLearning.Regression.DecisionTreeRegression = DecisionTreeRegression;
 MachineLearning.Regression.RandomForestRegression = RandomForestRegression;
 MachineLearning.Regression.MultivariateLinearRegression = MultivariateLinearRegression;

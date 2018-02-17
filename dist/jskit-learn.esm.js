@@ -83,13 +83,13 @@ function loadCSV$1(filepath, options) {
   }
 }
 
-const avg = MachineLearning.Stat.array.mean;
+const avg = MachineLearning.ArrayStat.mean;
 const mean = avg;
-const sum = MachineLearning.Stat.array.sum;
+const sum = MachineLearning.ArrayStat.sum;
 const scale = (a, d) => a.map(x => (x - avg(a)) / d);
 const max = a => a.concat([]).sort((x, y) => x < y)[0];
 const min = a => a.concat([]).sort((x, y) => x > y)[0];
-const sd = MachineLearning.Stat.array.standardDeviation; //(a, av) => Math.sqrt(avg(a.map(x => (x - av) * x)));
+const sd = MachineLearning.ArrayStat.standardDeviation; //(a, av) => Math.sqrt(avg(a.map(x => (x - av) * x)));
 
 
 /**
@@ -400,6 +400,13 @@ const calc$1 = {
   assocationRuleLearning,
 };
 
+MachineLearning.Regression = Object.assign({},
+  MachineLearning.Regression);
+MachineLearning.SL = Object.assign({},
+  MachineLearning.SL);
+MachineLearning.Stat = Object.assign({},
+  MachineLearning.Stat);
+
 MachineLearning.Regression.DecisionTreeRegression = DecisionTreeRegression;
 MachineLearning.Regression.RandomForestRegression = RandomForestRegression;
 MachineLearning.Regression.MultivariateLinearRegression = MultivariateLinearRegression;
@@ -594,7 +601,7 @@ const ReplacedAgeMeanColumn = dataset.columnReplace('Age',{strategy:'mean'});
       replaceVal = this.columnMerge(name, config.mergeData); 
       return replaceVal;  
     default:
-      replaceVal = ml$1.Stat.array[config.strategy](this.columnArray(name, config.arrayOptions));
+      replaceVal = ml$1.ArrayStat[config.strategy](this.columnArray(name, config.arrayOptions));
       replace.value = replaceVal;
       break;
     }
@@ -804,7 +811,7 @@ dataset.fitColumns({
       }, {});
     if (Object.keys(fittedColumns)) {
       const columnNames = Object.keys(fittedColumns);
-      const fittedData = fittedColumns[config.columns[0].name]
+      const fittedData = fittedColumns[columnNames[0]]
         .reduce((result, val, index, arr) => {
           const returnObj = {};
           columnNames.forEach(colName => {
@@ -818,6 +825,9 @@ dataset.fitColumns({
     return config.returnData ? this.data : this;
   }
 }
+
+const Matrix = ml$1.Matrix;
+const ConfusionMatrix = ml$1.ConfusionMatrix;
 
 /**
  * Split arrays into random train and test subsets
@@ -898,6 +908,57 @@ function cross_validation_split(dataset = [], options = {
   return dataset_split;
 }
 
+function cross_validate_score(options = {}) {
+  const config = Object.assign({}, {
+    // classifier,
+    // regression,
+    // dataset,
+    // testingset,
+    dependentFeatures: [ ['X'], ],
+    independentFeatures: [ ['Y'], ],
+    // random_state,
+    folds: 10,
+    // accuracy: 'mean',
+    use_train_x_matrix: true,
+    use_train_y_matrix: false,
+  }, options);
+  const classifier = config.classifier;
+  const regression = config.regression;
+  const folds = cross_validation_split(config.dataset, {
+    folds: config.folds,
+    random_state: config.random_state,
+  });
+  const testingDataSet = new DataSet(config.testingset);
+  const y_test_matrix = testingDataSet.columnMatrix(config.independentFeatures);
+  const x_test_matrix = testingDataSet.columnMatrix(config.dependentFeatures);
+  const actuals = util$1.pivotVector(y_test_matrix)[ 0 ];
+  const prediction_accuracies = folds.map(fold => { 
+    const trainingDataSet = new DataSet(fold);
+    const x_train = trainingDataSet.columnMatrix(config.dependentFeatures);
+    const y_train = trainingDataSet.columnMatrix(config.independentFeatures);
+    const x_train_matrix = (config.use_train_x_matrix) ? new Matrix(x_train) : x_train;
+    const y_train_matrix = (config.use_train_y_matrix) ? new Matrix(y_train) : y_train;
+
+    if (regression) {
+      
+    } else {
+      classifier.train(x_train_matrix, y_train_matrix);
+      const estimates = classifier.predict(x_test_matrix);
+      const CM = ConfusionMatrix.fromLabels(actuals, estimates);
+      return CM.getAccuracy();
+    }
+  });
+  return prediction_accuracies;
+}
+
+function grid_search(options = {}) {
+  const config = Object.assign({}, {
+    parameters :[],
+    search : () => { },
+  }, options);
+  
+}
+
 /**
  * @namespace
  * @see {@link https://machinelearningmastery.com/implement-resampling-methods-scratch-python/}
@@ -905,6 +966,9 @@ function cross_validation_split(dataset = [], options = {
 const cross_validation$1 = {
   train_test_split,
   cross_validation_split,
+  kfolds: cross_validation_split,
+  cross_validate_score,
+  grid_search,
 };
 
 const loadCSV = loadCSV$1;
@@ -918,8 +982,9 @@ const preprocessing = {
 };
 const util$$1 = util$1;
 const cross_validation$$1 = cross_validation$1;
+const model_selection = cross_validation$1;
 const calc$$1 = calc$1;
 const ml$$1 = ml$1;
 const nlp$$1 = nlp$1;
 
-export { loadCSV, loadCSVURI, preprocessing, util$$1 as util, cross_validation$$1 as cross_validation, calc$$1 as calc, ml$$1 as ml, nlp$$1 as nlp, DataSet };
+export { loadCSV, loadCSVURI, preprocessing, util$$1 as util, cross_validation$$1 as cross_validation, model_selection, calc$$1 as calc, ml$$1 as ml, nlp$$1 as nlp, DataSet };

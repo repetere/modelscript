@@ -172,7 +172,7 @@ const ReplacedAgeMeanColumn = dataset.columnReplace('Age',{strategy:'mean'});
       replaceVal = this.columnMerge(name, config.mergeData); 
       return replaceVal;  
     default:
-      replaceVal = ml.Stat.array[config.strategy](this.columnArray(name, config.arrayOptions));
+      replaceVal = ml.ArrayStat[config.strategy](this.columnArray(name, config.arrayOptions));
       replace.value = replaceVal;
       break;
     }
@@ -382,7 +382,7 @@ dataset.fitColumns({
       }, {});
     if (Object.keys(fittedColumns)) {
       const columnNames = Object.keys(fittedColumns);
-      const fittedData = fittedColumns[config.columns[0].name]
+      const fittedData = fittedColumns[columnNames[0]]
         .reduce((result, val, index, arr) => {
           const returnObj = {};
           columnNames.forEach(colName => {
