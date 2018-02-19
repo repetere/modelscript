@@ -1,33 +1,39 @@
-import { get } from 'http';
-import { get as get$1 } from 'https';
-import validURL from 'valid-url';
-import csv from 'csvtojson';
-import MachineLearning from 'ml';
-import range from 'lodash.range';
-import rangeRight from 'lodash.rangeright';
-import { FPGrowth } from 'node-fpgrowth';
-import ObjectValues from 'object.values';
-import { RandomForestClassifier, RandomForestRegression } from 'ml-random-forest';
-import LogisticRegression from 'ml-logistic-regression';
-import { DecisionTreeClassifier, DecisionTreeRegression } from 'ml-cart';
-import { GaussianNB } from 'ml-naivebayes';
-import MultivariateLinearRegression from 'ml-regression-multivariate-linear';
-import PCA from 'ml-pca';
-import natural from 'natural';
-import Random from 'random-js';
-import { GridSearch } from 'parameter-tuning';
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
+var http = require('http');
+var https = require('https');
+var validURL = _interopDefault(require('valid-url'));
+var csv = _interopDefault(require('csvtojson'));
+var MachineLearning = _interopDefault(require('ml'));
+var range = _interopDefault(require('lodash.range'));
+var rangeRight = _interopDefault(require('lodash.rangeright'));
+var nodeFpgrowth = require('node-fpgrowth');
+var ObjectValues = _interopDefault(require('object.values'));
+var mlRandomForest = require('ml-random-forest');
+var LogisticRegression = _interopDefault(require('ml-logistic-regression'));
+var mlCart = require('ml-cart');
+var mlNaivebayes = require('ml-naivebayes');
+var MultivariateLinearRegression = _interopDefault(require('ml-regression-multivariate-linear'));
+var PCA = _interopDefault(require('ml-pca'));
+var natural = _interopDefault(require('natural'));
+var Random = _interopDefault(require('random-js'));
+var parameterTuning = require('parameter-tuning');
 
 /**
  * Asynchronously loads a CSV from a remote URL and returns an array of objects
  * @example
  * // returns [{header:value,header2:value2}]
- * loadCSVURI('https://raw.githubusercontent.com/repetere/jskit-learn/master/test/mock/data.csv').then(csvData).catch(console.error)
+ * loadCSVURI('https://raw.githubusercontent.com/repetere/modelscript/master/test/mock/data.csv').then(csvData).catch(console.error)
  * @param {string} filepath - URL to CSV path
  * @param {Object} [options] - options passed to csvtojson
  * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
  */
 function loadCSVURI$1(filepath, options) {
-  const reqMethod = (filepath.search('https', 'gi') > -1) ? get$1 : get;
+  const reqMethod = (filepath.search('https', 'gi') > -1) ? https.get : http.get;
   return new Promise((resolve, reject) => {
     const csvData = [];
     const req = reqMethod(filepath, res => {
@@ -114,7 +120,7 @@ function squaredDifference(left, right) {
  * @example
   const actuals = [ 2, 4, 5, 4, 5, ];
   const estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];
-  const SE = jsk.util.standardError(actuals, estimates);
+  const SE = ms.util.standardError(actuals, estimates);
   SE.toFixed(2) // => 0.89
  * @param {Number[]} actuals - numerical samples 
  * @param {Number[]} estimates - estimates values
@@ -145,7 +151,7 @@ function standardScore(observations = []) {
  * @example
 const actuals = [ 2, 4, 5, 4, 5, ];
 const estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];
-const r2 = jsk.util.coefficientOfDetermination(actuals, estimates); 
+const r2 = ms.util.coefficientOfDetermination(actuals, estimates); 
 r2.toFixed(1) // => 0.6
  * @memberOf util
  * @see {@link https://en.wikipedia.org/wiki/Coefficient_of_determination} {@link http://statisticsbyjim.com/regression/standard-error-regression-vs-r-squared/}
@@ -369,7 +375,7 @@ function assocationRuleLearning(transactions =[], options) {
         summary: true,
         valuesMap: new Map(),
       }, options);
-      const fpgrowth = new FPGrowth(config.support);
+      const fpgrowth = new nodeFpgrowth.FPGrowth(config.support);
       fpgrowth.exec(transactions)
         .then(results => {
           if (config.summary) {
@@ -408,14 +414,14 @@ MachineLearning.SL = Object.assign({},
 MachineLearning.Stat = Object.assign({},
   MachineLearning.Stat);
 
-MachineLearning.Regression.DecisionTreeRegression = DecisionTreeRegression;
-MachineLearning.Regression.RandomForestRegression = RandomForestRegression;
+MachineLearning.Regression.DecisionTreeRegression = mlCart.DecisionTreeRegression;
+MachineLearning.Regression.RandomForestRegression = mlRandomForest.RandomForestRegression;
 MachineLearning.Regression.MultivariateLinearRegression = MultivariateLinearRegression;
 
-MachineLearning.SL.GaussianNB = GaussianNB;
+MachineLearning.SL.GaussianNB = mlNaivebayes.GaussianNB;
 MachineLearning.SL.LogisticRegression = LogisticRegression;
-MachineLearning.SL.DecisionTreeClassifier = DecisionTreeClassifier;
-MachineLearning.SL.RandomForestClassifier = RandomForestClassifier;
+MachineLearning.SL.DecisionTreeClassifier = mlCart.DecisionTreeClassifier;
+MachineLearning.SL.RandomForestClassifier = mlRandomForest.RandomForestClassifier;
 
 MachineLearning.Stat.PCA = PCA;
 
@@ -440,7 +446,7 @@ class DataSet {
   /**
    * creates a new raw data instance for preprocessing data for machine learning
    * @example
-   * const dataset = new jsk.DataSet(csvData);
+   * const dataset = new ms.DataSet(csvData);
    * @param {Object[]} dataset
    * @returns {this} 
    */
@@ -836,7 +842,7 @@ const ConfusionMatrix = ml$1.ConfusionMatrix;
  * @example
  * const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
 // { train: [ 50, 20, 34, 33, 10, 23, 90, 42 ], test: [ 25, 19 ] }
-const trainTestSplit = jsk.cross_validation.train_test_split(testArray,{ test_size:0.2, random_state: 0, });
+const trainTestSplit = ms.cross_validation.train_test_split(testArray,{ test_size:0.2, random_state: 0, });
  * @param {array} dataset - array of data to split
  * @param {object} options
  * @param {number} [options.test_size=0.2] - represent the proportion of the dataset to include in the test split, can be overwritten by the train_size 
@@ -881,7 +887,7 @@ Each fold is then used once as a validation while the k - 1 remaining folds form
  * @example
  * const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
 // [ [ 50, 20, 34, 33, 10 ], [ 23, 90, 42, 19, 25 ] ] 
-const crossValidationArrayKFolds = jsk.cross_validation.cross_validation_split(testArray, { folds: 2, random_state: 0, });
+const crossValidationArrayKFolds = ms.cross_validation.cross_validation_split(testArray, { folds: 2, random_state: 0, });
  * @param {array} dataset - array of data to split
  * @param {object} options
  * @param {number} [options.folds=3] - Number of folds 
@@ -1011,7 +1017,7 @@ function grid_search(options = {}) {
   }, options);
   const regressor = config.regression;
   const classification = config.classifier;
-  const gs = new GridSearch({
+  const gs = new parameterTuning.GridSearch({
     params: config.parameters,
     run_callback: (params) => {
       if (config.regression) {
@@ -1045,7 +1051,7 @@ const cross_validation$1 = {
   kfolds: cross_validation_split,
   cross_validate_score,
   grid_search,
-  GridSearch,
+  GridSearch: parameterTuning.GridSearch,
 };
 
 const loadCSV = loadCSV$1;
@@ -1064,4 +1070,13 @@ const calc$$1 = calc$1;
 const ml$$1 = ml$1;
 const nlp$$1 = nlp$1;
 
-export { loadCSV, loadCSVURI, preprocessing, util$$1 as util, cross_validation$$1 as cross_validation, model_selection, calc$$1 as calc, ml$$1 as ml, nlp$$1 as nlp, DataSet };
+exports.loadCSV = loadCSV;
+exports.loadCSVURI = loadCSVURI;
+exports.preprocessing = preprocessing;
+exports.util = util$$1;
+exports.cross_validation = cross_validation$$1;
+exports.model_selection = model_selection;
+exports.calc = calc$$1;
+exports.ml = ml$$1;
+exports.nlp = nlp$$1;
+exports.DataSet = DataSet;

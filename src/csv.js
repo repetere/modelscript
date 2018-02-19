@@ -6,7 +6,7 @@ import { default as csv, } from 'csvtojson';
  * Asynchronously loads a CSV from a remote URL and returns an array of objects
  * @example
  * // returns [{header:value,header2:value2}]
- * loadCSVURI('https://raw.githubusercontent.com/repetere/jskit-learn/master/test/mock/data.csv').then(csvData).catch(console.error)
+ * loadCSVURI('https://raw.githubusercontent.com/repetere/modelscript/master/test/mock/data.csv').then(csvData).catch(console.error)
  * @param {string} filepath - URL to CSV path
  * @param {Object} [options] - options passed to csvtojson
  * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  

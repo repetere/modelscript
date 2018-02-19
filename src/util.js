@@ -32,7 +32,7 @@ function squaredDifference(left, right) {
  * @example
   const actuals = [ 2, 4, 5, 4, 5, ];
   const estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];
-  const SE = jsk.util.standardError(actuals, estimates);
+  const SE = ms.util.standardError(actuals, estimates);
   SE.toFixed(2) // => 0.89
  * @param {Number[]} actuals - numerical samples 
  * @param {Number[]} estimates - estimates values
@@ -63,7 +63,7 @@ function standardScore(observations = []) {
  * @example
 const actuals = [ 2, 4, 5, 4, 5, ];
 const estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];
-const r2 = jsk.util.coefficientOfDetermination(actuals, estimates); 
+const r2 = ms.util.coefficientOfDetermination(actuals, estimates); 
 r2.toFixed(1) // => 0.6
  * @memberOf util
  * @see {@link https://en.wikipedia.org/wiki/Coefficient_of_determination} {@link http://statisticsbyjim.com/regression/standard-error-regression-vs-r-squared/}

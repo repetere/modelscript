@@ -1,7 +1,7 @@
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('lapack'), require('wordnet-db')) :
 	typeof define === 'function' && define.amd ? define(['exports', 'lapack', 'wordnet-db'], factory) :
-	(factory((global['jskit-learn'] = {}),global.lapack,global.wordnetDb));
+	(factory((global.modelscript = {}),global.lapack,global.wordnetDb));
 }(this, (function (exports,lapack,wordnetDb) { 'use strict';
 
 lapack = lapack && lapack.hasOwnProperty('default') ? lapack['default'] : lapack;
@@ -26932,7 +26932,7 @@ var lodash = createCommonjsModule(function (module, exports) {
 }.call(commonjsGlobal));
 });
 
-var __dirname = '/Users/yawjosephetse/Developer/github/repetere/jskit-learn/node_modules/csvtojson/libs/core'
+var __dirname = '/Users/yawjosephetse/Developer/github/repetere/modelscript/node_modules/csvtojson/libs/core'
 
 var empty = {};
 
@@ -27778,7 +27778,7 @@ var csvtojson = csv2json;
  * Asynchronously loads a CSV from a remote URL and returns an array of objects
  * @example
  * // returns [{header:value,header2:value2}]
- * loadCSVURI('https://raw.githubusercontent.com/repetere/jskit-learn/master/test/mock/data.csv').then(csvData).catch(console.error)
+ * loadCSVURI('https://raw.githubusercontent.com/repetere/modelscript/master/test/mock/data.csv').then(csvData).catch(console.error)
  * @param {string} filepath - URL to CSV path
  * @param {Object} [options] - options passed to csvtojson
  * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
@@ -58660,7 +58660,7 @@ function squaredDifference(left, right) {
  * @example
   const actuals = [ 2, 4, 5, 4, 5, ];
   const estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];
-  const SE = jsk.util.standardError(actuals, estimates);
+  const SE = ms.util.standardError(actuals, estimates);
   SE.toFixed(2) // => 0.89
  * @param {Number[]} actuals - numerical samples 
  * @param {Number[]} estimates - estimates values
@@ -58691,7 +58691,7 @@ function standardScore(observations = []) {
  * @example
 const actuals = [ 2, 4, 5, 4, 5, ];
 const estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];
-const r2 = jsk.util.coefficientOfDetermination(actuals, estimates); 
+const r2 = ms.util.coefficientOfDetermination(actuals, estimates); 
 r2.toFixed(1) // => 0.6
  * @memberOf util
  * @see {@link https://en.wikipedia.org/wiki/Coefficient_of_determination} {@link http://statisticsbyjim.com/regression/standard-error-regression-vs-r-squared/}
@@ -75591,7 +75591,7 @@ StemmerJa$1.prototype.attach = function() {
 
 var stemmer_ja = StemmerJa$1;
 
-var __dirname$1 = '/Users/yawjosephetse/Developer/github/repetere/jskit-learn/node_modules/natural/lib/natural/stemmers/indonesian'
+var __dirname$1 = '/Users/yawjosephetse/Developer/github/repetere/modelscript/node_modules/natural/lib/natural/stemmers/indonesian'
 
 /*
 Copyright (c) 2017, Alif Bhaskoro, Andy Librian, R. Kukuh (Reimplemented from https://github.com/sastrawi/sastrawi)
@@ -75974,7 +75974,7 @@ rules$1.push(sr.RemoveDerivationalSuffix);
 
 SuffixRules.rules = rules$1;
 
-var __dirname$2 = '/Users/yawjosephetse/Developer/github/repetere/jskit-learn/node_modules/natural/lib/natural/stemmers/indonesian'
+var __dirname$2 = '/Users/yawjosephetse/Developer/github/repetere/modelscript/node_modules/natural/lib/natural/stemmers/indonesian'
 
 /*
 Copyright (c) 2017, Alif Bhaskoro, Andy Librian, R. Kukuh (Reimplemented from https://github.com/sastrawi/sastrawi)
@@ -79161,7 +79161,7 @@ SentenceTokenizer$1.prototype.tokenize = function(text) {
 
 var sentence_tokenizer = SentenceTokenizer$1;
 
-var __filename = '/Users/yawjosephetse/Developer/github/repetere/jskit-learn/node_modules/bindings/bindings.js'
+var __filename = '/Users/yawjosephetse/Developer/github/repetere/modelscript/node_modules/bindings/bindings.js'
 
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -89230,7 +89230,7 @@ class DataSet {
   /**
    * creates a new raw data instance for preprocessing data for machine learning
    * @example
-   * const dataset = new jsk.DataSet(csvData);
+   * const dataset = new ms.DataSet(csvData);
    * @param {Object[]} dataset
    * @returns {this} 
    */
@@ -89867,7 +89867,7 @@ const ConfusionMatrix$2 = ml$1.ConfusionMatrix;
  * @example
  * const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
 // { train: [ 50, 20, 34, 33, 10, 23, 90, 42 ], test: [ 25, 19 ] }
-const trainTestSplit = jsk.cross_validation.train_test_split(testArray,{ test_size:0.2, random_state: 0, });
+const trainTestSplit = ms.cross_validation.train_test_split(testArray,{ test_size:0.2, random_state: 0, });
  * @param {array} dataset - array of data to split
  * @param {object} options
  * @param {number} [options.test_size=0.2] - represent the proportion of the dataset to include in the test split, can be overwritten by the train_size 
@@ -89912,7 +89912,7 @@ Each fold is then used once as a validation while the k - 1 remaining folds form
  * @example
  * const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
 // [ [ 50, 20, 34, 33, 10 ], [ 23, 90, 42, 19, 25 ] ] 
-const crossValidationArrayKFolds = jsk.cross_validation.cross_validation_split(testArray, { folds: 2, random_state: 0, });
+const crossValidationArrayKFolds = ms.cross_validation.cross_validation_split(testArray, { folds: 2, random_state: 0, });
  * @param {array} dataset - array of data to split
  * @param {object} options
  * @param {number} [options.folds=3] - Number of folds 

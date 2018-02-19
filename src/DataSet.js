@@ -10,7 +10,7 @@ export class DataSet {
   /**
    * creates a new raw data instance for preprocessing data for machine learning
    * @example
-   * const dataset = new jsk.DataSet(csvData);
+   * const dataset = new ms.DataSet(csvData);
    * @param {Object[]} dataset
    * @returns {this} 
    */

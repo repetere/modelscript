@@ -1,5 +1,5 @@
 
-const jsk = require('../../dist/jskit-learn.cjs');
+const ms = require('../../dist/modelscript.cjs');
 const ObjectValues = require('object.values');
 const expect = require('chai').expect;
 const rawTransactions = [
@@ -15,7 +15,7 @@ if (!Object.values) {
 }
 describe('calc', function () { 
   describe('getTransactions', () => {
-    const gt = jsk.calc.getTransactions(rawTransactions);
+    const gt = ms.calc.getTransactions(rawTransactions);
     // console.log(gt);
     it('should return values', () => {
       expect(gt).to.haveOwnProperty('values');
@@ -43,10 +43,10 @@ describe('calc', function () {
     });
   });
   describe('assocationRuleLearning', () => {
-    const gt = jsk.calc.getTransactions(rawTransactions);
+    const gt = ms.calc.getTransactions(rawTransactions);
     
     it('should use Eclat to associate transactions', (done) => {
-      jsk.calc.assocationRuleLearning(gt.transactions, {
+      ms.calc.assocationRuleLearning(gt.transactions, {
         valuesMap: gt.valuesMap,
       })
         .then(arl => {
@@ -54,10 +54,10 @@ describe('calc', function () {
           done();
         })
         .catch(done);  
-      expect(jsk.calc.assocationRuleLearning).to.be.an('function');
+      expect(ms.calc.assocationRuleLearning).to.be.an('function');
     });
     it('should use accept options for eclat summary', (done) => {
-      jsk.calc.assocationRuleLearning(gt.transactions, {
+      ms.calc.assocationRuleLearning(gt.transactions, {
         valuesMap: gt.valuesMap,
         summary:false,
       })
@@ -68,7 +68,7 @@ describe('calc', function () {
         .catch(done);  
     });
     it('should work with raw transactions', (done) => {
-      jsk.calc.assocationRuleLearning(rawTransactions, {
+      ms.calc.assocationRuleLearning(rawTransactions, {
         summary:false,
       })
         .then(arl => {

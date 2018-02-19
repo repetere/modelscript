@@ -43,10 +43,10 @@
 
 
     <section>
-        <article><h1>jskit-learn</h1><p><a href="https://coveralls.io/github/repetere/jskit-learn?branch=master"><img src="https://coveralls.io/repos/github/repetere/jskit-learn/badge.svg?branch=master" alt="Coverage Status"></a> <a href="https://travis-ci.org/repetere/jskit-learn"><img src="https://travis-ci.org/repetere/jskit-learn.svg?branch=master" alt="Build Status"></a></p>
-<h3>Description</h3><p><strong>JSkit-learn</strong> is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. <strong>JSkit-learn</strong> can be used with <a href="https://github.com/mljs/ml">ML.js</a>, <a href="https://github.com/StratoDem/pandas-js">pandas-js</a>, and <a href="https://github.com/numjs/numjs">numjs</a>, to approximate the equialent R/Python tool chain in JavaScript.</p>
-<p>In Python, data preperation is typically done in a DataFrame, jskit-learn encourages a more R like workflow where the data prepration is in it's native structure.</p>
-<h3>Installation</h3><pre class="prettyprint source lang-sh"><code>$ npm i jskit-learn</code></pre><h3><a href="https://github.com/repetere/jskit-learn/blob/master/docs/api.md">Full Documentation</a></h3><h3>Usage (basic)</h3><pre class="prettyprint source lang-javascript"><code>&quot;jskit-learn&quot; : {
+        <article><h1>modelscript</h1><p><a href="https://coveralls.io/github/repetere/modelscript?branch=master"><img src="https://coveralls.io/repos/github/repetere/modelscript/badge.svg?branch=master" alt="Coverage Status"></a> <a href="https://travis-ci.org/repetere/modelscript"><img src="https://travis-ci.org/repetere/modelscript.svg?branch=master" alt="Build Status"></a></p>
+<h3>Description</h3><p><strong>modelscript</strong> is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. <strong>modelscript</strong> can be used with <a href="https://github.com/mljs/ml">ML.js</a>, <a href="https://github.com/StratoDem/pandas-js">pandas-js</a>, and <a href="https://github.com/numjs/numjs">numjs</a>, to approximate the equialent R/Python tool chain in JavaScript.</p>
+<p>In Python, data preperation is typically done in a DataFrame, modelscript encourages a more R like workflow where the data prepration is in it's native structure.</p>
+<h3>Installation</h3><pre class="prettyprint source lang-sh"><code>$ npm i modelscript</code></pre><h3><a href="https://github.com/repetere/modelscript/blob/master/docs/api.md">Full Documentation</a></h3><h3>Usage (basic)</h3><pre class="prettyprint source lang-javascript"><code>&quot;modelscript&quot; : {
   loadCSV: [Function: loadCSV], //asynchronously loads CSVs, either a filepath or a remote URI
   cross_validation: {
     train_test_split: [Function: train_test_split], // splits data into training and testing sets
@@ -94,13 +94,13 @@
     zScore: [Function: standardScore], // alias for standardScore.
     approximateZPercentile: [Function: approximateZPercentile], // approximate the p value from a z score
   },
-}</code></pre><h3>Examples (JavaScript / Python / R)</h3><h4>Loading CSV Data</h4><h5>Javascript</h5><pre class="prettyprint source lang-javascript"><code>import { default as jsk } from 'jskit-learn';
+}</code></pre><h3>Examples (JavaScript / Python / R)</h3><h4>Loading CSV Data</h4><h5>Javascript</h5><pre class="prettyprint source lang-javascript"><code>import { default as jsk } from 'modelscript';
 let dataset;
 
 //In JavaScript, by default most I/O Operations are asynchronous, see the notes section for more
-jsk.loadCSV('/some/file/path.csv')
+ms.loadCSV('/some/file/path.csv')
   .then(csvData=>{
-    dataset = new jsk.DataSet(csvData);
+    dataset = new ms.DataSet(csvData);
     console.log({csvData});
     /* csvData [{
       'Country': 'Brazil',
@@ -119,7 +119,7 @@ jsk.loadCSV('/some/file/path.csv')
   .catch(console.error);
 
 // or from URL
-jsk.loadCSV('https://example.com/some/file/path.csv')</code></pre><h5>Python</h5><pre class="prettyprint source lang-python"><code>import pandas as pd
+ms.loadCSV('https://example.com/some/file/path.csv')</code></pre><h5>Python</h5><pre class="prettyprint source lang-python"><code>import pandas as pd
 
 #Importing the dataset
 dataset = pd.read_csv('/some/file/path.csv')</code></pre><h5>R</h5><pre class="prettyprint source lang-R"><code># Importingd the dataset
@@ -214,10 +214,10 @@ dataset$Purchased = factor(dataset$Purchased,
                          labels = c(0, 1))</code></pre><h4>Cross Validation</h4><h5>Javascript</h5><pre class="prettyprint source lang-javascript"><code>const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
 
 // { train: [ 50, 20, 34, 33, 10, 23, 90, 42 ], test: [ 25, 19 ] }
-const trainTestSplit = jsk.cross_validation.train_test_split(testArray,{ test_size:0.2, random_state: 0, });
+const trainTestSplit = ms.cross_validation.train_test_split(testArray,{ test_size:0.2, random_state: 0, });
 
 // [ [ 50, 20, 34, 33, 10 ], [ 23, 90, 42, 19, 25 ] ] 
-const crossValidationArrayKFolds = jsk.cross_validation.cross_validation_split(testArray, { folds: 2, random_state: 0, });</code></pre><h5>Python</h5><pre class="prettyprint source lang-python"><code>#splitting the dataset into trnaing set and test set
+const crossValidationArrayKFolds = ms.cross_validation.cross_validation_split(testArray, { folds: 2, random_state: 0, });</code></pre><h5>Python</h5><pre class="prettyprint source lang-python"><code>#splitting the dataset into trnaing set and test set
 from sklearn.cross_validation import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)</code></pre><h5>R</h5><pre class="prettyprint source lang-R"><code># Splitting the dataset into the training set and test set
 library(caTools)
@@ -231,7 +231,7 @@ X_train = sc_X.fit_transform(X_train)
 X_test = sc_X.transform(X_test)</code></pre><h3>Development</h3><p><em>Make sure you have grunt installed</em></p>
 <pre class="prettyprint source lang-sh"><code>$ npm i -g grunt-cli jsdoc-to-markdown</code></pre><p>For generating documentation</p>
 <pre class="prettyprint source lang-sh"><code>$ grunt doc
-$ jsdoc2md src/**/*.js  > docs/api.md</code></pre><h3>Notes</h3><p>Check out <a href="https://github.com/repetere/jskit-learn">https://github.com/repetere/jskit-learn</a> for the full jskit-learn Documentation</p>
+$ jsdoc2md src/**/*.js  > docs/api.md</code></pre><h3>Notes</h3><p>Check out <a href="https://github.com/repetere/modelscript">https://github.com/repetere/modelscript</a> for the full modelscript Documentation</p>
 <h4>A quick word about asynchronous JavaScript</h4><p>Most machine learning tutorials in Python and R are not using their asynchronous equivalents; however, there is a bias in JavaScript to default to non-blocking operations. </p>
 <p>With the advent of ES7 and Node.js 7+ there are syntax helpers with asynchronous functions. It may be easier to use async/await in JS if you want an approximation close to what a workflow would look like in R/Python</p>
 <pre class="prettyprint source lang-javascript"><code>import * as fs from 'fs-extra';
@@ -239,7 +239,7 @@ import * as np from 'numjs';
 import { default as ml } from 'ml';
 import { default as pd } from 'pandas-js';
 import { default as mpn } from 'matplotnode';
-import { loadCSV, preprocessing } from 'jskit-learn';
+import { loadCSV, preprocessing } from 'modelscript';
 const plt = mpn.plot;
 
 void async () => {
@@ -293,7 +293,7 @@ $ npm i --python=/usr/bin/python</code></pre><h2>License</h2><p>MIT</p></article
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Feb 18 2018 23:07:01 GMT-0500 (EST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Feb 18 2018 23:49:11 GMT-0500 (EST)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -1,5 +1,5 @@
 
-const jsk = require('../../dist/jskit-learn.cjs');
+const ms = require('../../dist/modelscript.cjs');
 const expect = require('chai').expect;
 const testArray = [20, 25, 10, 33, 50, 42, 19,];
 const vectors = [
@@ -17,30 +17,30 @@ const arrays = [
 describe('util', function () { 
   describe('max', () => {
     it('should return max value', () => {
-      expect(jsk.util).to.be.an('object');
-      expect(jsk.util.max(testArray)).to.equal(50);   
+      expect(ms.util).to.be.an('object');
+      expect(ms.util.max(testArray)).to.equal(50);   
     });
   });
   describe('min', () => {
     it('should return min value', () => {
-      expect(jsk.util.min(testArray)).to.equal(10);   
+      expect(ms.util.min(testArray)).to.equal(10);   
     });
   });
   describe('mean', () => {
     it('should return mean value', () => {
-      expect(jsk.util.mean(testArray)).to.equal(jsk.util.sum(testArray) / testArray.length);   
+      expect(ms.util.mean(testArray)).to.equal(ms.util.sum(testArray) / testArray.length);   
     });
   });
   describe('Log Scaler', () => { 
     it('should return log scaled values', () => {
-      const logScaledTestArray = jsk.util.LogScaler(testArray);
+      const logScaledTestArray = ms.util.LogScaler(testArray);
       expect(logScaledTestArray[ 0 ]).to.equal(Math.log(testArray[ 0 ]));
       expect(logScaledTestArray[ 3 ]).to.equal(Math.log(testArray[ 3 ]));
     });
   });
   describe('Exponent Scaler', () => {
     it('should return exponent scaled values', () => {
-      const expScaledTestArray = jsk.util.ExpScaler(testArray);
+      const expScaledTestArray = ms.util.ExpScaler(testArray);
       expect(expScaledTestArray[ 0 ]).to.equal(Math.exp(testArray[ 0 ]));
       expect(expScaledTestArray[ 3 ]).to.equal(Math.exp(testArray[ 3 ]));
     });
@@ -49,12 +49,12 @@ describe('util', function () {
     const actuals = [2, 4, 5, 4, 5,];
     const estimates = [2.8, 3.4, 4, 4.6, 5.2,];
     it('should return the Standard Error of the Estimate', () => {
-      const SE = jsk.util.standardError(actuals, estimates);
+      const SE = ms.util.standardError(actuals, estimates);
       expect(SE.toFixed(2)).to.eql(0.89.toString());
     });
     it('should return an error if array lengths are not the same', () => {
       try {
-        jsk.util.standardError(actuals, [2,]);
+        ms.util.standardError(actuals, [2,]);
       } catch (e) {
         expect(e).to.be.an('error');
       }
@@ -64,12 +64,12 @@ describe('util', function () {
     const actuals = [2, 4, 5, 4, 5,];
     const estimates = [2.8, 3.4, 4, 4.6, 5.2,];
     it('should return the Coefficient of determination(r squared)', () => {
-      const r2 = jsk.util.coefficientOfDetermination(actuals, estimates);
+      const r2 = ms.util.coefficientOfDetermination(actuals, estimates);
       expect(r2.toFixed(1)).to.eql(0.6.toString());
     });
     it('should return an error if array lengths are not the same', () => {
       try {
-        jsk.util.coefficientOfDetermination(actuals, [2,]);
+        ms.util.coefficientOfDetermination(actuals, [2,]);
       } catch (e) {
         expect(e).to.be.an('error');
       }
@@ -77,7 +77,7 @@ describe('util', function () {
   });
   describe('pivotVector', () => {
     it('should pivot vectors into arrays', () => {
-      const arrays = jsk.util.pivotVector(vectors); // => [ [1,2,3,3], [2,2,3,3], [3,3,4,3] ];
+      const arrays = ms.util.pivotVector(vectors); // => [ [1,2,3,3], [2,2,3,3], [3,3,4,3] ];
       expect(arrays[ 0 ]).to.be.lengthOf(4);
       expect(arrays[ 0 ]).to.eql([1, 1, 3, 3, ]);
       expect(arrays[ 1 ]).to.be.lengthOf(4);
@@ -88,7 +88,7 @@ describe('util', function () {
   });
   describe('pivotArrays', () => {
     it('should pivot arrays into vectors', () => {
-      const translatedVectors = jsk.util.pivotArrays(arrays);
+      const translatedVectors = ms.util.pivotArrays(arrays);
       expect(translatedVectors).to.eql(vectors);
     });
   });
@@ -97,7 +97,7 @@ describe('util', function () {
       const observations = [
         7, 8, 8, 7.5, 9,
       ];
-      const zscores = jsk.util.standardScore(observations);
+      const zscores = ms.util.standardScore(observations);
       const roundedZScores = zscores.map(z => parseFloat(z.toFixed(2), 10));
       expect(roundedZScores[ 3 ]).to.eql(-0.54);
       // console.log({ zscores,roundedZScores });
@@ -105,10 +105,10 @@ describe('util', function () {
     it('should approximate the p-value from the z score', () => { 
       const z1 = 2.87;
       const z2 = 1.96;
-      const p1 = parseFloat(jsk.util.approximateZPercentile(z1).toFixed(3), 10);
-      const p2 = parseFloat(jsk.util.approximateZPercentile(z2).toFixed(3), 10);
-      const p3 = parseFloat(jsk.util.approximateZPercentile(z1, false).toFixed(3), 10);
-      const p4 = parseFloat(jsk.util.approximateZPercentile(z2, false).toFixed(3), 10);
+      const p1 = parseFloat(ms.util.approximateZPercentile(z1).toFixed(3), 10);
+      const p2 = parseFloat(ms.util.approximateZPercentile(z2).toFixed(3), 10);
+      const p3 = parseFloat(ms.util.approximateZPercentile(z1, false).toFixed(3), 10);
+      const p4 = parseFloat(ms.util.approximateZPercentile(z2, false).toFixed(3), 10);
       expect(p1).to.eql(0.002);
       expect(p3).to.eql(0.998);
       expect(p2).to.eql(0.025);

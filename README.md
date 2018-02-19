@@ -1,23 +1,23 @@
-# jskit-learn
-[![Coverage Status](https://coveralls.io/repos/github/repetere/jskit-learn/badge.svg?branch=master)](https://coveralls.io/github/repetere/jskit-learn?branch=master) [![Build Status](https://travis-ci.org/repetere/jskit-learn.svg?branch=master)](https://travis-ci.org/repetere/jskit-learn)
+# modelscript
+[![Coverage Status](https://coveralls.io/repos/github/repetere/modelscript/badge.svg?branch=master)](https://coveralls.io/github/repetere/modelscript?branch=master) [![Build Status](https://travis-ci.org/repetere/modelscript.svg?branch=master)](https://travis-ci.org/repetere/modelscript)
 
 ### Description
-**JSkit-learn** is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. **JSkit-learn** can be used with [ML.js](https://github.com/mljs/ml), [pandas-js](https://github.com/StratoDem/pandas-js), and [numjs](https://github.com/numjs/numjs), to approximate the equialent R/Python tool chain in JavaScript.
+**modelscript** is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. **modelscript** can be used with [ML.js](https://github.com/mljs/ml), [pandas-js](https://github.com/StratoDem/pandas-js), and [numjs](https://github.com/numjs/numjs), to approximate the equialent R/Python tool chain in JavaScript.
 
-In Python, data preperation is typically done in a DataFrame, jskit-learn encourages a more R like workflow where the data prepration is in it's native structure.
+In Python, data preperation is typically done in a DataFrame, modelscript encourages a more R like workflow where the data prepration is in it's native structure.
 
 
 ### Installation
 ```sh
-$ npm i jskit-learn
+$ npm i modelscript
 ```
 
-### [Full Documentation](https://github.com/repetere/jskit-learn/blob/master/docs/api.md)
+### [Full Documentation](https://github.com/repetere/modelscript/blob/master/docs/api.md)
 
 ### Usage (basic)
 
 ```javascript
-"jskit-learn" : {
+"modelscript" : {
   loadCSV: [Function: loadCSV], //asynchronously loads CSVs, either a filepath or a remote URI
   cross_validation: {
     train_test_split: [Function: train_test_split], // splits data into training and testing sets
@@ -74,13 +74,13 @@ $ npm i jskit-learn
 
 ##### Javascript
 ```javascript
-import { default as jsk } from 'jskit-learn';
+import { default as jsk } from 'modelscript';
 let dataset;
 
 //In JavaScript, by default most I/O Operations are asynchronous, see the notes section for more
-jsk.loadCSV('/some/file/path.csv')
+ms.loadCSV('/some/file/path.csv')
   .then(csvData=>{
-    dataset = new jsk.DataSet(csvData);
+    dataset = new ms.DataSet(csvData);
     console.log({csvData});
     /* csvData [{
       'Country': 'Brazil',
@@ -99,7 +99,7 @@ jsk.loadCSV('/some/file/path.csv')
   .catch(console.error);
 
 // or from URL
-jsk.loadCSV('https://example.com/some/file/path.csv')
+ms.loadCSV('https://example.com/some/file/path.csv')
 
 ```
 ##### Python
@@ -250,10 +250,10 @@ dataset$Purchased = factor(dataset$Purchased,
 const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
 
 // { train: [ 50, 20, 34, 33, 10, 23, 90, 42 ], test: [ 25, 19 ] }
-const trainTestSplit = jsk.cross_validation.train_test_split(testArray,{ test_size:0.2, random_state: 0, });
+const trainTestSplit = ms.cross_validation.train_test_split(testArray,{ test_size:0.2, random_state: 0, });
 
 // [ [ 50, 20, 34, 33, 10 ], [ 23, 90, 42, 19, 25 ] ] 
-const crossValidationArrayKFolds = jsk.cross_validation.cross_validation_split(testArray, { folds: 2, random_state: 0, });
+const crossValidationArrayKFolds = ms.cross_validation.cross_validation_split(testArray, { folds: 2, random_state: 0, });
 ```
 
 ##### Python
@@ -306,7 +306,7 @@ $ jsdoc2md src/**/*.js  > docs/api.md
 
 
 ### Notes
-Check out [https://github.com/repetere/jskit-learn](https://github.com/repetere/jskit-learn) for the full jskit-learn Documentation
+Check out [https://github.com/repetere/modelscript](https://github.com/repetere/modelscript) for the full modelscript Documentation
 
 #### A quick word about asynchronous JavaScript
 Most machine learning tutorials in Python and R are not using their asynchronous equivalents; however, there is a bias in JavaScript to default to non-blocking operations. 
@@ -319,7 +319,7 @@ import * as np from 'numjs';
 import { default as ml } from 'ml';
 import { default as pd } from 'pandas-js';
 import { default as mpn } from 'matplotnode';
-import { loadCSV, preprocessing } from 'jskit-learn';
+import { loadCSV, preprocessing } from 'modelscript';
 const plt = mpn.plot;
 
 void async () => {

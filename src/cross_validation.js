@@ -13,7 +13,7 @@ const ConfusionMatrix = ml.ConfusionMatrix;
  * @example
  * const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
 // { train: [ 50, 20, 34, 33, 10, 23, 90, 42 ], test: [ 25, 19 ] }
-const trainTestSplit = jsk.cross_validation.train_test_split(testArray,{ test_size:0.2, random_state: 0, });
+const trainTestSplit = ms.cross_validation.train_test_split(testArray,{ test_size:0.2, random_state: 0, });
  * @param {array} dataset - array of data to split
  * @param {object} options
  * @param {number} [options.test_size=0.2] - represent the proportion of the dataset to include in the test split, can be overwritten by the train_size 
@@ -58,7 +58,7 @@ Each fold is then used once as a validation while the k - 1 remaining folds form
  * @example
  * const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
 // [ [ 50, 20, 34, 33, 10 ], [ 23, 90, 42, 19, 25 ] ] 
-const crossValidationArrayKFolds = jsk.cross_validation.cross_validation_split(testArray, { folds: 2, random_state: 0, });
+const crossValidationArrayKFolds = ms.cross_validation.cross_validation_split(testArray, { folds: 2, random_state: 0, });
  * @param {array} dataset - array of data to split
  * @param {object} options
  * @param {number} [options.folds=3] - Number of folds 

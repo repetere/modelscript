@@ -1,5 +1,5 @@
 'use strict';
-const jsk = require('../../dist/jskit-learn.cjs');
+const ms = require('../../dist/modelscript.cjs');
 const ml = require('ml');
 const expect = require('chai').expect;
 const csvData = [{
@@ -67,12 +67,12 @@ const unmodifiedCSVData = [...csvData,];
 
 describe('preprocessing', function() {
   describe('DataSet class', () => {
-    const CSVDataSet = new jsk.preprocessing.DataSet(csvData);
+    const CSVDataSet = new ms.preprocessing.DataSet(csvData);
     describe('constructor', () => {
       it('should instantiate a new DataSet Class', () => {
-        expect(jsk.preprocessing).to.be.an('object');
-        expect(jsk.preprocessing.DataSet).to.be.a('function');
-        expect(CSVDataSet).to.be.instanceof(jsk.preprocessing.DataSet);
+        expect(ms.preprocessing).to.be.an('object');
+        expect(ms.preprocessing.DataSet).to.be.a('function');
+        expect(CSVDataSet).to.be.instanceof(ms.preprocessing.DataSet);
       });
     });
     describe('filterColumn', () => {
@@ -151,9 +151,9 @@ describe('preprocessing', function() {
           prefilter: row => row.Salary,
           scale: 'standard',
         });
-        expect(JSON.stringify(standardScaleSalary)).to.equal(JSON.stringify(jsk.util.StandardScaler(salaryColumn)));
-        expect(jsk.util.sd(standardScaleSalary)).to.equal(1);
-        expect(parseInt(Math.round(jsk.util.mean(standardScaleSalary)))).to.equal(0);
+        expect(JSON.stringify(standardScaleSalary)).to.equal(JSON.stringify(ms.util.StandardScaler(salaryColumn)));
+        expect(ms.util.sd(standardScaleSalary)).to.equal(1);
+        expect(parseInt(Math.round(ms.util.mean(standardScaleSalary)))).to.equal(0);
       });
       it('should z-score / MinMax scale values', () => {
         const salaryColumn = CSVDataSet.columnArray('Salary', {
@@ -164,10 +164,10 @@ describe('preprocessing', function() {
           prefilter: row => row.Salary,
           scale: 'minMax',
         });
-        // console.log('jsk.util.mean(minMaxScaleSalary)', jsk.util.mean(minMaxScaleSalary));
-        expect(JSON.stringify(minMaxScaleSalary)).to.equal(JSON.stringify(jsk.util.MinMaxScaler(salaryColumn)));
-        expect(parseInt(Math.round(jsk.util.sd(minMaxScaleSalary)))).to.equal(0);
-        expect(parseInt(Math.round(jsk.util.mean(minMaxScaleSalary)))).to.equal(0);
+        // console.log('ms.util.mean(minMaxScaleSalary)', ms.util.mean(minMaxScaleSalary));
+        expect(JSON.stringify(minMaxScaleSalary)).to.equal(JSON.stringify(ms.util.MinMaxScaler(salaryColumn)));
+        expect(parseInt(Math.round(ms.util.sd(minMaxScaleSalary)))).to.equal(0);
+        expect(parseInt(Math.round(ms.util.mean(minMaxScaleSalary)))).to.equal(0);
       });
       it('should log scale values', () => {
         const salaryColumn = CSVDataSet.columnArray('Salary', {
@@ -178,7 +178,7 @@ describe('preprocessing', function() {
           prefilter: row => row.Salary,
           scale: 'log',
         });
-        expect(JSON.stringify(logScaleSalary)).to.equal(JSON.stringify(jsk.util.LogScaler(salaryColumn)));
+        expect(JSON.stringify(logScaleSalary)).to.equal(JSON.stringify(ms.util.LogScaler(salaryColumn)));
       });
       it('should exp scale values', () => {
         const salaryColumn = CSVDataSet.columnArray('Salary', {
@@ -189,7 +189,7 @@ describe('preprocessing', function() {
           prefilter: row => row.Salary,
           scale: 'exp',
         });
-        expect(JSON.stringify(logScaleSalary)).to.equal(JSON.stringify(jsk.util.ExpScaler(salaryColumn)));
+        expect(JSON.stringify(logScaleSalary)).to.equal(JSON.stringify(ms.util.ExpScaler(salaryColumn)));
       });
     });
     describe('labelEncoder', () => {
@@ -287,7 +287,7 @@ describe('preprocessing', function() {
           filter: val => val,
         });
         const meanColSalary = CSVDataSet.columnReplace('Salary');
-        const meanSal = jsk.util.mean(colSalary);
+        const meanSal = ms.util.mean(colSalary);
         expect(meanColSalary).to.include(meanSal);
       });
       it('should replace empty values with stat function from ml.js', () => {
@@ -296,7 +296,7 @@ describe('preprocessing', function() {
           filter: val => val,
         });
         const standardDeviationColSalary = CSVDataSet.columnReplace('Salary', { strategy: 'standardDeviation', });
-        const sdSal = jsk.util.sd(colSalary);
+        const sdSal = ms.util.sd(colSalary);
         expect(standardDeviationColSalary).to.include(sdSal);
       });
       it('should replace values by standard scaling', () => {
@@ -304,7 +304,7 @@ describe('preprocessing', function() {
           prefilter: row => row.Salary,
           parseInt: true,
         });
-        const salaryMean = jsk.util.mean(salaryColumn);
+        const salaryMean = ms.util.mean(salaryColumn);
         const formattedSalaryColumn = CSVDataSet.columnArray('Salary', {
           replace: {
             test: val => !val,
@@ -312,7 +312,7 @@ describe('preprocessing', function() {
           },
           parseFloat: true,
         });
-        const scaledSalaryColumn = jsk.util.StandardScaler(formattedSalaryColumn);
+        const scaledSalaryColumn = ms.util.StandardScaler(formattedSalaryColumn);
         const standardScaleSalary = CSVDataSet.columnReplace('Salary', {
           scale: 'standard',
         });
@@ -322,7 +322,7 @@ describe('preprocessing', function() {
     describe('fitColumns', () => {
       const extraColumn = [ 89, 12, 32, 45, 53, 52, 56, 21, 34, 56 ];
       it('should merge columns', () => {
-        const fittedOriginalData = new jsk.DataSet([...unmodifiedCSVData,]);
+        const fittedOriginalData = new ms.DataSet([...unmodifiedCSVData,]);
         fittedOriginalData.fitColumns({
           columns: [
             { name: 'Age', },
@@ -338,7 +338,7 @@ describe('preprocessing', function() {
         expect(fittedOriginalData.columnArray('Extra')).to.eql(extraColumn);
       });
       it('should only merge columns if data length matches', () => { 
-        const fittedOriginalData = new jsk.DataSet([ ...unmodifiedCSVData, ]);
+        const fittedOriginalData = new ms.DataSet([ ...unmodifiedCSVData, ]);
         const newColumn = fittedOriginalData.columnMerge('err', [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 ]);
         expect(newColumn).to.be.an('Object');
         expect(newColumn).to.haveOwnProperty('err');
@@ -351,8 +351,8 @@ describe('preprocessing', function() {
         }
       });
       it('should fit multiple columns', () => {
-        const unmodifiedData = new jsk.DataSet(unmodifiedCSVData);
-        const fittedOriginalData = new jsk.DataSet([...unmodifiedCSVData,]);
+        const unmodifiedData = new ms.DataSet(unmodifiedCSVData);
+        const fittedOriginalData = new ms.DataSet([...unmodifiedCSVData,]);
         const reducer = (result, value, index, arr) => {
           result.push(value * 2);
           return result;

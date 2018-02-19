@@ -12,7 +12,7 @@ export default [
     output: {
       exports: 'named',
       file: pkg.browser,
-      name: 'jskit-learn',
+      name: 'modelscript',
       format: 'umd',
     },
     plugins: [
@@ -66,13 +66,13 @@ export default [
       {
         exports: 'named',
         file: pkg.main,
-        name: 'jskit-learn',
+        name: 'modelscript',
         format: 'cjs',
       },
       {
         exports: 'named',
         file: pkg.module,
-        name: 'jskit-learn',
+        name: 'modelscript',
         format: 'es',
       },
     ],

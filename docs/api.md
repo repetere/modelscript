@@ -63,7 +63,7 @@ creates a new raw data instance for preprocessing data for machine learning
 
 **Example**  
 ```js
-const dataset = new jsk.DataSet(csvData);
+const dataset = new ms.DataSet(csvData);
 ```
 <a name="DataSet+filterColumn"></a>
 
@@ -362,7 +362,7 @@ Split arrays into random train and test subsets
 ```js
 const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
 // { train: [ 50, 20, 34, 33, 10, 23, 90, 42 ], test: [ 25, 19 ] }
-const trainTestSplit = jsk.cross_validation.train_test_split(testArray,{ test_size:0.2, random_state: 0, });
+const trainTestSplit = ms.cross_validation.train_test_split(testArray,{ test_size:0.2, random_state: 0, });
 ```
 <a name="cross_validation.cross_validation_split"></a>
 
@@ -384,7 +384,7 @@ Each fold is then used once as a validation while the k - 1 remaining folds form
 ```js
 const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
 // [ [ 50, 20, 34, 33, 10 ], [ 23, 90, 42, 19, 25 ] ] 
-const crossValidationArrayKFolds = jsk.cross_validation.cross_validation_split(testArray, { folds: 2, random_state: 0, });
+const crossValidationArrayKFolds = ms.cross_validation.cross_validation_split(testArray, { folds: 2, random_state: 0, });
 ```
 <a name="cross_validation.cross_validate_score"></a>
 
@@ -489,7 +489,7 @@ The standard error of the estimate is a measure of the accuracy of predictions m
 ```js
 const actuals = [ 2, 4, 5, 4, 5, ];
   const estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];
-  const SE = jsk.util.standardError(actuals, estimates);
+  const SE = ms.util.standardError(actuals, estimates);
   SE.toFixed(2) // => 0.89
 ```
 <a name="util.standardScore"></a>
@@ -523,7 +523,7 @@ In statistics, the coefficient of determination, denoted R2 or r2 and pronounced
 ```js
 const actuals = [ 2, 4, 5, 4, 5, ];
 const estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];
-const r2 = jsk.util.coefficientOfDetermination(actuals, estimates); 
+const r2 = ms.util.coefficientOfDetermination(actuals, estimates); 
 r2.toFixed(1) // => 0.6
 ```
 <a name="util.pivotVector"></a>
@@ -624,7 +624,7 @@ Asynchronously loads a CSV from a remote URL and returns an array of objects
 
 **Example**  
 ```js
-// returns [{header:value,header2:value2}]loadCSVURI('https://raw.githubusercontent.com/repetere/jskit-learn/master/test/mock/data.csv').then(csvData).catch(console.error)
+// returns [{header:value,header2:value2}]loadCSVURI('https://raw.githubusercontent.com/repetere/modelscript/master/test/mock/data.csv').then(csvData).catch(console.error)
 ```
 <a name="loadCSV"></a>
 
