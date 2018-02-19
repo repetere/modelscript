@@ -22,17 +22,6 @@
 <dd></dd>
 </dl>
 
-## Functions
-
-<dl>
-<dt><a href="#loadCSVURI">loadCSVURI(filepath, [options])</a> ⇒ <code>Array.&lt;Object&gt;</code></dt>
-<dd><p>Asynchronously loads a CSV from a remote URL and returns an array of objects</p>
-</dd>
-<dt><a href="#loadCSV">loadCSV(filepath, [options])</a> ⇒ <code>Array.&lt;Object&gt;</code></dt>
-<dd><p>Asynchronously loads a CSV from either a filepath or remote URL and returns an array of objects</p>
-</dd>
-</dl>
-
 <a name="DataSet"></a>
 
 ## DataSet
@@ -403,7 +392,7 @@ Used to test variance and bias of a prediction
 <a name="cross_validation.grid_search"></a>
 
 ### cross_validation.grid_search(options) ⇒ <code>Array.&lt;number&gt;</code>
-Used to test variance and bias of a prediction
+Used to test variance and bias of a prediction with parameter tuning
 
 **Kind**: static method of [<code>cross_validation</code>](#cross_validation)  
 **Returns**: <code>Array.&lt;number&gt;</code> - Array of accucracy calculations  
@@ -609,37 +598,3 @@ Converts z-score into the probability
 | --- | --- | --- |
 | z | <code>number</code> | Number of standard deviations from the mean. |
 
-<a name="loadCSVURI"></a>
-
-## loadCSVURI(filepath, [options]) ⇒ <code>Array.&lt;Object&gt;</code>
-Asynchronously loads a CSV from a remote URL and returns an array of objects
-
-**Kind**: global function  
-**Returns**: <code>Array.&lt;Object&gt;</code> - returns an array of objects from a csv where each column header is the property name  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| filepath | <code>string</code> | URL to CSV path |
-| [options] | <code>Object</code> | options passed to csvtojson |
-
-**Example**  
-```js
-// returns [{header:value,header2:value2}]loadCSVURI('https://raw.githubusercontent.com/repetere/modelscript/master/test/mock/data.csv').then(csvData).catch(console.error)
-```
-<a name="loadCSV"></a>
-
-## loadCSV(filepath, [options]) ⇒ <code>Array.&lt;Object&gt;</code>
-Asynchronously loads a CSV from either a filepath or remote URL and returns an array of objects
-
-**Kind**: global function  
-**Returns**: <code>Array.&lt;Object&gt;</code> - returns an array of objects from a csv where each column header is the property name  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| filepath | <code>string</code> | URL to CSV path |
-| [options] | <code>Object</code> | options passed to csvtojson |
-
-**Example**  
-```js
-// returns [{header:value,header2:value2}]loadCSV('../mock/invalid-file.csv').then(csvData).catch(console.error)
-```

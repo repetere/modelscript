@@ -18,13 +18,20 @@ $ npm i modelscript
 
 ```javascript
 "modelscript" : {
-  loadCSV: [Function: loadCSV], //asynchronously loads CSVs, either a filepath or a remote URI
-  cross_validation: {
+  ml, //see https://github.com/mljs/ml
+  nlp, //see https://github.com/NaturalNode/natural
+  csv:{
+    loadCSV: [Function: loadCSV], //asynchronously loads CSVs, either a filepath or a remote URI
+  },
+  model_selection: {
     train_test_split: [Function: train_test_split], // splits data into training and testing sets
     cross_validation_split: [Function: kfolds], //splits data into k-folds
+    cross_validate_score: [Function: cross_validate_score],//test model variance and bias
+    grid_search: [Function: grid_search], // tune models with grid search for optimal performance
   },
-  preprocessing: {
-    Class DataSet: [ //class for manipulating an array of objects (typically from CSV data)
+  DataSet: {
+    Class DataSet: { //class for manipulating an array of objects (typically from CSV data)
+      columnMatrix(vectors), //returns a matrix of values by combining column arrays into a matrix
       columnArray(columnName, options), // - returns a new array of a selected column from an array of objects, can filter, scale and replace values
       columnReplace(columnName, options), // - returns a new array of a selected column from an array of objects and replaces empty values, encodes values and scales values
       labelEncoder(columnName, options), // - returns a new array and label encodes a selected column
@@ -35,7 +42,7 @@ $ npm i modelscript
       columnMerge(name, data), // - returns a new column that is merged onto the data set
       filterColumn(options), // - filtered rows of data,
       fitColumns(options), // - mutates data property of DataSet by replacing multiple columns in a single command
-    ]
+    }
   },
   calc:{
     getTransactions: [Function getTransactions], // Formats an array of transactions into a sparse matrix like format for Apriori/Eclat
@@ -64,6 +71,9 @@ $ npm i modelscript
     standardScore: [Function: standardScore], // Calculates the z score of each value in the sample, relative to the sample mean and standard deviation.
     zScore: [Function: standardScore], // alias for standardScore.
     approximateZPercentile: [Function: approximateZPercentile], // approximate the p value from a z score
+  },
+  preprocessing: {
+    DataSet: [Class DataSet],
   },
 }
 ```

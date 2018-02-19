@@ -24,3 +24,4 @@ export const model_selection = cross_validations;
 export const calc = calcs;
 export const ml = mls;
 export const nlp = nlps;
+export const csv = csvUtils;

@@ -173,7 +173,7 @@ function cross_validate_score(options = {}) {
 }
 
 /**
- * Used to test variance and bias of a prediction
+ * Used to test variance and bias of a prediction with parameter tuning
  * @memberOf cross_validation
  * @param {object} options
  * @param {function} options.classifier - instance of classification model used for training, or function to train a model. e.g. new DecisionTreeClassifier({ gainFunction: 'gini', }) or ml.KNN

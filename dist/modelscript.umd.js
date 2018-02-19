@@ -27779,6 +27779,7 @@ var csvtojson = csv2json;
  * @example
  * // returns [{header:value,header2:value2}]
  * loadCSVURI('https://raw.githubusercontent.com/repetere/modelscript/master/test/mock/data.csv').then(csvData).catch(console.error)
+ * @memberOf csv
  * @param {string} filepath - URL to CSV path
  * @param {Object} [options] - options passed to csvtojson
  * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
@@ -27813,6 +27814,7 @@ function loadCSVURI$1(filepath, options) {
  * @example
  * // returns [{header:value,header2:value2}]
  * loadCSV('../mock/invalid-file.csv').then(csvData).catch(console.error)
+ * @memberOf csv
  * @param {string} filepath - URL to CSV path
  * @param {Object} [options] - options passed to csvtojson
  * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
@@ -27840,6 +27842,12 @@ function loadCSV$1(filepath, options) {
     });
   }
 }
+
+
+var csvUtils = Object.freeze({
+	loadCSVURI: loadCSVURI$1,
+	loadCSV: loadCSV$1
+});
 
 if (!Symbol.species) {
     Symbol.species = Symbol.for('@@species');
@@ -90027,7 +90035,7 @@ function cross_validate_score(options = {}) {
 }
 
 /**
- * Used to test variance and bias of a prediction
+ * Used to test variance and bias of a prediction with parameter tuning
  * @memberOf cross_validation
  * @param {object} options
  * @param {function} options.classifier - instance of classification model used for training, or function to train a model. e.g. new DecisionTreeClassifier({ gainFunction: 'gini', }) or ml.KNN
@@ -90094,6 +90102,7 @@ const model_selection = cross_validation$1;
 const calc$$1 = calc$1;
 const ml$$1 = ml$1;
 const nlp$$1 = nlp$1;
+const csv = csvUtils;
 
 exports.loadCSV = loadCSV;
 exports.loadCSVURI = loadCSVURI;
@@ -90104,6 +90113,7 @@ exports.model_selection = model_selection;
 exports.calc = calc$$1;
 exports.ml = ml$$1;
 exports.nlp = nlp$$1;
+exports.csv = csv;
 exports.DataSet = DataSet;
 
 Object.defineProperty(exports, '__esModule', { value: true });
