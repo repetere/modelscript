@@ -338,6 +338,8 @@ returns association rule learning results
 * [cross_validation](#cross_validation) : <code>object</code>
     * [.train_test_split(dataset, options)](#cross_validation.train_test_split) ⇒ <code>Object</code> \| <code>array</code>
     * [.cross_validation_split(dataset, options)](#cross_validation.cross_validation_split) ⇒ <code>array</code>
+    * [.cross_validate_score(options)](#cross_validation.cross_validate_score) ⇒ <code>Array.&lt;number&gt;</code>
+    * [.grid_search(options)](#cross_validation.grid_search) ⇒ <code>Array.&lt;number&gt;</code>
 
 <a name="cross_validation.train_test_split"></a>
 
@@ -384,6 +386,34 @@ const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
 // [ [ 50, 20, 34, 33, 10 ], [ 23, 90, 42, 19, 25 ] ] 
 const crossValidationArrayKFolds = jsk.cross_validation.cross_validation_split(testArray, { folds: 2, random_state: 0, });
 ```
+<a name="cross_validation.cross_validate_score"></a>
+
+### cross_validation.cross_validate_score(options) ⇒ <code>Array.&lt;number&gt;</code>
+Used to test variance and bias of a prediction
+
+**Kind**: static method of [<code>cross_validation</code>](#cross_validation)  
+**Returns**: <code>Array.&lt;number&gt;</code> - Array of accucracy calculations  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> |  |
+| options.classifier | <code>function</code> | instance of classification model used for training, or function to train a model. e.g. new DecisionTreeClassifier({ gainFunction: 'gini', }) or ml.KNN |
+| options.regression | <code>function</code> | instance of regression model used for training, or function to train a model. e.g. new RandomForestRegression({ nEstimators: 300, }) or ml.MultivariateLinearRegression |
+
+<a name="cross_validation.grid_search"></a>
+
+### cross_validation.grid_search(options) ⇒ <code>Array.&lt;number&gt;</code>
+Used to test variance and bias of a prediction
+
+**Kind**: static method of [<code>cross_validation</code>](#cross_validation)  
+**Returns**: <code>Array.&lt;number&gt;</code> - Array of accucracy calculations  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>object</code> |  |
+| options.classifier | <code>function</code> | instance of classification model used for training, or function to train a model. e.g. new DecisionTreeClassifier({ gainFunction: 'gini', }) or ml.KNN |
+| options.regression | <code>function</code> | instance of regression model used for training, or function to train a model. e.g. new RandomForestRegression({ nEstimators: 300, }) or ml.MultivariateLinearRegression |
+
 <a name="preprocessing"></a>
 
 ## preprocessing : <code>object</code>

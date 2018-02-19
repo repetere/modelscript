@@ -60,6 +60,7 @@ export default [
       'ml-naivebayes',
       'random-js',
       'natural',
+      'parameter-tuning',
     ],
     output: [
       {

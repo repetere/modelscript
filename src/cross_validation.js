@@ -3,6 +3,7 @@ import { default as range, } from 'lodash.range';
 import { ml, } from './ml';
 import { util, } from './util';
 import { DataSet, } from './DataSet';
+import { GridSearch, } from 'parameter-tuning';
 const Matrix = ml.Matrix;
 const ConfusionMatrix = ml.ConfusionMatrix;
 
@@ -44,7 +45,7 @@ function train_test_split(dataset = [], options = {
     // console.log({ index });
     training_set.push(dataset_copy.splice(index, 1)[0]);
   }
-  return (options.return_array) ? [training_set, dataset_copy,] : {
+  return (options.return_array) ? [training_set, dataset_copy, ] : {
     train: training_set,
     test: dataset_copy,
   };
@@ -85,19 +86,29 @@ function cross_validation_split(dataset = [], options = {
   return dataset_split;
 }
 
+/**
+ * Used to test variance and bias of a prediction
+ * @memberOf cross_validation
+ * @param {object} options
+ * @param {function} options.classifier - instance of classification model used for training, or function to train a model. e.g. new DecisionTreeClassifier({ gainFunction: 'gini', }) or ml.KNN
+ * @param {function} options.regression - instance of regression model used for training, or function to train a model. e.g. new RandomForestRegression({ nEstimators: 300, }) or ml.MultivariateLinearRegression
+ * @return {number[]} Array of accucracy calculations 
+ */
 function cross_validate_score(options = {}) {
   const config = Object.assign({}, {
     // classifier,
     // regression,
     // dataset,
     // testingset,
-    dependentFeatures: [ ['X'], ],
-    independentFeatures: [ ['Y'], ],
+    dependentFeatures: [['X',],],
+    independentFeatures: [['Y',],],
     // random_state,
     folds: 10,
-    // accuracy: 'mean',
+    accuracy: 'standardError',
     use_train_x_matrix: true,
     use_train_y_matrix: false,
+    use_train_y_vector: false,
+    use_estimates_y_vector: false,
   }, options);
   const classifier = config.classifier;
   const regression = config.regression;
@@ -109,31 +120,96 @@ function cross_validate_score(options = {}) {
   const y_test_matrix = testingDataSet.columnMatrix(config.independentFeatures);
   const x_test_matrix = testingDataSet.columnMatrix(config.dependentFeatures);
   const actuals = util.pivotVector(y_test_matrix)[ 0 ];
+  // console.log({ actuals });
   const prediction_accuracies = folds.map(fold => { 
     const trainingDataSet = new DataSet(fold);
     const x_train = trainingDataSet.columnMatrix(config.dependentFeatures);
     const y_train = trainingDataSet.columnMatrix(config.independentFeatures);
-    const x_train_matrix = (config.use_train_x_matrix) ? new Matrix(x_train) : x_train;
-    const y_train_matrix = (config.use_train_y_matrix) ? new Matrix(y_train) : y_train;
-
+    const x_train_matrix = (config.use_train_x_matrix)
+      ? new Matrix(x_train)
+      : x_train;
+    const y_train_matrix = (config.use_train_y_matrix)
+      ? new Matrix(y_train)
+      : (config.use_train_y_vector)
+        ? util.pivotVector(y_train)[0]
+        : y_train;
     if (regression) {
-      
+      let regressor;
+      let pred_y_test;
+      if (typeof regression.train === 'function') {
+        regressor = regression.train(x_train_matrix, y_train_matrix, config.modelOptions);
+        pred_y_test = regression.predict(x_test_matrix);
+      } else {
+        regressor = new regression(x_train_matrix, y_train_matrix, config.modelOptions);
+        pred_y_test = regressor.predict(x_test_matrix);
+      }
+      // console.log({ x_test_matrix });
+      // console.log({ pred_y_test });
+      const estimates = pred_y_test;//util.pivotVector(pred_y_test)[0];
+      // console.log({ estimates, actuals });
+      return (config.accuracy === 'standardError')
+        ? util.standardError(actuals, estimates)
+        : util.rSquared(actuals, estimates);
     } else {
-      classifier.train(x_train_matrix, y_train_matrix);
-      const estimates = classifier.predict(x_test_matrix);
-      const CM = ConfusionMatrix.fromLabels(actuals, estimates);
+      let classification;
+      let estimates;
+      if (typeof classifier.train === 'function') {
+        classifier.train(x_train_matrix, y_train_matrix, config.modelOptions);
+        estimates = classifier.predict(x_test_matrix);
+      } else {
+        classification = new classifier(x_train_matrix, y_train_matrix, config.modelOptions);
+        estimates = classification.predict(x_test_matrix);
+      }
+      // classification.train(x_train_matrix, y_train_matrix);
+      // classifier.train(x_train_matrix, y_train_matrix);
+      const compareEstimates = (config.use_estimates_y_vector)
+        ? util.pivotVector(estimates)[ 0 ]
+        : estimates;
+      const CM = ConfusionMatrix.fromLabels(actuals, compareEstimates);
       return CM.getAccuracy();
     }
   });
   return prediction_accuracies;
 }
 
+/**
+ * Used to test variance and bias of a prediction
+ * @memberOf cross_validation
+ * @param {object} options
+ * @param {function} options.classifier - instance of classification model used for training, or function to train a model. e.g. new DecisionTreeClassifier({ gainFunction: 'gini', }) or ml.KNN
+ * @param {function} options.regression - instance of regression model used for training, or function to train a model. e.g. new RandomForestRegression({ nEstimators: 300, }) or ml.MultivariateLinearRegression
+ * @return {number[]} Array of accucracy calculations 
+ */
 function grid_search(options = {}) {
   const config = Object.assign({}, {
-    parameters :[],
-    search : () => { },
+    return_parameters: false,
+    compare_score:'mean',
+    parameters: {},
   }, options);
-  
+  const regressor = config.regression;
+  const classification = config.classifier;
+  const gs = new GridSearch({
+    params: config.parameters,
+    run_callback: (params) => {
+      if (config.regression) {
+        config.regression = new regressor(params);
+      } else {
+        config.classifier = new classification(params);
+      }
+      const score = cross_validate_score(config);
+      return (config.compare_score)
+        ? util[config.compare_score](score)
+        : score;
+    },
+  });
+  gs.run();
+  const results = gs._results.sort((a, b) => b.results.metrix - a.results.metrix);
+
+  // console.log(JSON.stringify(results, null, 2));
+  // GridSearch;
+  return config.return_parameters
+    ? results
+    : results[ 0 ];
 }
 
 /**
@@ -146,4 +222,5 @@ export const cross_validation = {
   kfolds: cross_validation_split,
   cross_validate_score,
   grid_search,
+  GridSearch,
 };
