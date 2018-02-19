@@ -60,7 +60,7 @@ export default [
       'ml-naivebayes',
       'random-js',
       'natural',
-      'parameter-tuning',
+      '@yawetse/js-grid-search',
     ],
     output: [
       {
