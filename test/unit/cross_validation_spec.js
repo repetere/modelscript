@@ -18,7 +18,7 @@ describe('cross_validation', function () {
   this.timeout(10000);
   before((done) => {
     Promise.all([
-      ms.loadCSV(path.join(__dirname, '../mock/Social_Network_ads.csv'), {
+      ms.loadCSV(path.join(__dirname, '../mock/Social_Network_Ads.csv'), {
         colParser: {
           Age: 'number',
           EstimatedSalary: 'number',
