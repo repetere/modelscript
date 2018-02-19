@@ -15,7 +15,7 @@ import MultivariateLinearRegression from 'ml-regression-multivariate-linear';
 import PCA from 'ml-pca';
 import natural from 'natural';
 import Random from 'random-js';
-import { GridSearch } from 'parameter-tuning';
+import { GridSearch } from '@yawetse/js-grid-search';
 
 /**
  * Asynchronously loads a CSV from a remote URL and returns an array of objects

@@ -3,7 +3,7 @@ import { default as range, } from 'lodash.range';
 import { ml, } from './ml';
 import { util, } from './util';
 import { DataSet, } from './DataSet';
-import { GridSearch, } from 'parameter-tuning';
+import { GridSearch, } from '@yawetse/js-grid-search';
 const Matrix = ml.Matrix;
 const ConfusionMatrix = ml.ConfusionMatrix;
 

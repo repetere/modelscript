@@ -21,7 +21,7 @@ var MultivariateLinearRegression = _interopDefault(require('ml-regression-multiv
 var PCA = _interopDefault(require('ml-pca'));
 var natural = _interopDefault(require('natural'));
 var Random = _interopDefault(require('random-js'));
-var parameterTuning = require('parameter-tuning');
+var jsGridSearch = require('@yawetse/js-grid-search');
 
 /**
  * Asynchronously loads a CSV from a remote URL and returns an array of objects
@@ -1025,7 +1025,7 @@ function grid_search(options = {}) {
   }, options);
   const regressor = config.regression;
   const classification = config.classifier;
-  const gs = new parameterTuning.GridSearch({
+  const gs = new jsGridSearch.GridSearch({
     params: config.parameters,
     run_callback: (params) => {
       if (config.regression) {
@@ -1059,7 +1059,7 @@ const cross_validation$1 = {
   kfolds: cross_validation_split,
   cross_validate_score,
   grid_search,
-  GridSearch: parameterTuning.GridSearch,
+  GridSearch: jsGridSearch.GridSearch,
 };
 
 const loadCSV = loadCSV$1;
