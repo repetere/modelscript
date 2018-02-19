@@ -62,4 +62,18 @@ describe('loadCSV', function () {
         .catch(done); 
     });
   });
+  describe('loadTSV', () => {
+    it('should load tab separated values', (done) => {
+      expect(ms.csv.loadTSV).to.be.an('function');
+      ms.csv.loadTSV(path.join(__dirname, '../mock/Restaurant_Reviews.tsv'))
+        .then(tsv => {
+          const firstRow = tsv[ 0 ];
+          expect(tsv.length).to.be.greaterThan(0);
+          expect(firstRow.Review).to.be.a('string');
+          expect(firstRow.Liked).to.be.a('string');
+          done();
+        })
+        .catch(done);  
+    });
+  });
 });

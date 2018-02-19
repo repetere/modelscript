@@ -86,10 +86,28 @@ function loadCSV$1(filepath, options) {
   }
 }
 
+/**
+ * Asynchronously loads a TSV from either a filepath or remote URL and returns an array of objects
+ * @example
+ * // returns [{header:value,header2:value2}]
+ * loadCSV('../mock/invalid-file.tsv').then(csvData).catch(console.error)
+ * @memberOf csv
+ * @param {string} filepath - URL to CSV path
+ * @param {Object} [options] - options passed to csvtojson
+ * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
+ */
+function loadTSV(filepath, options) {
+  const tsvOptions = Object.assign({}, options, {
+    delimiter: '\t',
+  });
+  return loadCSV$1(filepath, tsvOptions);
+}
+
 
 var csvUtils = Object.freeze({
 	loadCSVURI: loadCSVURI$1,
-	loadCSV: loadCSV$1
+	loadCSV: loadCSV$1,
+	loadTSV: loadTSV
 });
 
 const avg = MachineLearning.ArrayStat.mean;

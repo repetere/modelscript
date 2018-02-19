@@ -22,6 +22,7 @@ $ npm i modelscript
   nlp, //see https://github.com/NaturalNode/natural
   csv:{
     loadCSV: [Function: loadCSV], //asynchronously loads CSVs, either a filepath or a remote URI
+    loadTSV: [Function: loadTSV], //asynchronously loads TSVs, either a filepath or a remote URI
   },
   model_selection: {
     train_test_split: [Function: train_test_split], // splits data into training and testing sets
