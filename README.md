@@ -19,7 +19,9 @@ $ npm i modelscript
 ```javascript
 "modelscript" : {
   ml, //see https://github.com/mljs/ml
-  nlp, //see https://github.com/NaturalNode/natural
+  nlp:{ //see https://github.com/NaturalNode/natural
+    ColumnVectorizer: [Class: ColumnVectorizer], //class creating sparse matrices from a corpus
+  },
   csv:{
     loadCSV: [Function: loadCSV], //asynchronously loads CSVs, either a filepath or a remote URI
     loadTSV: [Function: loadTSV], //asynchronously loads TSVs, either a filepath or a remote URI

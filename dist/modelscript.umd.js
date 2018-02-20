@@ -89242,12 +89242,6 @@ var natural = {
 };
 
 /**
- * @namespace
- * @see {@link https://github.com/NaturalNode/natural} 
- */
-const nlp$1 = natural;
-
-/**
  * class for manipulating an array of objects, typically from CSV data
  * @class DataSet
  * @memberOf preprocessing
@@ -89643,6 +89637,127 @@ dataset.fitColumns({
   }
 }
 
+// import { ml, } from './ml';
+// import { util as utils, } from './util';
+/**
+ * class creating sparse matrices from a corpus
+ * @class ColumnVectorizer
+ * @memberOf nlp
+ */
+class ColumnVectorizer {
+  /**
+   * creates a new c instance for preprocessing data for machine learning
+   * @example
+   * const dataset = new ms.DataSet(csvData);
+   * @param {Object} [options={}]
+   * @prop {Object[]} this.data - Array of strings
+   * @prop {Set} this.tokens - Unique collection of all tokenized strings
+   * @prop {Object[]} this.vectors - Array of tokenized words with value of count of appreance in string
+   * @prop {Object} this.wordMap - Object of all unique words, with value of 0
+   * @prop {Object} this.wordCountMap - Object of all unique words, with value as total count of appearances
+   * @prop {number} this.maxFeatures - max number of features
+   * @prop {String[]} this.sortedWordCount - list of words as tokens sorted by total appearances
+   * @prop {String[]} this.limitedFeatures - subset list of maxFeatures words as tokens sorted by total appearances
+   * @prop {Array[]} this.matrix - words in sparse matrix
+   * @prop {Function} this.replacer - clean string function
+   * @returns {this} 
+   */
+  constructor(options = {}) {
+    this.data = options.data || [];
+    this.tokens = new Set();
+    this.vectors = [];
+    this.wordMap = {};
+    this.wordCountMap = {};
+    this.maxFeatures = options.maxFeatures;
+    this.sortedWordCount = [];
+    this.limitedFeatures = [];
+    this.matrix = [];
+    this.replacer = (value='') => {
+      const cleanedValue = value
+        .toLowerCase()
+        .replace(/[^a-zA-Z]/gi, ' ');
+      return nlp$1.PorterStemmer
+        .tokenizeAndStem(cleanedValue)
+        .join(' ');
+    };
+    return this;
+  }
+  get_tokens() {
+    return Array.from(this.tokens);
+  }
+  get_vector_array() {
+    return this.get_tokens().map(tok => [
+      tok,
+    ]);
+  }
+  fit_transform(options = {}) {
+    const data = options.data || this.data;
+    data.forEach(datum => {
+      const datums = {};
+      this.replacer(datum)
+        .split(' ')
+        .forEach(tok => {
+          const token = tok.toLowerCase();
+          datums[ token ] = (datums[ token ])
+            ? datums[ token ] + 1
+            : 1;
+          this.wordCountMap[token] = (this.wordCountMap[token])
+            ? this.wordCountMap[token] + 1
+            : 1;
+          this.tokens.add(token);
+        });
+      this.vectors.push(datums);
+    });
+    this.wordMap = Array.from(this.tokens).reduce((result, value) => { 
+      result[ value ] = 0;
+      return result;
+    }, {});
+    this.sortedWordCount = Object.keys(this.wordCountMap)
+      .sort((a, b) => this.wordCountMap[ b ] - this.wordCountMap[ a ]);
+    this.vectors = this.vectors.map(vector => Object.assign({}, this.wordMap, vector));
+    const vectorData = new DataSet(this.vectors);
+    this.limitedFeatures = this.get_limited_features(options);
+    this.matrix = vectorData.columnMatrix(this.limitedFeatures);
+    return this.matrix;
+  }
+  get_limited_features(options = {}) {
+    const maxFeatures = options.maxFeatures || this.maxFeatures || this.tokens.size;
+ 
+    return this.sortedWordCount
+      .slice(0, maxFeatures)
+      .map(feature => [ feature, ]);
+  }
+  evaluteString(testString = '') {
+    const evalString = this.replacer(testString);
+    const evalStringWordMap = evalString.split(' ').reduce((result, value) => { 
+      if (this.tokens.has(value)) {
+        result[ value ] = (result[ value ]!==undefined)
+          ? result[ value ] + 1
+          : 1;
+      }
+      return result;
+    }, {});
+    // console.log({ evalStringWordMap, });
+    return Object.assign({}, this.wordMap, evalStringWordMap);
+  }
+  evaluate(testString='', options) {
+    const stringObj = this.evaluteString(testString);
+    const limitedFeatures = this.get_limited_features(options);
+    const vectorData = new DataSet([
+      stringObj,
+    ]);
+    return vectorData.columnMatrix(limitedFeatures);
+  }
+}
+
+/**
+ * @namespace
+ * @see {@link https://github.com/NaturalNode/natural} 
+ */
+const nlp$1 = Object.assign({
+  ColumnVectorizer,
+}, natural);
+
 /** This class performs grid search - an exhaustive search through all parameter combinations.
  * It can then call custom result evaluation and display heat-map in console.
  */
@@ -89689,7 +89804,9 @@ class GridSearch {
     _prepare(params_orig) {
         let pars = [];
         for (let par in params_orig) {
-            pars.push({ name: par, values: params_orig[par] });
+            if (params_orig.hasOwnProperty(par)) {
+                pars.push({ name: par, values: params_orig[par] });
+            }
         }
 
         this._combinations = [{}];
@@ -89737,7 +89854,9 @@ class GridSearch {
         for (let i = 0; i < filter_arr.length; i++) {
             let match = true;
             for (let p in filter_arr[i]) {
-                match = match && obj[p] == filter_arr[i][p];
+                if (filter_arr[i].hasOwnProperty(p)) {
+                    match = match && obj[p] == filter_arr[i][p];
+                }
             }
             if (match) {
                 return i;
@@ -89804,7 +89923,9 @@ class GridSearch {
     _createTitle(obj) {
         let res = "";
         for (let p in obj) {
-            res += `${p}=${obj[p]},`;
+            if (obj.hasOwnProperty(p)) {
+                res += `${p}=${obj[p]},`;
+            }
         }
         return res.substr(0, res.length - 1);
     }
@@ -89812,7 +89933,7 @@ class GridSearch {
     /** Utility function for padding given string to specified length */
     _padToWidth(s, width, c) {
         c = c || " ";
-        while (s.length < width) s += c;
+        while (s.length < width) { s += c; }
         return s;
     }
 
@@ -89828,11 +89949,7 @@ class GridSearch {
     /** Outputs numeric values while producing mathing color for the value */
     _outputValue(val, width) {
         let s = this._padToWidth("" + val, width);
-        if (this._shades[1] < val) return s.magenta;
-        if (this._shades[2] < val) return s.red;
-        if (this._shades[3] < val) return s.yellow;
-        if (this._shades[4] < val) return s.white;
-        return s.grey;
+        return s;
     }
 
     /** Display table in friendly way */
@@ -89865,7 +89982,7 @@ class GridSearch {
         row += "| " + this._padToWidth("", first_col_width);
         row2 += "|-" + this._padToWidth("", first_col_width, "-");
         for (let i = 0; i < col_titles.length; i++) {
-            row += "| " + this._padToWidth(col_titles[i], col_widths[i]).cyan;
+            row += "| " + this._padToWidth(col_titles[i], col_widths[i]);
             row2 += "|-" + this._padToWidth("", col_widths[i], "-");
         }
         console.log(row);
@@ -89873,7 +89990,7 @@ class GridSearch {
 
         for (let j = 0; j < row_titles.length; j++) {
             row = "| ";
-            row += this._padToWidth(row_titles[j], first_col_width).cyan;
+            row += this._padToWidth(row_titles[j], first_col_width);
             for (let i = 0; i < col_titles.length; i++) {
                 row += "| " + this._outputValue(tab.results[j][i], col_widths[i]);
             }
@@ -90064,10 +90181,16 @@ function grid_search(options = {}) {
   const config = Object.assign({}, {
     return_parameters: false,
     compare_score:'mean',
+    sortAccuracyScore:'desc',
     parameters: {},
   }, options);
   const regressor = config.regression;
   const classification = config.classifier;
+  const sortAccuracyScore = (!options.sortAccuracyScore && config.regression)
+    ? 'asc'
+    : config.sortAccuracyScore;
+  
+  // const scoreSorter = ;
   const gs = new GridSearch_1({
     params: config.parameters,
     run_callback: (params) => {
@@ -90083,9 +90206,10 @@ function grid_search(options = {}) {
     },
   });
   gs.run();
-  const results = gs._results.sort((a, b) => b.results.metrix - a.results.metrix);
-
-  // console.log(JSON.stringify(results, null, 2));
+  const accuracySorter = (sortAccuracyScore === 'desc')
+    ? (a, b) => b.results - a.results
+    : (a, b) => a.results - b.results;
+  const results = gs._results.sort(accuracySorter);
   // GridSearch;
   return config.return_parameters
     ? results

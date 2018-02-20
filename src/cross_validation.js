@@ -3,7 +3,7 @@ import { default as range, } from 'lodash.range';
 import { ml, } from './ml';
 import { util, } from './util';
 import { DataSet, } from './DataSet';
-import { GridSearch, } from '@yawetse/js-grid-search';
+import { GridSearch, } from 'js-grid-search-lite';
 const Matrix = ml.Matrix;
 const ConfusionMatrix = ml.ConfusionMatrix;
 
@@ -184,10 +184,16 @@ function grid_search(options = {}) {
   const config = Object.assign({}, {
     return_parameters: false,
     compare_score:'mean',
+    sortAccuracyScore:'desc',
     parameters: {},
   }, options);
   const regressor = config.regression;
   const classification = config.classifier;
+  const sortAccuracyScore = (!options.sortAccuracyScore && config.regression)
+    ? 'asc'
+    : config.sortAccuracyScore;
+  
+  // const scoreSorter = ;
   const gs = new GridSearch({
     params: config.parameters,
     run_callback: (params) => {
@@ -203,9 +209,10 @@ function grid_search(options = {}) {
     },
   });
   gs.run();
-  const results = gs._results.sort((a, b) => b.results.metrix - a.results.metrix);
-
-  // console.log(JSON.stringify(results, null, 2));
+  const accuracySorter = (sortAccuracyScore === 'desc')
+    ? (a, b) => b.results - a.results
+    : (a, b) => a.results - b.results;
+  const results = gs._results.sort(accuracySorter);
   // GridSearch;
   return config.return_parameters
     ? results

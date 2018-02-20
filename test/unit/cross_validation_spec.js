@@ -260,7 +260,7 @@ describe('cross_validation', function () {
           maxFeatures: [1.0, 0.5, ],
           // replacement: [true, false, ],
           // useSampleBagging: [true, false, ],
-          nEstimators: [10, 20,  ],
+          nEstimators: [10, 20, ],
           treeOptions: [
             { minNumSamples: 3, },
             { minNumSamples: 2, },
@@ -272,6 +272,12 @@ describe('cross_validation', function () {
       // console.log(JSON.stringify(optimizedParameters, null, 2));
       expect(optimizedParameters).to.be.an('array');
       expect(optimizedParameters).to.have.lengthOf(8);
+    });
+    it('should sort parameter performance logically for regression', () => {
+      //TODO
+    });
+    it('should sort parameter performance logically for classification', () => {
+      //TODO
     });
   });
 });
