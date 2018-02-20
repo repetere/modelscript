@@ -1,6 +1,8 @@
 ## Classes
 
 <dl>
+<dt><a href="#ColumnVectorizer">ColumnVectorizer</a></dt>
+<dd></dd>
 <dt><a href="#DataSet">DataSet</a></dt>
 <dd></dd>
 </dl>
@@ -22,6 +24,139 @@
 <dd></dd>
 </dl>
 
+<a name="ColumnVectorizer"></a>
+
+## ColumnVectorizer
+**Kind**: global class  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| this.data | <code>Array.&lt;Object&gt;</code> | Array of strings |
+| this.tokens | <code>Set</code> | Unique collection of all tokenized strings |
+| this.vectors | <code>Array.&lt;Object&gt;</code> | Array of tokenized words with value of count of appreance in string |
+| this.wordMap | <code>Object</code> | Object of all unique words, with value of 0 |
+| this.wordCountMap | <code>Object</code> | Object of all unique words, with value as total count of appearances |
+| this.maxFeatures | <code>number</code> | max number of features |
+| this.sortedWordCount | <code>Array.&lt;String&gt;</code> | list of words as tokens sorted by total appearances |
+| this.limitedFeatures | <code>Array.&lt;String&gt;</code> | subset list of maxFeatures words as tokens sorted by total appearances |
+| this.matrix | <code>Array.&lt;Array&gt;</code> | words in sparse matrix |
+| this.replacer | <code>function</code> | clean string function |
+
+
+* [ColumnVectorizer](#ColumnVectorizer)
+    * [new ColumnVectorizer([options])](#new_ColumnVectorizer_new)
+    * [.get_tokens()](#ColumnVectorizer+get_tokens) ⇒ <code>Array.&lt;String&gt;</code>
+    * [.get_vector_array()](#ColumnVectorizer+get_vector_array) ⇒ <code>Array.&lt;String&gt;</code>
+    * [.fit_transform(options)](#ColumnVectorizer+fit_transform)
+    * [.get_limited_features(options)](#ColumnVectorizer+get_limited_features)
+    * [.evaluateString(testString)](#ColumnVectorizer+evaluateString) ⇒ <code>Object</code>
+    * [.evaluate(testString)](#ColumnVectorizer+evaluate) ⇒ <code>Array.&lt;Array.&lt;number&gt;&gt;</code>
+
+<a name="new_ColumnVectorizer_new"></a>
+
+### new ColumnVectorizer([options])
+creates a new instance for classifying text data for machine learning
+
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [options] | <code>Object</code> | <code>{}</code> | 
+
+**Example**  
+```js
+const dataset = new ms.nlp.ColumnVectorizer(csvData);
+```
+<a name="ColumnVectorizer+get_tokens"></a>
+
+### columnVectorizer.get_tokens() ⇒ <code>Array.&lt;String&gt;</code>
+Returns a distinct array of all tokens
+
+**Kind**: instance method of [<code>ColumnVectorizer</code>](#ColumnVectorizer)  
+**Returns**: <code>Array.&lt;String&gt;</code> - returns a distinct array of all tokens  
+<a name="ColumnVectorizer+get_vector_array"></a>
+
+### columnVectorizer.get_vector_array() ⇒ <code>Array.&lt;String&gt;</code>
+Returns array of arrays of strings for dependent features from sparse matrix word map
+
+**Kind**: instance method of [<code>ColumnVectorizer</code>](#ColumnVectorizer)  
+**Returns**: <code>Array.&lt;String&gt;</code> - returns array of dependent features for DataSet column matrics  
+<a name="ColumnVectorizer+fit_transform"></a>
+
+### columnVectorizer.fit_transform(options)
+Fits and transforms data by creating column vectors (a sparse matrix where each row has every word in the corpus as a column and the count of appearances in the corpus)
+
+**Kind**: instance method of [<code>ColumnVectorizer</code>](#ColumnVectorizer)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> |  |
+| options.data | <code>Array.&lt;Object&gt;</code> | array of corpus data |
+
+<a name="ColumnVectorizer+get_limited_features"></a>
+
+### columnVectorizer.get_limited_features(options)
+Returns limited sets of dependent features or all dependent features sorted by word count
+
+**Kind**: instance method of [<code>ColumnVectorizer</code>](#ColumnVectorizer)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>\*</code> |  |
+| options.maxFeatures | <code>number</code> | max number of features |
+
+<a name="ColumnVectorizer+evaluateString"></a>
+
+### columnVectorizer.evaluateString(testString) ⇒ <code>Object</code>
+returns word map with counts
+
+**Kind**: instance method of [<code>ColumnVectorizer</code>](#ColumnVectorizer)  
+**Returns**: <code>Object</code> - object of corpus words with accounts  
+
+| Param | Type |
+| --- | --- |
+| testString | <code>String</code> | 
+
+**Example**  
+```js
+ColumnVectorizer.evaluateString('I would rate everything Great, views Great, food Great') => { realli: 0,
+     good: 0,
+     definit: 0,
+     recommend: 0,
+     wait: 0,
+     staff: 0,
+     rude: 0,
+     great: 3,
+     view: 1,
+     food: 1,
+     not: 0,
+     cold: 0,
+     took: 0,
+     forev: 0,
+     seat: 0,
+     time: 0,
+     prompt: 0,
+     attent: 0,
+     bland: 0,
+     flavor: 0,
+     kind: 0 }
+```
+<a name="ColumnVectorizer+evaluate"></a>
+
+### columnVectorizer.evaluate(testString) ⇒ <code>Array.&lt;Array.&lt;number&gt;&gt;</code>
+returns new matrix of words with counts in columns
+
+**Kind**: instance method of [<code>ColumnVectorizer</code>](#ColumnVectorizer)  
+**Returns**: <code>Array.&lt;Array.&lt;number&gt;&gt;</code> - sparse matrix row for new classification predictions  
+
+| Param | Type |
+| --- | --- |
+| testString | <code>String</code> | 
+
+**Example**  
+```js
+ColumnVectorizer.evaluate('I would rate everything Great, views Great, food Great') => [ [ 0, 1, 3, 0, 0, 0, 0, 0, 1 ] ]
+```
 <a name="DataSet"></a>
 
 ## DataSet
@@ -431,6 +566,20 @@ class for manipulating an array of objects, typically from CSV data
 ## nlp : <code>object</code>
 **Kind**: global namespace  
 **See**: [https://github.com/NaturalNode/natural](https://github.com/NaturalNode/natural)  
+
+* [nlp](#nlp) : <code>object</code>
+    * [.ColumnVectorizer](#nlp.ColumnVectorizer)
+        * [new ColumnVectorizer()](#new_nlp.ColumnVectorizer_new)
+
+<a name="nlp.ColumnVectorizer"></a>
+
+### nlp.ColumnVectorizer
+**Kind**: static class of [<code>nlp</code>](#nlp)  
+<a name="new_nlp.ColumnVectorizer_new"></a>
+
+#### new ColumnVectorizer()
+class creating sparse matrices from a corpus
+
 <a name="util"></a>
 
 ## util : <code>object</code>

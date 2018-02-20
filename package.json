@@ -1,7 +1,7 @@
 {
   "name": "modelscript",
   "description": "modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you're left with the equialent R/Python toolset in JavaScript.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "main": "dist/modelscript.cjs.js",
   "module": "dist/modelscript.esm.js",
   "browser": "dist/modelscript.umd.js",

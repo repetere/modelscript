@@ -89646,9 +89646,9 @@ dataset.fitColumns({
  */
 class ColumnVectorizer {
   /**
-   * creates a new c instance for preprocessing data for machine learning
+   * creates a new instance for classifying text data for machine learning
    * @example
-   * const dataset = new ms.DataSet(csvData);
+   * const dataset = new ms.nlp.ColumnVectorizer(csvData);
    * @param {Object} [options={}]
    * @prop {Object[]} this.data - Array of strings
    * @prop {Set} this.tokens - Unique collection of all tokenized strings
@@ -89682,14 +89682,27 @@ class ColumnVectorizer {
     };
     return this;
   }
+  /** 
+   * Returns a distinct array of all tokens
+   * @return {String[]} returns a distinct array of all tokens
+  */
   get_tokens() {
     return Array.from(this.tokens);
   }
+  /** 
+   * Returns array of arrays of strings for dependent features from sparse matrix word map
+   * @return {String[]} returns array of dependent features for DataSet column matrics
+  */
   get_vector_array() {
     return this.get_tokens().map(tok => [
       tok,
     ]);
   }
+  /**
+   * Fits and transforms data by creating column vectors (a sparse matrix where each row has every word in the corpus as a column and the count of appearances in the corpus)
+   * @param {Object} options 
+   * @param {Object[]} options.data - array of corpus data 
+   */
   fit_transform(options = {}) {
     const data = options.data || this.data;
     data.forEach(datum => {
@@ -89720,6 +89733,11 @@ class ColumnVectorizer {
     this.matrix = vectorData.columnMatrix(this.limitedFeatures);
     return this.matrix;
   }
+  /**
+   * Returns limited sets of dependent features or all dependent features sorted by word count
+   * @param {*} options 
+   * @param {number} options.maxFeatures - max number of features 
+   */
   get_limited_features(options = {}) {
     const maxFeatures = options.maxFeatures || this.maxFeatures || this.tokens.size;
  
@@ -89727,7 +89745,34 @@ class ColumnVectorizer {
       .slice(0, maxFeatures)
       .map(feature => [ feature, ]);
   }
-  evaluteString(testString = '') {
+  /**
+   * returns word map with counts
+   * @example 
+ColumnVectorizer.evaluateString('I would rate everything Great, views Great, food Great') => { realli: 0,
+     good: 0,
+     definit: 0,
+     recommend: 0,
+     wait: 0,
+     staff: 0,
+     rude: 0,
+     great: 3,
+     view: 1,
+     food: 1,
+     not: 0,
+     cold: 0,
+     took: 0,
+     forev: 0,
+     seat: 0,
+     time: 0,
+     prompt: 0,
+     attent: 0,
+     bland: 0,
+     flavor: 0,
+     kind: 0 }
+   * @param {String} testString 
+   * @return {Object} object of corpus words with accounts
+   */
+  evaluateString(testString = '') {
     const evalString = this.replacer(testString);
     const evalStringWordMap = evalString.split(' ').reduce((result, value) => { 
       if (this.tokens.has(value)) {
@@ -89737,11 +89782,17 @@ class ColumnVectorizer {
       }
       return result;
     }, {});
-    // console.log({ evalStringWordMap, });
     return Object.assign({}, this.wordMap, evalStringWordMap);
   }
+  /**
+   * returns new matrix of words with counts in columns
+   * @example 
+ColumnVectorizer.evaluate('I would rate everything Great, views Great, food Great') => [ [ 0, 1, 3, 0, 0, 0, 0, 0, 1 ] ]
+   * @param {String} testString 
+   * @return {number[][]} sparse matrix row for new classification predictions
+   */
   evaluate(testString='', options) {
-    const stringObj = this.evaluteString(testString);
+    const stringObj = this.evaluateString(testString);
     const limitedFeatures = this.get_limited_features(options);
     const vectorData = new DataSet([
       stringObj,

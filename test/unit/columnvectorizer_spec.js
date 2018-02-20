@@ -92,9 +92,9 @@ describe('nlp', function() {
         expect(feats).to.have.lengthOf(5);
       });
     });
-    describe('evaluteString', () => {
+    describe('evaluateString', () => {
       it('should return object of tokens and counts', () => {
-        const estring = nlpVectors.evaluteString(eVString);
+        const estring = nlpVectors.evaluateString(eVString);
         expect(estring.great).to.eql(3);
         expect(estring.view).to.eql(1);
         expect(estring.food).to.eql(1);
@@ -103,7 +103,7 @@ describe('nlp', function() {
     describe('evaluate', () => {
       it('should return matrix vector for new predictions', () => {
         const estring = nlpVectors.evaluate(eVString);
-        // console.log(estring);
+        // console.log({estring})
         expect(estring).to.be.an('array');
         expect(estring[ 0 ]).to.have.lengthOf(9);
         expect(estring[ 0 ].filter(val => val === 3).length).to.eql(1);
@@ -124,7 +124,7 @@ describe('nlp', function() {
         });
       });
       it('should create a dictionary of total word counts in this.wordCountMap', () => {
-        const wordMapCount = csvData.reduce((result, value) => {
+        const wordCountMap = csvData.reduce((result, value) => {
           const val = value.Review.toLowerCase();
           const stringVals = ms.nlp.PorterStemmer.tokenizeAndStem(val);
           stringVals.forEach(token => {
@@ -134,20 +134,33 @@ describe('nlp', function() {
           });
           return result;
         }, {});
-        // Object.keys()
-        // console.log({wordMapCount},'nlpVectors.wordMapCount',nlpVectors.wordCountMap);
+        Object.keys(wordCountMap).forEach(word => {
+          expect(wordCountMap[ word ]).to.eql(nlpVectors.wordCountMap[ word ]);
+        });
       });
       it('should create a dictionary of all words this.wordMap', () => {
-        
+        Array.from(nlpVectors.tokens).forEach(token => {
+          expect(nlpVectors.wordMap[ token ]).to.eql(0);
+        });
       });
       it('should create an array of all sorted words in this.sortedWordCount by word count', () => {
-        
+        nlpVectors.sortedWordCount.forEach((wordObj, i) => { 
+          if (i < nlpVectors.sortedWordCount.length-1) {
+            const currentSWC = nlpVectors.sortedWordCount[ i ];
+            const nextSWC = nlpVectors.sortedWordCount[ i + 1 ];
+            expect(nlpVectors.wordCountMap[ currentSWC ]).to.be.gte(nlpVectors.wordCountMap[ nextSWC ]);
+          }
+        });
       });
-      it('should create a sparse matrix dictionary words from corpus in this.data', () => {
-        
+      it('should create a sparse matrix dictionary words from corpus in this.data as this.vectors', () => {
+        const firstSentence = csvData[ 0 ].Review;
+        const firstSentenceWordMap = nlpVectors.evaluateString(firstSentence);
+        expect(firstSentenceWordMap).to.eql(nlpVectors.vectors[ 0 ]);
       });
       it('should create a sparse matrix of words from corpus in this.data', () => {
-        
+        const firstSentence = csvData[ 0 ].Review;
+        const firstSentenceWordMap = nlpVectors.evaluate(firstSentence);
+        expect(firstSentenceWordMap[0]).to.eql(nlpVectors.matrix[ 0 ]);
       });
     });
   });

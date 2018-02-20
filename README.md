@@ -21,6 +21,14 @@ $ npm i modelscript
   ml, //see https://github.com/mljs/ml
   nlp:{ //see https://github.com/NaturalNode/natural
     ColumnVectorizer: [Class: ColumnVectorizer], //class creating sparse matrices from a corpus
+    ColumnVectorizer:{
+      get_tokens(), // Returns a distinct array of all tokens after fit_transform
+      get_vector_array(), //Returns array of arrays of strings for dependent features from sparse matrix word map
+      fit_transform(options), //Fits and transforms data by creating column vectors (a sparse matrix where each row has every word in the corpus as a column and the count of appearances in the corpus)
+      get_limited_features(options), //Returns limited sets of dependent features or all dependent features sorted by word count
+      evaluateString(testString), //returns word map with counts
+      evaluate(testString), //returns new matrix of words with counts in columns
+    }
   },
   csv:{
     loadCSV: [Function: loadCSV], //asynchronously loads CSVs, either a filepath or a remote URI
