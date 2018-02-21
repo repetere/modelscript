@@ -5,6 +5,7 @@ import { DecisionTreeRegression, DecisionTreeClassifier, } from 'ml-cart';
 import { GaussianNB, } from 'ml-naivebayes';
 import { default as MultivariateLinearRegression, } from 'ml-regression-multivariate-linear';
 import { default as PCA, } from 'ml-pca';
+import { ReinforcedLearningBase, UpperConfidenceBound, ThompsonSampling, } from './ReinforcedLearning';
 
 MachineLearning.Regression = Object.assign({},
   MachineLearning.Regression);
@@ -12,6 +13,12 @@ MachineLearning.SL = Object.assign({},
   MachineLearning.SL);
 MachineLearning.Stat = Object.assign({},
   MachineLearning.Stat);
+MachineLearning.RL = Object.assign({},
+  MachineLearning.RL, {
+    ReinforcedLearningBase,
+    UpperConfidenceBound,
+    ThompsonSampling,
+  });
 
 MachineLearning.Regression.DecisionTreeRegression = DecisionTreeRegression;
 MachineLearning.Regression.RandomForestRegression = RandomForestRegression;

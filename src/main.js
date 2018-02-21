@@ -1,5 +1,4 @@
-
-
+import * as probabilty from 'probability-distributions';
 import * as csvUtils from './csv';
 import { util as utils, } from './util';
 import { calc as calcs, } from './calc';
@@ -25,3 +24,4 @@ export const calc = calcs;
 export const ml = mls;
 export const nlp = nlps;
 export const csv = csvUtils;
+export const PD = probabilty;

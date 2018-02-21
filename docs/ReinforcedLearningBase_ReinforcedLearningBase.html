@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: ColumnVectorizer</title>
+    <title>JSDoc: Class: ReinforcedLearningBase</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: ColumnVectorizer</h1>
+    <h1 class="page-title">Class: ReinforcedLearningBase</h1>
 
     
 
@@ -28,7 +28,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>ColumnVectorizer<span class="signature">(options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {this}</span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>ReinforcedLearningBase<span class="signature">(options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {this}</span></h2>
         
     
 </header>
@@ -41,7 +41,7 @@
     
 
     
-    <h4 class="name" id="ColumnVectorizer"><span class="type-signature"></span>new ColumnVectorizer<span class="signature">(options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {this}</span></h4>
+    <h4 class="name" id="ReinforcedLearningBase"><span class="type-signature"></span>new ReinforcedLearningBase<span class="signature">(options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {this}</span></h4>
     
 
     
@@ -49,7 +49,7 @@
 
 
 <div class="description">
-    creates a new instance for classifying text data for machine learning
+    base class for reinforced learning
 </div>
 
 
@@ -159,13 +159,13 @@
 
         <tr>
             
-                <td class="name"><code>this.data</code></td>
+                <td class="name"><code>options.bounds</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;Object></span>
+<span class="param-type">Number</span>
 
 
             
@@ -175,198 +175,14 @@
 
             
 
-            <td class="description last">Array of strings</td>
+            <td class="description last">number of bounds / bandits</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>this.tokens</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Set</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Unique collection of all tokenized strings</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>this.vectors</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;Object></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Array of tokenized words with value of count of appreance in string</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>this.wordMap</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Object of all unique words, with value of 0</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>this.wordCountMap</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Object of all unique words, with value as total count of appearances</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>this.maxFeatures</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">max number of features</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>this.sortedWordCount</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;String></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">list of words as tokens sorted by total appearances</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>this.limitedFeatures</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;String></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">subset list of maxFeatures words as tokens sorted by total appearances</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>this.matrix</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;Array></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">words in sparse matrix</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>this.replacer</code></td>
+                <td class="name"><code>options.getBound</code></td>
             
 
             <td class="type">
@@ -382,7 +198,99 @@
 
             
 
-            <td class="description last">clean string function</td>
+            <td class="description last">get value of bound</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>this.bounds</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">number of bounds / bandits</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>this.last_selected</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">list of selections</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>this.total_reward</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">total rewards</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>this.iteration</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">total number of iterations</td>
         </tr>
 
     
@@ -421,7 +329,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ColumnVectorizer.js.html">ColumnVectorizer.js</a>, <a href="ColumnVectorizer.js.html#line29">line 29</a>
+        <a href="ReinforcedLearning.js.html">ReinforcedLearning.js</a>, <a href="ReinforcedLearning.js.html#line20">line 20</a>
     </li></ul></dd>
     
 
@@ -464,11 +372,6 @@
     
 
 
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>const dataset = new ms.nlp.ColumnVectorizer(csvData);</code></pre>
 
 
 

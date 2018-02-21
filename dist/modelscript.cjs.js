@@ -4,6 +4,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
+var probabilty = require('probability-distributions');
 var http = require('http');
 var https = require('https');
 var validURL = _interopDefault(require('valid-url'));
@@ -433,12 +434,229 @@ const calc$1 = {
   assocationRuleLearning,
 };
 
+/**
+ * base interface class for reinforced learning
+ * @class ReinforcedLearningBase
+ * @memberOf ml
+ */
+class ReinforcedLearningBase{
+  /**
+   * base class for reinforced learning
+   * @param {Object} [options={}]
+   * @prop {Number} options.bounds - number of bounds / bandits
+   * @prop {Function} options.getBound - get value of bound
+   * @prop {Number} this.bounds - number of bounds / bandits
+   * @prop {Array} this.last_selected - list of selections
+   * @prop {Number} this.total_reward - total rewards
+   * @prop {Number} this.iteration - total number of iterations
+   * @returns {this} 
+   */
+  constructor(options = {}) {
+    this.bounds = options.bounds || 5;
+    this.getBound = options.getBound || function getBound(bound) {
+      return bound;
+    };
+    this.last_selected = [];
+    this.total_reward = 0;
+    this.iteration = 0;
+    return this;
+  }
+  /** 
+   * interface instance method for reinforced learning step
+  */
+  learn() {
+    throw new ReferenceError('Missing learn method implementation');
+  }
+  /** 
+   * interface instance method for reinforced training step
+  */
+  train() {
+    throw new ReferenceError('Missing train method implementation');
+  }
+  /** 
+   * interface instance method for reinforced prediction step
+  */
+  predict() {
+    throw new ReferenceError('Missing predict method implementation');
+  }
+}
+
+/**
+ * Implementation of the Upper Confidence Bound algorithm
+ * @class UpperConfidenceBound
+ * @memberOf ml
+ */
+class UpperConfidenceBound extends ReinforcedLearningBase{
+  /**
+   * creates a new instance of the Upper confidence bound(UCB) algorithm. UCB is based on the principle of optimism in the face of uncertainty, which is to choose your actions as if the environment (in this case bandit) is as nice as is plausibly possible
+   * @see {@link http://banditalgs.com/2016/09/18/the-upper-confidence-bound-algorithm/}
+   * @example
+   * const dataset = new ms.ml.UpperConfidenceBound({bounds:10});
+   * @param {Object} [options={}]
+   * @prop {Map} this.numbers_of_selections - map of all bound selections
+   * @prop {Map} this.sums_of_rewards - successful bound selections
+   * @returns {this} 
+   */
+  constructor(options = {}) {
+    super(options);
+    this.numbers_of_selections = new Map();
+    this.sums_of_rewards = new Map();
+    for (let i = 0; i < this.bounds; i++){
+      this.numbers_of_selections.set(i, 0);
+      this.sums_of_rewards.set(i, 0);
+    }
+    return this;
+  }
+  /**
+   * returns next action based off of the upper confidence bound
+   * @return {number} returns bound selection
+   */
+  predict() {
+    let ad = 0; //ad is each bandit
+    let max_upper_bound = 0;
+    for (let i = 0; i < this.bounds; i++){
+      let upper_bound = 1e400;
+      if (this.numbers_of_selections.get( i ) > 0) {
+        // if selected at least once
+        let average_reward = this.sums_of_rewards.get( i ) / this.numbers_of_selections.get( i );
+        let delta_i = Math.sqrt(3 / 2 * Math.log(this.iteration + 1) / this.numbers_of_selections.get( i ));
+        upper_bound = average_reward + delta_i;
+      } 
+      if (upper_bound > max_upper_bound) { //get max at each round
+        max_upper_bound = upper_bound;
+        ad = i;
+      }
+    }
+    return ad;
+  }
+  learn(options={}) {
+    const { ucbRow, getBound, } = options;
+    let ad = this.predict();
+    this.last_selected.push(ad);
+    this.numbers_of_selections.set(ad,  this.numbers_of_selections.get(ad) + 1);
+    let reward = ucbRow[getBound(ad)];
+    this.sums_of_rewards.set(ad,  this.sums_of_rewards.get(ad) + reward);
+    this.total_reward = this.total_reward + reward;
+    this.iteration++;
+    return this;
+  }
+  train(options) {
+    const {
+      ucbRow,
+      getBound = this.getBound,
+    } = options;
+    if (Array.isArray(ucbRow)) {
+      for (let i in ucbRow) {
+        this.learn({
+          ucbRow: ucbRow[i],
+          getBound,
+        });
+      }
+    } else {
+      this.learn({
+        ucbRow,
+        getBound,
+      });
+    }
+    return this;
+  }
+}
+
+/**
+ * class creating sparse matrices from a corpus
+ * @class UpperConfidenceBound
+ * @memberOf ml
+ */
+class ThompsonSampling extends ReinforcedLearningBase{
+  /**
+   * creates a new instance for classifying text data for machine learning
+   * @example
+   * const dataset = new ms.nlp.ColumnVectorizer(csvData);
+   * @param {Object} [options={}]
+   * @prop {Object[]} this.data - Array of strings
+   * @prop {Set} this.tokens - Unique collection of all tokenized strings
+   * @prop {Object[]} this.vectors - Array of tokenized words with value of count of appreance in string
+   * @prop {Object} this.wordMap - Object of all unique words, with value of 0
+   * @prop {Function} this.replacer - clean string function
+   * @returns {this} 
+   */
+  constructor(options = {}) {
+    super(options);
+    this.numbers_of_rewards_1 = new Map();
+    this.numbers_of_rewards_0 = new Map();
+    for (let i = 0; i < this.bounds; i++){
+      this.numbers_of_rewards_1.set(i, 0);
+      this.numbers_of_rewards_0.set(i, 0);
+    }
+    return this;
+  }
+  /**
+   * returns new matrix of words with counts in columns
+   * @example 
+ColumnVectorizer.evaluate('I would rate everything Great, views Great, food Great') => [ [ 0, 1, 3, 0, 0, 0, 0, 0, 1 ] ]
+   * @param {String} testString 
+   * @return {number[][]} sparse matrix row for new classification predictions
+   */
+  predict() {
+    let ad = 0; //ad is each bandit
+    let max_random = 0;
+    for (let i = 0; i < this.bounds; i++){
+      let random_beta = probabilty.rbeta(1, this.numbers_of_rewards_1.get(i) + 1, this.numbers_of_rewards_0.get(i) + 1);
+      if (random_beta > max_random) {
+        max_random = random_beta;
+        ad = i;
+      }
+    }
+    return ad;
+  }
+  learn(options = {}) {
+    const { tsRow, getBound, } = options;
+    let ad = this.predict();
+    this.last_selected.push(ad);
+    let reward = tsRow[ getBound(ad) ];
+    if (reward === 1) {
+      this.numbers_of_rewards_1.set(ad,  this.numbers_of_rewards_1.get(ad) + 1);
+    } else {
+      this.numbers_of_rewards_0.set(ad,  this.numbers_of_rewards_0.get(ad) + 1);
+    }
+    this.total_reward = this.total_reward + reward;
+    this.iteration++;
+    return this;
+  }
+  train(options) {
+    const {
+      tsRow,
+      getBound = this.getBound,
+    } = options;
+    if (Array.isArray(tsRow)) {
+      for (let i in tsRow) {
+        this.learn({
+          tsRow: tsRow[i],
+          getBound,
+        });
+      }
+    } else {
+      this.learn({
+        tsRow,
+        getBound,
+      });
+    }
+    return this;
+  }
+}
+
 MachineLearning.Regression = Object.assign({},
   MachineLearning.Regression);
 MachineLearning.SL = Object.assign({},
   MachineLearning.SL);
 MachineLearning.Stat = Object.assign({},
   MachineLearning.Stat);
+MachineLearning.RL = Object.assign({},
+  MachineLearning.RL, {
+    ReinforcedLearningBase,
+    UpperConfidenceBound,
+    ThompsonSampling,
+  });
 
 MachineLearning.Regression.DecisionTreeRegression = mlCart.DecisionTreeRegression;
 MachineLearning.Regression.RandomForestRegression = mlRandomForest.RandomForestRegression;
@@ -1269,6 +1487,7 @@ const calc$$1 = calc$1;
 const ml$$1 = ml$1;
 const nlp$$1 = nlp$1;
 const csv$1 = csvUtils;
+const PD = probabilty;
 
 exports.loadCSV = loadCSV;
 exports.loadCSVURI = loadCSVURI;
@@ -1280,4 +1499,5 @@ exports.calc = calc$$1;
 exports.ml = ml$$1;
 exports.nlp = nlp$$1;
 exports.csv = csv$1;
+exports.PD = PD;
 exports.DataSet = DataSet;

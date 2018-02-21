@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ReinforcedLearning.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ReinforcedLearning.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as PD from 'probability-distributions';
+
+/**
+ * base interface class for reinforced learning
+ * @class ReinforcedLearningBase
+ * @memberOf ml
+ */
+export class ReinforcedLearningBase{
+  /**
+   * base class for reinforced learning
+   * @param {Object} [options={}]
+   * @prop {Number} options.bounds - number of bounds / bandits
+   * @prop {Function} options.getBound - get value of bound
+   * @prop {Number} this.bounds - number of bounds / bandits
+   * @prop {Array} this.last_selected - list of selections
+   * @prop {Number} this.total_reward - total rewards
+   * @prop {Number} this.iteration - total number of iterations
+   * @returns {this} 
+   */
+  constructor(options = {}) {
+    this.bounds = options.bounds || 5;
+    this.getBound = options.getBound || function getBound(bound) {
+      return bound;
+    };
+    this.last_selected = [];
+    this.total_reward = 0;
+    this.iteration = 0;
+    return this;
+  }
+  /** 
+   * interface instance method for reinforced learning step
+  */
+  learn() {
+    throw new ReferenceError('Missing learn method implementation');
+  }
+  /** 
+   * interface instance method for reinforced training step
+  */
+  train() {
+    throw new ReferenceError('Missing train method implementation');
+  }
+  /** 
+   * interface instance method for reinforced prediction step
+  */
+  predict() {
+    throw new ReferenceError('Missing predict method implementation');
+  }
+}
+
+/**
+ * Implementation of the Upper Confidence Bound algorithm
+ * @class UpperConfidenceBound
+ * @memberOf ml
+ */
+export class UpperConfidenceBound extends ReinforcedLearningBase{
+  /**
+   * creates a new instance of the Upper confidence bound(UCB) algorithm. UCB is based on the principle of optimism in the face of uncertainty, which is to choose your actions as if the environment (in this case bandit) is as nice as is plausibly possible
+   * @see {@link http://banditalgs.com/2016/09/18/the-upper-confidence-bound-algorithm/}
+   * @example
+   * const dataset = new ms.ml.UpperConfidenceBound({bounds:10});
+   * @param {Object} [options={}]
+   * @prop {Map} this.numbers_of_selections - map of all bound selections
+   * @prop {Map} this.sums_of_rewards - successful bound selections
+   * @returns {this} 
+   */
+  constructor(options = {}) {
+    super(options);
+    this.numbers_of_selections = new Map();
+    this.sums_of_rewards = new Map();
+    for (let i = 0; i &lt; this.bounds; i++){
+      this.numbers_of_selections.set(i, 0);
+      this.sums_of_rewards.set(i, 0);
+    }
+    return this;
+  }
+  /**
+   * returns next action based off of the upper confidence bound
+   * @return {number} returns bound selection
+   */
+  predict() {
+    let ad = 0; //ad is each bandit
+    let max_upper_bound = 0;
+    for (let i = 0; i &lt; this.bounds; i++){
+      let upper_bound = 1e400;
+      if (this.numbers_of_selections.get( i ) > 0) {
+        // if selected at least once
+        let average_reward = this.sums_of_rewards.get( i ) / this.numbers_of_selections.get( i );
+        let delta_i = Math.sqrt(3 / 2 * Math.log(this.iteration + 1) / this.numbers_of_selections.get( i ));
+        upper_bound = average_reward + delta_i;
+      } 
+      if (upper_bound > max_upper_bound) { //get max at each round
+        max_upper_bound = upper_bound;
+        ad = i;
+      }
+    }
+    return ad;
+  }
+  /**
+   * single step trainning method
+   * @param {Object} ucbRow - row of bound selections
+   * @param {Function} [getBound=this.getBound] - select value of ucbRow by selection value
+   * @return {this} 
+   */
+  learn(options={}) {
+    const { ucbRow, getBound, } = options;
+    let ad = this.predict();
+    this.last_selected.push(ad);
+    this.numbers_of_selections.set(ad,  this.numbers_of_selections.get(ad) + 1);
+    let reward = ucbRow[getBound(ad)];
+    this.sums_of_rewards.set(ad,  this.sums_of_rewards.get(ad) + reward);
+    this.total_reward = this.total_reward + reward;
+    this.iteration++;
+    return this;
+  }
+  /**
+   * training method for upper confidence bound calculations
+   * @param {Object|Object[]} ucbRow - row of bound selections
+   * @param {Function} [getBound=this.getBound] - select value of ucbRow by selection value
+   * @return {this} 
+   */
+  train(options) {
+    const {
+      ucbRow,
+      getBound = this.getBound,
+    } = options;
+    if (Array.isArray(ucbRow)) {
+      for (let i in ucbRow) {
+        this.learn({
+          ucbRow: ucbRow[i],
+          getBound,
+        });
+      }
+    } else {
+      this.learn({
+        ucbRow,
+        getBound,
+      });
+    }
+    return this;
+  }
+}
+
+/**
+ * Implementation of the Thompson Sampling algorithm
+ * @class ThompsonSampling
+ * @memberOf ml
+ */
+export class ThompsonSampling extends ReinforcedLearningBase{
+  /**
+   * creates a new instance of the Thompson Sampling(TS) algorithm. TS a heuristic for choosing actions that addresses the exploration-exploitation dilemma in the multi-armed bandit problem. It consists in choosing the action that maximizes the expected reward with respect to a randomly drawn belief
+   * @see {@link https://en.wikipedia.org/wiki/Thompson_sampling}
+   * @example
+   * const dataset = new ms.ml.ThompsonSampling({bounds:10});
+   * @param {Object} [options={}]
+   * @prop {Map} this.numbers_of_rewards_1 - map of all reward 1 selections
+   * @prop {Map} this.numbers_of_rewards_0 - map of all reward 0 selections
+   * @returns {this} 
+   */
+  constructor(options = {}) {
+    super(options);
+    this.numbers_of_rewards_1 = new Map();
+    this.numbers_of_rewards_0 = new Map();
+    for (let i = 0; i &lt; this.bounds; i++){
+      this.numbers_of_rewards_1.set(i, 0);
+      this.numbers_of_rewards_0.set(i, 0);
+    }
+    return this;
+  }
+  /**
+   * returns next action based off of the thompson sampling
+   * @return {number} returns thompson sample
+   */
+  predict() {
+    let ad = 0; //ad is each bandit
+    let max_random = 0;
+    for (let i = 0; i &lt; this.bounds; i++){
+      let random_beta = PD.rbeta(1, this.numbers_of_rewards_1.get(i) + 1, this.numbers_of_rewards_0.get(i) + 1);
+      if (random_beta > max_random) {
+        max_random = random_beta;
+        ad = i;
+      }
+    }
+    return ad;
+  }
+  /**
+   * single step trainning method
+   * @param {Object} tsRow - row of bound selections
+   * @param {Function} [getBound=this.getBound] - select value of tsRow by selection value
+   * @return {this} 
+   */
+  learn(options = {}) {
+    const { tsRow, getBound, } = options;
+    let ad = this.predict();
+    this.last_selected.push(ad);
+    let reward = tsRow[ getBound(ad) ];
+    if (reward === 1) {
+      this.numbers_of_rewards_1.set(ad,  this.numbers_of_rewards_1.get(ad) + 1);
+    } else {
+      this.numbers_of_rewards_0.set(ad,  this.numbers_of_rewards_0.get(ad) + 1);
+    }
+    this.total_reward = this.total_reward + reward;
+    this.iteration++;
+    return this;
+  }
+  /**
+   * training method for thompson sampling calculations
+   * @param {Object|Object[]} tsRow - row of bound selections
+   * @param {Function} [getBound=this.getBound] - select value of tsRow by selection value
+   * @return {this} 
+   */
+  train(options) {
+    const {
+      tsRow,
+      getBound = this.getBound,
+    } = options;
+    if (Array.isArray(tsRow)) {
+      for (let i in tsRow) {
+        this.learn({
+          tsRow: tsRow[i],
+          getBound,
+        });
+      }
+    } else {
+      this.learn({
+        tsRow,
+        getBound,
+      });
+    }
+    return this;
+  }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ColumnVectorizer_ColumnVectorizer.html">ColumnVectorizer</a></li><li><a href="DataSet_DataSet.html">DataSet</a></li><li><a href="ml.ReinforcedLearningBase.html">ReinforcedLearningBase</a></li><li><a href="ml.ThompsonSampling.html">ThompsonSampling</a></li><li><a href="ml.UpperConfidenceBound.html">UpperConfidenceBound</a></li><li><a href="nlp.ColumnVectorizer.html">ColumnVectorizer</a></li><li><a href="preprocessing.DataSet.html">DataSet</a></li><li><a href="ReinforcedLearningBase_ReinforcedLearningBase.html">ReinforcedLearningBase</a></li><li><a href="ThompsonSampling_ThompsonSampling.html">ThompsonSampling</a></li><li><a href="UpperConfidenceBound_UpperConfidenceBound.html">UpperConfidenceBound</a></li></ul><h3>Namespaces</h3><ul><li><a href="calc.html">calc</a></li><li><a href="cross_validation.html">cross_validation</a></li><li><a href="ml.html">ml</a></li><li><a href="nlp.html">nlp</a></li><li><a href="preprocessing.html">preprocessing</a></li><li><a href="util.html">util</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Feb 21 2018 16:22:20 GMT-0500 (EST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: DataSet</title>
+    <title>JSDoc: Class: ThompsonSampling</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: DataSet</h1>
+    <h1 class="page-title">Class: ThompsonSampling</h1>
 
     
 
@@ -28,7 +28,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>DataSet<span class="signature">(dataset)</span><span class="type-signature"> &rarr; {this}</span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>ThompsonSampling<span class="signature">(options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {this}</span></h2>
         
     
 </header>
@@ -41,7 +41,7 @@
     
 
     
-    <h4 class="name" id="DataSet"><span class="type-signature"></span>new DataSet<span class="signature">(dataset)</span><span class="type-signature"> &rarr; {this}</span></h4>
+    <h4 class="name" id="ThompsonSampling"><span class="type-signature"></span>new ThompsonSampling<span class="signature">(options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {this}</span></h4>
     
 
     
@@ -49,7 +49,7 @@
 
 
 <div class="description">
-    creates a new raw data instance for preprocessing data for machine learning
+    creates a new instance of the Thompson Sampling(TS) algorithm. TS a heuristic for choosing actions that addresses the exploration-exploitation dilemma in the multi-armed bandit problem. It consists in choosing the action that maximizes the expected reward with respect to a randomly drawn belief
 </div>
 
 
@@ -73,6 +73,80 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    {}
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
 
         
 
@@ -85,13 +159,13 @@
 
         <tr>
             
-                <td class="name"><code>dataset</code></td>
+                <td class="name"><code>this.numbers_of_rewards_1</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;Object></span>
+<span class="param-type">Map</span>
 
 
             
@@ -101,14 +175,35 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">map of all reward 1 selections</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>this.numbers_of_rewards_0</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Map</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">map of all reward 0 selections</td>
         </tr>
 
     
     </tbody>
 </table>
-
-
 
 
 
@@ -142,12 +237,19 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="DataSet.js.html">DataSet.js</a>, <a href="DataSet.js.html#line17">line 17</a>
+        <a href="ReinforcedLearning.js.html">ReinforcedLearning.js</a>, <a href="ReinforcedLearning.js.html#line159">line 159</a>
     </li></ul></dd>
     
 
     
 
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://en.wikipedia.org/wiki/Thompson_sampling">https://en.wikipedia.org/wiki/Thompson_sampling</a></li>
+        </ul>
+    </dd>
     
 
     
@@ -189,7 +291,7 @@
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>const dataset = new ms.DataSet(csvData);</code></pre>
+    <pre class="prettyprint"><code>const dataset = new ms.ml.ThompsonSampling({bounds:10});</code></pre>
 
 
 

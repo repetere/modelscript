@@ -5,6 +5,12 @@
 <dd></dd>
 <dt><a href="#DataSet">DataSet</a></dt>
 <dd></dd>
+<dt><a href="#ReinforcedLearningBase">ReinforcedLearningBase</a></dt>
+<dd></dd>
+<dt><a href="#UpperConfidenceBound">UpperConfidenceBound</a></dt>
+<dd></dd>
+<dt><a href="#ThompsonSampling">ThompsonSampling</a></dt>
+<dd></dd>
 </dl>
 
 ## Objects
@@ -411,6 +417,184 @@ dataset.fitColumns({
 //     ...
 //   ]
 ```
+<a name="ReinforcedLearningBase"></a>
+
+## ReinforcedLearningBase
+**Kind**: global class  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| options.bounds | <code>Number</code> | number of bounds / bandits |
+| options.getBound | <code>function</code> | get value of bound |
+| this.bounds | <code>Number</code> | number of bounds / bandits |
+| this.last_selected | <code>Array</code> | list of selections |
+| this.total_reward | <code>Number</code> | total rewards |
+| this.iteration | <code>Number</code> | total number of iterations |
+
+
+* [ReinforcedLearningBase](#ReinforcedLearningBase)
+    * [new ReinforcedLearningBase([options])](#new_ReinforcedLearningBase_new)
+    * [.learn()](#ReinforcedLearningBase+learn)
+    * [.train()](#ReinforcedLearningBase+train)
+    * [.predict()](#ReinforcedLearningBase+predict)
+
+<a name="new_ReinforcedLearningBase_new"></a>
+
+### new ReinforcedLearningBase([options])
+base class for reinforced learning
+
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [options] | <code>Object</code> | <code>{}</code> | 
+
+<a name="ReinforcedLearningBase+learn"></a>
+
+### reinforcedLearningBase.learn()
+interface instance method for reinforced learning step
+
+**Kind**: instance method of [<code>ReinforcedLearningBase</code>](#ReinforcedLearningBase)  
+<a name="ReinforcedLearningBase+train"></a>
+
+### reinforcedLearningBase.train()
+interface instance method for reinforced training step
+
+**Kind**: instance method of [<code>ReinforcedLearningBase</code>](#ReinforcedLearningBase)  
+<a name="ReinforcedLearningBase+predict"></a>
+
+### reinforcedLearningBase.predict()
+interface instance method for reinforced prediction step
+
+**Kind**: instance method of [<code>ReinforcedLearningBase</code>](#ReinforcedLearningBase)  
+<a name="UpperConfidenceBound"></a>
+
+## UpperConfidenceBound
+**Kind**: global class  
+**See**: [http://banditalgs.com/2016/09/18/the-upper-confidence-bound-algorithm/](http://banditalgs.com/2016/09/18/the-upper-confidence-bound-algorithm/)  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| this.numbers_of_selections | <code>Map</code> | map of all bound selections |
+| this.sums_of_rewards | <code>Map</code> | successful bound selections |
+
+
+* [UpperConfidenceBound](#UpperConfidenceBound)
+    * [new UpperConfidenceBound([options])](#new_UpperConfidenceBound_new)
+    * [.predict()](#UpperConfidenceBound+predict) ⇒ <code>number</code>
+    * [.learn(ucbRow, [getBound])](#UpperConfidenceBound+learn) ⇒ <code>this</code>
+    * [.train(ucbRow, [getBound])](#UpperConfidenceBound+train) ⇒ <code>this</code>
+
+<a name="new_UpperConfidenceBound_new"></a>
+
+### new UpperConfidenceBound([options])
+creates a new instance of the Upper confidence bound(UCB) algorithm. UCB is based on the principle of optimism in the face of uncertainty, which is to choose your actions as if the environment (in this case bandit) is as nice as is plausibly possible
+
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [options] | <code>Object</code> | <code>{}</code> | 
+
+**Example**  
+```js
+const dataset = new ms.ml.UpperConfidenceBound({bounds:10});
+```
+<a name="UpperConfidenceBound+predict"></a>
+
+### upperConfidenceBound.predict() ⇒ <code>number</code>
+returns next action based off of the upper confidence bound
+
+**Kind**: instance method of [<code>UpperConfidenceBound</code>](#UpperConfidenceBound)  
+**Returns**: <code>number</code> - returns bound selection  
+<a name="UpperConfidenceBound+learn"></a>
+
+### upperConfidenceBound.learn(ucbRow, [getBound]) ⇒ <code>this</code>
+single step trainning method
+
+**Kind**: instance method of [<code>UpperConfidenceBound</code>](#UpperConfidenceBound)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| ucbRow | <code>Object</code> |  | row of bound selections |
+| [getBound] | <code>function</code> | <code>this.getBound</code> | select value of ucbRow by selection value |
+
+<a name="UpperConfidenceBound+train"></a>
+
+### upperConfidenceBound.train(ucbRow, [getBound]) ⇒ <code>this</code>
+training method for upper confidence bound calculations
+
+**Kind**: instance method of [<code>UpperConfidenceBound</code>](#UpperConfidenceBound)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| ucbRow | <code>Object</code> \| <code>Array.&lt;Object&gt;</code> |  | row of bound selections |
+| [getBound] | <code>function</code> | <code>this.getBound</code> | select value of ucbRow by selection value |
+
+<a name="ThompsonSampling"></a>
+
+## ThompsonSampling
+**Kind**: global class  
+**See**: [https://en.wikipedia.org/wiki/Thompson_sampling](https://en.wikipedia.org/wiki/Thompson_sampling)  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| this.numbers_of_rewards_1 | <code>Map</code> | map of all reward 1 selections |
+| this.numbers_of_rewards_0 | <code>Map</code> | map of all reward 0 selections |
+
+
+* [ThompsonSampling](#ThompsonSampling)
+    * [new ThompsonSampling([options])](#new_ThompsonSampling_new)
+    * [.predict()](#ThompsonSampling+predict) ⇒ <code>number</code>
+    * [.learn(tsRow, [getBound])](#ThompsonSampling+learn) ⇒ <code>this</code>
+    * [.train(tsRow, [getBound])](#ThompsonSampling+train) ⇒ <code>this</code>
+
+<a name="new_ThompsonSampling_new"></a>
+
+### new ThompsonSampling([options])
+creates a new instance of the Thompson Sampling(TS) algorithm. TS a heuristic for choosing actions that addresses the exploration-exploitation dilemma in the multi-armed bandit problem. It consists in choosing the action that maximizes the expected reward with respect to a randomly drawn belief
+
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [options] | <code>Object</code> | <code>{}</code> | 
+
+**Example**  
+```js
+const dataset = new ms.ml.ThompsonSampling({bounds:10});
+```
+<a name="ThompsonSampling+predict"></a>
+
+### thompsonSampling.predict() ⇒ <code>number</code>
+returns next action based off of the thompson sampling
+
+**Kind**: instance method of [<code>ThompsonSampling</code>](#ThompsonSampling)  
+**Returns**: <code>number</code> - returns thompson sample  
+<a name="ThompsonSampling+learn"></a>
+
+### thompsonSampling.learn(tsRow, [getBound]) ⇒ <code>this</code>
+single step trainning method
+
+**Kind**: instance method of [<code>ThompsonSampling</code>](#ThompsonSampling)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| tsRow | <code>Object</code> |  | row of bound selections |
+| [getBound] | <code>function</code> | <code>this.getBound</code> | select value of tsRow by selection value |
+
+<a name="ThompsonSampling+train"></a>
+
+### thompsonSampling.train(tsRow, [getBound]) ⇒ <code>this</code>
+training method for thompson sampling calculations
+
+**Kind**: instance method of [<code>ThompsonSampling</code>](#ThompsonSampling)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| tsRow | <code>Object</code> \| <code>Array.&lt;Object&gt;</code> |  | row of bound selections |
+| [getBound] | <code>function</code> | <code>this.getBound</code> | select value of tsRow by selection value |
+
 <a name="calc"></a>
 
 ## calc : <code>object</code>
@@ -561,6 +745,42 @@ class for manipulating an array of objects, typically from CSV data
 ## ml : <code>object</code>
 **Kind**: global namespace  
 **See**: [https://github.com/mljs/ml](https://github.com/mljs/ml)  
+
+* [ml](#ml) : <code>object</code>
+    * [.ReinforcedLearningBase](#ml.ReinforcedLearningBase)
+        * [new ReinforcedLearningBase()](#new_ml.ReinforcedLearningBase_new)
+    * [.UpperConfidenceBound](#ml.UpperConfidenceBound)
+        * [new UpperConfidenceBound()](#new_ml.UpperConfidenceBound_new)
+    * [.ThompsonSampling](#ml.ThompsonSampling)
+        * [new ThompsonSampling()](#new_ml.ThompsonSampling_new)
+
+<a name="ml.ReinforcedLearningBase"></a>
+
+### ml.ReinforcedLearningBase
+**Kind**: static class of [<code>ml</code>](#ml)  
+<a name="new_ml.ReinforcedLearningBase_new"></a>
+
+#### new ReinforcedLearningBase()
+base interface class for reinforced learning
+
+<a name="ml.UpperConfidenceBound"></a>
+
+### ml.UpperConfidenceBound
+**Kind**: static class of [<code>ml</code>](#ml)  
+<a name="new_ml.UpperConfidenceBound_new"></a>
+
+#### new UpperConfidenceBound()
+Implementation of the Upper Confidence Bound algorithm
+
+<a name="ml.ThompsonSampling"></a>
+
+### ml.ThompsonSampling
+**Kind**: static class of [<code>ml</code>](#ml)  
+<a name="new_ml.ThompsonSampling_new"></a>
+
+#### new ThompsonSampling()
+Implementation of the Thompson Sampling algorithm
+
 <a name="nlp"></a>
 
 ## nlp : <code>object</code>
