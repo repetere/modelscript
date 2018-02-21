@@ -1,7 +1,7 @@
-import * as probabilty from 'probability-distributions';
 import * as csvUtils from './csv';
 import { util as utils, } from './util';
 import { calc as calcs, } from './calc';
+import { PD as probabilty, } from './pd';
 import { ml as mls, } from './ml';
 import { nlp as nlps, } from './nlp';
 import { DataSet, } from './DataSet';

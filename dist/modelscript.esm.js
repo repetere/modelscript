@@ -1,5 +1,3 @@
-import { rbeta } from 'probability-distributions';
-import * as probabilty from 'probability-distributions';
 import { get } from 'http';
 import { get as get$1 } from 'https';
 import validURL from 'valid-url';
@@ -9,6 +7,8 @@ import range from 'lodash.range';
 import rangeRight from 'lodash.rangeright';
 import { FPGrowth } from 'node-fpgrowth';
 import ObjectValues from 'object.values';
+import { rbeta } from 'probability-distributions';
+import * as probabilty from 'probability-distributions';
 import { RandomForestClassifier, RandomForestRegression } from 'ml-random-forest';
 import LogisticRegression from 'ml-logistic-regression';
 import { DecisionTreeClassifier, DecisionTreeRegression } from 'ml-cart';
@@ -430,6 +430,12 @@ const calc$1 = {
 };
 
 /**
+ * @namespace
+ * @see {@link https://github.com/Mattasher/probability-distributions} 
+ */
+const PD$1 = Object.assign({}, probabilty);
+
+/**
  * base interface class for reinforced learning
  * @class ReinforcedLearningBase
  * @memberOf ml
@@ -524,6 +530,12 @@ class UpperConfidenceBound extends ReinforcedLearningBase{
     }
     return ad;
   }
+  /**
+   * single step trainning method
+   * @param {Object} ucbRow - row of bound selections
+   * @param {Function} [getBound=this.getBound] - select value of ucbRow by selection value
+   * @return {this} 
+   */
   learn(options={}) {
     const { ucbRow, getBound, } = options;
     let ad = this.predict();
@@ -535,6 +547,12 @@ class UpperConfidenceBound extends ReinforcedLearningBase{
     this.iteration++;
     return this;
   }
+  /**
+   * training method for upper confidence bound calculations
+   * @param {Object|Object[]} ucbRow - row of bound selections
+   * @param {Function} [getBound=this.getBound] - select value of ucbRow by selection value
+   * @return {this} 
+   */
   train(options) {
     const {
       ucbRow,
@@ -558,21 +576,19 @@ class UpperConfidenceBound extends ReinforcedLearningBase{
 }
 
 /**
- * class creating sparse matrices from a corpus
- * @class UpperConfidenceBound
+ * Implementation of the Thompson Sampling algorithm
+ * @class ThompsonSampling
  * @memberOf ml
  */
 class ThompsonSampling extends ReinforcedLearningBase{
   /**
-   * creates a new instance for classifying text data for machine learning
+   * creates a new instance of the Thompson Sampling(TS) algorithm. TS a heuristic for choosing actions that addresses the exploration-exploitation dilemma in the multi-armed bandit problem. It consists in choosing the action that maximizes the expected reward with respect to a randomly drawn belief
+   * @see {@link https://en.wikipedia.org/wiki/Thompson_sampling}
    * @example
-   * const dataset = new ms.nlp.ColumnVectorizer(csvData);
+   * const dataset = new ms.ml.ThompsonSampling({bounds:10});
    * @param {Object} [options={}]
-   * @prop {Object[]} this.data - Array of strings
-   * @prop {Set} this.tokens - Unique collection of all tokenized strings
-   * @prop {Object[]} this.vectors - Array of tokenized words with value of count of appreance in string
-   * @prop {Object} this.wordMap - Object of all unique words, with value of 0
-   * @prop {Function} this.replacer - clean string function
+   * @prop {Map} this.numbers_of_rewards_1 - map of all reward 1 selections
+   * @prop {Map} this.numbers_of_rewards_0 - map of all reward 0 selections
    * @returns {this} 
    */
   constructor(options = {}) {
@@ -586,11 +602,8 @@ class ThompsonSampling extends ReinforcedLearningBase{
     return this;
   }
   /**
-   * returns new matrix of words with counts in columns
-   * @example 
-ColumnVectorizer.evaluate('I would rate everything Great, views Great, food Great') => [ [ 0, 1, 3, 0, 0, 0, 0, 0, 1 ] ]
-   * @param {String} testString 
-   * @return {number[][]} sparse matrix row for new classification predictions
+   * returns next action based off of the thompson sampling
+   * @return {number} returns thompson sample
    */
   predict() {
     let ad = 0; //ad is each bandit
@@ -604,6 +617,12 @@ ColumnVectorizer.evaluate('I would rate everything Great, views Great, food Grea
     }
     return ad;
   }
+  /**
+   * single step trainning method
+   * @param {Object} tsRow - row of bound selections
+   * @param {Function} [getBound=this.getBound] - select value of tsRow by selection value
+   * @return {this} 
+   */
   learn(options = {}) {
     const { tsRow, getBound, } = options;
     let ad = this.predict();
@@ -618,6 +637,12 @@ ColumnVectorizer.evaluate('I would rate everything Great, views Great, food Grea
     this.iteration++;
     return this;
   }
+  /**
+   * training method for thompson sampling calculations
+   * @param {Object|Object[]} tsRow - row of bound selections
+   * @param {Function} [getBound=this.getBound] - select value of tsRow by selection value
+   * @return {this} 
+   */
   train(options) {
     const {
       tsRow,
@@ -1482,6 +1507,6 @@ const calc$$1 = calc$1;
 const ml$$1 = ml$1;
 const nlp$$1 = nlp$1;
 const csv$1 = csvUtils;
-const PD = probabilty;
+const PD$$1 = PD$1;
 
-export { loadCSV, loadCSVURI, preprocessing, util$$1 as util, cross_validation$$1 as cross_validation, model_selection, calc$$1 as calc, ml$$1 as ml, nlp$$1 as nlp, csv$1 as csv, PD, DataSet };
+export { loadCSV, loadCSVURI, preprocessing, util$$1 as util, cross_validation$$1 as cross_validation, model_selection, calc$$1 as calc, ml$$1 as ml, nlp$$1 as nlp, csv$1 as csv, PD$$1 as PD, DataSet };

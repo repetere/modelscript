@@ -18,10 +18,20 @@ $ npm i modelscript
 
 ```javascript
 "modelscript" : {
-  ml, //see https://github.com/mljs/ml
+  ml:{ //see https://github.com/mljs/ml
+    UpperConfidenceBound [Class: UpperConfidenceBound]{ // Implementation of the Upper Confidence Bound algorithm
+      predict(), //returns next action based off of the upper confidence bound
+      learn(), //single step trainning method
+      train(), //training method for upper confidence bound calculations
+    },
+    ThompsonSampling [Class: ThompsonSampling]{ //Implementation of the Thompson Sampling algorithm
+      predict(), //returns next action based off of the thompson sampling
+      learn(), //single step trainning method
+      train(), //training method for thompson sampling calculations
+    },
+  },
   nlp:{ //see https://github.com/NaturalNode/natural
-    ColumnVectorizer: [Class: ColumnVectorizer], //class creating sparse matrices from a corpus
-    ColumnVectorizer:{
+    ColumnVectorizer [Class: ColumnVectorizer]{ //class creating sparse matrices from a corpus
       get_tokens(), // Returns a distinct array of all tokens after fit_transform
       get_vector_array(), //Returns array of arrays of strings for dependent features from sparse matrix word map
       fit_transform(options), //Fits and transforms data by creating column vectors (a sparse matrix where each row has every word in the corpus as a column and the count of appearances in the corpus)
@@ -40,20 +50,18 @@ $ npm i modelscript
     cross_validate_score: [Function: cross_validate_score],//test model variance and bias
     grid_search: [Function: grid_search], // tune models with grid search for optimal performance
   },
-  DataSet: {
-    Class DataSet: { //class for manipulating an array of objects (typically from CSV data)
-      columnMatrix(vectors), //returns a matrix of values by combining column arrays into a matrix
-      columnArray(columnName, options), // - returns a new array of a selected column from an array of objects, can filter, scale and replace values
-      columnReplace(columnName, options), // - returns a new array of a selected column from an array of objects and replaces empty values, encodes values and scales values
-      labelEncoder(columnName, options), // - returns a new array and label encodes a selected column
-      labelDecode(columnName, options), // - returns a new array and decodes an encoded column back to the original array values
-      oneHotEncoder(columnName, options), // - returns a new object of one hot encoded values
-      columnMatrix(columnName, options), // - returns a matrix of values from multiple columns
-      columnReducer(newColumnName, options), // - returns a new array of a selected column that is passed a reducer function, this is used to create new columns for aggregate statistics
-      columnMerge(name, data), // - returns a new column that is merged onto the data set
-      filterColumn(options), // - filtered rows of data,
-      fitColumns(options), // - mutates data property of DataSet by replacing multiple columns in a single command
-    }
+  DataSet [Class: DataSet]: { //class for manipulating an array of objects (typically from CSV data)
+    columnMatrix(vectors), //returns a matrix of values by combining column arrays into a matrix
+    columnArray(columnName, options), // - returns a new array of a selected column from an array of objects, can filter, scale and replace values
+    columnReplace(columnName, options), // - returns a new array of a selected column from an array of objects and replaces empty values, encodes values and scales values
+    labelEncoder(columnName, options), // - returns a new array and label encodes a selected column
+    labelDecode(columnName, options), // - returns a new array and decodes an encoded column back to the original array values
+    oneHotEncoder(columnName, options), // - returns a new object of one hot encoded values
+    columnMatrix(columnName, options), // - returns a matrix of values from multiple columns
+    columnReducer(newColumnName, options), // - returns a new array of a selected column that is passed a reducer function, this is used to create new columns for aggregate statistics
+    columnMerge(name, data), // - returns a new column that is merged onto the data set
+    filterColumn(options), // - filtered rows of data,
+    fitColumns(options), // - mutates data property of DataSet by replacing multiple columns in a single command
   },
   calc:{
     getTransactions: [Function getTransactions], // Formats an array of transactions into a sparse matrix like format for Apriori/Eclat

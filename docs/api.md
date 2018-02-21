@@ -26,6 +26,8 @@
 <dd></dd>
 <dt><a href="#nlp">nlp</a> : <code>object</code></dt>
 <dd></dd>
+<dt><a href="#PD">PD</a> : <code>object</code></dt>
+<dd></dd>
 <dt><a href="#util">util</a> : <code>object</code></dt>
 <dd></dd>
 </dl>
@@ -800,6 +802,11 @@ Implementation of the Thompson Sampling algorithm
 #### new ColumnVectorizer()
 class creating sparse matrices from a corpus
 
+<a name="PD"></a>
+
+## PD : <code>object</code>
+**Kind**: global namespace  
+**See**: [https://github.com/Mattasher/probability-distributions](https://github.com/Mattasher/probability-distributions)  
 <a name="util"></a>
 
 ## util : <code>object</code>

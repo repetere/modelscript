@@ -19,7 +19,8 @@ MachineLearning.RL = Object.assign({},
     UpperConfidenceBound,
     ThompsonSampling,
   });
-
+MachineLearning.UpperConfidenceBound = UpperConfidenceBound;
+MachineLearning.ThompsonSampling = ThompsonSampling;
 MachineLearning.Regression.DecisionTreeRegression = DecisionTreeRegression;
 MachineLearning.Regression.RandomForestRegression = RandomForestRegression;
 MachineLearning.Regression.MultivariateLinearRegression = MultivariateLinearRegression;
