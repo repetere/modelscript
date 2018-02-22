@@ -70,7 +70,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line194">line 194</a>
+        <a href="util.js.html">util.js</a>, <a href="util.js.html#line234">line 234</a>
     </li></ul></dd>
     
 
@@ -210,7 +210,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line162">line 162</a>
+        <a href="util.js.html">util.js</a>, <a href="util.js.html#line202">line 202</a>
     </li></ul></dd>
     
 
@@ -264,6 +264,201 @@
     
 
 
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".coefficientOfCorrelation"><span class="type-signature">(static) </span>coefficientOfCorrelation<span class="signature">(actuals, estimates)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    The coefficent of determination is given by R2 decides how well the given data fits a line or a curve.The correlation R formula is
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>actuals</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Number></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">numerical samples</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>estimates</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Number></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">estimates values</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="util.js.html">util.js</a>, <a href="util.js.html#line95">line 95</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://calculator.tutorvista.com/r-squared-calculator.html">https://calculator.tutorvista.com/r-squared-calculator.html</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    r^2
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const actuals = [ 39, 42, 67, 76, ];
+const estimates = [ 44, 40, 60, 84, ];
+const r2 = ms.util.coefficientOfCorrelation(actuals, estimates); 
+r2.toFixed(3) // => 0.885</code></pre>
 
 
 
@@ -570,7 +765,7 @@ r2.toFixed(1) // => 0.6</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line153">line 153</a>
+        <a href="util.js.html">util.js</a>, <a href="util.js.html#line193">line 193</a>
     </li></ul></dd>
     
 
@@ -743,7 +938,7 @@ r2.toFixed(1) // => 0.6</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line121">line 121</a>
+        <a href="util.js.html">util.js</a>, <a href="util.js.html#line161">line 161</a>
     </li></ul></dd>
     
 
@@ -916,7 +1111,7 @@ r2.toFixed(1) // => 0.6</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line91">line 91</a>
+        <a href="util.js.html">util.js</a>, <a href="util.js.html#line131">line 131</a>
     </li></ul></dd>
     
 
@@ -1454,7 +1649,7 @@ const arrays = pivotVector(vectors); // => [ [1,2,3,3], [2,2,3,3], [3,3,4,3] ];<
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line143">line 143</a>
+        <a href="util.js.html">util.js</a>, <a href="util.js.html#line183">line 183</a>
     </li></ul></dd>
     
 
@@ -1686,7 +1881,7 @@ const arrays = pivotVector(vectors); // => [ [1,2,3,3], [2,2,3,3], [3,3,4,3] ];<
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Feb 21 2018 16:36:23 GMT-0500 (EST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Feb 22 2018 09:31:36 GMT-0500 (EST)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -60,10 +60,26 @@ describe('util', function () {
       }
     });
   });
+  describe('Coefficient of correlation', () => {
+    const actuals = [ 39, 42, 67, 76, ];
+    const estimates = [ 44, 40, 60, 84, ];
+    it('should return the Coefficient of correlation', () => {
+      const R2 = ms.util.coefficientOfCorrelation(actuals, estimates);
+      expect(R2.toFixed(3)).to.eql(0.885.toString());
+
+    });
+    it('should return an error if array lengths are not the same', () => {
+      try {
+        ms.util.coefficientOfCorrelation(actuals, [2,]);
+      } catch (e) {
+        expect(e).to.be.an('error');
+      }
+    });
+  });
   describe('Coefficient of determination', () => {
     const actuals = [2, 4, 5, 4, 5,];
     const estimates = [2.8, 3.4, 4, 4.6, 5.2,];
-    it('should return the Coefficient of determination(r squared)', () => {
+    it('should return the Coefficient of determination', () => {
       const r2 = ms.util.coefficientOfDetermination(actuals, estimates);
       expect(r2.toFixed(1)).to.eql(0.6.toString());
     });

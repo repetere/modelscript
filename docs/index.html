@@ -44,7 +44,7 @@
 
     <section>
         <article><h1>modelscript</h1><p><a href="https://coveralls.io/github/repetere/modelscript?branch=master"><img src="https://coveralls.io/repos/github/repetere/modelscript/badge.svg?branch=master" alt="Coverage Status"></a> <a href="https://travis-ci.org/repetere/modelscript"><img src="https://travis-ci.org/repetere/modelscript.svg?branch=master" alt="Build Status"></a></p>
-<h3>Description</h3><p><strong>modelscript</strong> is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. <strong>modelscript</strong> can be used with <a href="https://github.com/mljs/ml">ML.js</a>, <a href="https://github.com/StratoDem/pandas-js">pandas-js</a>, and <a href="https://github.com/numjs/numjs">numjs</a>, to approximate the equialent R/Python tool chain in JavaScript.</p>
+<h2>Description</h2><p><strong>modelscript</strong> is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. <strong>modelscript</strong> can be used with <a href="https://github.com/mljs/ml">ML.js</a>, <a href="https://github.com/StratoDem/pandas-js">pandas-js</a>, and <a href="https://github.com/numjs/numjs">numjs</a>, to approximate the equialent R/Python tool chain in JavaScript.</p>
 <p>In Python, data preperation is typically done in a DataFrame, modelscript encourages a more R like workflow where the data prepration is in it's native structure.</p>
 <h3>Installation</h3><pre class="prettyprint source lang-sh"><code>$ npm i modelscript</code></pre><h3><a href="https://github.com/repetere/modelscript/blob/master/docs/api.md">Full Documentation</a></h3><h3>Usage (basic)</h3><pre class="prettyprint source lang-javascript"><code>&quot;modelscript&quot; : {
   ml:{ //see https://github.com/mljs/ml
@@ -112,8 +112,9 @@
     LogScaler: [Function: LogScaler], // natual log scaling
     squaredDifference: [Function: squaredDifference], // Returns an array of the squared different of two arrays
     standardError: [Function: standardError], // The standard error of the estimate is a measure of the accuracy of predictions made with a regression line
-    coefficientOfDetermination: [Function: coefficientOfDetermination], // r^2
-    rSquared: [Function: coefficientOfDetermination], // alias for coefficientOfDetermination
+    coefficientOfDetermination: [Function: coefficientOfDetermination],
+    coefficientOfCorrelation: [Function: coefficientOfCorrelation], 
+    rSquared: [Function: coefficientOfCorrelation], // alias for coefficientOfCorrelation
     pivotVector: [Function: pivotVector], // returns an array of vectors as an array of arrays
     pivotArrays: [Function: pivotArrays], // returns a matrix of values by combining arrays into a matrix
     standardScore: [Function: standardScore], // Calculates the z score of each value in the sample, relative to the sample mean and standard deviation.
@@ -195,15 +196,15 @@ const originalCountry = dataset.columnArray('Country');
      Country_Ghana: [ 0, 0, 1, 0, 1, 0, 0, 0, 1, 0 ] },
     }
 */
-const oneHotCountryColumn = dataset.oneHotEncoder('Country'); 
+const oneHotCountryColumn = dataset.oneHotEncoder('Country');
 
-// [ 'N', 'Yes', 'No', 'f', 'Yes', 'Yes', 'false', 'Yes', 'No', 'Yes' ] 
+// [ 'N', 'Yes', 'No', 'f', 'Yes', 'Yes', 'false', 'Yes', 'No', 'Yes' ]
 const originalPurchasedColumn = dataset.labelEncoder('Purchased');
 // [ 0, 1, 0, 0, 1, 1, 1, 1, 0, 1 ]
 const encodedBinaryPurchasedColumn = dataset.labelEncoder('Purchased',{ binary:true });
 // [ 0, 1, 2, 3, 1, 1, 4, 1, 2, 1 ]
-const encodedPurchasedColumn = dataset.labelEncoder('Purchased'); 
-// [ 'N', 'Yes', 'No', 'f', 'Yes', 'Yes', 'false', 'Yes', 'No', 'Yes' ] 
+const encodedPurchasedColumn = dataset.labelEncoder('Purchased');
+// [ 'N', 'Yes', 'No', 'f', 'Yes', 'Yes', 'false', 'Yes', 'No', 'Yes' ]
 const decodedPurchased = dataset.labelDecode('Purchased', { data: encodedPurchasedColumn, });
 
 
@@ -261,7 +262,7 @@ X_test = sc_X.transform(X_test)</code></pre><h3>Development</h3><p><em>Make sure
 <pre class="prettyprint source lang-sh"><code>$ npm i -g grunt-cli jsdoc-to-markdown</code></pre><p>For generating documentation</p>
 <pre class="prettyprint source lang-sh"><code>$ grunt doc
 $ jsdoc2md src/**/*.js  > docs/api.md</code></pre><h3>Notes</h3><p>Check out <a href="https://github.com/repetere/modelscript">https://github.com/repetere/modelscript</a> for the full modelscript Documentation</p>
-<h4>A quick word about asynchronous JavaScript</h4><p>Most machine learning tutorials in Python and R are not using their asynchronous equivalents; however, there is a bias in JavaScript to default to non-blocking operations. </p>
+<h4>A quick word about asynchronous JavaScript</h4><p>Most machine learning tutorials in Python and R are not using their asynchronous equivalents; however, there is a bias in JavaScript to default to non-blocking operations.</p>
 <p>With the advent of ES7 and Node.js 7+ there are syntax helpers with asynchronous functions. It may be easier to use async/await in JS if you want an approximation close to what a workflow would look like in R/Python</p>
 <pre class="prettyprint source lang-javascript"><code>import * as fs from 'fs-extra';
 import * as np from 'numjs'; 
@@ -302,8 +303,8 @@ void async () => {
   });
 }();</code></pre><h3>Testing</h3><pre class="prettyprint source lang-sh"><code>$ npm i
 $ grunt test</code></pre><h3>Contributing</h3><p>Fork, write tests and create a pull request!</p>
-<h3>Misc</h3><p>As of Node 8, ES modules are still used behind a flag, when running natively as an ES module </p>
-<pre class="prettyprint source lang-sh"><code>$ node --experimental-modules my-machine-learning-script.mjs 
+<h3>Misc</h3><p>As of Node 8, ES modules are still used behind a flag, when running natively as an ES module</p>
+<pre class="prettyprint source lang-sh"><code>$ node --experimental-modules my-machine-learning-script.mjs
 # Also there are native bindings that require Python 2.x, make sure if you're using Andaconda, you build with your Python 2.x bin
 $ npm i --python=/usr/bin/python</code></pre><h2>License</h2><p>MIT</p></article>
     </section>
@@ -322,7 +323,7 @@ $ npm i --python=/usr/bin/python</code></pre><h2>License</h2><p>MIT</p></article
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Feb 21 2018 16:36:23 GMT-0500 (EST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Feb 22 2018 09:31:36 GMT-0500 (EST)
 </footer>
 
 <script> prettyPrint(); </script>

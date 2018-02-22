@@ -1,13 +1,15 @@
 # modelscript
+
 [![Coverage Status](https://coveralls.io/repos/github/repetere/modelscript/badge.svg?branch=master)](https://coveralls.io/github/repetere/modelscript?branch=master) [![Build Status](https://travis-ci.org/repetere/modelscript.svg?branch=master)](https://travis-ci.org/repetere/modelscript)
 
-### Description
+## Description
+
 **modelscript** is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. **modelscript** can be used with [ML.js](https://github.com/mljs/ml), [pandas-js](https://github.com/StratoDem/pandas-js), and [numjs](https://github.com/numjs/numjs), to approximate the equialent R/Python tool chain in JavaScript.
 
 In Python, data preperation is typically done in a DataFrame, modelscript encourages a more R like workflow where the data prepration is in it's native structure.
 
-
 ### Installation
+
 ```sh
 $ npm i modelscript
 ```
@@ -83,8 +85,9 @@ $ npm i modelscript
     LogScaler: [Function: LogScaler], // natual log scaling
     squaredDifference: [Function: squaredDifference], // Returns an array of the squared different of two arrays
     standardError: [Function: standardError], // The standard error of the estimate is a measure of the accuracy of predictions made with a regression line
-    coefficientOfDetermination: [Function: coefficientOfDetermination], // r^2
-    rSquared: [Function: coefficientOfDetermination], // alias for coefficientOfDetermination
+    coefficientOfDetermination: [Function: coefficientOfDetermination],
+    coefficientOfCorrelation: [Function: coefficientOfCorrelation], 
+    rSquared: [Function: coefficientOfCorrelation], // alias for coefficientOfCorrelation
     pivotVector: [Function: pivotVector], // returns an array of vectors as an array of arrays
     pivotArrays: [Function: pivotArrays], // returns a matrix of values by combining arrays into a matrix
     standardScore: [Function: standardScore], // Calculates the z score of each value in the sample, relative to the sample mean and standard deviation.
@@ -102,6 +105,7 @@ $ npm i modelscript
 #### Loading CSV Data
 
 ##### Javascript
+
 ```javascript
 import { default as jsk } from 'modelscript';
 let dataset;
@@ -131,7 +135,9 @@ ms.loadCSV('/some/file/path.csv')
 ms.loadCSV('https://example.com/some/file/path.csv')
 
 ```
+
 ##### Python
+
 ```python
 import pandas as pd
 
@@ -140,15 +146,16 @@ dataset = pd.read_csv('/some/file/path.csv')
 ```
 
 ##### R
+
 ```R
 # Importingd the dataset
 dataset = read.csv('Data.csv')
 ```
 
-
 #### Handling Missing Data
 
 ##### Javascript
+
 ```javascript
 //column Array returns column of data by name
 // [ '44','27','30','38','40','35','','48','50', '37' ]
@@ -178,6 +185,7 @@ class DataSet
 ```
 
 ##### Python
+
 ```python
 X = dataset.iloc[:, :-1].values
 y = dataset.iloc[:, 3].values
@@ -190,6 +198,7 @@ X[:, 1:3] = imputer.transform(X[:, 1:3])
 ```
 
 ##### R
+
 ```R
 # Taking care of the missing data
 dataset$Age = ifelse(is.na(dataset$Age),
@@ -197,11 +206,10 @@ dataset$Age = ifelse(is.na(dataset$Age),
                 dataset$Age)
 ```
 
-
-
 #### One Hot Encoding and Label Encoding
 
 ##### Javascript
+
 ```javascript
 // [ 'Brazil','Mexico','Ghana','Mexico','Ghana','Brazil','Mexico','Brazil','Ghana', 'Brazil' ]
 const originalCountry = dataset.columnArray('Country'); 
@@ -212,15 +220,15 @@ const originalCountry = dataset.columnArray('Country');
      Country_Ghana: [ 0, 0, 1, 0, 1, 0, 0, 0, 1, 0 ] },
     }
 */
-const oneHotCountryColumn = dataset.oneHotEncoder('Country'); 
+const oneHotCountryColumn = dataset.oneHotEncoder('Country');
 
-// [ 'N', 'Yes', 'No', 'f', 'Yes', 'Yes', 'false', 'Yes', 'No', 'Yes' ] 
+// [ 'N', 'Yes', 'No', 'f', 'Yes', 'Yes', 'false', 'Yes', 'No', 'Yes' ]
 const originalPurchasedColumn = dataset.labelEncoder('Purchased');
 // [ 0, 1, 0, 0, 1, 1, 1, 1, 0, 1 ]
 const encodedBinaryPurchasedColumn = dataset.labelEncoder('Purchased',{ binary:true });
 // [ 0, 1, 2, 3, 1, 1, 4, 1, 2, 1 ]
-const encodedPurchasedColumn = dataset.labelEncoder('Purchased'); 
-// [ 'N', 'Yes', 'No', 'f', 'Yes', 'Yes', 'false', 'Yes', 'No', 'Yes' ] 
+const encodedPurchasedColumn = dataset.labelEncoder('Purchased');
+// [ 'N', 'Yes', 'No', 'f', 'Yes', 'Yes', 'false', 'Yes', 'No', 'Yes' ]
 const decodedPurchased = dataset.labelDecode('Purchased', { data: encodedPurchasedColumn, });
 
 
@@ -247,6 +255,7 @@ dataset.fitColumns({
 ```
 
 ##### Python
+
 ```python
 # Encoding  categorical data
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
@@ -259,6 +268,7 @@ y = labelencoder_y.fit_transform(y)
 ```
 
 ##### R
+
 ```R
 # Encoding categorical data
 dataset$Country = factor(dataset$Country,
@@ -270,11 +280,10 @@ dataset$Purchased = factor(dataset$Purchased,
                          labels = c(0, 1))
 ```
 
-
-
 #### Cross Validation
 
 ##### Javascript
+
 ```javascript
 const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
 
@@ -286,6 +295,7 @@ const crossValidationArrayKFolds = ms.cross_validation.cross_validation_split(te
 ```
 
 ##### Python
+
 ```python
 #splitting the dataset into trnaing set and test set
 from sklearn.cross_validation import train_test_split
@@ -293,6 +303,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, rando
 ```
 
 ##### R
+
 ```R
 # Splitting the dataset into the training set and test set
 library(caTools)
@@ -302,17 +313,17 @@ training_set = subset(dataset, split == TRUE)
 test_set = subset(dataset, split == FALSE)
 ```
 
-
-
 #### Scaling (z-score / min-mix)
 
 ##### Javascript
+
 ```javascript
 dataset.columnArray('Salary',{ scale:'standard'}); 
 dataset.columnArray('Salary',{ scale:'minmax'}); 
 ```
 
 ##### Python
+
 ```python
 from sklearn.preprocessing import StandardScaler
 sc_X = StandardScaler()
@@ -321,7 +332,9 @@ X_test = sc_X.transform(X_test)
 ```
 
 ### Development
+
 *Make sure you have grunt installed*
+
 ```sh
 $ npm i -g grunt-cli jsdoc-to-markdown
 ```
@@ -332,13 +345,13 @@ $ grunt doc
 $ jsdoc2md src/**/*.js  > docs/api.md
 ```
 
-
-
 ### Notes
+
 Check out [https://github.com/repetere/modelscript](https://github.com/repetere/modelscript) for the full modelscript Documentation
 
 #### A quick word about asynchronous JavaScript
-Most machine learning tutorials in Python and R are not using their asynchronous equivalents; however, there is a bias in JavaScript to default to non-blocking operations. 
+
+Most machine learning tutorials in Python and R are not using their asynchronous equivalents; however, there is a bias in JavaScript to default to non-blocking operations.
 
 With the advent of ES7 and Node.js 7+ there are syntax helpers with asynchronous functions. It may be easier to use async/await in JS if you want an approximation close to what a workflow would look like in R/Python
 
@@ -385,20 +398,25 @@ void async () => {
 ```
 
 ### Testing
+
 ```sh
 $ npm i
 $ grunt test
 ```
+
 ### Contributing
+
 Fork, write tests and create a pull request!
 
 ### Misc
-As of Node 8, ES modules are still used behind a flag, when running natively as an ES module 
+
+As of Node 8, ES modules are still used behind a flag, when running natively as an ES module
+
 ```sh
-$ node --experimental-modules my-machine-learning-script.mjs 
+$ node --experimental-modules my-machine-learning-script.mjs
 # Also there are native bindings that require Python 2.x, make sure if you're using Andaconda, you build with your Python 2.x bin
 $ npm i --python=/usr/bin/python
- ``` 
+ ```
 
 License
 ----

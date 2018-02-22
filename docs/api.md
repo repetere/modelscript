@@ -817,6 +817,7 @@ class creating sparse matrices from a corpus
     * [.standardError(actuals, estimates)](#util.standardError) ⇒ <code>Number</code>
     * [.standardScore(observations)](#util.standardScore) ⇒ <code>Array.&lt;Number&gt;</code>
     * [.coefficientOfDetermination(actuals, estimates)](#util.coefficientOfDetermination) ⇒ <code>Number</code>
+    * [.coefficientOfCorrelation(actuals, estimates)](#util.coefficientOfCorrelation) ⇒ <code>Number</code>
     * [.pivotVector(vectors)](#util.pivotVector) ⇒ <code>Array.&lt;Array&gt;</code>
     * [.pivotArrays([vectors])](#util.pivotArrays) ⇒ <code>Array</code>
     * [.StandardScaler(z)](#util.StandardScaler) ⇒ <code>Array.&lt;number&gt;</code>
@@ -890,6 +891,27 @@ const actuals = [ 2, 4, 5, 4, 5, ];
 const estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];
 const r2 = ms.util.coefficientOfDetermination(actuals, estimates); 
 r2.toFixed(1) // => 0.6
+```
+<a name="util.coefficientOfCorrelation"></a>
+
+### util.coefficientOfCorrelation(actuals, estimates) ⇒ <code>Number</code>
+The coefficent of determination is given by R2 decides how well the given data fits a line or a curve.The correlation R formula is
+
+**Kind**: static method of [<code>util</code>](#util)  
+**Returns**: <code>Number</code> - r^2  
+**See**: [https://calculator.tutorvista.com/r-squared-calculator.html](https://calculator.tutorvista.com/r-squared-calculator.html)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| actuals | <code>Array.&lt;Number&gt;</code> | numerical samples |
+| estimates | <code>Array.&lt;Number&gt;</code> | estimates values |
+
+**Example**  
+```js
+const actuals = [ 39, 42, 67, 76, ];
+const estimates = [ 44, 40, 60, 84, ];
+const r2 = ms.util.coefficientOfCorrelation(actuals, estimates); 
+r2.toFixed(3) // => 0.885
 ```
 <a name="util.pivotVector"></a>
 

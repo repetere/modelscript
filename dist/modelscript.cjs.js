@@ -195,6 +195,46 @@ function coefficientOfDetermination(actuals=[], estimates=[]) {
 }
 
 /**
+ * The coefficent of determination is given by R2 decides how well the given data fits a line or a curve.The correlation R formula is
+ * @example
+const actuals = [ 39, 42, 67, 76, ];
+const estimates = [ 44, 40, 60, 84, ];
+const r2 = ms.util.coefficientOfCorrelation(actuals, estimates); 
+r2.toFixed(3) // => 0.885
+ * @memberOf util
+ * @see {@link https://calculator.tutorvista.com/r-squared-calculator.html}
+ * @param {Number[]} actuals - numerical samples 
+ * @param {Number[]} estimates - estimates values
+ * @returns {Number} r^2
+ */
+function coefficientOfCorrelation(actuals = [], estimates = []) {
+  if (actuals.length !== estimates.length) throw new RangeError('arrays must have the same length');
+  const sumX = sum(actuals);
+  const sumY = sum(estimates);
+  const sumProdXY = actuals.reduce((result, val, index) => { 
+    result = result + (actuals[ index ] * estimates[ index ]);
+    return result;
+  }, 0);
+  const sumXSquared = actuals.reduce((result, val) => { 
+    result = result + (val * val);
+    return result;
+  }, 0);
+  const sumYSquared = estimates.reduce((result, val) => { 
+    result = result + (val * val);
+    return result;
+  }, 0);
+  const N = actuals.length;
+  const R = (
+    (N * sumProdXY - sumX * sumY) /
+    Math.sqrt(
+      (N * sumXSquared - Math.pow(sumX, 2)) * (N * sumYSquared - Math.pow(sumY, 2))
+    )
+  );
+  const rSquared = Math.pow(R, 2);
+  return rSquared;
+}
+
+/**
  * returns an array of vectors as an array of arrays
  * @example
 const vectors = [ [1,2,3], [1,2,3], [3,3,4], [3,3,3] ];
@@ -323,7 +363,8 @@ const util$1 = {
   squaredDifference,
   standardError,
   coefficientOfDetermination,
-  rSquared: coefficientOfDetermination,
+  coefficientOfCorrelation,
+  rSquared: coefficientOfCorrelation,
   pivotVector,
   pivotArrays,
   standardScore,
@@ -682,7 +723,8 @@ MachineLearning.RL = Object.assign({},
     UpperConfidenceBound,
     ThompsonSampling,
   });
-
+MachineLearning.UpperConfidenceBound = UpperConfidenceBound;
+MachineLearning.ThompsonSampling = ThompsonSampling;
 MachineLearning.Regression.DecisionTreeRegression = mlCart.DecisionTreeRegression;
 MachineLearning.Regression.RandomForestRegression = mlRandomForest.RandomForestRegression;
 MachineLearning.Regression.MultivariateLinearRegression = MultivariateLinearRegression;
