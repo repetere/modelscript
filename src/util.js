@@ -71,26 +71,82 @@ r2.toFixed(1) // => 0.6
  * @param {Number[]} estimates - estimates values
  * @returns {Number} r^2
  */
-function coefficientOfDetermination(actuals=[], estimates=[]) {
+function coefficientOfDetermination(actuals = [], estimates = []) {
   if (actuals.length !== estimates.length) throw new RangeError('arrays must have the same length');
   const actualsMean = mean(actuals);
-  const meanActualsDiffSquared = actuals.map(a => Math.pow(a - actualsMean, 2));
-  const meanEstimatesDiffSquared = estimates.map(e => Math.pow(e - actualsMean, 2));
-  return (sum(meanEstimatesDiffSquared) / sum(meanActualsDiffSquared));
+
+  const totalVariation = sum(actuals.reduce((result, val, index) => {
+    result.push(Math.pow((actuals[index]-actualsMean), 2));
+    return result;
+  }, []));
+  const unexplainedVariation = sum(actuals.reduce((result, val, index) => {
+    result.push(Math.pow((actuals[ index ] - estimates[ index ]), 2));
+    return result;
+  }, []));
+  const rSquared = ((totalVariation - unexplainedVariation) / totalVariation);
+
+  return rSquared;
+  /*
+  @see  {@link https://math.tutorvista.com/statistics/coefficient-of-determination.html}
+  Some Properties of Coefficient of Determination are as follow:
+  It helps to provide the proportion of the variance of one variable which is predictable from the other variable.
+  It is a way of measurement which allows determining how clear it can be in making predictions from a certain data provided.
+  It can be taken as a ratio of the explained variation to the total variation.
+  It denotes the strength of the linear association between the variables.
+  The square of the coefficient of determination will always b e between 0 and1, which is 0 ≤
+  ≤
+  r2 ≤
+  ≤
+  1. Here r2 will always be a positive value.
+  As r2 gets close to 1, the Y data values get close to the regression line.
+  As r2 gets close to 0, the Y data values get further from the regression line.
+  It helps to provide the proportion of the variance of one variable which is predictable from the other variable.
+  It is a way of measurement which allows determining how clear it can be in making predictions from a certain data provided.
+  It can be taken as a ratio of the explained variation to the total variation.
+  It denotes the strength of the linear association between the variables.
+  */  
 }
 
 /**
- * The coefficent of determination is given by R2 decides how well the given data fits a line or a curve.The correlation R formula is
+ * You can use the adjusted coefficient of determination to determine how well a multiple regression equation “fits” the sample data. The adjusted coefficient of determination is closely related to the coefficient of determination (also known as R2) that you use to test the results of a simple regression equation.
+ * @example
+const adjr2 = ms.util.adjustedCoefficentOfDetermination({
+  rSquared: 0.944346527,
+  sampleSize: 8,
+  independentVariables: 2,
+}); 
+r2.toFixed(3) // => 0.922
+ * @memberOf util
+ * @see {@link http://www.dummies.com/education/math/business-statistics/how-to-calculate-the-adjusted-coefficient-of-determination/}
+ * @param {Object} [options={}] 
+ * @param {Number[]} [options.actuals] - numerical samples 
+ * @param {Number[]} [options.estimates] - estimate values 
+ * @param {Number} [options.rSquared] - coefficent of determination 
+ * @param {Number} [options.sampleSize] - the sample size 
+ * @param {Number} options.independentVariables - the number of independent variables in the regression equation
+ * @returns {Number} adjusted r^2 for multiple linear regression
+ */
+function adjustedCoefficentOfDetermination(options = {}) {
+  const { actuals, estimates, rSquared, independentVariables, sampleSize, } = options;
+  const r2 = rSquared || coefficientOfDetermination(actuals, estimates);
+  const n = sampleSize || actuals.length;
+  const k = independentVariables;
+
+  return (1 - (1 - r2) * ((n - 1) / (n - (k + 1))));
+}
+
+/**
+ * The coefficent of Correlation is given by R decides how well the given data fits a line or a curve.
  * @example
 const actuals = [ 39, 42, 67, 76, ];
 const estimates = [ 44, 40, 60, 84, ];
-const r2 = ms.util.coefficientOfCorrelation(actuals, estimates); 
-r2.toFixed(3) // => 0.885
+const R = ms.util.coefficientOfCorrelation(actuals, estimates); 
+R.toFixed(4) // => 0.9408
  * @memberOf util
  * @see {@link https://calculator.tutorvista.com/r-squared-calculator.html}
  * @param {Number[]} actuals - numerical samples 
  * @param {Number[]} estimates - estimates values
- * @returns {Number} r^2
+ * @returns {Number} R
  */
 function coefficientOfCorrelation(actuals = [], estimates = []) {
   if (actuals.length !== estimates.length) throw new RangeError('arrays must have the same length');
@@ -115,8 +171,18 @@ function coefficientOfCorrelation(actuals = [], estimates = []) {
       (N * sumXSquared - Math.pow(sumX, 2)) * (N * sumYSquared - Math.pow(sumY, 2))
     )
   );
-  const rSquared = Math.pow(R, 2);
-  return rSquared;
+  return R;
+}
+
+/**
+ * The coefficent of determination is given by r^2 decides how well the given data fits a line or a curve.
+ * 
+ * @param {Number[]} [actuals=[]] 
+ * @param {Number[]}  [estimates=[]]  
+ * @returns {Number} r^2
+ */
+function rSquared(actuals = [], estimates=[]) {
+  return Math.pow(coefficientOfCorrelation(actuals, estimates), 2);
 }
 
 /**
@@ -249,7 +315,11 @@ export const util = {
   standardError,
   coefficientOfDetermination,
   coefficientOfCorrelation,
-  rSquared: coefficientOfCorrelation,
+  r: coefficientOfCorrelation,
+  rSquared,
+  adjustedCoefficentOfDetermination,
+  rBarSquared: adjustedCoefficentOfDetermination,
+  adjustedRSquared: adjustedCoefficentOfDetermination,
   pivotVector,
   pivotArrays,
   standardScore,

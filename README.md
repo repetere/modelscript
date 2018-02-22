@@ -86,8 +86,12 @@ $ npm i modelscript
     squaredDifference: [Function: squaredDifference], // Returns an array of the squared different of two arrays
     standardError: [Function: standardError], // The standard error of the estimate is a measure of the accuracy of predictions made with a regression line
     coefficientOfDetermination: [Function: coefficientOfDetermination],
-    coefficientOfCorrelation: [Function: coefficientOfCorrelation], 
-    rSquared: [Function: coefficientOfCorrelation], // alias for coefficientOfCorrelation
+    adjustedCoefficentOfDetermination: [Function: adjustedCoefficentOfDetermination],
+    adjustedRSquared: [Function: adjustedCoefficentOfDetermination],
+    rBarSquared: [Function: adjustedCoefficentOfDetermination],
+    r: [Function: coefficientOfCorrelation],
+    coefficientOfCorrelation: [Function: coefficientOfCorrelation],
+    rSquared: [Function: rSquared], //r^2
     pivotVector: [Function: pivotVector], // returns an array of vectors as an array of arrays
     pivotArrays: [Function: pivotArrays], // returns a matrix of values by combining arrays into a matrix
     standardScore: [Function: standardScore], // Calculates the z score of each value in the sample, relative to the sample mean and standard deviation.

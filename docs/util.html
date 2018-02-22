@@ -70,7 +70,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line234">line 234</a>
+        <a href="util.js.html">util.js</a>, <a href="util.js.html#line300">line 300</a>
     </li></ul></dd>
     
 
@@ -102,6 +102,391 @@
 
     
         <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".adjustedCoefficentOfDetermination"><span class="type-signature">(static) </span>adjustedCoefficentOfDetermination<span class="signature">(options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    You can use the adjusted coefficient of determination to determine how well a multiple regression equation “fits” the sample data. The adjusted coefficient of determination is closely related to the coefficient of determination (also known as R2) that you use to test the results of a simple regression equation.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    {}
+                
+                </td>
+            
+
+            <td class="description last">
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>actuals</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Number></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">numerical samples</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>estimates</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Number></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">estimate values</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>rSquared</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">coefficent of determination</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>sampleSize</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">the sample size</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>independentVariables</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">the number of independent variables in the regression equation</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="util.js.html">util.js</a>, <a href="util.js.html#line129">line 129</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="http://www.dummies.com/education/math/business-statistics/how-to-calculate-the-adjusted-coefficient-of-determination/">http://www.dummies.com/education/math/business-statistics/how-to-calculate-the-adjusted-coefficient-of-determination/</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    adjusted r^2 for multiple linear regression
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const adjr2 = ms.util.adjustedCoefficentOfDetermination({
+  rSquared: 0.944346527,
+  sampleSize: 8,
+  independentVariables: 2,
+}); 
+r2.toFixed(3) // => 0.922</code></pre>
+
+
 
         
             
@@ -210,7 +595,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line202">line 202</a>
+        <a href="util.js.html">util.js</a>, <a href="util.js.html#line268">line 268</a>
     </li></ul></dd>
     
 
@@ -281,7 +666,7 @@
 
 
 <div class="description">
-    The coefficent of determination is given by R2 decides how well the given data fits a line or a curve.The correlation R formula is
+    The coefficent of Correlation is given by R decides how well the given data fits a line or a curve.
 </div>
 
 
@@ -397,7 +782,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line95">line 95</a>
+        <a href="util.js.html">util.js</a>, <a href="util.js.html#line151">line 151</a>
     </li></ul></dd>
     
 
@@ -431,7 +816,7 @@
 
         
 <div class="param-desc">
-    r^2
+    R
 </div>
 
 
@@ -457,8 +842,8 @@
     
     <pre class="prettyprint"><code>const actuals = [ 39, 42, 67, 76, ];
 const estimates = [ 44, 40, 60, 84, ];
-const r2 = ms.util.coefficientOfCorrelation(actuals, estimates); 
-r2.toFixed(3) // => 0.885</code></pre>
+const R = ms.util.coefficientOfCorrelation(actuals, estimates); 
+R.toFixed(4) // => 0.9408</code></pre>
 
 
 
@@ -765,7 +1150,7 @@ r2.toFixed(1) // => 0.6</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line193">line 193</a>
+        <a href="util.js.html">util.js</a>, <a href="util.js.html#line259">line 259</a>
     </li></ul></dd>
     
 
@@ -938,7 +1323,7 @@ r2.toFixed(1) // => 0.6</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line161">line 161</a>
+        <a href="util.js.html">util.js</a>, <a href="util.js.html#line227">line 227</a>
     </li></ul></dd>
     
 
@@ -1111,7 +1496,7 @@ r2.toFixed(1) // => 0.6</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line131">line 131</a>
+        <a href="util.js.html">util.js</a>, <a href="util.js.html#line197">line 197</a>
     </li></ul></dd>
     
 
@@ -1649,7 +2034,7 @@ const arrays = pivotVector(vectors); // => [ [1,2,3,3], [2,2,3,3], [3,3,4,3] ];<
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line183">line 183</a>
+        <a href="util.js.html">util.js</a>, <a href="util.js.html#line249">line 249</a>
     </li></ul></dd>
     
 
@@ -1875,13 +2260,13 @@ const arrays = pivotVector(vectors); // => [ [1,2,3,3], [2,2,3,3], [3,3,4,3] ];<
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ColumnVectorizer_ColumnVectorizer.html">ColumnVectorizer</a></li><li><a href="DataSet_DataSet.html">DataSet</a></li><li><a href="ml.ReinforcedLearningBase.html">ReinforcedLearningBase</a></li><li><a href="ml.ThompsonSampling.html">ThompsonSampling</a></li><li><a href="ml.UpperConfidenceBound.html">UpperConfidenceBound</a></li><li><a href="nlp.ColumnVectorizer.html">ColumnVectorizer</a></li><li><a href="preprocessing.DataSet.html">DataSet</a></li><li><a href="ReinforcedLearningBase_ReinforcedLearningBase.html">ReinforcedLearningBase</a></li><li><a href="ThompsonSampling_ThompsonSampling.html">ThompsonSampling</a></li><li><a href="UpperConfidenceBound_UpperConfidenceBound.html">UpperConfidenceBound</a></li></ul><h3>Namespaces</h3><ul><li><a href="calc.html">calc</a></li><li><a href="cross_validation.html">cross_validation</a></li><li><a href="ml.html">ml</a></li><li><a href="nlp.html">nlp</a></li><li><a href="PD.html">PD</a></li><li><a href="preprocessing.html">preprocessing</a></li><li><a href="util.html">util</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ColumnVectorizer_ColumnVectorizer.html">ColumnVectorizer</a></li><li><a href="DataSet_DataSet.html">DataSet</a></li><li><a href="ml.ReinforcedLearningBase.html">ReinforcedLearningBase</a></li><li><a href="ml.ThompsonSampling.html">ThompsonSampling</a></li><li><a href="ml.UpperConfidenceBound.html">UpperConfidenceBound</a></li><li><a href="nlp.ColumnVectorizer.html">ColumnVectorizer</a></li><li><a href="preprocessing.DataSet.html">DataSet</a></li><li><a href="ReinforcedLearningBase_ReinforcedLearningBase.html">ReinforcedLearningBase</a></li><li><a href="ThompsonSampling_ThompsonSampling.html">ThompsonSampling</a></li><li><a href="UpperConfidenceBound_UpperConfidenceBound.html">UpperConfidenceBound</a></li></ul><h3>Namespaces</h3><ul><li><a href="calc.html">calc</a></li><li><a href="cross_validation.html">cross_validation</a></li><li><a href="ml.html">ml</a></li><li><a href="nlp.html">nlp</a></li><li><a href="PD.html">PD</a></li><li><a href="preprocessing.html">preprocessing</a></li><li><a href="util.html">util</a></li></ul><h3>Global</h3><ul><li><a href="global.html#rSquared">rSquared</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Feb 22 2018 09:31:36 GMT-0500 (EST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Feb 22 2018 11:28:15 GMT-0500 (EST)
 </footer>
 
 <script> prettyPrint(); </script>

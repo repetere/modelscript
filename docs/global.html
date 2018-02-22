@@ -104,7 +104,7 @@
     
 
     
-    <h4 class="name" id="loadCSV"><span class="type-signature"></span>loadCSV<span class="signature">(filepath, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array.&lt;Object>}</span></h4>
+    <h4 class="name" id="rSquared"><span class="type-signature"></span>rSquared<span class="signature">(actuals<span class="signature-attributes">opt</span>, estimates<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Number}</span></h4>
     
 
     
@@ -112,7 +112,7 @@
 
 
 <div class="description">
-    Asynchronously loads a CSV from either a filepath or remote URL and returns an array of objects
+    The coefficent of determination is given by r^2 decides how well the given data fits a line or a curve.
 </div>
 
 
@@ -140,6 +140,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -150,44 +152,13 @@
 
         <tr>
             
-                <td class="name"><code>filepath</code></td>
+                <td class="name"><code>actuals</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">URL to CSV path</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
+<span class="param-type">Array.&lt;Number></span>
 
 
             
@@ -206,8 +177,53 @@
             
 
             
+                <td class="default">
+                
+                    []
+                
+                </td>
+            
 
-            <td class="description last">options passed to csvtojson</td>
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>estimates</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Number></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    []
+                
+                </td>
+            
+
+            <td class="description last"></td>
         </tr>
 
     
@@ -248,7 +264,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="csv.js.html">csv.js</a>, <a href="csv.js.html#line48">line 48</a>
+        <a href="util.js.html">util.js</a>, <a href="util.js.html#line184">line 184</a>
     </li></ul></dd>
     
 
@@ -275,7 +291,7 @@
 
         
 <div class="param-desc">
-    returns an array of objects from a csv where each column header is the property name
+    r^2
 </div>
 
 
@@ -286,7 +302,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Array.&lt;Object></span>
+<span class="param-type">Number</span>
 
 
     </dd>
@@ -295,216 +311,6 @@
     
 
 
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>// returns [{header:value,header2:value2}]loadCSV('../mock/invalid-file.csv').then(csvData).catch(console.error)</code></pre>
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="loadCSVURI"><span class="type-signature"></span>loadCSVURI<span class="signature">(filepath, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array.&lt;Object>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Asynchronously loads a CSV from a remote URL and returns an array of objects
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>filepath</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">URL to CSV path</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">options passed to csvtojson</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="csv.js.html">csv.js</a>, <a href="csv.js.html#line14">line 14</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    returns an array of objects from a csv where each column header is the property name
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;Object></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>// returns [{header:value,header2:value2}]loadCSVURI('https://raw.githubusercontent.com/repetere/modelscript/master/test/mock/data.csv').then(csvData).catch(console.error)</code></pre>
 
 
 
@@ -524,13 +330,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DataSet_DataSet.html">DataSet</a></li><li><a href="preprocessing.DataSet.html">DataSet</a></li></ul><h3>Namespaces</h3><ul><li><a href="calc.html">calc</a></li><li><a href="cross_validation.html">cross_validation</a></li><li><a href="ml.html">ml</a></li><li><a href="nlp.html">nlp</a></li><li><a href="preprocessing.html">preprocessing</a></li><li><a href="util.html">util</a></li></ul><h3>Global</h3><ul><li><a href="global.html#loadCSV">loadCSV</a></li><li><a href="global.html#loadCSVURI">loadCSVURI</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ColumnVectorizer_ColumnVectorizer.html">ColumnVectorizer</a></li><li><a href="DataSet_DataSet.html">DataSet</a></li><li><a href="ml.ReinforcedLearningBase.html">ReinforcedLearningBase</a></li><li><a href="ml.ThompsonSampling.html">ThompsonSampling</a></li><li><a href="ml.UpperConfidenceBound.html">UpperConfidenceBound</a></li><li><a href="nlp.ColumnVectorizer.html">ColumnVectorizer</a></li><li><a href="preprocessing.DataSet.html">DataSet</a></li><li><a href="ReinforcedLearningBase_ReinforcedLearningBase.html">ReinforcedLearningBase</a></li><li><a href="ThompsonSampling_ThompsonSampling.html">ThompsonSampling</a></li><li><a href="UpperConfidenceBound_UpperConfidenceBound.html">UpperConfidenceBound</a></li></ul><h3>Namespaces</h3><ul><li><a href="calc.html">calc</a></li><li><a href="cross_validation.html">cross_validation</a></li><li><a href="ml.html">ml</a></li><li><a href="nlp.html">nlp</a></li><li><a href="PD.html">PD</a></li><li><a href="preprocessing.html">preprocessing</a></li><li><a href="util.html">util</a></li></ul><h3>Global</h3><ul><li><a href="global.html#rSquared">rSquared</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Feb 18 2018 23:49:11 GMT-0500 (EST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Feb 22 2018 11:28:15 GMT-0500 (EST)
 </footer>
 
 <script> prettyPrint(); </script>

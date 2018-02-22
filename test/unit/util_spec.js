@@ -64,8 +64,8 @@ describe('util', function () {
     const actuals = [ 39, 42, 67, 76, ];
     const estimates = [ 44, 40, 60, 84, ];
     it('should return the Coefficient of correlation', () => {
-      const R2 = ms.util.coefficientOfCorrelation(actuals, estimates);
-      expect(R2.toFixed(3)).to.eql(0.885.toString());
+      const R = ms.util.coefficientOfCorrelation(actuals, estimates);
+      expect(R.toFixed(4)).to.eql(0.9408.toString());
 
     });
     it('should return an error if array lengths are not the same', () => {
@@ -74,6 +74,17 @@ describe('util', function () {
       } catch (e) {
         expect(e).to.be.an('error');
       }
+    });
+  });
+  describe('rSquared', () => {
+    const actuals = [ 39, 42, 67, 76, ];
+    const estimates = [ 44, 40, 60, 84, ];
+    it('should return r^2', () => {
+      const R = ms.util.coefficientOfCorrelation(actuals, estimates);
+      const rSquared = ms.util.rSquared(actuals, estimates);
+      const COD = ms.util.coefficientOfDetermination(actuals, estimates);
+      expect(Math.pow(R, 2)).to.eql(rSquared);
+      expect(rSquared.toFixed(1)).to.eql(COD.toFixed(1));
     });
   });
   describe('Coefficient of determination', () => {
@@ -89,6 +100,16 @@ describe('util', function () {
       } catch (e) {
         expect(e).to.be.an('error');
       }
+    });
+  });
+  describe('adjusted coefficient of determination', () => {
+    it('should return the adjusted Coefficient of determination', () => {
+      const adjr2 = ms.util.adjustedCoefficentOfDetermination({
+        rSquared: 0.944346527,
+        sampleSize: 8,
+        independentVariables: 2,
+      }); 
+      expect(adjr2.toFixed(3)).to.eql(0.922.toString());
     });
   });
   describe('pivotVector', () => {

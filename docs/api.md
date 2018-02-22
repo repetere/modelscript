@@ -32,6 +32,14 @@
 <dd></dd>
 </dl>
 
+## Functions
+
+<dl>
+<dt><a href="#rSquared">rSquared([actuals], [estimates])</a> ⇒ <code>Number</code></dt>
+<dd><p>The coefficent of determination is given by r^2 decides how well the given data fits a line or a curve.</p>
+</dd>
+</dl>
+
 <a name="ColumnVectorizer"></a>
 
 ## ColumnVectorizer
@@ -817,6 +825,7 @@ class creating sparse matrices from a corpus
     * [.standardError(actuals, estimates)](#util.standardError) ⇒ <code>Number</code>
     * [.standardScore(observations)](#util.standardScore) ⇒ <code>Array.&lt;Number&gt;</code>
     * [.coefficientOfDetermination(actuals, estimates)](#util.coefficientOfDetermination) ⇒ <code>Number</code>
+    * [.adjustedCoefficentOfDetermination([options])](#util.adjustedCoefficentOfDetermination) ⇒ <code>Number</code>
     * [.coefficientOfCorrelation(actuals, estimates)](#util.coefficientOfCorrelation) ⇒ <code>Number</code>
     * [.pivotVector(vectors)](#util.pivotVector) ⇒ <code>Array.&lt;Array&gt;</code>
     * [.pivotArrays([vectors])](#util.pivotArrays) ⇒ <code>Array</code>
@@ -892,13 +901,40 @@ const estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];
 const r2 = ms.util.coefficientOfDetermination(actuals, estimates); 
 r2.toFixed(1) // => 0.6
 ```
+<a name="util.adjustedCoefficentOfDetermination"></a>
+
+### util.adjustedCoefficentOfDetermination([options]) ⇒ <code>Number</code>
+You can use the adjusted coefficient of determination to determine how well a multiple regression equation “fits” the sample data. The adjusted coefficient of determination is closely related to the coefficient of determination (also known as R2) that you use to test the results of a simple regression equation.
+
+**Kind**: static method of [<code>util</code>](#util)  
+**Returns**: <code>Number</code> - adjusted r^2 for multiple linear regression  
+**See**: [http://www.dummies.com/education/math/business-statistics/how-to-calculate-the-adjusted-coefficient-of-determination/](http://www.dummies.com/education/math/business-statistics/how-to-calculate-the-adjusted-coefficient-of-determination/)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options] | <code>Object</code> | <code>{}</code> |  |
+| [options.actuals] | <code>Array.&lt;Number&gt;</code> |  | numerical samples |
+| [options.estimates] | <code>Array.&lt;Number&gt;</code> |  | estimate values |
+| [options.rSquared] | <code>Number</code> |  | coefficent of determination |
+| [options.sampleSize] | <code>Number</code> |  | the sample size |
+| options.independentVariables | <code>Number</code> |  | the number of independent variables in the regression equation |
+
+**Example**  
+```js
+const adjr2 = ms.util.adjustedCoefficentOfDetermination({
+  rSquared: 0.944346527,
+  sampleSize: 8,
+  independentVariables: 2,
+}); 
+r2.toFixed(3) // => 0.922
+```
 <a name="util.coefficientOfCorrelation"></a>
 
 ### util.coefficientOfCorrelation(actuals, estimates) ⇒ <code>Number</code>
-The coefficent of determination is given by R2 decides how well the given data fits a line or a curve.The correlation R formula is
+The coefficent of Correlation is given by R decides how well the given data fits a line or a curve.
 
 **Kind**: static method of [<code>util</code>](#util)  
-**Returns**: <code>Number</code> - r^2  
+**Returns**: <code>Number</code> - R  
 **See**: [https://calculator.tutorvista.com/r-squared-calculator.html](https://calculator.tutorvista.com/r-squared-calculator.html)  
 
 | Param | Type | Description |
@@ -910,8 +946,8 @@ The coefficent of determination is given by R2 decides how well the given data f
 ```js
 const actuals = [ 39, 42, 67, 76, ];
 const estimates = [ 44, 40, 60, 84, ];
-const r2 = ms.util.coefficientOfCorrelation(actuals, estimates); 
-r2.toFixed(3) // => 0.885
+const R = ms.util.coefficientOfCorrelation(actuals, estimates); 
+R.toFixed(4) // => 0.9408
 ```
 <a name="util.pivotVector"></a>
 
@@ -995,4 +1031,17 @@ Converts z-score into the probability
 | Param | Type | Description |
 | --- | --- | --- |
 | z | <code>number</code> | Number of standard deviations from the mean. |
+
+<a name="rSquared"></a>
+
+## rSquared([actuals], [estimates]) ⇒ <code>Number</code>
+The coefficent of determination is given by r^2 decides how well the given data fits a line or a curve.
+
+**Kind**: global function  
+**Returns**: <code>Number</code> - r^2  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [actuals] | <code>Array.&lt;Number&gt;</code> | <code>[]</code> | 
+| [estimates] | <code>Array.&lt;Number&gt;</code> | <code>[]</code> | 
 
