@@ -180,16 +180,20 @@ ColumnVectorizer.evaluate('I would rate everything Great, views Great, food Grea
 
 * [DataSet](#DataSet)
     * [new DataSet(dataset)](#new_DataSet_new)
-    * [.filterColumn([filter])](#DataSet+filterColumn) ⇒ <code>Array</code>
-    * [.columnMatrix([vectors])](#DataSet+columnMatrix) ⇒ <code>Array</code>
-    * [.columnArray(name, options)](#DataSet+columnArray) ⇒ <code>array</code>
-    * [.columnReplace(name, options)](#DataSet+columnReplace) ⇒ <code>array</code> \| <code>Array.&lt;Object&gt;</code>
-    * [.labelEncoder(name, options)](#DataSet+labelEncoder) ⇒ <code>array</code>
-    * [.labelDecode(name, options)](#DataSet+labelDecode) ⇒ <code>array</code>
-    * [.oneHotEncoder(name, options)](#DataSet+oneHotEncoder) ⇒ <code>Object</code>
-    * [.columnReducer(name, options)](#DataSet+columnReducer) ⇒ <code>Object</code>
-    * [.columnMerge(name, data)](#DataSet+columnMerge) ⇒ <code>Object</code>
-    * [.fitColumns(options)](#DataSet+fitColumns) ⇒ <code>Array.&lt;Object&gt;</code>
+    * _instance_
+        * [.filterColumn([filter])](#DataSet+filterColumn) ⇒ <code>Array</code>
+        * [.columnMatrix([vectors])](#DataSet+columnMatrix) ⇒ <code>Array</code>
+        * [.selectColumns(names, options)](#DataSet+selectColumns) ⇒ <code>Array.&lt;Object&gt;</code>
+        * [.columnArray(name, options)](#DataSet+columnArray) ⇒ <code>array</code>
+        * [.columnReplace(name, options)](#DataSet+columnReplace) ⇒ <code>array</code> \| <code>Array.&lt;Object&gt;</code>
+        * [.labelEncoder(name, options)](#DataSet+labelEncoder) ⇒ <code>array</code>
+        * [.labelDecode(name, options)](#DataSet+labelDecode) ⇒ <code>array</code>
+        * [.oneHotEncoder(name, options)](#DataSet+oneHotEncoder) ⇒ <code>Object</code>
+        * [.columnReducer(name, options)](#DataSet+columnReducer) ⇒ <code>Object</code>
+        * [.columnMerge(name, data)](#DataSet+columnMerge) ⇒ <code>Object</code>
+        * [.fitColumns(options)](#DataSet+fitColumns) ⇒ <code>Array.&lt;Object&gt;</code>
+    * _static_
+        * [.reverseColumnMatrix(options)](#DataSet.reverseColumnMatrix) ⇒ <code>Array.&lt;Object&gt;</code>
 
 <a name="new_DataSet_new"></a>
 
@@ -245,6 +249,28 @@ csvObj.columnMatrix([['col1',{parseInt:true}],['col2']]); // =>
 //  [1,5], 
 //  [2,6], 
 //]
+```
+<a name="DataSet+selectColumns"></a>
+
+### dataSet.selectColumns(names, options) ⇒ <code>Array.&lt;Object&gt;</code>
+returns a list of objects with only selected columns as properties
+
+**Kind**: instance method of [<code>DataSet</code>](#DataSet)  
+**Returns**: <code>Array.&lt;Object&gt;</code> - an array of objects with properties derived from names  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| names | <code>Array.&lt;String&gt;</code> | array of selected columns |
+| options | <code>\*</code> |  |
+
+**Example**  
+```js
+const data = [{ Age: '44', Salary: '44' , Height: '34' },
+{ Age: '27', Salary: '44' , Height: '50'  }]
+const AgeDataSet = new MS.DataSet(data);
+const cols = [ 'Age', 'Salary' ];
+const selectedCols = CSVDataSet.selectColumns(cols); // => [{ Age: '44', Salary: '44' },
+{ Age: '27', Salary: '27' }]
 ```
 <a name="DataSet+columnArray"></a>
 
@@ -426,6 +452,32 @@ dataset.fitColumns({
 //     }
 //     ...
 //   ]
+```
+<a name="DataSet.reverseColumnMatrix"></a>
+
+### DataSet.reverseColumnMatrix(options) ⇒ <code>Array.&lt;Object&gt;</code>
+returns an array of objects by applying labels to matrix columns
+
+**Kind**: static method of [<code>DataSet</code>](#DataSet)  
+**Returns**: <code>Array.&lt;Object&gt;</code> - an array of objects with properties derived from options.labels  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>\*</code> |  |
+| options.vectors | <code>Array.&lt;Array&gt;</code> | array of vectors |
+| options.labels | <code>Array.&lt;String&gt;</code> | array of labels |
+
+**Example**  
+```js
+const data = [{ Age: '44', Salary: '44' },
+{ Age: '27', Salary: '27' }]
+const AgeDataSet = new MS.DataSet(data);
+const dependentVariables = [ [ 'Age', ], [ 'Salary', ], ];
+const AgeSalMatrix = AgeDataSet.columnMatrix(dependentVariables); // =>
+//  [ [ '44', '72000' ],
+//  [ '27', '48000' ] ];
+MS.DataSet.reverseColumnMatrix({vectors:AgeSalMatrix,labels:dependentVariables}); // => [{ Age: '44', Salary: '44' },
+{ Age: '27', Salary: '27' }]
 ```
 <a name="ReinforcedLearningBase"></a>
 

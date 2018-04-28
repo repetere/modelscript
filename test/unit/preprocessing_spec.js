@@ -98,6 +98,27 @@ describe('preprocessing', function() {
         expect(invalidMatrix[ 0 ][ 0 ]).to.be.undefined;
       });
     });
+    describe('static reverseColumnMatrix', () => {
+      it('should reverse a matrix of values into labeled object', () => {
+        const dependentVariables = [ [ 'Age', ], [ 'Salary', ], ];
+        const AgeSalMatrix = CSVDataSet.columnMatrix(dependentVariables);
+        const AgeArray = CSVDataSet.columnArray('Age');
+        const reversedAgeSalMatrix = ms.DataSet.reverseColumnMatrix({ vectors: AgeSalMatrix, labels: dependentVariables, });
+        const selectedCols = CSVDataSet.selectColumns([ 'Age', 'Salary' ]);
+        expect(AgeSalMatrix).to.be.lengthOf(AgeArray.length);
+        expect(reversedAgeSalMatrix).to.be.lengthOf(AgeArray.length);
+      });
+    });
+    describe('selectColumns', () => { 
+      it('should return a list of objects with only selected columns as properties', () => {
+        const cols = [ 'Age', 'Salary' ];
+        const selectedCols = CSVDataSet.selectColumns(cols);
+        expect(Object.keys(selectedCols[ 0 ])).to.eql(cols);
+        expect(Object.keys(selectedCols[ 0 ])).to.have.lengthOf(cols.length);
+        expect(selectedCols[ 0 ].Age).to.eql(CSVDataSet.data[ 0 ].Age);
+        expect(selectedCols[ 0 ].Salary).to.eql(CSVDataSet.data[ 0 ].Salary);
+      });
+    });
     describe('columnArray', () => {
       const countryColumn = CSVDataSet.columnArray('Country');
       it('should select a column from CSV Data by name', () => {

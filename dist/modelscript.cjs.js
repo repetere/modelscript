@@ -862,6 +862,58 @@ csvObj.columnMatrix([['col1',{parseInt:true}],['col2']]); // =>
     return util$1.pivotArrays(vectorArrays);
   }
   /**
+   * returns an array of objects by applying labels to matrix columns
+   * @example
+const data = [{ Age: '44', Salary: '44' },
+{ Age: '27', Salary: '27' }]
+const AgeDataSet = new MS.DataSet(data);
+const dependentVariables = [ [ 'Age', ], [ 'Salary', ], ];
+const AgeSalMatrix = AgeDataSet.columnMatrix(dependentVariables); // =>
+//  [ [ '44', '72000' ],
+//  [ '27', '48000' ] ];
+MS.DataSet.reverseColumnMatrix({vectors:AgeSalMatrix,labels:dependentVariables}); // => [{ Age: '44', Salary: '44' },
+{ Age: '27', Salary: '27' }]
+   * 
+   * @param {*} options 
+   * @param {Array[]} options.vectors - array of vectors
+   * @param {String[]} options.labels - array of labels
+   * @returns {Object[]} an array of objects with properties derived from options.labels
+   */
+  static reverseColumnMatrix(options = {}) {
+    const { vectors, labels, } = options;
+    return vectors.reduce((result, val) => { 
+      result.push(val.reduce((prop, value, index) => { 
+        prop[ labels[ index ][ 0 ] ] = val[0];
+        return prop;
+      }, {}));
+      return result;
+    }, []);
+  }
+  /**
+   * returns a list of objects with only selected columns as properties
+ * @example
+const data = [{ Age: '44', Salary: '44' , Height: '34' },
+{ Age: '27', Salary: '44' , Height: '50'  }]
+const AgeDataSet = new MS.DataSet(data);
+const cols = [ 'Age', 'Salary' ];
+const selectedCols = CSVDataSet.selectColumns(cols); // => [{ Age: '44', Salary: '44' },
+{ Age: '27', Salary: '27' }]
+   * 
+   * @param {String[]} names - array of selected columns
+   * @param {*} options 
+   * @returns {Object[]} an array of objects with properties derived from names
+   */
+  selectColumns(names, options = {}) {
+    return this.data.reduce((result, val) => {
+      const selectedData = {};
+      names.forEach(name => {
+        selectedData[ name ] = val[ name ];
+      });
+      result.push(selectedData);
+      return result;
+    }, []);
+  }
+  /**
    * returns a new array of a selected column from an array of objects, can filter, scale and replace values
    * @example 
    * //column Array returns column of data by name
