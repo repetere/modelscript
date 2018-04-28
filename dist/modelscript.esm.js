@@ -878,7 +878,7 @@ MS.DataSet.reverseColumnMatrix({vectors:AgeSalMatrix,labels:dependentVariables})
     const { vectors, labels, } = options;
     return vectors.reduce((result, val) => { 
       result.push(val.reduce((prop, value, index) => { 
-        prop[ labels[ index ][ 0 ] ] = val[0];
+        prop[ labels[ index ][ 0 ] ] = val[index];
         return prop;
       }, {}));
       return result;

@@ -107,6 +107,7 @@ describe('preprocessing', function() {
         const selectedCols = CSVDataSet.selectColumns([ 'Age', 'Salary' ]);
         expect(AgeSalMatrix).to.be.lengthOf(AgeArray.length);
         expect(reversedAgeSalMatrix).to.be.lengthOf(AgeArray.length);
+        expect(reversedAgeSalMatrix).to.eql(selectedCols);
       });
     });
     describe('selectColumns', () => { 
