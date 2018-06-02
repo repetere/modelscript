@@ -1,0 +1,1 @@
+cmd_Release/obj.target/range.node := g++ -shared -pthread -rdynamic -m64  -Wl,-soname=range.node -o Release/obj.target/range.node -Wl,--start-group Release/obj.target/range/src/range.o -Wl,--end-group 

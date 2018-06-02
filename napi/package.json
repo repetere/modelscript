@@ -1,0 +1,11 @@
+{
+    "name": "modelscript-napi",
+    "version": "0.0.0-alpha.0",
+    "description": "modelscript native bindings",
+    "main": "index.js",
+    "private": true,
+    "dependencies": {
+        "bindings": "~1.2.1"
+    },
+    "gypfile": true
+}
