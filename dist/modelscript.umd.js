@@ -84443,6 +84443,16 @@ MS.DataSet.reverseColumnMatrix({vectors:AgeSalMatrix,labels:dependentVariables})
       return result;
     }, []);
   }
+
+  static reverseColumnVector(options = {}) {
+    const { vector, labels, } = options;
+    return vector.reduce((result, val) => {
+      result.push(
+        { [ labels[ 0 ][ 0 ] ]: val, }
+      );
+      return result;
+    }, []);
+  }
   /**
    * returns a list of objects with only selected columns as properties
  * @example

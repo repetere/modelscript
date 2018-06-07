@@ -110,6 +110,16 @@ describe('preprocessing', function() {
         expect(reversedAgeSalMatrix).to.eql(selectedCols);
       });
     });
+    describe('static reverseColumnVector', () => {
+      it('should reverse a vector of values into labeled object', () => {
+        const dependentVariables = [ [ 'Age', ], [ 'Salary', ], ];
+        const AgeArray = CSVDataSet.columnArray('Age');
+        const reversedAgeSalVector = ms.DataSet.reverseColumnVector({ vector: AgeArray, labels: dependentVariables, });
+        const selectedCols = CSVDataSet.selectColumns([ 'Age', ]);
+        expect(reversedAgeSalVector).to.be.lengthOf(AgeArray.length);
+        expect(reversedAgeSalVector).to.eql(selectedCols);
+      });
+    });
     describe('selectColumns', () => { 
       it('should return a list of objects with only selected columns as properties', () => {
         const cols = [ 'Age', 'Salary' ];
