@@ -863,7 +863,7 @@ csvObj.columnMatrix([['col1',{parseInt:true}],['col2']]); // =>
     return util$1.pivotArrays(vectorArrays);
   }
   /**
-   * returns an array of objects by applying labels to matrix columns
+   * returns an array of objects by applying labels to matrix of columns
    * @example
 const data = [{ Age: '44', Salary: '44' },
 { Age: '27', Salary: '27' }]
@@ -1155,11 +1155,6 @@ const encodedPurchasedColumn = dataset.labelEncoder('Purchased');
   */
   labelEncoder(name, options) {
     const config = Object.assign({
-      // n_values: "auto",
-      // categorical_features: "all",
-      // // dtype: np.float64,
-      // sparse: true,
-      // handle_unknown: 'error',
       binary: false,
     }, options);
     const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
@@ -1290,6 +1285,36 @@ CSVDataSet.columnMerge('DoubleAge', [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ]);
       [name]: data,
     };
   }
+  /*
+  transformObject(data) {
+    // if (Array.isArray(data)) return data.map(datum => this.transformObject);
+    const currentColumns = Object.keys(this.data[ 0 ]);
+    const objectColumns = Object.keys(data);
+    const differentKeys = objectColumns.reduce((diffKeys, val) => {
+      if (currentColumns.indexOf(val) === -1) diffKeys.push(val);
+    }, []);
+    let transformedObject = Object.assign({}, data);
+    if (currentColumns.length !== objectColumns.length) {
+      throw new RangeError(`Object must have the same number of keys (${objectColumns.length}) as data in your dataset(${currentColumns.length})`);
+    } else if (differentKeys.length) {
+      throw new ReferenceError(`Object must have identical keys as data in your DataSet. Invalid keys: ${differentKeys.join(',')}`);
+    } else {
+      const labeledData = objectColumns.reduce((labelObject, columnName) => {
+        if (this.labels.has(columnName)){
+          labelObject[ columnName ] = this.labels.get(columnName).get(data[ columnName ]);
+        }
+        return labelObject;
+      }, {});
+      const encodedData = objectColumns.reduce((encodedObject, columnName) => {
+        if (this.encoders.has(columnName)){
+          labelObject[ columnName ] = this.labels.get(columnName).get(data[ columnName ]);
+        }
+        return encodedObject;
+      }, {});
+      transformedObject = Object.assign(transformedObject, labeledData, encodedData);
+    }
+    return transformedObject;
+  }*/
   /**
      * mutates data property of DataSet by replacing multiple columns in a single command
      * @example
