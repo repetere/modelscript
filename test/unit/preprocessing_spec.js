@@ -1,7 +1,8 @@
-'use strict';
+
 const ms = require('../../dist/modelscript.cjs');
 const ml = require('ml');
 const expect = require('chai').expect;
+const { fullData, } = require('../mock/dataset');
 const csvData = [{
   'Country': 'Brazil',
   'Age': '44',
@@ -68,6 +69,7 @@ const unmodifiedCSVData = [...csvData,];
 describe('preprocessing', function() {
   describe('DataSet class', () => {
     const CSVDataSet = new ms.preprocessing.DataSet(csvData);
+    const CSVFullDataSet = new ms.preprocessing.DataSet(fullData);
     describe('constructor', () => {
       it('should instantiate a new DataSet Class', () => {
         expect(ms.preprocessing).to.be.an('object');
@@ -82,10 +84,10 @@ describe('preprocessing', function() {
       it('should filter data by a filter function', () => {
         expect(CSVDataSet.filterColumn(row => row.Salary.toString() === '83000')).to.have.lengthOf(1);
       });
-    })
+    });
     describe('columnMatrix', () => { 
       it('should create a matrix of values from columns', () => {
-        const AgeSalMatrix = CSVDataSet.columnMatrix([ [ 'Age', ], [ 'Salary', ], ]);
+        const AgeSalMatrix = CSVDataSet.columnMatrix([['Age', ], ['Salary', ], ]);
         const AgeArray = CSVDataSet.columnArray('Age');
         expect(AgeSalMatrix).to.be.lengthOf(AgeArray.length);
         expect(AgeSalMatrix[ 0 ][0]).to.eql(AgeArray[0]);
@@ -100,11 +102,11 @@ describe('preprocessing', function() {
     });
     describe('static reverseColumnMatrix', () => {
       it('should reverse a matrix of values into labeled object', () => {
-        const dependentVariables = [ [ 'Age', ], [ 'Salary', ], ];
+        const dependentVariables = [['Age', ], ['Salary', ], ];
         const AgeSalMatrix = CSVDataSet.columnMatrix(dependentVariables);
         const AgeArray = CSVDataSet.columnArray('Age');
         const reversedAgeSalMatrix = ms.DataSet.reverseColumnMatrix({ vectors: AgeSalMatrix, labels: dependentVariables, });
-        const selectedCols = CSVDataSet.selectColumns([ 'Age', 'Salary' ]);
+        const selectedCols = CSVDataSet.selectColumns(['Age', 'Salary', ]);
         expect(AgeSalMatrix).to.be.lengthOf(AgeArray.length);
         expect(reversedAgeSalMatrix).to.be.lengthOf(AgeArray.length);
         expect(reversedAgeSalMatrix).to.eql(selectedCols);
@@ -112,17 +114,17 @@ describe('preprocessing', function() {
     });
     describe('static reverseColumnVector', () => {
       it('should reverse a vector of values into labeled object', () => {
-        const dependentVariables = [ [ 'Age', ], [ 'Salary', ], ];
+        const dependentVariables = [['Age', ], ['Salary', ], ];
         const AgeArray = CSVDataSet.columnArray('Age');
         const reversedAgeSalVector = ms.DataSet.reverseColumnVector({ vector: AgeArray, labels: dependentVariables, });
-        const selectedCols = CSVDataSet.selectColumns([ 'Age', ]);
+        const selectedCols = CSVDataSet.selectColumns(['Age', ]);
         expect(reversedAgeSalVector).to.be.lengthOf(AgeArray.length);
         expect(reversedAgeSalVector).to.eql(selectedCols);
       });
     });
     describe('selectColumns', () => { 
       it('should return a list of objects with only selected columns as properties', () => {
-        const cols = [ 'Age', 'Salary' ];
+        const cols = ['Age', 'Salary', ];
         const selectedCols = CSVDataSet.selectColumns(cols);
         expect(Object.keys(selectedCols[ 0 ])).to.eql(cols);
         expect(Object.keys(selectedCols[ 0 ])).to.have.lengthOf(cols.length);
@@ -222,6 +224,23 @@ describe('preprocessing', function() {
           scale: 'exp',
         });
         expect(JSON.stringify(logScaleSalary)).to.equal(JSON.stringify(ms.util.ExpScaler(salaryColumn)));
+      });
+    });
+    describe('columnScale / columnDescale', () => {
+      const salaryColumn = CSVFullDataSet.columnArray('Salary', { parseInt:true, });
+      const salaryColumnScaled = CSVFullDataSet.columnArray('Salary', { scale:'log', });
+      const scaledSalaryColumn = CSVFullDataSet.columnScale('Salary', { strategy: 'log', });
+      it('should scale a column and store the transform functions', () => {
+        expect(CSVFullDataSet.scalers).to.be.a('map');
+        expect(CSVFullDataSet.scalers.has('Salary')).to.be.true;
+        expect(scaledSalaryColumn).to.eql(salaryColumnScaled);
+        expect(CSVFullDataSet.scalers.get('Salary').scale(72000)).to.eql(11.184421397998193);
+        expect(CSVFullDataSet.scalers.get('Salary').scale(44)).to.eql( 3.784189633918261);
+      });
+      it('should descale a column', () => {
+        const descaledColumn = CSVFullDataSet.columnDescale('Salary', { data: scaledSalaryColumn, });
+        expect(parseInt(CSVFullDataSet.scalers.get('Salary').descale(11.184421397998193))).to.eql(72000);
+        expect(descaledColumn.map(Math.round)).to.eql(salaryColumn);
       });
     });
     describe('labelEncoder', () => {
@@ -352,7 +371,7 @@ describe('preprocessing', function() {
       });
     });
     describe('fitColumns', () => {
-      const extraColumn = [ 89, 12, 32, 45, 53, 52, 56, 21, 34, 56 ];
+      const extraColumn = [89, 12, 32, 45, 53, 52, 56, 21, 34, 56, ];
       it('should merge columns', () => {
         const fittedOriginalData = new ms.DataSet([...unmodifiedCSVData,]);
         fittedOriginalData.fitColumns({
@@ -370,13 +389,13 @@ describe('preprocessing', function() {
         expect(fittedOriginalData.columnArray('Extra')).to.eql(extraColumn);
       });
       it('should only merge columns if data length matches', () => { 
-        const fittedOriginalData = new ms.DataSet([ ...unmodifiedCSVData, ]);
-        const newColumn = fittedOriginalData.columnMerge('err', [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 ]);
+        const fittedOriginalData = new ms.DataSet([...unmodifiedCSVData, ]);
+        const newColumn = fittedOriginalData.columnMerge('err', [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, ]);
         expect(newColumn).to.be.an('Object');
         expect(newColumn).to.haveOwnProperty('err');
         expect(newColumn.err).to.be.an('array');
         try {
-          fittedOriginalData.columnMerge('err', [ 1, 2 ]);
+          fittedOriginalData.columnMerge('err', [1, 2, ]);
         } catch (e) {
           expect(e).to.be.an('error');
           expect(e.toString()).to.eql(`RangeError: Merged data column must have the same length(2) as the DataSet's length (${10})`);

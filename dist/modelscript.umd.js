@@ -84383,6 +84383,7 @@ class DataSet {
     this.data = [...data, ];
     this.labels = new Map();
     this.encoders = new Map();
+    this.scalers = new Map();
     return this;
   }
   /**
@@ -84545,6 +84546,72 @@ const OringalAgeColumn = dataset.columnArray('Age');
     }
   }
   /**
+   * Returns a new array of scaled values which can be reverse (descaled). The scaling transformations are stored on the DataSet
+   * @example
+//dataset.columnArray('Age') => [ '44','27','30','38','40','35',38.77777777777778,'48','50','37' ]
+dataset.columnScale('Age',{strategy:'log'}) // => [ 3.784189633918261,
+  3.295836866004329, 3.4011973816621555, 3.6375861597263857, 3.6888794541139363, 3.5553480614894135, 3.657847344866208, 3.8712010109078907, 3.912023005428146, 3.6109179126442243 ]
+dataset.scalers.get('Age').scale(45) // => 3.8066624897703196
+dataset.scalers.get('Age').descale(3.8066624897703196) // => 45
+//this supports, log/exponent, minmax/normalization and standardscaling
+   * @param {string} name - name - csv column header, or JSON object property name 
+   * @param {string} [options.strategy="log"] - strategy for scaling values 
+   * @returns {number[]} returns an array of scaled values
+   */
+  columnScale(name, options = {}) {
+    const config = Object.assign({
+      strategy: 'log',
+    }, options);
+    const scaleData = config.data || this.columnArray(name, config.columnArrayOptions);
+    let scaledData;
+    let transforms;
+    switch (config.strategy) {
+    case 'standard':
+      transforms = util$4.StandardScalerTransforms(scaleData);     
+      this.scalers.set(name, {
+        scale: transforms.scale,
+        descale: transforms.descale,
+      });
+      scaledData = transforms.values;
+      break;
+    case 'log':
+      this.scalers.set(name, {
+        scale: Math.log,
+        descale: Math.exp,
+      });
+      scaledData = util$4.LogScaler(scaleData);
+      break;
+    case 'normalize':
+    case 'minmax':
+    default:
+      transforms = util$4.MinMaxScalerTransforms(scaleData);     
+      this.scalers.set(name, {
+        scale: transforms.scale,
+        descale: transforms.descale,
+      });
+      scaledData = transforms.values;
+      break;
+    }
+    return scaledData;
+  }
+  /**
+   * Returns a new array of descaled values
+   * @example
+//dataset.columnArray('Age') => [ '44','27','30','38','40','35',38.77777777777778,'48','50','37' ]
+const scaledData = [ 3.784189633918261,
+  3.295836866004329, 3.4011973816621555, 3.6375861597263857, 3.6888794541139363, 3.5553480614894135, 3.657847344866208, 3.8712010109078907, 3.912023005428146, 3.6109179126442243 ]
+dataset.columnDescale('Age') // => [ '44','27','30','38','40','35',38.77777777777778,'48','50','37' ]
+   * @param {string} name - name - csv column header, or JSON object property name 
+   * @param {string} [options.strategy="log"] - strategy for scaling values 
+   * @returns {number[]} returns an array of scaled values
+   */
+  columnDescale(name, options) {
+    const config = Object.assign({ }, options);
+    const scaledData = config.data || this.columnArray(name, config.columnArrayOptions);
+    const descaleFunction = this.scalers.get(name).descale;
+    return scaledData.map(descaleFunction);
+  }
+  /**
    * returns a new array of a selected column from an array of objects and replaces empty values, encodes values and scales values
    * @example
    * //column Replace returns new Array with replaced missing data
@@ -84572,6 +84639,20 @@ const ReplacedAgeMeanColumn = dataset.columnReplace('Age',{strategy:'mean'});
       value: replaceVal,
     };
     switch (config.strategy) {
+    case 'scale':
+      replaceVal = this.columnScale(name, config.scaleOptions);
+      replace = {
+        test: val => true,
+        value: (result, val, index, arr) => replaceVal[index],
+      };
+      break;
+    case 'descale':
+      replaceVal = this.columnDescale(name, config.descaleOptions);
+      replace = {
+        test: val => true,
+        value: (result, val, index, arr) => replaceVal[index],
+      };
+      break;
     case 'label':
     case 'labelEncoder':
       replaceVal = this.labelEncoder(name, config.labelOptions);

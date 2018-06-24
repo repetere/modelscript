@@ -56,6 +56,9 @@ $ npm i modelscript
     columnMatrix(vectors), //returns a matrix of values by combining column arrays into a matrix
     columnArray(columnName, options), // - returns a new array of a selected column from an array of objects, can filter, scale and replace values
     columnReplace(columnName, options), // - returns a new array of a selected column from an array of objects and replaces empty values, encodes values and scales values
+    columnScale(columnName, options), // - returns a new array of scaled values which can be reverse (descaled). The scaling transformations are stored on the DataSet
+    columnDescale(columnName, options), // - Returns a new array of descaled values
+    selectColumns(columns, options), //returns a list of objects with only selected columns as properties
     labelEncoder(columnName, options), // - returns a new array and label encodes a selected column
     labelDecode(columnName, options), // - returns a new array and decodes an encoded column back to the original array values
     oneHotEncoder(columnName, options), // - returns a new object of one hot encoded values
@@ -64,6 +67,8 @@ $ npm i modelscript
     columnMerge(name, data), // - returns a new column that is merged onto the data set
     filterColumn(options), // - filtered rows of data,
     fitColumns(options), // - mutates data property of DataSet by replacing multiple columns in a single command
+    static reverseColumnMatrix(options), // returns an array of objects by applying labels to matrix of columns
+    static reverseColumnVector(options), // returns an array of objects by applying labels to column vector
   },
   calc:{
     getTransactions: [Function getTransactions], // Formats an array of transactions into a sparse matrix like format for Apriori/Eclat
