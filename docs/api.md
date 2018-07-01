@@ -38,6 +38,12 @@
 <dt><a href="#rSquared">rSquared([actuals], [estimates])</a> ⇒ <code>Number</code></dt>
 <dd><p>The coefficent of determination is given by r^2 decides how well the given data fits a line or a curve.</p>
 </dd>
+<dt><a href="#StandardScalerTransforms">StandardScalerTransforms(values)</a> ⇒ <code>Object</code></dt>
+<dd><p>This function returns two functions that can standard scale new inputs and reverse scale new outputs</p>
+</dd>
+<dt><a href="#MinMaxScalerTransforms">MinMaxScalerTransforms(values)</a> ⇒ <code>Object</code></dt>
+<dd><p>This function returns two functions that can mix max scale new inputs and reverse scale new outputs</p>
+</dd>
 </dl>
 
 <a name="ColumnVectorizer"></a>
@@ -185,6 +191,8 @@ ColumnVectorizer.evaluate('I would rate everything Great, views Great, food Grea
         * [.columnMatrix([vectors])](#DataSet+columnMatrix) ⇒ <code>Array</code>
         * [.selectColumns(names, options)](#DataSet+selectColumns) ⇒ <code>Array.&lt;Object&gt;</code>
         * [.columnArray(name, options)](#DataSet+columnArray) ⇒ <code>array</code>
+        * [.columnScale(name)](#DataSet+columnScale) ⇒ <code>Array.&lt;number&gt;</code>
+        * [.columnDescale(name)](#DataSet+columnDescale) ⇒ <code>Array.&lt;number&gt;</code>
         * [.columnReplace(name, options)](#DataSet+columnReplace) ⇒ <code>array</code> \| <code>Array.&lt;Object&gt;</code>
         * [.labelEncoder(name, options)](#DataSet+labelEncoder) ⇒ <code>array</code>
         * [.labelDecode(name, options)](#DataSet+labelDecode) ⇒ <code>array</code>
@@ -297,6 +305,48 @@ returns a new array of a selected column from an array of objects, can filter, s
 //column Array returns column of data by name
 // [ '44','27','30','38','40','35','','48','50', '37' ]
 const OringalAgeColumn = dataset.columnArray('Age'); 
+```
+<a name="DataSet+columnScale"></a>
+
+### dataSet.columnScale(name) ⇒ <code>Array.&lt;number&gt;</code>
+Returns a new array of scaled values which can be reverse (descaled). The scaling transformations are stored on the DataSet
+
+**Kind**: instance method of [<code>DataSet</code>](#DataSet)  
+**Returns**: <code>Array.&lt;number&gt;</code> - returns an array of scaled values  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| name | <code>string</code> |  | name - csv column header, or JSON object property name |
+| [options.strategy] | <code>string</code> | <code>&quot;\&quot;log\&quot;&quot;</code> | strategy for scaling values |
+
+**Example**  
+```js
+//dataset.columnArray('Age') => [ '44','27','30','38','40','35',38.77777777777778,'48','50','37' ]
+dataset.columnScale('Age',{strategy:'log'}) // => [ 3.784189633918261,
+  3.295836866004329, 3.4011973816621555, 3.6375861597263857, 3.6888794541139363, 3.5553480614894135, 3.657847344866208, 3.8712010109078907, 3.912023005428146, 3.6109179126442243 ]
+dataset.scalers.get('Age').scale(45) // => 3.8066624897703196
+dataset.scalers.get('Age').descale(3.8066624897703196) // => 45
+//this supports, log/exponent, minmax/normalization and standardscaling
+```
+<a name="DataSet+columnDescale"></a>
+
+### dataSet.columnDescale(name) ⇒ <code>Array.&lt;number&gt;</code>
+Returns a new array of descaled values
+
+**Kind**: instance method of [<code>DataSet</code>](#DataSet)  
+**Returns**: <code>Array.&lt;number&gt;</code> - returns an array of scaled values  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| name | <code>string</code> |  | name - csv column header, or JSON object property name |
+| [options.strategy] | <code>string</code> | <code>&quot;\&quot;log\&quot;&quot;</code> | strategy for scaling values |
+
+**Example**  
+```js
+//dataset.columnArray('Age') => [ '44','27','30','38','40','35',38.77777777777778,'48','50','37' ]
+const scaledData = [ 3.784189633918261,
+  3.295836866004329, 3.4011973816621555, 3.6375861597263857, 3.6888794541139363, 3.5553480614894135, 3.657847344866208, 3.8712010109078907, 3.912023005428146, 3.6109179126442243 ]
+dataset.columnDescale('Age') // => [ '44','27','30','38','40','35',38.77777777777778,'48','50','37' ]
 ```
 <a name="DataSet+columnReplace"></a>
 
@@ -456,7 +506,7 @@ dataset.fitColumns({
 <a name="DataSet.reverseColumnMatrix"></a>
 
 ### DataSet.reverseColumnMatrix(options) ⇒ <code>Array.&lt;Object&gt;</code>
-returns an array of objects by applying labels to matrix columns
+returns an array of objects by applying labels to matrix of columns
 
 **Kind**: static method of [<code>DataSet</code>](#DataSet)  
 **Returns**: <code>Array.&lt;Object&gt;</code> - an array of objects with properties derived from options.labels  
@@ -1096,4 +1146,28 @@ The coefficent of determination is given by r^2 decides how well the given data 
 | --- | --- | --- |
 | [actuals] | <code>Array.&lt;Number&gt;</code> | <code>[]</code> | 
 | [estimates] | <code>Array.&lt;Number&gt;</code> | <code>[]</code> | 
+
+<a name="StandardScalerTransforms"></a>
+
+## StandardScalerTransforms(values) ⇒ <code>Object</code>
+This function returns two functions that can standard scale new inputs and reverse scale new outputs
+
+**Kind**: global function  
+**Returns**: <code>Object</code> - - {scale[ Function ], descale[ Function ]}  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| values | <code>Array.&lt;Number&gt;</code> | array of numbers |
+
+<a name="MinMaxScalerTransforms"></a>
+
+## MinMaxScalerTransforms(values) ⇒ <code>Object</code>
+This function returns two functions that can mix max scale new inputs and reverse scale new outputs
+
+**Kind**: global function  
+**Returns**: <code>Object</code> - - {scale[ Function ], descale[ Function ]}  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| values | <code>Array.&lt;Number&gt;</code> | array of numbers |
 

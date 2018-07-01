@@ -250,8 +250,8 @@ const StandardScaler = (z) => scale(z, sd(z));
 
 
 /** This function returns two functions that can standard scale new inputs and reverse scale new outputs
- * @param {Array[]} values - array of numbers
- * @returns {scale[ Function ], descale[ Function ]}
+ * @param {Number[]} values - array of numbers
+ * @returns {Object} - {scale[ Function ], descale[ Function ]}
 */
 function StandardScalerTransforms(vector = []) {
   let average = avg(vector);
@@ -278,8 +278,8 @@ function StandardScalerTransforms(vector = []) {
 const MinMaxScaler= (z) => scale(z, (max(z) - min(z)));
 
 /** This function returns two functions that can mix max scale new inputs and reverse scale new outputs
- * @param {Array[]} values - array of numbers
- * @returns {scale[ Function ], descale[ Function ]}
+ * @param {Number[]} values - array of numbers
+ * @returns {Object} - {scale[ Function ], descale[ Function ]}
 */
 function MinMaxScalerTransforms(vector = []) {
   let average = avg(vector);

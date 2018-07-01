@@ -46,6 +46,7 @@ export class DataSet {
     this.data = [...data, ];
     this.labels = new Map();
     this.encoders = new Map();
+    this.scalers = new Map();
     return this;
   }
   /**
@@ -79,7 +80,7 @@ csvObj.columnMatrix([['col1',{parseInt:true}],['col2']]); // =>
     return utils.pivotArrays(vectorArrays);
   }
   /**
-   * returns an array of objects by applying labels to matrix columns
+   * returns an array of objects by applying labels to matrix of columns
    * @example
 const data = [{ Age: '44', Salary: '44' },
 { Age: '27', Salary: '27' }]
@@ -103,6 +104,16 @@ MS.DataSet.reverseColumnMatrix({vectors:AgeSalMatrix,labels:dependentVariables})
         prop[ labels[ index ][ 0 ] ] = val[index];
         return prop;
       }, {}));
+      return result;
+    }, []);
+  }
+
+  static reverseColumnVector(options = {}) {
+    const { vector, labels, } = options;
+    return vector.reduce((result, val) => {
+      result.push(
+        { [ labels[ 0 ][ 0 ] ]: val, }
+      );
       return result;
     }, []);
   }
@@ -198,6 +209,72 @@ const OringalAgeColumn = dataset.columnArray('Age');
     }
   }
   /**
+   * Returns a new array of scaled values which can be reverse (descaled). The scaling transformations are stored on the DataSet
+   * @example
+//dataset.columnArray('Age') => [ '44','27','30','38','40','35',38.77777777777778,'48','50','37' ]
+dataset.columnScale('Age',{strategy:'log'}) // => [ 3.784189633918261,
+  3.295836866004329, 3.4011973816621555, 3.6375861597263857, 3.6888794541139363, 3.5553480614894135, 3.657847344866208, 3.8712010109078907, 3.912023005428146, 3.6109179126442243 ]
+dataset.scalers.get('Age').scale(45) // => 3.8066624897703196
+dataset.scalers.get('Age').descale(3.8066624897703196) // => 45
+//this supports, log/exponent, minmax/normalization and standardscaling
+   * @param {string} name - name - csv column header, or JSON object property name 
+   * @param {string} [options.strategy="log"] - strategy for scaling values 
+   * @returns {number[]} returns an array of scaled values
+   */
+  columnScale(name, options = {}) {
+    const config = Object.assign({
+      strategy: 'log',
+    }, options);
+    const scaleData = config.data || this.columnArray(name, config.columnArrayOptions);
+    let scaledData;
+    let transforms;
+    switch (config.strategy) {
+    case 'standard':
+      transforms = utils.StandardScalerTransforms(scaleData);     
+      this.scalers.set(name, {
+        scale: transforms.scale,
+        descale: transforms.descale,
+      });
+      scaledData = transforms.values;
+      break;
+    case 'log':
+      this.scalers.set(name, {
+        scale: Math.log,
+        descale: Math.exp,
+      });
+      scaledData = utils.LogScaler(scaleData);
+      break;
+    case 'normalize':
+    case 'minmax':
+    default:
+      transforms = utils.MinMaxScalerTransforms(scaleData);     
+      this.scalers.set(name, {
+        scale: transforms.scale,
+        descale: transforms.descale,
+      });
+      scaledData = transforms.values;
+      break;
+    }
+    return scaledData;
+  }
+  /**
+   * Returns a new array of descaled values
+   * @example
+//dataset.columnArray('Age') => [ '44','27','30','38','40','35',38.77777777777778,'48','50','37' ]
+const scaledData = [ 3.784189633918261,
+  3.295836866004329, 3.4011973816621555, 3.6375861597263857, 3.6888794541139363, 3.5553480614894135, 3.657847344866208, 3.8712010109078907, 3.912023005428146, 3.6109179126442243 ]
+dataset.columnDescale('Age') // => [ '44','27','30','38','40','35',38.77777777777778,'48','50','37' ]
+   * @param {string} name - name - csv column header, or JSON object property name 
+   * @param {string} [options.strategy="log"] - strategy for scaling values 
+   * @returns {number[]} returns an array of scaled values
+   */
+  columnDescale(name, options) {
+    const config = Object.assign({ }, options);
+    const scaledData = config.data || this.columnArray(name, config.columnArrayOptions);
+    const descaleFunction = this.scalers.get(name).descale;
+    return scaledData.map(descaleFunction);
+  }
+  /**
    * returns a new array of a selected column from an array of objects and replaces empty values, encodes values and scales values
    * @example
    * //column Replace returns new Array with replaced missing data
@@ -225,6 +302,20 @@ const ReplacedAgeMeanColumn = dataset.columnReplace('Age',{strategy:'mean'});
       value: replaceVal,
     };
     switch (config.strategy) {
+    case 'scale':
+      replaceVal = this.columnScale(name, config.scaleOptions);
+      replace = {
+        test: val => true,
+        value: (result, val, index, arr) => replaceVal[index],
+      };
+      break;
+    case 'descale':
+      replaceVal = this.columnDescale(name, config.descaleOptions);
+      replace = {
+        test: val => true,
+        value: (result, val, index, arr) => replaceVal[index],
+      };
+      break;
     case 'label':
     case 'labelEncoder':
       replaceVal = this.labelEncoder(name, config.labelOptions);
@@ -281,11 +372,6 @@ const encodedPurchasedColumn = dataset.labelEncoder('Purchased');
   */
   labelEncoder(name, options) {
     const config = Object.assign({
-      // n_values: "auto",
-      // categorical_features: "all",
-      // // dtype: np.float64,
-      // sparse: true,
-      // handle_unknown: 'error',
       binary: false,
     }, options);
     const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
@@ -416,6 +502,36 @@ CSVDataSet.columnMerge('DoubleAge', [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ]);
       [name]: data,
     };
   }
+  /*
+  transformObject(data) {
+    // if (Array.isArray(data)) return data.map(datum => this.transformObject);
+    const currentColumns = Object.keys(this.data[ 0 ]);
+    const objectColumns = Object.keys(data);
+    const differentKeys = objectColumns.reduce((diffKeys, val) => {
+      if (currentColumns.indexOf(val) === -1) diffKeys.push(val);
+    }, []);
+    let transformedObject = Object.assign({}, data);
+    if (currentColumns.length !== objectColumns.length) {
+      throw new RangeError(`Object must have the same number of keys (${objectColumns.length}) as data in your dataset(${currentColumns.length})`);
+    } else if (differentKeys.length) {
+      throw new ReferenceError(`Object must have identical keys as data in your DataSet. Invalid keys: ${differentKeys.join(',')}`);
+    } else {
+      const labeledData = objectColumns.reduce((labelObject, columnName) => {
+        if (this.labels.has(columnName)){
+          labelObject[ columnName ] = this.labels.get(columnName).get(data[ columnName ]);
+        }
+        return labelObject;
+      }, {});
+      const encodedData = objectColumns.reduce((encodedObject, columnName) => {
+        if (this.encoders.has(columnName)){
+          labelObject[ columnName ] = this.labels.get(columnName).get(data[ columnName ]);
+        }
+        return encodedObject;
+      }, {});
+      transformedObject = Object.assign(transformedObject, labeledData, encodedData);
+    }
+    return transformedObject;
+  }*/
   /**
      * mutates data property of DataSet by replacing multiple columns in a single command
      * @example
@@ -485,13 +601,13 @@ dataset.fitColumns({
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ColumnVectorizer_ColumnVectorizer.html">ColumnVectorizer</a></li><li><a href="DataSet_DataSet.html">DataSet</a></li><li><a href="ml.ReinforcedLearningBase.html">ReinforcedLearningBase</a></li><li><a href="ml.ThompsonSampling.html">ThompsonSampling</a></li><li><a href="ml.UpperConfidenceBound.html">UpperConfidenceBound</a></li><li><a href="nlp.ColumnVectorizer.html">ColumnVectorizer</a></li><li><a href="preprocessing.DataSet.html">DataSet</a></li><li><a href="ReinforcedLearningBase_ReinforcedLearningBase.html">ReinforcedLearningBase</a></li><li><a href="ThompsonSampling_ThompsonSampling.html">ThompsonSampling</a></li><li><a href="UpperConfidenceBound_UpperConfidenceBound.html">UpperConfidenceBound</a></li></ul><h3>Namespaces</h3><ul><li><a href="calc.html">calc</a></li><li><a href="cross_validation.html">cross_validation</a></li><li><a href="ml.html">ml</a></li><li><a href="nlp.html">nlp</a></li><li><a href="PD.html">PD</a></li><li><a href="preprocessing.html">preprocessing</a></li><li><a href="util.html">util</a></li></ul><h3>Global</h3><ul><li><a href="global.html#rSquared">rSquared</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ColumnVectorizer_ColumnVectorizer.html">ColumnVectorizer</a></li><li><a href="DataSet_DataSet.html">DataSet</a></li><li><a href="ml.ReinforcedLearningBase.html">ReinforcedLearningBase</a></li><li><a href="ml.ThompsonSampling.html">ThompsonSampling</a></li><li><a href="ml.UpperConfidenceBound.html">UpperConfidenceBound</a></li><li><a href="nlp.ColumnVectorizer.html">ColumnVectorizer</a></li><li><a href="preprocessing.DataSet.html">DataSet</a></li><li><a href="ReinforcedLearningBase_ReinforcedLearningBase.html">ReinforcedLearningBase</a></li><li><a href="ThompsonSampling_ThompsonSampling.html">ThompsonSampling</a></li><li><a href="UpperConfidenceBound_UpperConfidenceBound.html">UpperConfidenceBound</a></li></ul><h3>Namespaces</h3><ul><li><a href="calc.html">calc</a></li><li><a href="cross_validation.html">cross_validation</a></li><li><a href="ml.html">ml</a></li><li><a href="nlp.html">nlp</a></li><li><a href="PD.html">PD</a></li><li><a href="preprocessing.html">preprocessing</a></li><li><a href="util.html">util</a></li></ul><h3>Global</h3><ul><li><a href="global.html#MinMaxScalerTransforms">MinMaxScalerTransforms</a></li><li><a href="global.html#rSquared">rSquared</a></li><li><a href="global.html#StandardScalerTransforms">StandardScalerTransforms</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Apr 27 2018 22:59:33 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Jul 01 2018 10:46:19 GMT-0400 (EDT)
 </footer>
 
 <script> prettyPrint(); </script>

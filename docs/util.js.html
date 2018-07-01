@@ -226,7 +226,7 @@ function pivotVector(vectors=[]) {
   return vectors.reduce((result, val, index/*, arr*/) => {
     val.forEach((vecVal, i) => {
       (index === 0)
-        ? (result.push([vecVal, ]))
+        ? (result.push([vecVal,]))
         : (result[ i ].push(vecVal));
     });
     return result;
@@ -277,6 +277,25 @@ function pivotArrays(arrays = []) {
 const StandardScaler = (z) => scale(z, sd(z));
 
 
+/** This function returns two functions that can standard scale new inputs and reverse scale new outputs
+ * @param {Number[]} values - array of numbers
+ * @returns {Object} - {scale[ Function ], descale[ Function ]}
+*/
+function StandardScalerTransforms(vector = []) {
+  let average = avg(vector);
+  let standard_dev = sd(vector);
+  let maximum = max(vector);
+  let minimum = min(vector);
+  const scale = (z)=> (z - average) / standard_dev; // equivalent to MinMaxScaler(z)
+  const descale = (scaledZ) => (scaledZ * standard_dev) + average;
+  let values = vector.map(scale);
+  return {
+    scale,
+    descale,
+    values,
+  };
+}
+
 /**
  * Transforms features by scaling each feature to a given range.
   This estimator scales and translates each feature individually such that it is in the given range on the training set, i.e. between zero and one.
@@ -285,6 +304,25 @@ const StandardScaler = (z) => scale(z, sd(z));
   * @returns {number[]}
   */
 const MinMaxScaler= (z) => scale(z, (max(z) - min(z)));
+
+/** This function returns two functions that can mix max scale new inputs and reverse scale new outputs
+ * @param {Number[]} values - array of numbers
+ * @returns {Object} - {scale[ Function ], descale[ Function ]}
+*/
+function MinMaxScalerTransforms(vector = []) {
+  let average = avg(vector);
+  let standard_dev = sd(vector);
+  let maximum = max(vector);
+  let minimum = min(vector);
+  const scale = (z)=> (z - average) / (maximum - minimum); // equivalent to MinMaxScaler(z)
+  const descale = (scaledZ) => (scaledZ * (maximum - minimum)) + average;
+  let values = vector.map(scale);
+  return {
+    scale,
+    descale,
+    values,
+  };
+}
 
 /**
   * Converts z-score into the probability
@@ -336,7 +374,9 @@ export const util = {
   min,
   sd,
   StandardScaler,
+  StandardScalerTransforms,
   MinMaxScaler,
+  MinMaxScalerTransforms,
   LogScaler: (z) => z.map(Math.log),
   ExpScaler: (z) => z.map(Math.exp),
   squaredDifference,
@@ -354,6 +394,8 @@ export const util = {
   zScore: standardScore,
   approximateZPercentile,
   // approximatePercentileZ,
+  MinMaxScalerTransforms,
+  StandardScalerTransforms,
 };</code></pre>
         </article>
     </section>
@@ -364,13 +406,13 @@ export const util = {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ColumnVectorizer_ColumnVectorizer.html">ColumnVectorizer</a></li><li><a href="DataSet_DataSet.html">DataSet</a></li><li><a href="ml.ReinforcedLearningBase.html">ReinforcedLearningBase</a></li><li><a href="ml.ThompsonSampling.html">ThompsonSampling</a></li><li><a href="ml.UpperConfidenceBound.html">UpperConfidenceBound</a></li><li><a href="nlp.ColumnVectorizer.html">ColumnVectorizer</a></li><li><a href="preprocessing.DataSet.html">DataSet</a></li><li><a href="ReinforcedLearningBase_ReinforcedLearningBase.html">ReinforcedLearningBase</a></li><li><a href="ThompsonSampling_ThompsonSampling.html">ThompsonSampling</a></li><li><a href="UpperConfidenceBound_UpperConfidenceBound.html">UpperConfidenceBound</a></li></ul><h3>Namespaces</h3><ul><li><a href="calc.html">calc</a></li><li><a href="cross_validation.html">cross_validation</a></li><li><a href="ml.html">ml</a></li><li><a href="nlp.html">nlp</a></li><li><a href="PD.html">PD</a></li><li><a href="preprocessing.html">preprocessing</a></li><li><a href="util.html">util</a></li></ul><h3>Global</h3><ul><li><a href="global.html#rSquared">rSquared</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ColumnVectorizer_ColumnVectorizer.html">ColumnVectorizer</a></li><li><a href="DataSet_DataSet.html">DataSet</a></li><li><a href="ml.ReinforcedLearningBase.html">ReinforcedLearningBase</a></li><li><a href="ml.ThompsonSampling.html">ThompsonSampling</a></li><li><a href="ml.UpperConfidenceBound.html">UpperConfidenceBound</a></li><li><a href="nlp.ColumnVectorizer.html">ColumnVectorizer</a></li><li><a href="preprocessing.DataSet.html">DataSet</a></li><li><a href="ReinforcedLearningBase_ReinforcedLearningBase.html">ReinforcedLearningBase</a></li><li><a href="ThompsonSampling_ThompsonSampling.html">ThompsonSampling</a></li><li><a href="UpperConfidenceBound_UpperConfidenceBound.html">UpperConfidenceBound</a></li></ul><h3>Namespaces</h3><ul><li><a href="calc.html">calc</a></li><li><a href="cross_validation.html">cross_validation</a></li><li><a href="ml.html">ml</a></li><li><a href="nlp.html">nlp</a></li><li><a href="PD.html">PD</a></li><li><a href="preprocessing.html">preprocessing</a></li><li><a href="util.html">util</a></li></ul><h3>Global</h3><ul><li><a href="global.html#MinMaxScalerTransforms">MinMaxScalerTransforms</a></li><li><a href="global.html#rSquared">rSquared</a></li><li><a href="global.html#StandardScalerTransforms">StandardScalerTransforms</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Apr 27 2018 22:59:33 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Jul 01 2018 10:46:19 GMT-0400 (EDT)
 </footer>
 
 <script> prettyPrint(); </script>
