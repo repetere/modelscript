@@ -84,6 +84,8 @@ $ npm i modelscript
     max: [Function: max],
     min: [Function: min],
     sd: [Function: standardDeviation], // standard deviation
+    StandardScalerTransforms: [Function: StandardScalerTransforms], // returns two functions that can standard scale new inputs and reverse scale new outputs
+    MinMaxScalerTransforms: [Function: MinMaxScalerTransforms], // returns two functions that can mix max scale new inputs and reverse scale new outputs
     StandardScaler: [Function: StandardScaler], // standardization (z-scores)
     MinMaxScaler: [Function: MinMaxScaler], // min-max scaling
     ExpScaler: [Function: ExpScaler], // exponent scaling
