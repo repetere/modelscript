@@ -31,6 +31,58 @@ describe('util', function () {
       expect(ms.util.mean(testArray)).to.equal(ms.util.sum(testArray) / testArray.length);   
     });
   });
+  describe('Standard Scaler Transforms', () => { 
+    const standardScaledTestArray = ms.util.StandardScaler(testArray);
+    const standardScaledTransformsTestObj = ms.util.StandardScalerTransforms(testArray);
+    it('should return an object with a scale function, descale function and values array', () => {
+      expect(standardScaledTransformsTestObj).to.be.an('object');
+      expect(standardScaledTransformsTestObj).to.have.property('scale');
+      expect(standardScaledTransformsTestObj).to.have.property('descale');
+      expect(standardScaledTransformsTestObj).to.have.property('values');
+      expect(standardScaledTransformsTestObj.scale).to.be.a('function');
+      expect(standardScaledTransformsTestObj.descale).to.be.a('function');
+      expect(standardScaledTransformsTestObj.values).to.be.an('array');
+    });
+    it('should have a values array that is equal to the array produced by StandardScaler function', () => {
+      expect(standardScaledTransformsTestObj.values).to.eql(standardScaledTestArray);
+    });
+    it('should have a values array that is equal to the array produced by StandardScaler function', () => {
+      expect(standardScaledTransformsTestObj.values).to.eql(standardScaledTestArray);
+    });
+    it('should properly scale single values', () => {
+      expect(standardScaledTransformsTestObj.scale(testArray[0])).to.equal(standardScaledTestArray[0]);
+      expect(standardScaledTransformsTestObj.scale(testArray[1])).to.equal(standardScaledTestArray[1]);
+    });
+    it('should properly descale single values', () => {
+      expect(standardScaledTransformsTestObj.descale(standardScaledTestArray[0])).to.equal(testArray[0]);
+      expect(standardScaledTransformsTestObj.descale(standardScaledTestArray[1])).to.equal(testArray[1]);
+    });
+  });
+  describe('MinMax Scaler Transforms', () => { 
+    const minMaxScaledTestArray = ms.util.MinMaxScaler(testArray);
+    const minMaxScaledTransformsTestObj = ms.util.MinMaxScalerTransforms(testArray);
+    it('should return an object with a scale function, descale function and values array', () => {
+      expect(minMaxScaledTransformsTestObj).to.be.an('object');
+      expect(minMaxScaledTransformsTestObj).to.have.property('scale');
+      expect(minMaxScaledTransformsTestObj).to.have.property('descale');
+      expect(minMaxScaledTransformsTestObj).to.have.property('values');
+      expect(minMaxScaledTransformsTestObj.scale).to.be.a('function');
+      expect(minMaxScaledTransformsTestObj.descale).to.be.a('function');
+      expect(minMaxScaledTransformsTestObj.values).to.be.an('array');
+      expect(minMaxScaledTransformsTestObj.values).to.eql(minMaxScaledTestArray);
+    });
+    it('should have a values array that is equal to the array produced by MinMaxScaler function', () => {
+      expect(minMaxScaledTransformsTestObj.values).to.eql(minMaxScaledTestArray);
+    });
+    it('should properly scale single values', () => {
+      expect(minMaxScaledTransformsTestObj.scale(testArray[0])).to.equal(minMaxScaledTestArray[0]);
+      expect(minMaxScaledTransformsTestObj.scale(testArray[1])).to.equal(minMaxScaledTestArray[1]);
+    });
+    it('should properly descale single values', () => {
+      expect(minMaxScaledTransformsTestObj.descale(minMaxScaledTestArray[0])).to.equal(testArray[0]);
+      expect(minMaxScaledTransformsTestObj.descale(minMaxScaledTestArray[1])).to.equal(testArray[1]);
+    });
+  });
   describe('Log Scaler', () => { 
     it('should return log scaled values', () => {
       const logScaledTestArray = ms.util.LogScaler(testArray);

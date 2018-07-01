@@ -29,7 +29,8 @@
     "probability-distributions": "^0.9.1",
     "random-js": "^1.0.8",
     "request": "^2.83.0",
-    "valid-url": "^1.0.9"
+    "valid-url": "^1.0.9",
+    "webworker-threads": "^0.7.16"
   },
   "devDependencies": {
     "chai": "^4.0.2",
