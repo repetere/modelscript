@@ -308,7 +308,7 @@ function pivotVector(vectors=[]) {
   return vectors.reduce((result, val, index/*, arr*/) => {
     val.forEach((vecVal, i) => {
       (index === 0)
-        ? (result.push([vecVal, ]))
+        ? (result.push([vecVal,]))
         : (result[ i ].push(vecVal));
     });
     return result;
@@ -359,6 +359,25 @@ function pivotArrays(arrays = []) {
 const StandardScaler = (z) => scale(z, sd(z));
 
 
+/** This function returns two functions that can standard scale new inputs and reverse scale new outputs
+ * @param {Array[]} values - array of numbers
+ * @returns {scale[ Function ], descale[ Function ]}
+*/
+function StandardScalerTransforms(vector = []) {
+  let average = avg(vector);
+  let standard_dev = sd(vector);
+  let maximum = max(vector);
+  let minimum = min(vector);
+  const scale = (z)=> (z - average) / standard_dev; // equivalent to MinMaxScaler(z)
+  const descale = (scaledZ) => (scaledZ * standard_dev) + average;
+  let values = vector.map(scale);
+  return {
+    scale,
+    descale,
+    values,
+  };
+}
+
 /**
  * Transforms features by scaling each feature to a given range.
   This estimator scales and translates each feature individually such that it is in the given range on the training set, i.e. between zero and one.
@@ -367,6 +386,25 @@ const StandardScaler = (z) => scale(z, sd(z));
   * @returns {number[]}
   */
 const MinMaxScaler= (z) => scale(z, (max(z) - min(z)));
+
+/** This function returns two functions that can mix max scale new inputs and reverse scale new outputs
+ * @param {Array[]} values - array of numbers
+ * @returns {scale[ Function ], descale[ Function ]}
+*/
+function MinMaxScalerTransforms(vector = []) {
+  let average = avg(vector);
+  let standard_dev = sd(vector);
+  let maximum = max(vector);
+  let minimum = min(vector);
+  const scale = (z)=> (z - average) / (maximum - minimum); // equivalent to MinMaxScaler(z)
+  const descale = (scaledZ) => (scaledZ * (maximum - minimum)) + average;
+  let values = vector.map(scale);
+  return {
+    scale,
+    descale,
+    values,
+  };
+}
 
 /**
   * Converts z-score into the probability
@@ -418,7 +456,9 @@ const util$1 = {
   min,
   sd,
   StandardScaler,
+  StandardScalerTransforms,
   MinMaxScaler,
+  MinMaxScalerTransforms,
   LogScaler: (z) => z.map(Math.log),
   ExpScaler: (z) => z.map(Math.exp),
   squaredDifference,
@@ -436,6 +476,8 @@ const util$1 = {
   zScore: standardScore,
   approximateZPercentile,
   // approximatePercentileZ,
+  MinMaxScalerTransforms,
+  StandardScalerTransforms,
 };
 
 if (!Object.values) {

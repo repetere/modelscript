@@ -32,7 +32,7 @@ before_script:
   - npm install 
 
 install: 
- - npm install  grunt-cli istanbul -g
+ - npm install  grunt-cli istanbul rollup -g
 
 branches:
   only:
