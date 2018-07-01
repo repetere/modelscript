@@ -198,7 +198,7 @@ function pivotVector(vectors=[]) {
   return vectors.reduce((result, val, index/*, arr*/) => {
     val.forEach((vecVal, i) => {
       (index === 0)
-        ? (result.push([vecVal, ]))
+        ? (result.push([vecVal,]))
         : (result[ i ].push(vecVal));
     });
     return result;
@@ -254,18 +254,18 @@ const StandardScaler = (z) => scale(z, sd(z));
  * @returns {scale[ Function ], descale[ Function ]}
 */
 function StandardScalerTransforms(vector = []) {
-	let average = avg(vector);
-	let standard_dev = sd(vector);
-	let maximum = max(vector);
-	let minimum = min(vector);
+  let average = avg(vector);
+  let standard_dev = sd(vector);
+  let maximum = max(vector);
+  let minimum = min(vector);
   const scale = (z)=> (z - average) / standard_dev; // equivalent to MinMaxScaler(z)
   const descale = (scaledZ) => (scaledZ * standard_dev) + average;
-	let values = vector.map(scale);
+  let values = vector.map(scale);
   return {
     scale,
-		descale,
-		values,
-  }
+    descale,
+    values,
+  };
 }
 
 /**
@@ -282,18 +282,18 @@ const MinMaxScaler= (z) => scale(z, (max(z) - min(z)));
  * @returns {scale[ Function ], descale[ Function ]}
 */
 function MinMaxScalerTransforms(vector = []) {
-	let average = avg(vector);
-	let standard_dev = sd(vector);
-	let maximum = max(vector);
-	let minimum = min(vector);
+  let average = avg(vector);
+  let standard_dev = sd(vector);
+  let maximum = max(vector);
+  let minimum = min(vector);
   const scale = (z)=> (z - average) / (maximum - minimum); // equivalent to MinMaxScaler(z)
   const descale = (scaledZ) => (scaledZ * (maximum - minimum)) + average;
-	let values = vector.map(scale);
+  let values = vector.map(scale);
   return {
     scale,
-		descale,
-		values,
-  }
+    descale,
+    values,
+  };
 }
 
 /**
@@ -364,4 +364,6 @@ export const util = {
   zScore: standardScore,
   approximateZPercentile,
   // approximatePercentileZ,
+  MinMaxScalerTransforms,
+  StandardScalerTransforms,
 };
