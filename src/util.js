@@ -254,14 +254,20 @@ const StandardScaler = (z) => scale(z, sd(z));
  * @returns {Object} - {scale[ Function ], descale[ Function ]}
 */
 function StandardScalerTransforms(vector = []) {
-  let average = avg(vector);
-  let standard_dev = sd(vector);
-  let maximum = max(vector);
-  let minimum = min(vector);
+  const average = avg(vector);
+  const standard_dev = sd(vector);
+  const maximum = max(vector);
+  const minimum = min(vector);
   const scale = (z)=> (z - average) / standard_dev; // equivalent to MinMaxScaler(z)
   const descale = (scaledZ) => (scaledZ * standard_dev) + average;
-  let values = vector.map(scale);
+  const values = vector.map(scale);
   return {
+    components: {
+      average,
+      standard_dev,
+      maximum,
+      minimum,
+    },
     scale,
     descale,
     values,
@@ -282,14 +288,20 @@ const MinMaxScaler= (z) => scale(z, (max(z) - min(z)));
  * @returns {Object} - {scale[ Function ], descale[ Function ]}
 */
 function MinMaxScalerTransforms(vector = []) {
-  let average = avg(vector);
-  let standard_dev = sd(vector);
-  let maximum = max(vector);
-  let minimum = min(vector);
+  const average = avg(vector);
+  const standard_dev = sd(vector);
+  const maximum = max(vector);
+  const minimum = min(vector);
   const scale = (z)=> (z - average) / (maximum - minimum); // equivalent to MinMaxScaler(z)
   const descale = (scaledZ) => (scaledZ * (maximum - minimum)) + average;
-  let values = vector.map(scale);
+  const values = vector.map(scale);
   return {
+    components: {
+      average,
+      standard_dev,
+      maximum,
+      minimum,
+    },
     scale,
     descale,
     values,

@@ -364,14 +364,20 @@ const StandardScaler = (z) => scale(z, sd(z));
  * @returns {Object} - {scale[ Function ], descale[ Function ]}
 */
 function StandardScalerTransforms(vector = []) {
-  let average = avg(vector);
-  let standard_dev = sd(vector);
-  let maximum = max(vector);
-  let minimum = min(vector);
+  const average = avg(vector);
+  const standard_dev = sd(vector);
+  const maximum = max(vector);
+  const minimum = min(vector);
   const scale = (z)=> (z - average) / standard_dev; // equivalent to MinMaxScaler(z)
   const descale = (scaledZ) => (scaledZ * standard_dev) + average;
-  let values = vector.map(scale);
+  const values = vector.map(scale);
   return {
+    components: {
+      average,
+      standard_dev,
+      maximum,
+      minimum,
+    },
     scale,
     descale,
     values,
@@ -392,14 +398,20 @@ const MinMaxScaler= (z) => scale(z, (max(z) - min(z)));
  * @returns {Object} - {scale[ Function ], descale[ Function ]}
 */
 function MinMaxScalerTransforms(vector = []) {
-  let average = avg(vector);
-  let standard_dev = sd(vector);
-  let maximum = max(vector);
-  let minimum = min(vector);
+  const average = avg(vector);
+  const standard_dev = sd(vector);
+  const maximum = max(vector);
+  const minimum = min(vector);
   const scale = (z)=> (z - average) / (maximum - minimum); // equivalent to MinMaxScaler(z)
   const descale = (scaledZ) => (scaledZ * (maximum - minimum)) + average;
-  let values = vector.map(scale);
+  const values = vector.map(scale);
   return {
+    components: {
+      average,
+      standard_dev,
+      maximum,
+      minimum,
+    },
     scale,
     descale,
     values,
@@ -1054,25 +1066,33 @@ dataset.scalers.get('Age').descale(3.8066624897703196) // => 45
       this.scalers.set(name, {
         scale: transforms.scale,
         descale: transforms.descale,
+        components: transforms.components,
       });
       scaledData = transforms.values;
       break;
-    case 'log':
-      this.scalers.set(name, {
-        scale: Math.log,
-        descale: Math.exp,
-      });
-      scaledData = util$1.LogScaler(scaleData);
-      break;
     case 'normalize':
     case 'minmax':
-    default:
       transforms = util$1.MinMaxScalerTransforms(scaleData);     
       this.scalers.set(name, {
         scale: transforms.scale,
         descale: transforms.descale,
+        components: transforms.components,
       });
       scaledData = transforms.values;
+      break;
+    case 'log':
+    default:
+      this.scalers.set(name, {
+        scale: Math.log,
+        descale: Math.exp,
+        components: {
+          average : util$1.avg(scaleData),
+          standard_dev : util$1.sd(scaleData),
+          maximum : util$1.max(scaleData),
+          minimum : util$1.min(scaleData),
+        },
+      });
+      scaledData = util$1.LogScaler(scaleData);
       break;
     }
     return scaledData;

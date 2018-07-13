@@ -206,25 +206,33 @@ dataset.scalers.get('Age').descale(3.8066624897703196) // => 45
       this.scalers.set(name, {
         scale: transforms.scale,
         descale: transforms.descale,
+        components: transforms.components,
       });
       scaledData = transforms.values;
       break;
-    case 'log':
-      this.scalers.set(name, {
-        scale: Math.log,
-        descale: Math.exp,
-      });
-      scaledData = utils.LogScaler(scaleData);
-      break;
     case 'normalize':
     case 'minmax':
-    default:
       transforms = utils.MinMaxScalerTransforms(scaleData);     
       this.scalers.set(name, {
         scale: transforms.scale,
         descale: transforms.descale,
+        components: transforms.components,
       });
       scaledData = transforms.values;
+      break;
+    case 'log':
+    default:
+      this.scalers.set(name, {
+        scale: Math.log,
+        descale: Math.exp,
+        components: {
+          average : utils.avg(scaleData),
+          standard_dev : utils.sd(scaleData),
+          maximum : utils.max(scaleData),
+          minimum : utils.min(scaleData),
+        },
+      });
+      scaledData = utils.LogScaler(scaleData);
       break;
     }
     return scaledData;
