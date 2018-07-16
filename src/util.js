@@ -378,6 +378,4 @@ export const util = {
   zScore: standardScore,
   approximateZPercentile,
   // approximatePercentileZ,
-  MinMaxScalerTransforms,
-  StandardScalerTransforms,
 };

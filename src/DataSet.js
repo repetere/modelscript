@@ -556,7 +556,7 @@ dataset.fitColumns({
         }
         return result;
       }, {});
-    if (Object.keys(fittedColumns)) {
+    if (Object.keys(fittedColumns) && Object.keys(fittedColumns).length) {
       const columnNames = Object.keys(fittedColumns);
       const fittedData = fittedColumns[columnNames[0]]
         .reduce((result, val, index, arr) => {
