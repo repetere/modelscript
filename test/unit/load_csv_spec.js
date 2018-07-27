@@ -4,6 +4,7 @@ const ms = require('../../dist/modelscript.cjs');
 const expect = require('chai').expect;
 
 describe('loadCSV', function () { 
+  this.timeout(5000);
   describe('loading CSV from File', () => {
     it('should load a csv from a filepath', (done) => {
       expect(ms.loadCSV).to.be.an('function');
@@ -70,7 +71,7 @@ describe('loadCSV', function () {
           const firstRow = tsv[ 0 ];
           expect(tsv.length).to.be.greaterThan(0);
           expect(firstRow.Review).to.be.a('string');
-          expect(firstRow.Liked).to.be.a('string');
+          expect(firstRow.Liked).to.be.a('number');
           done();
         })
         .catch(done);  

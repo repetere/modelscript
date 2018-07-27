@@ -33,8 +33,9 @@ function loadCSVURI$1(filepath, options) {
   const reqMethod = (filepath.search('https', 'gi') > -1) ? get$1 : get;
   return new Promise((resolve, reject) => {
     const csvData = [];
+    const config = Object.assign({ checkType: true, }, options);
     const req = reqMethod(filepath, res => {
-      csv(options).fromStream(res)
+      csv(config).fromStream(res)
         .on('json', jsonObj => {
           csvData.push(jsonObj);
         })
@@ -70,7 +71,8 @@ function loadCSV$1(filepath, options) {
   } else {
     return new Promise((resolve, reject) => {
       const csvData = [];
-      csv(options).fromFile(filepath)
+      const config = Object.assign({ checkType: true, }, options);
+      csv(config).fromFile(filepath)
         .on('json', jsonObj => {
           csvData.push(jsonObj);
         })
@@ -99,7 +101,9 @@ function loadCSV$1(filepath, options) {
  * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
  */
 function loadTSV(filepath, options) {
-  const tsvOptions = Object.assign({}, options, {
+  const tsvOptions = Object.assign({
+    checkType: true,
+  }, options, {
     delimiter: '\t',
   });
   return loadCSV$1(filepath, tsvOptions);
