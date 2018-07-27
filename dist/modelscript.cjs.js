@@ -878,7 +878,7 @@ class DataSet {
    * @returns {this} 
    */
   constructor(data = []) {
-    this.data = [...data, ];
+    this.data = [...data,];
     this.labels = new Map();
     this.encoders = new Map();
     this.scalers = new Map();
@@ -909,7 +909,10 @@ csvObj.columnMatrix([['col1',{parseInt:true}],['col2']]); // =>
   * @returns {Array} a matrix of column values 
   */
   columnMatrix(vectors = []) {
-    const vectorArrays = vectors
+    const columnVectors = (Array.isArray(vectors) && Array.isArray(vectors[ 0 ]))
+      ? vectors
+      : vectors.map(vector => [vector,]);
+    const vectorArrays = columnVectors
       .map(vec => this.columnArray(...vec));
         
     return util$1.pivotArrays(vectorArrays);
@@ -1221,8 +1224,8 @@ const encodedPurchasedColumn = dataset.labelEncoder('Purchased');
     const labels = new Map(
       Array.from(new Set(labelData).values())
         .reduce((result, val, i, arr) => {
-          result.push([val, i, ]);
-          result.push([i, val, ]);
+          result.push([val, i,]);
+          result.push([i, val,]);
           return result;
         }, [])
     );
@@ -1296,7 +1299,7 @@ const oneHotCountryColumn = dataset.oneHotEncoder('Country');
           if (Array.isArray(result[oneHotLabelArrayName])) {
             result[oneHotLabelArrayName].push(oneHotVal);
           } else {
-            result[oneHotLabelArrayName] = [oneHotVal, ];
+            result[oneHotLabelArrayName] = [oneHotVal,];
           }
         });
         return result;
@@ -1393,7 +1396,7 @@ dataset.fitColumns({
 //     }
 //     ...
 //   ]
-  * @param options 
+  * @param {Boolean} options.returnData - return updated DataSet data property 
   * @param {Object[]} options.columns - {name:'columnName',options:{strategy:'mean',labelOoptions:{}},}
   * @returns {Object[]}
   */

@@ -36090,7 +36090,7 @@ class CholeskyDecomposition$1 {
 
 
 
-var matrixLib = Object.freeze({
+var src$3 = Object.freeze({
 	default: Matrix$1,
 	Matrix: Matrix$1,
 	abstractMatrix: AbstractMatrix$1,
@@ -41519,7 +41519,7 @@ class CholeskyDecomposition$2 {
 
 
 
-var src$3 = Object.freeze({
+var src$4 = Object.freeze({
 	default: Matrix$3,
 	Matrix: Matrix$3,
 	abstractMatrix: AbstractMatrix$2,
@@ -42687,9 +42687,9 @@ var matrix_22 = matrix.weightedMean;
 var matrix_23 = matrix.weightedCovariance;
 var matrix_24 = matrix.weightedScatter;
 
-const Matrix$2 = src$3.Matrix;
-const EVD = src$3.EVD;
-const SVD = src$3.SVD;
+const Matrix$2 = src$4.Matrix;
+const EVD = src$4.EVD;
+const SVD = src$4.SVD;
 
 const mean$3 = matrix.mean;
 const stdev = matrix.standardDeviation;
@@ -43417,7 +43417,7 @@ function distanceMatrix(data, distanceFn) {
     return result;
 }
 
-var src$6 = distanceMatrix;
+var src$7 = distanceMatrix;
 
 /**
  * @private
@@ -43538,7 +43538,7 @@ function agnes$1(data, options) {
     var len = data.length;
     var distance = data;//If source
     if (!options.isDistanceMatrix) {
-        distance = src$6(data, options.disFunc);
+        distance = src$7(data, options.disFunc);
     }
 
 
@@ -43963,7 +43963,7 @@ var diana = diana_1;
 //exports.cure = require('./cure');
 //exports.chameleon = require('./chameleon');
 
-var src$4 = {
+var src$5 = {
 	agnes: agnes,
 	diana: diana
 };
@@ -44026,7 +44026,7 @@ function nearestVector(listVectors, vector, options) {
     }
 }
 
-var src$8 = nearestVector;
+var src$9 = nearestVector;
 
 /**
  * Calculates the distance matrix for a given array of points
@@ -44064,7 +44064,7 @@ function calculateDistanceMatrix(data, distance) {
  */
 function updateClusterID(data, centers, clusterID, distance) {
     for (var i = 0; i < data.length; i++) {
-        clusterID[i] = src$8(centers, data[i], {distanceFunction: distance});
+        clusterID[i] = src$9(centers, data[i], {distanceFunction: distance});
     }
     return clusterID;
 }
@@ -44649,7 +44649,7 @@ class SigmoidKernel {
 
 var sigmoidKernel = SigmoidKernel;
 
-const Matrix$4 = matrixLib.Matrix;
+const Matrix$4 = src$3.Matrix;
 
 
 
@@ -48517,7 +48517,7 @@ function matrixLog(i, j) {
 
 
 
-var src$10 = Object.freeze({
+var src$11 = Object.freeze({
 	GaussianNB: GaussianNB,
 	MultinomialNB: MultinomialNB
 });
@@ -48922,7 +48922,7 @@ function getSinglePrediction(knn, currentCase) {
 }
 
 
-var src$11 = Object.freeze({
+var src$12 = Object.freeze({
 	default: KNN
 });
 
@@ -49433,7 +49433,7 @@ class KOPLS {
 
 
 
-var src$12 = Object.freeze({
+var src$13 = Object.freeze({
 	PLS: PLS,
 	KOPLS: KOPLS
 });
@@ -49834,13 +49834,13 @@ class ConfusionMatrix {
     }
 }
 
-var src$15 = ConfusionMatrix;
+var src$16 = ConfusionMatrix;
 
 const defaultOptions$19 = {
     mode: 'index'
 };
 
-var src$17 = function *(M, N, options) {
+var src$18 = function *(M, N, options) {
     options = Object.assign({}, defaultOptions$19, options);
     var a = new Array(N);
     var c = new Array(M);
@@ -49979,7 +49979,7 @@ CV.leavePOut = function (Classifier, features, labels, classifierOptions, p) {
     const confusionMatrix = initMatrix(distinct.length, distinct.length);
 
     var N = features.length;
-    var gen = src$17(p, N);
+    var gen = src$18(p, N);
     var allIdx = new Array(N);
     for (let i = 0; i < N; i++) {
         allIdx[i] = i;
@@ -49999,7 +49999,7 @@ CV.leavePOut = function (Classifier, features, labels, classifierOptions, p) {
 
     }
 
-    return new src$15(confusionMatrix, distinct);
+    return new src$16(confusionMatrix, distinct);
 };
 
 /**
@@ -50060,7 +50060,7 @@ CV.kFold = function (Classifier, features, labels, classifierOptions, k) {
         }
     }
 
-    return new src$15(confusionMatrix, distinct);
+    return new src$16(confusionMatrix, distinct);
 };
 
 function check(features, labels) {
@@ -50133,9 +50133,9 @@ function getTrainTest(features, labels, testIdx, trainIdx) {
     };
 }
 
-var src$13 = CV;
+var src$14 = CV;
 
-var Matrix$8 = matrixLib.Matrix;
+var Matrix$8 = src$3.Matrix;
 
 /**
  * @private
@@ -50287,7 +50287,7 @@ const ACTIVATION_FUNCTIONS = {
 
 var activationFunctions = ACTIVATION_FUNCTIONS;
 
-var Matrix$7 = matrixLib.Matrix;
+var Matrix$7 = src$3.Matrix;
 
 
 
@@ -50435,7 +50435,7 @@ class OutputLayer extends Layer_1 {
 
 var OutputLayer_1 = OutputLayer;
 
-const Matrix$6 = matrixLib.Matrix;
+const Matrix$6 = src$3.Matrix;
 
 
 
@@ -51202,7 +51202,7 @@ function getMaxDistance(distance, numWeights) {
     return distance(zero, one);
 }
 
-var src$19 = SOM;
+var src$20 = SOM;
 
 function maybeToPrecision(value, digits) {
     if (value < 0) {
@@ -52348,7 +52348,7 @@ const NLR = {
 
 
 
-var src$21 = Object.freeze({
+var src$22 = Object.freeze({
 	NLR: NLR,
 	NonLinearRegression: NLR,
 	SimpleLinearRegression: SimpleLinearRegression,
@@ -52419,7 +52419,7 @@ function gradientFunction(
       ans[param][point] = evaluatedData[point] - funcParam(data.x[point]);
     }
   }
-  return new matrixLib.Matrix(ans);
+  return new src$3.Matrix(ans);
 }
 
 /**
@@ -52438,7 +52438,7 @@ function matrixFunction(data, evaluatedData) {
     ans[point] = data.y[point] - evaluatedData[point];
   }
 
-  return new matrixLib.Matrix([ans]);
+  return new src$3.Matrix([ans]);
 }
 
 /**
@@ -52458,7 +52458,7 @@ function step$1(
   gradientDifference,
   parameterizedFunction
 ) {
-  var identity = matrixLib.Matrix.eye(params.length).mul(
+  var identity = src$3.Matrix.eye(params.length).mul(
     damping * gradientDifference * gradientDifference
   );
 
@@ -52476,10 +52476,10 @@ function step$1(
     parameterizedFunction
   );
   var matrixFunc = matrixFunction(data, evaluatedData).transposeView();
-  var inverseMatrix = matrixLib.inverse(
+  var inverseMatrix = src$3.inverse(
     identity.add(gradientFunc.mmul(gradientFunc.transposeView()))
   );
-  params = new matrixLib.Matrix([params]);
+  params = new src$3.Matrix([params]);
   params = params.sub(
     inverseMatrix
       .mmul(gradientFunc)
@@ -53374,7 +53374,7 @@ function fillTemplateFunction(template, values) {
 }
 
 
-var src$22 = Object.freeze({
+var src$23 = Object.freeze({
 	SparseMatrix: SparseMatrix
 });
 
@@ -53933,7 +53933,7 @@ function tree$1(A, B, from, to, options) {
     return S(Atree, Btree, options.alpha, options.beta, options.gamma);
 }
 
-var src$25 = {
+var src$26 = {
     calc: tree$1,
     createTree: createTree
 };
@@ -53989,7 +53989,7 @@ var squaredEuclidean$5 = euclidean_1.squared;
 var taneja = taneja$1;
 var tanimoto = tanimoto$1;
 var topsoe = topsoe$1;
-var tree = src$25;
+var tree = src$26;
 var waveHedges = waveHedges$1;
 
 var distances = {
@@ -54120,7 +54120,7 @@ var similarities = {
 var distance = distances;
 var similarity = similarities;
 
-var src$23 = {
+var src$24 = {
 	distance: distance,
 	similarity: similarity
 };
@@ -54606,7 +54606,7 @@ Performance.names = {
     threshold: 'Threshold'
 };
 
-var src$27 = Performance;
+var src$28 = Performance;
 
 var hasOwn = Object.prototype.hasOwnProperty;
 var toStr = Object.prototype.toString;
@@ -54807,10 +54807,10 @@ function padArray (data, options) {
         throw new TypeError('data should be an array');
 }
 
-var src$31 = padArray;
+var src$32 = padArray;
 
-var Matrix$9 = matrixLib.Matrix;
-var inverse$4 = matrixLib.inverse;
+var Matrix$9 = src$3.Matrix;
+var inverse$4 = src$3.inverse;
 
 
 
@@ -54842,7 +54842,7 @@ function SavitzkyGolay (data, h, options) {
     var step = Math.floor(options.windowSize / 2);
 
     if (options.pad === 'pre') {
-        data = src$31(data, {size: step, value: options.padValue});
+        data = src$32(data, {size: step, value: options.padValue});
     }
 
     var ans =  new Array(data.length - 2*step);
@@ -54881,13 +54881,13 @@ function SavitzkyGolay (data, h, options) {
     }
 
     if (options.pad === 'post') {
-        ans = src$31(ans, {size: step, value: options.padValue});
+        ans = src$32(ans, {size: step, value: options.padValue});
     }
 
     return ans;
 }
 
-var src$29 = SavitzkyGolay;
+var src$30 = SavitzkyGolay;
 
 //Code translate from Pascal source in http://pubs.acs.org/doi/pdf/10.1021/ac00205a007
 
@@ -55056,7 +55056,7 @@ function guessWindowSize(data, h){
     return 5;
 }
 */
-var src$33 = SavitzkyGolay$1;
+var src$34 = SavitzkyGolay$1;
 
 // auxiliary file to create the 256 look at table elements
 
@@ -55240,7 +55240,7 @@ function toDebug(arr) {
     return str
 }
 
-var src$35 = {
+var src$36 = {
     count: count,
     and: and,
     or: or,
@@ -55762,18 +55762,18 @@ var snv = {
 	SNV: SNV_1
 };
 
-var src$37 = createCommonjsModule(function (module, exports) {
+var src$38 = createCommonjsModule(function (module, exports) {
 module.exports = exports = ArrayUtils;
 
 exports.getEquallySpacedData = getEquallySpaced.getEquallySpacedData;
 exports.SNV = snv.SNV;
 });
 
-var src_1 = src$37.scale;
-var src_2 = src$37.getEquallySpacedData;
-var src_3 = src$37.SNV;
+var src_1 = src$38.scale;
+var src_2 = src$38.getEquallySpacedData;
+var src_3 = src$38.SNV;
 
-var require$$5$2 = ( src$11 && KNN ) || src$11;
+var require$$5$2 = ( src$12 && KNN ) || src$12;
 
 var src = createCommonjsModule(function (module, exports) {
 const ML = exports;
@@ -55782,32 +55782,32 @@ const ML = exports;
 
 // Unsupervised learning
 ML.PCA = pca;
-ML.HClust = src$4;
+ML.HClust = src$5;
 ML.KMeans = kmeans_1;
 
 // Supervised learning
 ML.SVM = svm;
-ML.NaiveBayes = src$10;
+ML.NaiveBayes = src$11;
 ML.KNN = require$$5$2;
-ML.PLS = src$12;
-ML.CrossValidation = src$13;
-ML.ConfusionMatrix = src$15;
+ML.PLS = src$13;
+ML.CrossValidation = src$14;
+ML.ConfusionMatrix = src$16;
 ML.DecisionTreeClassifier = src$1.DecisionTreeClassifier;
 ML.RandomForestClassifier = src$2.RandomForestClassifier;
 
 // Artificial neural networks
 ML.FNN = FeedForwardNeuralNetwork;
-ML.SOM = src$19;
+ML.SOM = src$20;
 
 // Regression
 
-ML.SimpleLinearRegression = src$21.SimpleLinearRegression;
-ML.PolynomialRegression = src$21.PolynomialRegression;
-ML.MultivariateLinearRegression = src$21.MultivariateLinearRegression;
-ML.PowerRegression = src$21.PowerRegression;
-ML.ExponentialRegression = src$21.ExponentialRegression;
-ML.TheilSenRegression = src$21.TheilSenRegression;
-ML.RobustPolynomialRegression = src$21.RobustPolynomialRegression;
+ML.SimpleLinearRegression = src$22.SimpleLinearRegression;
+ML.PolynomialRegression = src$22.PolynomialRegression;
+ML.MultivariateLinearRegression = src$22.MultivariateLinearRegression;
+ML.PowerRegression = src$22.PowerRegression;
+ML.ExponentialRegression = src$22.ExponentialRegression;
+ML.TheilSenRegression = src$22.TheilSenRegression;
+ML.RobustPolynomialRegression = src$22.RobustPolynomialRegression;
 ML.DesisionTreeRegression = src$1.DesisionTreeRegression;
 ML.RandomForestRegression = src$2.RandomForestRegression;
 
@@ -55816,38 +55816,38 @@ ML.levenbergMarquardt = lib;
 
 // Math
 
-ML.Matrix = matrixLib.Matrix;
-ML.SVD = matrixLib.SVD;
-ML.EVD = matrixLib.EVD;
-ML.CholeskyDecomposition = matrixLib.CholeskyDecomposition;
-ML.LuDecomposition = matrixLib.LuDecomposition;
-ML.QrDecomposition = matrixLib.QrDecomposition;
+ML.Matrix = src$3.Matrix;
+ML.SVD = src$3.SVD;
+ML.EVD = src$3.EVD;
+ML.CholeskyDecomposition = src$3.CholeskyDecomposition;
+ML.LuDecomposition = src$3.LuDecomposition;
+ML.QrDecomposition = src$3.QrDecomposition;
 
-ML.SparseMatrix = src$22;
+ML.SparseMatrix = src$23;
 ML.Kernel = kernel;
-ML.Distance = src$23.distance;
-ML.Similarity = src$23.similarity;
-ML.distanceMatrix = src$6;
+ML.Distance = src$24.distance;
+ML.Similarity = src$24.similarity;
+ML.distanceMatrix = src$7;
 ML.XSadd = xsaddEs5;
 
 // Statistics
-ML.Performance = src$27;
+ML.Performance = src$28;
 
 // Data preprocessing
-ML.savitzkyGolay = src$29;
-ML.savitzkyGolayGeneralized = src$33;
+ML.savitzkyGolay = src$30;
+ML.savitzkyGolayGeneralized = src$34;
 
 // Utility
-ML.BitArray = src$35;
+ML.BitArray = src$36;
 ML.HashTable = HashTable_1;
-ML.padArray = src$31;
+ML.padArray = src$32;
 ML.binarySearch = binarySearch;
 ML.numSort = numSort;
 
 // Undocumented/deprecated packages
-ML.ArrayUtils = src$37;
-ML.Regression = src$21;
-ML.MatrixUtil = matrixLib;
+ML.ArrayUtils = src$38;
+ML.Regression = src$22;
+ML.MatrixUtil = src$3;
 ML.ArrayStat = mlStat.array;
 ML.MatrixStat = mlStat.matrix;
 });
@@ -57959,7 +57959,7 @@ var implementation$2 = function bind(that) {
 
 var functionBind = Function.prototype.bind || implementation$2;
 
-var src$39 = functionBind.call(Function.call, Object.prototype.hasOwnProperty);
+var src$40 = functionBind.call(Function.call, Object.prototype.hasOwnProperty);
 
 var isPrimitive$1 = function isPrimitive(value) {
 	return value === null || (typeof value !== 'function' && typeof value !== 'object');
@@ -58281,13 +58281,13 @@ var ES5 = {
 		};
 		// jscs:disable
 		for (var key in Desc) { // eslint-disable-line
-			if (src$39(Desc, key) && !allowed[key]) {
+			if (src$40(Desc, key) && !allowed[key]) {
 				return false;
 			}
 		}
 		// jscs:enable
-		var isData = src$39(Desc, '[[Value]]');
-		var IsAccessor = src$39(Desc, '[[Get]]') || src$39(Desc, '[[Set]]');
+		var isData = src$40(Desc, '[[Value]]');
+		var IsAccessor = src$40(Desc, '[[Get]]') || src$40(Desc, '[[Set]]');
 		if (isData && IsAccessor) {
 			throw new TypeError('Property Descriptors may not be both accessor and data descriptors');
 		}
@@ -58304,7 +58304,7 @@ var ES5 = {
 			throw new TypeError('Desc must be a Property Descriptor');
 		}
 
-		if (!src$39(Desc, '[[Get]]') && !src$39(Desc, '[[Set]]')) {
+		if (!src$40(Desc, '[[Get]]') && !src$40(Desc, '[[Set]]')) {
 			return false;
 		}
 
@@ -58321,7 +58321,7 @@ var ES5 = {
 			throw new TypeError('Desc must be a Property Descriptor');
 		}
 
-		if (!src$39(Desc, '[[Value]]') && !src$39(Desc, '[[Writable]]')) {
+		if (!src$40(Desc, '[[Value]]') && !src$40(Desc, '[[Writable]]')) {
 			return false;
 		}
 
@@ -58381,26 +58381,26 @@ var ES5 = {
 		}
 
 		var desc = {};
-		if (src$39(Obj, 'enumerable')) {
+		if (src$40(Obj, 'enumerable')) {
 			desc['[[Enumerable]]'] = this.ToBoolean(Obj.enumerable);
 		}
-		if (src$39(Obj, 'configurable')) {
+		if (src$40(Obj, 'configurable')) {
 			desc['[[Configurable]]'] = this.ToBoolean(Obj.configurable);
 		}
-		if (src$39(Obj, 'value')) {
+		if (src$40(Obj, 'value')) {
 			desc['[[Value]]'] = Obj.value;
 		}
-		if (src$39(Obj, 'writable')) {
+		if (src$40(Obj, 'writable')) {
 			desc['[[Writable]]'] = this.ToBoolean(Obj.writable);
 		}
-		if (src$39(Obj, 'get')) {
+		if (src$40(Obj, 'get')) {
 			var getter = Obj.get;
 			if (typeof getter !== 'undefined' && !this.IsCallable(getter)) {
 				throw new TypeError('getter must be a function');
 			}
 			desc['[[Get]]'] = getter;
 		}
-		if (src$39(Obj, 'set')) {
+		if (src$40(Obj, 'set')) {
 			var setter = Obj.set;
 			if (typeof setter !== 'undefined' && !this.IsCallable(setter)) {
 				throw new TypeError('setter must be a function');
@@ -58408,7 +58408,7 @@ var ES5 = {
 			desc['[[Set]]'] = setter;
 		}
 
-		if ((src$39(desc, '[[Get]]') || src$39(desc, '[[Set]]')) && (src$39(desc, '[[Value]]') || src$39(desc, '[[Writable]]'))) {
+		if ((src$40(desc, '[[Get]]') || src$40(desc, '[[Set]]')) && (src$40(desc, '[[Value]]') || src$40(desc, '[[Writable]]'))) {
 			throw new TypeError('Invalid property descriptor. Cannot both specify accessors and a value or writable attribute');
 		}
 		return desc;
@@ -58446,7 +58446,7 @@ var isRegex = function isRegex(value) {
 	}
 
 	var descriptor = gOPD(value, 'lastIndex');
-	var hasLastIndexDataProperty = descriptor && src$39(descriptor, 'value');
+	var hasLastIndexDataProperty = descriptor && src$40(descriptor, 'value');
 	if (!hasLastIndexDataProperty) {
 		return false;
 	}
@@ -58787,24 +58787,24 @@ var ES6 = assign(assign({}, es5), {
 		}
 
 		if (this.IsGenericDescriptor(Desc) || this.IsDataDescriptor(Desc)) {
-			if (!src$39(Desc, '[[Value]]')) {
+			if (!src$40(Desc, '[[Value]]')) {
 				Desc['[[Value]]'] = void 0;
 			}
-			if (!src$39(Desc, '[[Writable]]')) {
+			if (!src$40(Desc, '[[Writable]]')) {
 				Desc['[[Writable]]'] = false;
 			}
 		} else {
-			if (!src$39(Desc, '[[Get]]')) {
+			if (!src$40(Desc, '[[Get]]')) {
 				Desc['[[Get]]'] = void 0;
 			}
-			if (!src$39(Desc, '[[Set]]')) {
+			if (!src$40(Desc, '[[Set]]')) {
 				Desc['[[Set]]'] = void 0;
 			}
 		}
-		if (!src$39(Desc, '[[Enumerable]]')) {
+		if (!src$40(Desc, '[[Enumerable]]')) {
 			Desc['[[Enumerable]]'] = false;
 		}
-		if (!src$39(Desc, '[[Configurable]]')) {
+		if (!src$40(Desc, '[[Configurable]]')) {
 			Desc['[[Configurable]]'] = false;
 		}
 		return Desc;
@@ -58841,7 +58841,7 @@ var ES6 = assign(assign({}, es5), {
 		if (!this.IsPropertyKey(P)) {
 			throw new TypeError('P must be a Property Key');
 		}
-		return src$39(O, P);
+		return src$40(O, P);
 	},
 
 	// http://ecma-international.org/ecma-262/6.0/#sec-hasproperty
@@ -59035,7 +59035,7 @@ var implementation = function values(O) {
 	var obj = es7.RequireObjectCoercible(O);
 	var vals = [];
 	for (var key in obj) {
-		if (src$39(obj, key) && isEnumerable$1(obj, key)) {
+		if (src$40(obj, key) && isEnumerable$1(obj, key)) {
 			vals.push(obj[key]);
 		}
 	}
@@ -74364,7 +74364,7 @@ SentenceTokenizer$1.prototype.tokenize = function(text) {
 
 var sentence_tokenizer = SentenceTokenizer$1;
 
-var __filename = '/Users/yawjosephetse/Developer/github/repetere/modelscript/node_modules/bindings/bindings.js'
+var __filename = '/Users/yawjosephetse/Developer/github/repetere/modelscript/node_modules/webworker-threads/node_modules/bindings/bindings.js'
 
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -74624,7 +74624,8 @@ var bindings_1 = createCommonjsModule(function (module, exports) {
 
 var join = path$2.join
   , dirname = path$2.dirname
-  , exists = fs.existsSync || path$2.existsSync
+  , exists = ((fs.accessSync && function (path) { try { fs.accessSync(path); } catch (e) { return false; } return true; })
+      || fs.existsSync || path$2.existsSync)
   , defaults = {
         arrow: process.env.NODE_BINDINGS_ARROW || ' → '
       , compiled: process.env.NODE_BINDINGS_COMPILED_DIR || 'compiled'
@@ -74665,7 +74666,11 @@ function bindings (opts) {
   } else if (!opts) {
     opts = {};
   }
-  opts.__proto__ = defaults;
+
+  // maps `defaults` onto `opts` object
+  Object.keys(defaults).map(function(i) {
+    if (!(i in opts)) opts[i] = defaults[i];
+  });
 
   // Get the module root
   if (!opts.module_root) {
@@ -84432,7 +84437,7 @@ class DataSet {
    * @returns {this} 
    */
   constructor(data = []) {
-    this.data = [...data, ];
+    this.data = [...data,];
     this.labels = new Map();
     this.encoders = new Map();
     this.scalers = new Map();
@@ -84463,7 +84468,10 @@ csvObj.columnMatrix([['col1',{parseInt:true}],['col2']]); // =>
   * @returns {Array} a matrix of column values 
   */
   columnMatrix(vectors = []) {
-    const vectorArrays = vectors
+    const columnVectors = (Array.isArray(vectors) && Array.isArray(vectors[ 0 ]))
+      ? vectors
+      : vectors.map(vector => [vector,]);
+    const vectorArrays = columnVectors
       .map(vec => this.columnArray(...vec));
         
     return util$4.pivotArrays(vectorArrays);
@@ -84775,8 +84783,8 @@ const encodedPurchasedColumn = dataset.labelEncoder('Purchased');
     const labels = new Map(
       Array.from(new Set(labelData).values())
         .reduce((result, val, i, arr) => {
-          result.push([val, i, ]);
-          result.push([i, val, ]);
+          result.push([val, i,]);
+          result.push([i, val,]);
           return result;
         }, [])
     );
@@ -84850,7 +84858,7 @@ const oneHotCountryColumn = dataset.oneHotEncoder('Country');
           if (Array.isArray(result[oneHotLabelArrayName])) {
             result[oneHotLabelArrayName].push(oneHotVal);
           } else {
-            result[oneHotLabelArrayName] = [oneHotVal, ];
+            result[oneHotLabelArrayName] = [oneHotVal,];
           }
         });
         return result;
@@ -84947,7 +84955,7 @@ dataset.fitColumns({
 //     }
 //     ...
 //   ]
-  * @param options 
+  * @param {Boolean} options.returnData - return updated DataSet data property 
   * @param {Object[]} options.columns - {name:'columnName',options:{strategy:'mean',labelOoptions:{}},}
   * @returns {Object[]}
   */

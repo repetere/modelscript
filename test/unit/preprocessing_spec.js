@@ -92,6 +92,15 @@ describe('preprocessing', function() {
         expect(AgeSalMatrix).to.be.lengthOf(AgeArray.length);
         expect(AgeSalMatrix[ 0 ][0]).to.eql(AgeArray[0]);
       });
+      it('should create a matrix of values from an array of column names', () => {
+        const columns = [
+          'Age', 'Salary',
+        ];
+        const AgeSalMatrix = CSVDataSet.columnMatrix(columns);
+        const AgeArray = CSVDataSet.columnArray('Age');
+        expect(AgeSalMatrix).to.be.lengthOf(AgeArray.length);
+        expect(AgeSalMatrix[ 0 ][0]).to.eql(AgeArray[0]);
+      });
       it('should handle invalid columns', () => {
         const invalidMatrix = CSVDataSet.columnMatrix([
           ['iojf',],
