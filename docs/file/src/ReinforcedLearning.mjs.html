@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/ReinforcedLearning.mjs | ModelScript</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you&apos;re left with the equialent R/Python toolset in JavaScript"><meta property="og:type" content="website"><meta property="og:url" content="https://repetere.github.io/modelscript"><meta property="og:site_name" content="ModelScript"><meta property="og:title" content="ModelScript"><meta property="og:image" content="https://repetere.ai/favicon.png"><meta property="og:description" content="Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you&apos;re left with the equialent R/Python toolset in JavaScript"><meta property="og:author" content="https://github.com/repetere"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="ModelScript"><meta property="twitter:description" content="Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you&apos;re left with the equialent R/Python toolset in JavaScript"><meta property="twitter:image" content="https://repetere.ai/favicon.png"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/repetere/modelscript"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ColumnVectorizer.mjs~ColumnVectorizer.html">ColumnVectorizer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/DataSet.mjs~DataSet.html">DataSet</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ReinforcedLearning.mjs~ReinforcedLearningBase.html">ReinforcedLearningBase</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ReinforcedLearning.mjs~ThompsonSampling.html">ThompsonSampling</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ReinforcedLearning.mjs~UpperConfidenceBound.html">UpperConfidenceBound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-assocationRuleLearning">assocationRuleLearning</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTransactions">getTransactions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadCSV">loadCSV</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadCSVURI">loadCSVURI</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadTSV">loadTSV</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-calc">calc</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-cross_validation">cross_validation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-PD">PD</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-calc">calc</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-cross_validation">cross_validation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-csv">csv</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-loadCSV">loadCSV</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-loadCSVURI">loadCSVURI</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-ml">ml</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-model_selection">model_selection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-nlp">nlp</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-preprocessing">preprocessing</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-util">util</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-ml">ml</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-nlp">nlp</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-PD">PD</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-util">util</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/ReinforcedLearning.mjs</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { default as PD, } from &apos;probability-distributions&apos;;
+
+/**
+ * base interface class for reinforced learning
+ * @class ReinforcedLearningBase
+ * @memberOf ml
+ */
+export class ReinforcedLearningBase{
+  /**
+   * base class for reinforced learning
+   * @param {Object} [options={}]
+   * @prop {Number} options.bounds - number of bounds / bandits
+   * @prop {Function} options.getBound - get value of bound
+   * @prop {Number} this.bounds - number of bounds / bandits
+   * @prop {Array} this.last_selected - list of selections
+   * @prop {Number} this.total_reward - total rewards
+   * @prop {Number} this.iteration - total number of iterations
+   * @returns {this} 
+   */
+  constructor(options = {}) {
+    this.bounds = options.bounds || 5;
+    this.getBound = options.getBound || function getBound(bound) {
+      return bound;
+    };
+    this.last_selected = [];
+    this.total_reward = 0;
+    this.iteration = 0;
+    return this;
+  }
+  /** 
+   * interface instance method for reinforced learning step
+  */
+  learn() {
+    throw new ReferenceError(&apos;Missing learn method implementation&apos;);
+  }
+  /** 
+   * interface instance method for reinforced training step
+  */
+  train() {
+    throw new ReferenceError(&apos;Missing train method implementation&apos;);
+  }
+  /** 
+   * interface instance method for reinforced prediction step
+  */
+  predict() {
+    throw new ReferenceError(&apos;Missing predict method implementation&apos;);
+  }
+}
+
+/**
+ * Implementation of the Upper Confidence Bound algorithm
+ * @class UpperConfidenceBound
+ * @memberOf ml
+ */
+export class UpperConfidenceBound extends ReinforcedLearningBase{
+  /**
+   * creates a new instance of the Upper confidence bound(UCB) algorithm. UCB is based on the principle of optimism in the face of uncertainty, which is to choose your actions as if the environment (in this case bandit) is as nice as is plausibly possible
+   * @see {@link http://banditalgs.com/2016/09/18/the-upper-confidence-bound-algorithm/}
+   * @example
+   * const dataset = new ms.ml.UpperConfidenceBound({bounds:10});
+   * @param {Object} [options={}]
+   * @prop {Map} this.numbers_of_selections - map of all bound selections
+   * @prop {Map} this.sums_of_rewards - successful bound selections
+   * @returns {this} 
+   */
+  constructor(options = {}) {
+    super(options);
+    this.numbers_of_selections = new Map();
+    this.sums_of_rewards = new Map();
+    for (let i = 0; i &lt; this.bounds; i++){
+      this.numbers_of_selections.set(i, 0);
+      this.sums_of_rewards.set(i, 0);
+    }
+    return this;
+  }
+  /**
+   * returns next action based off of the upper confidence bound
+   * @return {number} returns bound selection
+   */
+  predict() {
+    let ad = 0; //ad is each bandit
+    let max_upper_bound = 0;
+    for (let i = 0; i &lt; this.bounds; i++){
+      let upper_bound = 1e400;
+      if (this.numbers_of_selections.get( i ) &gt; 0) {
+        // if selected at least once
+        let average_reward = this.sums_of_rewards.get( i ) / this.numbers_of_selections.get( i );
+        let delta_i = Math.sqrt(3 / 2 * Math.log(this.iteration + 1) / this.numbers_of_selections.get( i ));
+        upper_bound = average_reward + delta_i;
+      } 
+      if (upper_bound &gt; max_upper_bound) { //get max at each round
+        max_upper_bound = upper_bound;
+        ad = i;
+      }
+    }
+    return ad;
+  }
+  /**
+   * single step trainning method
+   * @param {Object} ucbRow - row of bound selections
+   * @param {Function} [getBound=this.getBound] - select value of ucbRow by selection value
+   * @return {this} 
+   */
+  learn(options={}) {
+    const { ucbRow, getBound, } = options;
+    let ad = this.predict();
+    this.last_selected.push(ad);
+    this.numbers_of_selections.set(ad,  this.numbers_of_selections.get(ad) + 1);
+    let reward = ucbRow[getBound(ad)];
+    this.sums_of_rewards.set(ad,  this.sums_of_rewards.get(ad) + reward);
+    this.total_reward = this.total_reward + reward;
+    this.iteration++;
+    return this;
+  }
+  /**
+   * training method for upper confidence bound calculations
+   * @param {Object|Object[]} ucbRow - row of bound selections
+   * @param {Function} [getBound=this.getBound] - select value of ucbRow by selection value
+   * @return {this} 
+   */
+  train(options) {
+    const {
+      ucbRow,
+      getBound = this.getBound,
+    } = options;
+    if (Array.isArray(ucbRow)) {
+      for (let i in ucbRow) {
+        this.learn({
+          ucbRow: ucbRow[i],
+          getBound,
+        });
+      }
+    } else {
+      this.learn({
+        ucbRow,
+        getBound,
+      });
+    }
+    return this;
+  }
+}
+
+/**
+ * Implementation of the Thompson Sampling algorithm
+ * @class ThompsonSampling
+ * @memberOf ml
+ */
+export class ThompsonSampling extends ReinforcedLearningBase{
+  /**
+   * creates a new instance of the Thompson Sampling(TS) algorithm. TS a heuristic for choosing actions that addresses the exploration-exploitation dilemma in the multi-armed bandit problem. It consists in choosing the action that maximizes the expected reward with respect to a randomly drawn belief
+   * @see {@link https://en.wikipedia.org/wiki/Thompson_sampling}
+   * @example
+   * const dataset = new ms.ml.ThompsonSampling({bounds:10});
+   * @param {Object} [options={}]
+   * @prop {Map} this.numbers_of_rewards_1 - map of all reward 1 selections
+   * @prop {Map} this.numbers_of_rewards_0 - map of all reward 0 selections
+   * @returns {this} 
+   */
+  constructor(options = {}) {
+    super(options);
+    this.numbers_of_rewards_1 = new Map();
+    this.numbers_of_rewards_0 = new Map();
+    for (let i = 0; i &lt; this.bounds; i++){
+      this.numbers_of_rewards_1.set(i, 0);
+      this.numbers_of_rewards_0.set(i, 0);
+    }
+    return this;
+  }
+  /**
+   * returns next action based off of the thompson sampling
+   * @return {number} returns thompson sample
+   */
+  predict() {
+    let ad = 0; //ad is each bandit
+    let max_random = 0;
+    for (let i = 0; i &lt; this.bounds; i++){
+      let random_beta = PD.rbeta(1, this.numbers_of_rewards_1.get(i) + 1, this.numbers_of_rewards_0.get(i) + 1);
+      if (random_beta &gt; max_random) {
+        max_random = random_beta;
+        ad = i;
+      }
+    }
+    return ad;
+  }
+  /**
+   * single step trainning method
+   * @param {Object} tsRow - row of bound selections
+   * @param {Function} [getBound=this.getBound] - select value of tsRow by selection value
+   * @return {this} 
+   */
+  learn(options = {}) {
+    const { tsRow, getBound, } = options;
+    let ad = this.predict();
+    this.last_selected.push(ad);
+    let reward = tsRow[ getBound(ad) ];
+    if (reward === 1) {
+      this.numbers_of_rewards_1.set(ad,  this.numbers_of_rewards_1.get(ad) + 1);
+    } else {
+      this.numbers_of_rewards_0.set(ad,  this.numbers_of_rewards_0.get(ad) + 1);
+    }
+    this.total_reward = this.total_reward + reward;
+    this.iteration++;
+    return this;
+  }
+  /**
+   * training method for thompson sampling calculations
+   * @param {Object|Object[]} tsRow - row of bound selections
+   * @param {Function} [getBound=this.getBound] - select value of tsRow by selection value
+   * @return {this} 
+   */
+  train(options) {
+    const {
+      tsRow,
+      getBound = this.getBound,
+    } = options;
+    if (Array.isArray(tsRow)) {
+      for (let i in tsRow) {
+        this.learn({
+          tsRow: tsRow[i],
+          getBound,
+        });
+      }
+    } else {
+      this.learn({
+        tsRow,
+        getBound,
+      });
+    }
+    return this;
+  }
+}</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

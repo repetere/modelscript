@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/ColumnVectorizer.mjs | ModelScript</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you&apos;re left with the equialent R/Python toolset in JavaScript"><meta property="og:type" content="website"><meta property="og:url" content="https://repetere.github.io/modelscript"><meta property="og:site_name" content="ModelScript"><meta property="og:title" content="ModelScript"><meta property="og:image" content="https://repetere.ai/favicon.png"><meta property="og:description" content="Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you&apos;re left with the equialent R/Python toolset in JavaScript"><meta property="og:author" content="https://github.com/repetere"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="ModelScript"><meta property="twitter:description" content="Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you&apos;re left with the equialent R/Python toolset in JavaScript"><meta property="twitter:image" content="https://repetere.ai/favicon.png"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/repetere/modelscript"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ColumnVectorizer.mjs~ColumnVectorizer.html">ColumnVectorizer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/DataSet.mjs~DataSet.html">DataSet</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ReinforcedLearning.mjs~ReinforcedLearningBase.html">ReinforcedLearningBase</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ReinforcedLearning.mjs~ThompsonSampling.html">ThompsonSampling</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ReinforcedLearning.mjs~UpperConfidenceBound.html">UpperConfidenceBound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-assocationRuleLearning">assocationRuleLearning</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTransactions">getTransactions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadCSV">loadCSV</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadCSVURI">loadCSVURI</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadTSV">loadTSV</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-calc">calc</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-cross_validation">cross_validation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-PD">PD</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-calc">calc</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-cross_validation">cross_validation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-csv">csv</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-loadCSV">loadCSV</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-loadCSVURI">loadCSVURI</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-ml">ml</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-model_selection">model_selection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-nlp">nlp</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-preprocessing">preprocessing</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-util">util</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-ml">ml</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-nlp">nlp</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-PD">PD</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-util">util</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/ColumnVectorizer.mjs</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">// import { ml, } from &apos;./ml&apos;;
+import { nlp, } from &apos;./nlp&apos;;
+// import { util as utils, } from &apos;./util&apos;;
+import { DataSet, } from &apos;./DataSet&apos;;
+
+/**
+ * class creating sparse matrices from a corpus
+ * @class ColumnVectorizer
+ * @memberOf nlp
+ */
+export class ColumnVectorizer {
+  /**
+   * creates a new instance for classifying text data for machine learning
+   * @example
+   * const dataset = new ms.nlp.ColumnVectorizer(csvData);
+   * @param {Object} [options={}]
+   * @prop {Object[]} this.data - Array of strings
+   * @prop {Set} this.tokens - Unique collection of all tokenized strings
+   * @prop {Object[]} this.vectors - Array of tokenized words with value of count of appreance in string
+   * @prop {Object} this.wordMap - Object of all unique words, with value of 0
+   * @prop {Object} this.wordCountMap - Object of all unique words, with value as total count of appearances
+   * @prop {number} this.maxFeatures - max number of features
+   * @prop {String[]} this.sortedWordCount - list of words as tokens sorted by total appearances
+   * @prop {String[]} this.limitedFeatures - subset list of maxFeatures words as tokens sorted by total appearances
+   * @prop {Array[]} this.matrix - words in sparse matrix
+   * @prop {Function} this.replacer - clean string function
+   * @returns {this} 
+   */
+  constructor(options = {}) {
+    this.data = options.data || [];
+    this.tokens = new Set();
+    this.vectors = [];
+    this.wordMap = {};
+    this.wordCountMap = {};
+    this.maxFeatures = options.maxFeatures;
+    this.sortedWordCount = [];
+    this.limitedFeatures = [];
+    this.matrix = [];
+    this.replacer = (value=&apos;&apos;) =&gt; {
+      const cleanedValue = value
+        .toLowerCase()
+        .replace(/[^a-zA-Z]/gi, &apos; &apos;);
+      return nlp.PorterStemmer
+        .tokenizeAndStem(cleanedValue)
+        .join(&apos; &apos;);
+    };
+    return this;
+  }
+  /** 
+   * Returns a distinct array of all tokens
+   * @return {String[]} returns a distinct array of all tokens
+  */
+  get_tokens() {
+    return Array.from(this.tokens);
+  }
+  /** 
+   * Returns array of arrays of strings for dependent features from sparse matrix word map
+   * @return {String[]} returns array of dependent features for DataSet column matrics
+  */
+  get_vector_array() {
+    return this.get_tokens().map(tok =&gt; [
+      tok,
+    ]);
+  }
+  /**
+   * Fits and transforms data by creating column vectors (a sparse matrix where each row has every word in the corpus as a column and the count of appearances in the corpus)
+   * @param {Object} options 
+   * @param {Object[]} options.data - array of corpus data 
+   */
+  fit_transform(options = {}) {
+    const data = options.data || this.data;
+    data.forEach(datum =&gt; {
+      const datums = {};
+      this.replacer(datum)
+        .split(&apos; &apos;)
+        .forEach(tok =&gt; {
+          const token = tok.toLowerCase();
+          datums[ token ] = (datums[ token ])
+            ? datums[ token ] + 1
+            : 1;
+          this.wordCountMap[token] = (this.wordCountMap[token])
+            ? this.wordCountMap[token] + 1
+            : 1;
+          this.tokens.add(token);
+        });
+      this.vectors.push(datums);
+    });
+    this.wordMap = Array.from(this.tokens).reduce((result, value) =&gt; { 
+      result[ value ] = 0;
+      return result;
+    }, {});
+    this.sortedWordCount = Object.keys(this.wordCountMap)
+      .sort((a, b) =&gt; this.wordCountMap[ b ] - this.wordCountMap[ a ]);
+    this.vectors = this.vectors.map(vector =&gt; Object.assign({}, this.wordMap, vector));
+    const vectorData = new DataSet(this.vectors);
+    this.limitedFeatures = this.get_limited_features(options);
+    this.matrix = vectorData.columnMatrix(this.limitedFeatures);
+    return this.matrix;
+  }
+  /**
+   * Returns limited sets of dependent features or all dependent features sorted by word count
+   * @param {*} options 
+   * @param {number} options.maxFeatures - max number of features 
+   */
+  get_limited_features(options = {}) {
+    const maxFeatures = options.maxFeatures || this.maxFeatures || this.tokens.size;
+ 
+    return this.sortedWordCount
+      .slice(0, maxFeatures)
+      .map(feature =&gt; [ feature, ]);
+  }
+  /**
+   * returns word map with counts
+   * @example 
+ColumnVectorizer.evaluateString(&apos;I would rate everything Great, views Great, food Great&apos;) =&gt; { realli: 0,
+     good: 0,
+     definit: 0,
+     recommend: 0,
+     wait: 0,
+     staff: 0,
+     rude: 0,
+     great: 3,
+     view: 1,
+     food: 1,
+     not: 0,
+     cold: 0,
+     took: 0,
+     forev: 0,
+     seat: 0,
+     time: 0,
+     prompt: 0,
+     attent: 0,
+     bland: 0,
+     flavor: 0,
+     kind: 0 }
+   * @param {String} testString 
+   * @return {Object} object of corpus words with accounts
+   */
+  evaluateString(testString = &apos;&apos;) {
+    const evalString = this.replacer(testString);
+    const evalStringWordMap = evalString.split(&apos; &apos;).reduce((result, value) =&gt; { 
+      if (this.tokens.has(value)) {
+        result[ value ] = (result[ value ]!==undefined)
+          ? result[ value ] + 1
+          : 1;
+      }
+      return result;
+    }, {});
+    return Object.assign({}, this.wordMap, evalStringWordMap);
+  }
+  /**
+   * returns new matrix of words with counts in columns
+   * @example 
+ColumnVectorizer.evaluate(&apos;I would rate everything Great, views Great, food Great&apos;) =&gt; [ [ 0, 1, 3, 0, 0, 0, 0, 0, 1 ] ]
+   * @param {String} testString 
+   * @return {number[][]} sparse matrix row for new classification predictions
+   */
+  evaluate(testString=&apos;&apos;, options) {
+    const stringObj = this.evaluateString(testString);
+    const limitedFeatures = this.get_limited_features(options);
+    const vectorData = new DataSet([
+      stringObj,
+    ]);
+    return vectorData.columnMatrix(limitedFeatures);
+  }
+}</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

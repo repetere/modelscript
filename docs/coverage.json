@@ -1,0 +1,120 @@
+{
+  "coverage": "58.33%",
+  "expectCount": 120,
+  "actualCount": 70,
+  "files": {
+    "src/ColumnVectorizer.mjs": {
+      "expectCount": 18,
+      "actualCount": 8,
+      "undocumentLines": [
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39
+      ]
+    },
+    "src/DataSet.mjs": {
+      "expectCount": 21,
+      "actualCount": 16,
+      "undocumentLines": [
+        18,
+        19,
+        20,
+        21,
+        89
+      ]
+    },
+    "src/ReinforcedLearning.mjs": {
+      "expectCount": 26,
+      "actualCount": 15,
+      "undocumentLines": [
+        21,
+        22,
+        25,
+        26,
+        27,
+        68,
+        69,
+        111,
+        161,
+        162,
+        201
+      ]
+    },
+    "src/calc.mjs": {
+      "expectCount": 4,
+      "actualCount": 3,
+      "undocumentLines": [
+        2
+      ]
+    },
+    "src/cross_validation.mjs": {
+      "expectCount": 8,
+      "actualCount": 5,
+      "undocumentLines": [
+        7,
+        8,
+        9
+      ]
+    },
+    "src/csv.mjs": {
+      "expectCount": 3,
+      "actualCount": 3,
+      "undocumentLines": []
+    },
+    "src/main.mjs": {
+      "expectCount": 11,
+      "actualCount": 1,
+      "undocumentLines": [
+        10,
+        11,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27
+      ]
+    },
+    "src/ml.mjs": {
+      "expectCount": 4,
+      "actualCount": 1,
+      "undocumentLines": [
+        3,
+        6,
+        8
+      ]
+    },
+    "src/nlp.mjs": {
+      "expectCount": 1,
+      "actualCount": 1,
+      "undocumentLines": []
+    },
+    "src/pd.mjs": {
+      "expectCount": 1,
+      "actualCount": 1,
+      "undocumentLines": []
+    },
+    "src/util.mjs": {
+      "expectCount": 23,
+      "actualCount": 16,
+      "undocumentLines": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ]
+    }
+  }
+}

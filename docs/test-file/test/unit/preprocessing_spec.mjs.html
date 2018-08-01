@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">test/unit/preprocessing_spec.mjs | ModelScript</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you&apos;re left with the equialent R/Python toolset in JavaScript"><meta property="og:type" content="website"><meta property="og:url" content="https://repetere.github.io/modelscript"><meta property="og:site_name" content="ModelScript"><meta property="og:title" content="ModelScript"><meta property="og:image" content="https://repetere.ai/favicon.png"><meta property="og:description" content="Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you&apos;re left with the equialent R/Python toolset in JavaScript"><meta property="og:author" content="https://github.com/repetere"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="ModelScript"><meta property="twitter:description" content="Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you&apos;re left with the equialent R/Python toolset in JavaScript"><meta property="twitter:image" content="https://repetere.ai/favicon.png"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/repetere/modelscript"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ColumnVectorizer.mjs~ColumnVectorizer.html">ColumnVectorizer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/DataSet.mjs~DataSet.html">DataSet</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ReinforcedLearning.mjs~ReinforcedLearningBase.html">ReinforcedLearningBase</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ReinforcedLearning.mjs~ThompsonSampling.html">ThompsonSampling</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ReinforcedLearning.mjs~UpperConfidenceBound.html">UpperConfidenceBound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-assocationRuleLearning">assocationRuleLearning</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTransactions">getTransactions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadCSV">loadCSV</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadCSVURI">loadCSVURI</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadTSV">loadTSV</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-calc">calc</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-cross_validation">cross_validation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-PD">PD</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-calc">calc</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-cross_validation">cross_validation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-csv">csv</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-loadCSV">loadCSV</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-loadCSVURI">loadCSVURI</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-ml">ml</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-model_selection">model_selection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-nlp">nlp</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-preprocessing">preprocessing</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-util">util</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-ml">ml</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-nlp">nlp</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-PD">PD</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-util">util</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">test/unit/preprocessing_spec.mjs</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import * as ms from &apos;../../index.mjs&apos;;
+import chai from &apos;chai&apos;;
+import { fullData, } from &apos;../mock/dataset&apos;;
+// import path from &apos;path&apos;;
+// const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const expect = chai.expect;
+const csvData = [{
+  &apos;Country&apos;: &apos;Brazil&apos;,
+  &apos;Age&apos;: &apos;44&apos;,
+  &apos;Salary&apos;: &apos;72000&apos;,
+  &apos;Purchased&apos;: &apos;N&apos;,
+},
+{
+  &apos;Country&apos;: &apos;Mexico&apos;,
+  &apos;Age&apos;: &apos;27&apos;,
+  &apos;Salary&apos;: &apos;48000&apos;,
+  &apos;Purchased&apos;: &apos;Yes&apos;,
+},
+{
+  &apos;Country&apos;: &apos;Ghana&apos;,
+  &apos;Age&apos;: &apos;30&apos;,
+  &apos;Salary&apos;: &apos;54000&apos;,
+  &apos;Purchased&apos;: &apos;No&apos;,
+},
+{
+  &apos;Country&apos;: &apos;Mexico&apos;,
+  &apos;Age&apos;: &apos;38&apos;,
+  &apos;Salary&apos;: &apos;61000&apos;,
+  &apos;Purchased&apos;: &apos;f&apos;,
+},
+{
+  &apos;Country&apos;: &apos;Ghana&apos;,
+  &apos;Age&apos;: &apos;40&apos;,
+  &apos;Salary&apos;: &apos;&apos;,
+  &apos;Purchased&apos;: &apos;Yes&apos;,
+},
+{
+  &apos;Country&apos;: &apos;Brazil&apos;,
+  &apos;Age&apos;: &apos;35&apos;,
+  &apos;Salary&apos;: &apos;58000&apos;,
+  &apos;Purchased&apos;: &apos;Yes&apos;,
+},
+{
+  &apos;Country&apos;: &apos;Mexico&apos;,
+  &apos;Age&apos;: &apos;&apos;,
+  &apos;Salary&apos;: &apos;52000&apos;,
+  &apos;Purchased&apos;: &apos;false&apos;,
+},
+{
+  &apos;Country&apos;: &apos;Brazil&apos;,
+  &apos;Age&apos;: &apos;48&apos;,
+  &apos;Salary&apos;: &apos;79000&apos;,
+  &apos;Purchased&apos;: &apos;Yes&apos;,
+},
+{
+  &apos;Country&apos;: &apos;Ghana&apos;,
+  &apos;Age&apos;: &apos;50&apos;,
+  &apos;Salary&apos;: &apos;83000&apos;,
+  &apos;Purchased&apos;: &apos;No&apos;,
+},
+{
+  &apos;Country&apos;: &apos;Brazil&apos;,
+  &apos;Age&apos;: &apos;37&apos;,
+  &apos;Salary&apos;: &apos;67000&apos;,
+  &apos;Purchased&apos;: &apos;Yes&apos;,
+},
+];
+const unmodifiedCSVData = [...csvData,];
+
+describe(&apos;preprocessing&apos;, function() {
+  describe(&apos;DataSet class&apos;, () =&gt; {
+    const CSVDataSet = new ms.preprocessing.DataSet(csvData);
+    const CSVFullDataSet = new ms.preprocessing.DataSet(fullData);
+    describe(&apos;constructor&apos;, () =&gt; {
+      it(&apos;should instantiate a new DataSet Class&apos;, () =&gt; {
+        expect(ms.preprocessing).to.be.an(&apos;object&apos;);
+        expect(ms.preprocessing.DataSet).to.be.a(&apos;function&apos;);
+        expect(CSVDataSet).to.be.instanceof(ms.preprocessing.DataSet);
+      });
+    });
+    describe(&apos;filterColumn&apos;, () =&gt; {
+      it(&apos;should by default return full dataset&apos;, () =&gt; {
+        expect(CSVDataSet.filterColumn()).to.eql(CSVDataSet.data);
+      });
+      it(&apos;should filter data by a filter function&apos;, () =&gt; {
+        expect(CSVDataSet.filterColumn(row =&gt; row.Salary.toString() === &apos;83000&apos;)).to.have.lengthOf(1);
+      });
+    });
+    describe(&apos;columnMatrix&apos;, () =&gt; { 
+      it(&apos;should create a matrix of values from columns&apos;, () =&gt; {
+        const AgeSalMatrix = CSVDataSet.columnMatrix([[&apos;Age&apos;, ], [&apos;Salary&apos;, ], ]);
+        const AgeArray = CSVDataSet.columnArray(&apos;Age&apos;);
+        expect(AgeSalMatrix).to.be.lengthOf(AgeArray.length);
+        expect(AgeSalMatrix[ 0 ][0]).to.eql(AgeArray[0]);
+      });
+      it(&apos;should create a matrix of values from an array of column names&apos;, () =&gt; {
+        const columns = [
+          &apos;Age&apos;, &apos;Salary&apos;,
+        ];
+        const AgeSalMatrix = CSVDataSet.columnMatrix(columns);
+        const AgeArray = CSVDataSet.columnArray(&apos;Age&apos;);
+        expect(AgeSalMatrix).to.be.lengthOf(AgeArray.length);
+        expect(AgeSalMatrix[ 0 ][0]).to.eql(AgeArray[0]);
+      });
+      it(&apos;should handle invalid columns&apos;, () =&gt; {
+        const invalidMatrix = CSVDataSet.columnMatrix([
+          [&apos;iojf&apos;,],
+        ]);
+        expect(invalidMatrix).to.be.an(&apos;Array&apos;);
+        expect(invalidMatrix[ 0 ][ 0 ]).to.be.undefined;
+      });
+    });
+    describe(&apos;static reverseColumnMatrix&apos;, () =&gt; {
+      it(&apos;should reverse a matrix of values into labeled object&apos;, () =&gt; {
+        const dependentVariables = [[&apos;Age&apos;, ], [&apos;Salary&apos;, ], ];
+        const AgeSalMatrix = CSVDataSet.columnMatrix(dependentVariables);
+        const AgeArray = CSVDataSet.columnArray(&apos;Age&apos;);
+        const reversedAgeSalMatrix = ms.DataSet.reverseColumnMatrix({ vectors: AgeSalMatrix, labels: dependentVariables, });
+        const selectedCols = CSVDataSet.selectColumns([&apos;Age&apos;, &apos;Salary&apos;, ]);
+        expect(AgeSalMatrix).to.be.lengthOf(AgeArray.length);
+        expect(reversedAgeSalMatrix).to.be.lengthOf(AgeArray.length);
+        expect(reversedAgeSalMatrix).to.eql(selectedCols);
+      });
+    });
+    describe(&apos;static reverseColumnVector&apos;, () =&gt; {
+      it(&apos;should reverse a vector of values into labeled object&apos;, () =&gt; {
+        const dependentVariables = [[&apos;Age&apos;, ], [&apos;Salary&apos;, ], ];
+        const AgeArray = CSVDataSet.columnArray(&apos;Age&apos;);
+        const reversedAgeSalVector = ms.DataSet.reverseColumnVector({ vector: AgeArray, labels: dependentVariables, });
+        const selectedCols = CSVDataSet.selectColumns([&apos;Age&apos;, ]);
+        expect(reversedAgeSalVector).to.be.lengthOf(AgeArray.length);
+        expect(reversedAgeSalVector).to.eql(selectedCols);
+      });
+    });
+    describe(&apos;selectColumns&apos;, () =&gt; { 
+      it(&apos;should return a list of objects with only selected columns as properties&apos;, () =&gt; {
+        const cols = [&apos;Age&apos;, &apos;Salary&apos;, ];
+        const selectedCols = CSVDataSet.selectColumns(cols);
+        expect(Object.keys(selectedCols[ 0 ])).to.eql(cols);
+        expect(Object.keys(selectedCols[ 0 ])).to.have.lengthOf(cols.length);
+        expect(selectedCols[ 0 ].Age).to.eql(CSVDataSet.data[ 0 ].Age);
+        expect(selectedCols[ 0 ].Salary).to.eql(CSVDataSet.data[ 0 ].Salary);
+      });
+    });
+    describe(&apos;columnArray&apos;, () =&gt; {
+      const countryColumn = CSVDataSet.columnArray(&apos;Country&apos;);
+      it(&apos;should select a column from CSV Data by name&apos;, () =&gt; {
+        expect(countryColumn.length).to.equal(10);
+        expect(countryColumn[0]).to.equal(csvData[0].Country);
+      });
+      it(&apos;should prefilter the dataset&apos;, () =&gt; {
+        const countryColumnPreFiltered = CSVDataSet.columnArray(&apos;Country&apos;, {
+          prefilter: row =&gt; row.Country === &apos;Ghana&apos;,
+        });
+        expect(countryColumnPreFiltered.length).to.equal(3);
+      });
+      it(&apos;should filter the dataset&apos;, () =&gt; {
+        const countryColumnPostFiltered = CSVDataSet.columnArray(&apos;Country&apos;, {
+          filter: val =&gt; val === &apos;Brazil&apos;,
+        });
+        expect(countryColumnPostFiltered.length).to.equal(4);
+      });
+      it(&apos;should replace values in dataset&apos;, () =&gt; {
+        const countryColumnReplaced = CSVDataSet.columnArray(&apos;Country&apos;, {
+          replace: {
+            test: val =&gt; val === &apos;Brazil&apos;,
+            value: &apos;China&apos;,
+          },
+        });
+        const ageColumnReplacedFuncVal = CSVDataSet.columnArray(&apos;Age&apos;, {
+          replace: {
+            test: val =&gt; val,
+            value: (result, val, index, arr, name) =&gt; parseInt(val[name]) * 10,
+          },
+        });
+        expect(ageColumnReplacedFuncVal[0]).to.equal(440);
+        expect(countryColumnReplaced[0]).to.equal(&apos;China&apos;);
+      });
+      it(&apos;should convert vals to numbers&apos;, () =&gt; {
+        const ageColumnInt = CSVDataSet.columnArray(&apos;Age&apos;, {
+          parseInt: true,
+        });
+        const ageColumnFloat = CSVDataSet.columnArray(&apos;Age&apos;, {
+          parseFloat: true,
+        });
+        expect(ageColumnInt[0]).to.be.a(&apos;number&apos;);
+        expect(ageColumnFloat[0]).to.be.a(&apos;number&apos;);
+      });
+      it(&apos;should standardize scale values&apos;, () =&gt; {
+        const salaryColumn = CSVDataSet.columnArray(&apos;Salary&apos;, {
+          prefilter: row =&gt; row.Salary,
+          parseInt: true,
+        });
+        const standardScaleSalary = CSVDataSet.columnArray(&apos;Salary&apos;, {
+          prefilter: row =&gt; row.Salary,
+          scale: &apos;standard&apos;,
+        });
+        expect(JSON.stringify(standardScaleSalary)).to.equal(JSON.stringify(ms.util.StandardScaler(salaryColumn)));
+        expect(ms.util.sd(standardScaleSalary)).to.equal(1);
+        expect(parseInt(Math.round(ms.util.mean(standardScaleSalary)))).to.equal(0);
+      });
+      it(&apos;should z-score / MinMax scale values&apos;, () =&gt; {
+        const salaryColumn = CSVDataSet.columnArray(&apos;Salary&apos;, {
+          prefilter: row =&gt; row.Salary,
+          parseInt: true,
+        });
+        const minMaxScaleSalary = CSVDataSet.columnArray(&apos;Salary&apos;, {
+          prefilter: row =&gt; row.Salary,
+          scale: &apos;minMax&apos;,
+        });
+        // console.log(&apos;ms.util.mean(minMaxScaleSalary)&apos;, ms.util.mean(minMaxScaleSalary));
+        expect(JSON.stringify(minMaxScaleSalary)).to.equal(JSON.stringify(ms.util.MinMaxScaler(salaryColumn)));
+        expect(parseInt(Math.round(ms.util.sd(minMaxScaleSalary)))).to.equal(0);
+        expect(parseInt(Math.round(ms.util.mean(minMaxScaleSalary)))).to.equal(0);
+      });
+      it(&apos;should log scale values&apos;, () =&gt; {
+        const salaryColumn = CSVDataSet.columnArray(&apos;Salary&apos;, {
+          prefilter: row =&gt; row.Salary,
+          parseInt: true,
+        });
+        const logScaleSalary = CSVDataSet.columnArray(&apos;Salary&apos;, {
+          prefilter: row =&gt; row.Salary,
+          scale: &apos;log&apos;,
+        });
+        expect(JSON.stringify(logScaleSalary)).to.equal(JSON.stringify(ms.util.LogScaler(salaryColumn)));
+      });
+      it(&apos;should exp scale values&apos;, () =&gt; {
+        const salaryColumn = CSVDataSet.columnArray(&apos;Salary&apos;, {
+          prefilter: row =&gt; row.Salary,
+          parseInt: true,
+        });
+        const logScaleSalary = CSVDataSet.columnArray(&apos;Salary&apos;, {
+          prefilter: row =&gt; row.Salary,
+          scale: &apos;exp&apos;,
+        });
+        expect(JSON.stringify(logScaleSalary)).to.equal(JSON.stringify(ms.util.ExpScaler(salaryColumn)));
+      });
+    });
+    describe(&apos;columnScale / columnDescale&apos;, () =&gt; {
+      const salaryColumn = CSVFullDataSet.columnArray(&apos;Salary&apos;, { parseInt:true, });
+      const salaryColumnScaled = CSVFullDataSet.columnArray(&apos;Salary&apos;, { scale:&apos;log&apos;, });
+      const scaledSalaryColumn = CSVFullDataSet.columnScale(&apos;Salary&apos;, { strategy: &apos;log&apos;, });
+      it(&apos;should scale a column and store the transform functions&apos;, () =&gt; {
+        expect(CSVFullDataSet.scalers).to.be.a(&apos;map&apos;);
+        expect(CSVFullDataSet.scalers.has(&apos;Salary&apos;)).to.be.true;
+        expect(scaledSalaryColumn).to.eql(salaryColumnScaled);
+        expect(CSVFullDataSet.scalers.get(&apos;Salary&apos;).scale(72000)).to.eql(11.184421397998193);
+        expect(CSVFullDataSet.scalers.get(&apos;Salary&apos;).scale(44)).to.eql( 3.784189633918261);
+      });
+      it(&apos;should descale a column&apos;, () =&gt; {
+        const descaledColumn = CSVFullDataSet.columnDescale(&apos;Salary&apos;, { data: scaledSalaryColumn, });
+        expect(parseInt(CSVFullDataSet.scalers.get(&apos;Salary&apos;).descale(11.184421397998193))).to.eql(72000);
+        expect(descaledColumn.map(Math.round)).to.eql(salaryColumn);
+      });
+    });
+    describe(&apos;labelEncoder&apos;, () =&gt; {
+      const purchasedColumn = CSVDataSet.columnArray(&apos;Purchased&apos;);
+      let encodedPurchased;
+      let encodedCountry;
+      it(&apos;should binary label encode&apos;, () =&gt; {
+        const binaryEncodedColumn = CSVDataSet.labelEncoder(&apos;Purchased&apos;, {
+          data: purchasedColumn,
+          binary: true,
+        });
+        encodedPurchased = binaryEncodedColumn;
+        expect(binaryEncodedColumn).to.include.members([0, 1,]);
+      });
+      it(&apos;should label encode&apos;, () =&gt; {
+        const labelEncodedColumn = CSVDataSet.labelEncoder(&apos;Country&apos;);
+        encodedCountry = labelEncodedColumn;
+        // console.log({ CSVDataSet }, CSVDataSet.data);
+        expect(labelEncodedColumn).to.include.members([0, 1, 2,]);
+        labelEncodedColumn.forEach(lec =&gt; expect(lec).to.be.a(&apos;number&apos;));
+        expect(CSVDataSet.labels.size).equal(2);
+      });
+      it(&apos;should decode labels&apos;, () =&gt; {
+        const decodedCountry = CSVDataSet.labelDecode(&apos;Country&apos;, { data: encodedCountry, });
+        // console.log({ decodedCountry, encodedCountry });
+        expect(decodedCountry[0]).to.be.a(&apos;string&apos;);
+        expect(decodedCountry[0]).to.eql(&apos;Brazil&apos;);
+        expect(CSVDataSet.labels.get(&apos;Country&apos;).get(decodedCountry[0])).to.equal(encodedCountry[0]);
+      });
+    });
+    describe(&apos;oneHotEncoder&apos;, () =&gt; {
+      it(&apos;should one hot encode&apos;, () =&gt; {
+        const oneHotCountry = CSVDataSet.oneHotEncoder(&apos;Country&apos;);
+        // console.log({ oneHotCountry },CSVDataSet);
+        expect(Object.keys(oneHotCountry).length).to.equal(3);
+        expect(oneHotCountry).to.haveOwnProperty(&apos;Country_Brazil&apos;);
+        expect(csvData[0].Country).to.equal(&apos;Brazil&apos;);
+        expect(oneHotCountry.Country_Brazil[0]).to.eql(1);
+        expect(oneHotCountry.Country_Mexico[0]).to.eql(0);
+        expect(oneHotCountry.Country_Ghana[0]).to.eql(0);
+        expect(CSVDataSet.encoders.size).to.equal(1);
+        expect(CSVDataSet.encoders.has(&apos;Country&apos;)).to.be.true;
+      });
+    });
+    describe(&apos;columnReducer&apos;, () =&gt; { 
+      it(&apos;should reduce column and greate a new column&apos;, () =&gt; {
+        const reducer = (result, value, index, arr) =&gt; {
+          result.push(value * 2);
+          return result;
+        };
+        const DoubleAgeColumn = CSVDataSet.columnReducer(&apos;DoubleAge&apos;, {
+          columnName: &apos;Age&apos;,
+          reducer,
+        });
+        const AgeColumn = CSVDataSet.columnArray(&apos;Age&apos;);
+        // console.log({ DoubleAgeColumn, AgeColumn, });
+        expect(AgeColumn[ 0 ] * 2).to.eql(DoubleAgeColumn.DoubleAge[ 0 ]);
+        expect(DoubleAgeColumn.DoubleAge).to.eql(AgeColumn.reduce(reducer, []));
+      });
+    });
+    describe(&apos;columnReplace&apos;, () =&gt; {
+      it(&apos;should label encode&apos;, () =&gt; {
+        const leCountry = CSVDataSet.labelEncoder(&apos;Country&apos;);
+        const crCountry = CSVDataSet.columnReplace(&apos;Country&apos;, {
+          strategy: &apos;label&apos;,
+        });
+        const cr2Country = CSVDataSet.columnReplace(&apos;Country&apos;, {
+          strategy: &apos;labelEncoder&apos;,
+        });
+        expect(leCountry).to.have.ordered.members(crCountry);
+        expect(leCountry).to.have.ordered.members(cr2Country);
+      });
+      it(&apos;should onehot encode&apos;, () =&gt; {
+        const ohCountry = CSVDataSet.oneHotEncoder(&apos;Country&apos;);
+        const oh1Country = CSVDataSet.columnReplace(&apos;Country&apos;, {
+          strategy: &apos;onehot&apos;,
+        });
+        const oh2Country = CSVDataSet.columnReplace(&apos;Country&apos;, {
+          strategy: &apos;oneHot&apos;,
+        });
+        const oh3Country = CSVDataSet.columnReplace(&apos;Country&apos;, {
+          strategy: &apos;oneHotEncode&apos;,
+        });
+        const oh4Country = CSVDataSet.columnReplace(&apos;Country&apos;, {
+          strategy: &apos;oneHotEncoder&apos;,
+        });
+        expect(ohCountry).to.deep.eq(oh1Country);
+        expect(ohCountry).to.deep.eq(oh2Country);
+        expect(ohCountry).to.deep.eq(oh3Country);
+        expect(ohCountry).to.deep.eq(oh4Country);
+      });
+      it(&apos;should replace empty values with mean by default&apos;, () =&gt; {
+        const colSalary = CSVDataSet.columnArray(&apos;Salary&apos;, {
+          parseFloat: true,
+          filter: val =&gt; val,
+        });
+        const meanColSalary = CSVDataSet.columnReplace(&apos;Salary&apos;);
+        const meanSal = ms.util.mean(colSalary);
+        expect(meanColSalary).to.include(meanSal);
+      });
+      it(&apos;should replace empty values with stat function from ml.js&apos;, () =&gt; {
+        const colSalary = CSVDataSet.columnArray(&apos;Salary&apos;, {
+          parseFloat: true,
+          filter: val =&gt; val,
+        });
+        const standardDeviationColSalary = CSVDataSet.columnReplace(&apos;Salary&apos;, { strategy: &apos;standardDeviation&apos;, });
+        const sdSal = ms.util.sd(colSalary);
+        expect(standardDeviationColSalary).to.include(sdSal);
+      });
+      it(&apos;should replace values by standard scaling&apos;, () =&gt; {
+        const salaryColumn = CSVDataSet.columnArray(&apos;Salary&apos;, {
+          prefilter: row =&gt; row.Salary,
+          parseInt: true,
+        });
+        const salaryMean = ms.util.mean(salaryColumn);
+        const formattedSalaryColumn = CSVDataSet.columnArray(&apos;Salary&apos;, {
+          replace: {
+            test: val =&gt; !val,
+            value: salaryMean,
+          },
+          parseFloat: true,
+        });
+        const scaledSalaryColumn = ms.util.StandardScaler(formattedSalaryColumn);
+        const standardScaleSalary = CSVDataSet.columnReplace(&apos;Salary&apos;, {
+          scale: &apos;standard&apos;,
+        });
+        expect(standardScaleSalary).to.include.ordered.members(scaledSalaryColumn);
+      });
+    });
+    describe(&apos;fitColumns&apos;, () =&gt; {
+      const extraColumn = [89, 12, 32, 45, 53, 52, 56, 21, 34, 56, ];
+      it(&apos;should merge columns&apos;, () =&gt; {
+        const fittedOriginalData = new ms.DataSet([...unmodifiedCSVData,]);
+        fittedOriginalData.fitColumns({
+          columns: [
+            { name: &apos;Age&apos;, },
+            {
+              name: &apos;Extra&apos;,
+              options: {
+                strategy: &apos;merge&apos;,
+                mergeData: extraColumn,
+              },
+            },
+          ],
+        });
+        expect(fittedOriginalData.columnArray(&apos;Extra&apos;)).to.eql(extraColumn);
+      });
+      it(&apos;should only merge columns if data length matches&apos;, () =&gt; { 
+        const fittedOriginalData = new ms.DataSet([...unmodifiedCSVData, ]);
+        const newColumn = fittedOriginalData.columnMerge(&apos;err&apos;, [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, ]);
+        expect(newColumn).to.be.an(&apos;Object&apos;);
+        expect(newColumn).to.haveOwnProperty(&apos;err&apos;);
+        expect(newColumn.err).to.be.an(&apos;array&apos;);
+        try {
+          fittedOriginalData.columnMerge(&apos;err&apos;, [1, 2, ]);
+        } catch (e) {
+          expect(e).to.be.an(&apos;error&apos;);
+          expect(e.toString()).to.eql(`RangeError: Merged data column must have the same length(2) as the DataSet&apos;s length (${10})`);
+        }
+      });
+      it(&apos;should fit multiple columns&apos;, () =&gt; {
+        const unmodifiedData = new ms.DataSet(unmodifiedCSVData);
+        const fittedOriginalData = new ms.DataSet([...unmodifiedCSVData,]);
+        const reducer = (result, value, index, arr) =&gt; {
+          result.push(value * 2);
+          return result;
+        };
+
+        const fitdata = fittedOriginalData.fitColumns({
+          columns: [
+            { name: &apos;Age&apos;, },
+            {
+              name: &apos;Salary&apos;,
+              options: {
+                scale: &apos;standard&apos;,
+              },
+            },
+            {
+              name: &apos;DoubleSalary&apos;,
+              options: {
+                strategy:&apos;reduce&apos;,
+                reducerOptions: {
+                  columnName: &apos;Salary&apos;,
+                  reducer,
+                },
+              },
+            },
+            {
+              name: &apos;Purchased&apos;,
+              options: {
+                strategy: &apos;label&apos;,
+                labelOptions: {
+                  binary: true,
+                },
+              },
+            },
+            {
+              name: &apos;Country&apos;,
+              options: {
+                strategy: &apos;onehot&apos;,
+                labelOptions: {
+                  binary: true,
+                },
+              },
+            },
+          ],
+        });
+        expect(fitdata).to.eql(fittedOriginalData.data);
+        const fitObject = fittedOriginalData.fitColumns({
+          returnData: false,
+          columns: [
+            {
+              name: &apos;DoubleAge&apos;,
+              options: {
+                strategy:&apos;reduce&apos;,
+                reducerOptions: {
+                  columnName: &apos;Age&apos;,
+                  reducer,
+                },
+              },
+            },
+          ],
+        });
+        expect(fitObject).to.eql(fittedOriginalData);
+        expect(unmodifiedData === fittedOriginalData).to.be.false;
+        expect(fittedOriginalData.data).to.not.eq(unmodifiedCSVData);
+        expect(fittedOriginalData.columnArray(&apos;Age&apos;)).to.have.ordered.members(unmodifiedData.columnReplace(&apos;Age&apos;));
+        expect(fittedOriginalData.columnArray(&apos;Salary&apos;)).to.have.ordered.members(unmodifiedData.columnReplace(&apos;Salary&apos;, {
+          scale: &apos;standard&apos;,
+        }));
+      });
+    });
+  });
+});</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

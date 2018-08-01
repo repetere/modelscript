@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/csv.mjs | ModelScript</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you&apos;re left with the equialent R/Python toolset in JavaScript"><meta property="og:type" content="website"><meta property="og:url" content="https://repetere.github.io/modelscript"><meta property="og:site_name" content="ModelScript"><meta property="og:title" content="ModelScript"><meta property="og:image" content="https://repetere.ai/favicon.png"><meta property="og:description" content="Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you&apos;re left with the equialent R/Python toolset in JavaScript"><meta property="og:author" content="https://github.com/repetere"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="ModelScript"><meta property="twitter:description" content="Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you&apos;re left with the equialent R/Python toolset in JavaScript"><meta property="twitter:image" content="https://repetere.ai/favicon.png"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/repetere/modelscript"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ColumnVectorizer.mjs~ColumnVectorizer.html">ColumnVectorizer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/DataSet.mjs~DataSet.html">DataSet</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ReinforcedLearning.mjs~ReinforcedLearningBase.html">ReinforcedLearningBase</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ReinforcedLearning.mjs~ThompsonSampling.html">ThompsonSampling</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ReinforcedLearning.mjs~UpperConfidenceBound.html">UpperConfidenceBound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-assocationRuleLearning">assocationRuleLearning</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTransactions">getTransactions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadCSV">loadCSV</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadCSVURI">loadCSVURI</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadTSV">loadTSV</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-calc">calc</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-cross_validation">cross_validation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-PD">PD</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-calc">calc</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-cross_validation">cross_validation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-csv">csv</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-loadCSV">loadCSV</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-loadCSVURI">loadCSVURI</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-ml">ml</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-model_selection">model_selection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-nlp">nlp</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-preprocessing">preprocessing</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-util">util</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-ml">ml</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-nlp">nlp</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-PD">PD</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-util">util</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/csv.mjs</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { get as request, } from &apos;http&apos;;
+import { get as requestHTTPS, } from &apos;https&apos;;
+import { default as validURL, } from &apos;valid-url&apos;;
+import { default as csv, } from &apos;csvtojson&apos;;
+/**
+ * Asynchronously loads a CSV from a remote URL and returns an array of objects
+ * @example
+ * // returns [{header:value,header2:value2}]
+ * loadCSVURI(&apos;https://raw.githubusercontent.com/repetere/modelscript/master/test/mock/data.csv&apos;).then(csvData).catch(console.error)
+ * @memberOf csv
+ * @param {string} filepath - URL to CSV path
+ * @param {Object} [options] - options passed to csvtojson
+ * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
+ */
+export function loadCSVURI(filepath, options) {
+  const reqMethod = (filepath.search(&apos;https&apos;, &apos;gi&apos;) &gt; -1) ? requestHTTPS : request;
+  return new Promise((resolve, reject) =&gt; {
+    const csvData = [];
+    const config = Object.assign({ checkType: true, }, options);
+    const req = reqMethod(filepath, res =&gt; {
+      csv(config).fromStream(res)
+        .on(&apos;json&apos;, jsonObj =&gt; {
+          csvData.push(jsonObj);
+        })
+        .on(&apos;error&apos;, err =&gt; {
+          return reject(err);
+        })
+        .on(&apos;done&apos;, error =&gt; {
+          if (error) {
+            return reject(error);
+          } else {
+            return resolve(csvData);
+          }
+        });
+    });
+    req.on(&apos;error&apos;, reject);
+  });
+}
+
+
+/**
+ * Asynchronously loads a CSV from either a filepath or remote URL and returns an array of objects
+ * @example
+ * // returns [{header:value,header2:value2}]
+ * loadCSV(&apos;../mock/invalid-file.csv&apos;).then(csvData).catch(console.error)
+ * @memberOf csv
+ * @param {string} filepath - URL to CSV path
+ * @param {Object} [options] - options passed to csvtojson
+ * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
+ */
+export function loadCSV(filepath, options) {
+  if (validURL.isUri(filepath)) {
+    return loadCSVURI(filepath, options);
+  } else {
+    return new Promise((resolve, reject) =&gt; {
+      const csvData = [];
+      const config = Object.assign({ checkType: true, }, options);
+      csv(config).fromFile(filepath)
+        .on(&apos;json&apos;, jsonObj =&gt; {
+          csvData.push(jsonObj);
+        })
+        .on(&apos;error&apos;, err =&gt; {
+          return reject(err);
+        })
+        .on(&apos;done&apos;, error =&gt; {
+          if (error) {
+            return reject(error);
+          } else {
+            return resolve(csvData);
+          }
+        });
+    });
+  }
+}
+
+/**
+ * Asynchronously loads a TSV from either a filepath or remote URL and returns an array of objects
+ * @example
+ * // returns [{header:value,header2:value2}]
+ * loadCSV(&apos;../mock/invalid-file.tsv&apos;).then(csvData).catch(console.error)
+ * @memberOf csv
+ * @param {string} filepath - URL to CSV path
+ * @param {Object} [options] - options passed to csvtojson
+ * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
+ */
+export function loadTSV(filepath, options) {
+  const tsvOptions = Object.assign({
+    checkType: true,
+  }, options, {
+    delimiter: &apos;\t&apos;,
+  });
+  return loadCSV(filepath, tsvOptions);
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
