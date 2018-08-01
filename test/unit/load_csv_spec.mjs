@@ -1,7 +1,8 @@
 import * as ms from '../../index.mjs';
 import chai from 'chai';
 import path from 'path';
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+import expose from './expose.js';
+const { __dirname, } = expose;
 const expect = chai.expect;
 
 describe('loadCSV', function () { 

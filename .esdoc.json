@@ -1,5 +1,5 @@
 {
-  "source": "./lib",
+  "source": "./src",
   "destination": "./docs",
   "plugins": [
     {
@@ -34,7 +34,7 @@
     {
       "name": "esdoc-publish-markdown-plugin",
       "option": {
-        "filename":"./API.md"
+        "filename":"./api.md"
       }
     }
   ],

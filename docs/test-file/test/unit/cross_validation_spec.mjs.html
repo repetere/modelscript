@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">test/unit/cross_validation_spec.mjs | ModelScript</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you&apos;re left with the equialent R/Python toolset in JavaScript"><meta property="og:type" content="website"><meta property="og:url" content="https://repetere.github.io/modelscript"><meta property="og:site_name" content="ModelScript"><meta property="og:title" content="ModelScript"><meta property="og:image" content="https://repetere.ai/favicon.png"><meta property="og:description" content="Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you&apos;re left with the equialent R/Python toolset in JavaScript"><meta property="og:author" content="https://github.com/repetere"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="ModelScript"><meta property="twitter:description" content="Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you&apos;re left with the equialent R/Python toolset in JavaScript"><meta property="twitter:image" content="https://repetere.ai/favicon.png"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/repetere/modelscript"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ColumnVectorizer.mjs~ColumnVectorizer.html">ColumnVectorizer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/DataSet.mjs~DataSet.html">DataSet</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ReinforcedLearning.mjs~ReinforcedLearningBase.html">ReinforcedLearningBase</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ReinforcedLearning.mjs~ThompsonSampling.html">ThompsonSampling</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ReinforcedLearning.mjs~UpperConfidenceBound.html">UpperConfidenceBound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-assocationRuleLearning">assocationRuleLearning</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTransactions">getTransactions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadCSV">loadCSV</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadCSVURI">loadCSVURI</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadTSV">loadTSV</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-calc">calc</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-cross_validation">cross_validation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-PD">PD</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-calc">calc</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-cross_validation">cross_validation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-csv">csv</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-loadCSV">loadCSV</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-loadCSVURI">loadCSVURI</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-ml">ml</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-model_selection">model_selection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-nlp">nlp</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-preprocessing">preprocessing</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-util">util</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-ml">ml</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-nlp">nlp</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-PD">PD</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-util">util</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">test/unit/cross_validation_spec.mjs</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import * as ms from &apos;../../index.mjs&apos;;
+import chai from &apos;chai&apos;;
+import path from &apos;path&apos;;
+import expose from &apos;./expose.js&apos;;
+const { __dirname, } = expose;
+const expect = chai.expect;
+const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
+const ml = ms.ml;
+const DTClassifier = ml.SL.DecisionTreeClassifier;
+const RFRegression = ml.Regression.RandomForestRegression;
+const dependentFeatures = [[&apos;Age&apos;, ], [&apos;EstimatedSalary&apos;, ], ];
+const independentFeatures = [[&apos;Purchased&apos;, ], ];
+const regressionDependentFeatures = [[&apos;R&amp;D Spend&apos;, ], [&apos;Administration&apos;, ], [&apos;Marketing Spend&apos;, ], ];
+const regressionIndependentFeatures = [[&apos;Profit&apos;, ], ];
+let SNA_csv;
+let Start50_csv;
+let Start50DataSet;
+
+describe(&apos;cross_validation&apos;, function () { 
+  this.timeout(10000);
+  before((done) =&gt; {
+    Promise.all([
+      ms.loadCSV(path.join(__dirname, &apos;../mock/Social_Network_Ads.csv&apos;), {
+        colParser: {
+          Age: &apos;number&apos;,
+          EstimatedSalary: &apos;number&apos;,
+          Purchased: &apos;number&apos;,
+        },
+      }),
+      ms.loadCSV(path.join(__dirname, &apos;../mock/50_Startups.csv&apos;), {
+        colParser: {
+          &apos;Administration&apos;: &apos;number&apos;,
+          &apos;R&amp;D Spend&apos;: &apos;number&apos;,
+          &apos;Marketing Spend&apos;: &apos;number&apos;,
+          &apos;Profit&apos;: &apos;number&apos;,
+        },
+      }),
+    ])
+      .then(csvs =&gt; {
+        const [
+          SNA_csv_list,
+          S50_csv_list,
+        ] = csvs;
+        SNA_csv = SNA_csv_list;
+        Start50_csv = S50_csv_list;
+        Start50DataSet = new ms.DataSet(Start50_csv)
+          .fitColumns({
+            columns: [
+              {
+                name: &apos;State&apos;,
+                options: {
+                  strategy: &apos;onehot&apos;,
+                },
+              },
+            ],
+          });
+        done();
+      })
+      .catch(done);
+  });
+  describe(&apos;train_test_split&apos;, () =&gt; {
+    const defaultTrainTestSplit = ms.cross_validation.train_test_split(testArray);
+    it(&apos;should split dataset with default values&apos;, () =&gt; {
+      expect(ms.cross_validation).to.be.an(&apos;object&apos;);
+      expect(defaultTrainTestSplit.train.length).to.equal(8);
+      expect(defaultTrainTestSplit.test.length).to.equal(2);
+    });
+    it(&apos;should split the data into two arrays&apos;, () =&gt; {
+      const defaultTrainTestSplitArray = ms.cross_validation.train_test_split(testArray, { return_array: true, });
+      const [train, test,] = defaultTrainTestSplitArray;
+      expect(train.length).to.equal(8);
+      expect(test.length).to.equal(2);
+    });
+    it(&apos;should split with defined test size&apos;, () =&gt; {
+      const defaultTrainTestSplitSize = ms.cross_validation.train_test_split(testArray, { test_size: 0.4, });
+      const { train, test, } = defaultTrainTestSplitSize;
+      expect(train.length).to.equal(6);
+      expect(test.length).to.equal(4);
+    });
+    it(&apos;should split with defined train size&apos;, () =&gt; {
+      const defaultTrainTestSplitSize = ms.cross_validation.train_test_split(testArray, { train_size: 0.5, });
+      const { train, test, } = defaultTrainTestSplitSize;
+      expect(train.length).to.equal(5);
+      expect(test.length).to.equal(5);
+    });
+    it(&apos;should use a randomized seed&apos;, () =&gt; {
+      const defaultTrainTestSplitSeed0 = ms.cross_validation.train_test_split(testArray, { random_state: 0, return_array: true, });
+      const defaultTrainTestSplitSeed0a = ms.cross_validation.train_test_split(testArray, { random_state: 0, return_array: true, });
+      const defaultTrainTestSplitSeed1 = ms.cross_validation.train_test_split(testArray, { random_state: 1, return_array: true, });
+      const [train0,] = defaultTrainTestSplitSeed0;
+      const [train0a,] = defaultTrainTestSplitSeed0a;
+      const [train1,] = defaultTrainTestSplitSeed1;
+      expect(train0.toString()).to.equal(train0a.toString());
+      expect(train0.toString()).to.not.equal(train1.toString());
+    });
+  });
+  describe(&apos;cross_validation_split&apos;, () =&gt; {
+    const defaultCrossValidation = ms.cross_validation.cross_validation_split(testArray);
+    it(&apos;should split dataset with default values&apos;, () =&gt; {
+      expect(defaultCrossValidation.length).to.equal(3);
+    });
+    it(&apos;should split the data into k-folds&apos;, () =&gt; {
+      const defaultCrossValidationArray = ms.cross_validation.cross_validation_split(testArray, {
+        folds: 2,
+      });
+      expect(defaultCrossValidationArray[0].length).to.equal(5);
+      expect(defaultCrossValidationArray.length).to.equal(2);
+    });
+    it(&apos;should use a randomized seed&apos;, () =&gt; {
+      const defaultCrossValidationSeed0 = ms.cross_validation.cross_validation_split(testArray, { random_state: 0, });
+      const defaultCrossValidationSeed0a = ms.cross_validation.cross_validation_split(testArray, { random_state: 0, });
+      const defaultCrossValidationSeed1 = ms.cross_validation.cross_validation_split(testArray, { random_state: 1, });
+      
+      expect(JSON.stringify(defaultCrossValidationSeed0)).to.equal(JSON.stringify(defaultCrossValidationSeed0a));
+      expect(JSON.stringify(defaultCrossValidationSeed0)).to.not.equal(JSON.stringify(defaultCrossValidationSeed1));
+    });
+  });
+  describe(&apos;cross_validate_score&apos;, () =&gt; {
+    it(&apos;should validate classification&apos;, () =&gt; {
+      // console.log({ SNA_csv });
+      const { train, test, } = ms.cross_validation.train_test_split(SNA_csv, {
+        test_size: 0.25,
+        random_state: 0,
+        parse_int_train_size: true,
+      });
+      const classifier = new DTClassifier({
+        gainFunction: &apos;gini&apos;,
+        minNumSamples: 4,
+      });
+      const accuracy = ms.cross_validation.cross_validate_score({
+        dataset: train,
+        testingset: test,
+        classifier,
+        dependentFeatures,
+        independentFeatures,
+      });
+      expect(accuracy).to.have.lengthOf(10);
+      expect(ms.util.mean(accuracy)).to.be.greaterThan(0.75);
+      expect(ms.util.sd(accuracy)).to.be.lessThan(0.08);
+      // console.log(&apos;accuracy&apos;, accuracy);
+      // console.log(&apos;acc avg&apos;, ms.util.mean(accuracy));
+      // console.log(&apos;acc sd&apos;, ms.util.sd(accuracy));   
+    });
+    it(&apos;should validate classification constructor&apos;, () =&gt; {
+      // console.log({ SNA_csv });
+      const { train, test, } = ms.cross_validation.train_test_split(SNA_csv, {
+        test_size: 0.25,
+        random_state: 0,
+        parse_int_train_size: true,
+      });
+      const classifier = ml.KNN;
+      const accuracy = ms.cross_validation.cross_validate_score({
+        dataset: train,
+        testingset: test,
+        classifier,
+        modelOptions: { k: 5, },
+        use_estimates_y_vector: true,
+        dependentFeatures,
+        independentFeatures,
+      });
+      expect(accuracy).to.have.lengthOf(10);
+      expect(ms.util.mean(accuracy)).to.be.greaterThan(0.65);
+      expect(ms.util.sd(accuracy)).to.be.lessThan(0.08);
+      // console.log(&apos;accuracy&apos;, accuracy);
+      // console.log(&apos;acc avg&apos;, ms.util.mean(accuracy));
+      // console.log(&apos;acc sd&apos;, ms.util.sd(accuracy));   
+    });
+    it(&apos;should validate regression with train method&apos;, () =&gt; {
+      const { train, test, } = ms.cross_validation.train_test_split(Start50DataSet, {
+        test_size: 0.25,
+        random_state: 0,
+        parse_int_train_size: true,
+      });
+      const regression = new RFRegression({
+        seed: 3,
+        maxFeatures: 2,
+        replacement: false,
+        nEstimators: 300,
+      });
+      const accuracy = ms.cross_validation.cross_validate_score({
+        dataset: train,
+        testingset: test,
+        folds: 2,
+        // accuracy:&apos;rSquared&apos;,
+        use_train_y_vector:true,
+        regression,
+        dependentFeatures: regressionDependentFeatures,
+        independentFeatures: regressionIndependentFeatures,
+      });
+      // console.log(&apos;accuracy&apos;, accuracy);
+      // console.log(&apos;acc avg&apos;, ms.util.mean(accuracy));
+      expect(accuracy).to.have.lengthOf(2);
+      expect(ms.util.mean(accuracy)).to.be.lessThan(40000);
+      // expect(ms.util.sd(accuracy)).to.be.lessThan(0.08);
+      // console.log(&apos;acc sd&apos;, ms.util.sd(accuracy));   
+    });
+    it(&apos;should validate regression with constructor methods&apos;, () =&gt; {
+      const { train, test, } = ms.cross_validation.train_test_split(Start50DataSet, {
+        test_size: 0.25,
+        random_state: 0,
+        parse_int_train_size: true,
+      });
+      const regression = ml.MultivariateLinearRegression;
+      const accuracy = ms.cross_validation.cross_validate_score({
+        dataset: train,
+        testingset: test,
+        folds: 2,
+        // accuracy:&apos;rSquared&apos;,
+        use_train_y_vector:false,
+        regression,
+        dependentFeatures: regressionDependentFeatures,
+        independentFeatures: regressionIndependentFeatures,
+      });
+      // console.log(&apos;accuracy&apos;, accuracy);
+      // console.log(&apos;acc avg&apos;, ms.util.mean(accuracy));
+      expect(accuracy).to.have.lengthOf(2);
+      expect(ms.util.mean(accuracy)).to.be.lessThan(9000);
+      // expect(ms.util.sd(accuracy)).to.be.lessThan(0.08);
+      // console.log(&apos;acc sd&apos;, ms.util.sd(accuracy));   
+    });
+  });
+  describe(&apos;grid_search&apos;, () =&gt; {
+    it(&apos;should return sorted best regression parameters&apos;, (done) =&gt; {
+      const { train, test, } = ms.cross_validation.train_test_split(Start50DataSet, {
+        test_size: 0.25,
+        random_state: 0,
+        parse_int_train_size: true,
+      }); 
+      const optimizedParameters = ms.cross_validation.grid_search({
+        regression: ml.Regression.RandomForestRegression,
+        parameters: {
+          seed: [2, ],
+          maxFeatures: [2, 3, ],
+          replacement: [false, true, ],
+          nEstimators: [300, 500, ],
+        },
+        dataset: train,
+        testingset: test,
+        folds: 2,
+        // accuracy:&apos;rSquared&apos;,
+        use_train_y_vector:true,
+        dependentFeatures: regressionDependentFeatures,
+        independentFeatures: regressionIndependentFeatures,
+      });
+      // console.log(JSON.stringify(optimizedParameters, null, 2));
+      expect(optimizedParameters).to.haveOwnProperty(&apos;params&apos;);
+      expect(optimizedParameters).to.haveOwnProperty(&apos;results&apos;);
+      done();
+    });
+    it(&apos;should return sorted best classification parameters&apos;, () =&gt; {
+      const { train, test, } = ms.cross_validation.train_test_split(SNA_csv, {
+        test_size: 0.25,
+        random_state: 0,
+        parse_int_train_size: true,
+      });
+      const optimizedParameters = ms.cross_validation.grid_search({
+        dataset: train,
+        testingset: test,
+        classifier: ml.SL.RandomForestClassifier,
+        return_parameters:true,
+        parameters: {
+          maxFeatures: [1.0, 0.5,],
+          // replacement: [true, false, ],
+          // useSampleBagging: [true, false, ],
+          nEstimators: [10, 20,],
+          treeOptions: [
+            { minNumSamples: 3, },
+            { minNumSamples: 2, },
+          ],
+        },
+        dependentFeatures,
+        independentFeatures,
+      });
+      // console.log(JSON.stringify(optimizedParameters, null, 2));
+      expect(optimizedParameters).to.be.an(&apos;array&apos;);
+      expect(optimizedParameters).to.have.lengthOf(8);
+    });
+    it(&apos;should sort parameter performance logically for regression&apos;, () =&gt; {
+      //TODO
+    });
+    it(&apos;should sort parameter performance logically for classification&apos;, () =&gt; {
+      //TODO
+    });
+  });
+});</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

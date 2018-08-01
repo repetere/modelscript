@@ -1,16 +1,17 @@
 import * as ms from '../../index.mjs';
 import chai from 'chai';
 import path from 'path';
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+import expose from './expose.js';
+const { __dirname, } = expose;
 const expect = chai.expect;
-const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23,];
+const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
 const ml = ms.ml;
 const DTClassifier = ml.SL.DecisionTreeClassifier;
 const RFRegression = ml.Regression.RandomForestRegression;
-const dependentFeatures = [['Age',], ['EstimatedSalary',],];
-const independentFeatures = [['Purchased',],];
-const regressionDependentFeatures = [['R&D Spend',], ['Administration',], ['Marketing Spend',],];
-const regressionIndependentFeatures = [['Profit',],];
+const dependentFeatures = [['Age', ], ['EstimatedSalary', ], ];
+const independentFeatures = [['Purchased', ], ];
+const regressionDependentFeatures = [['R&D Spend', ], ['Administration', ], ['Marketing Spend', ], ];
+const regressionIndependentFeatures = [['Profit', ], ];
 let SNA_csv;
 let Start50_csv;
 let Start50DataSet;
@@ -66,7 +67,7 @@ describe('cross_validation', function () {
     });
     it('should split the data into two arrays', () => {
       const defaultTrainTestSplitArray = ms.cross_validation.train_test_split(testArray, { return_array: true, });
-      const [train, test, ] = defaultTrainTestSplitArray;
+      const [train, test,] = defaultTrainTestSplitArray;
       expect(train.length).to.equal(8);
       expect(test.length).to.equal(2);
     });
@@ -86,9 +87,9 @@ describe('cross_validation', function () {
       const defaultTrainTestSplitSeed0 = ms.cross_validation.train_test_split(testArray, { random_state: 0, return_array: true, });
       const defaultTrainTestSplitSeed0a = ms.cross_validation.train_test_split(testArray, { random_state: 0, return_array: true, });
       const defaultTrainTestSplitSeed1 = ms.cross_validation.train_test_split(testArray, { random_state: 1, return_array: true, });
-      const [train0, ] = defaultTrainTestSplitSeed0;
-      const [train0a, ] = defaultTrainTestSplitSeed0a;
-      const [train1, ] = defaultTrainTestSplitSeed1;
+      const [train0,] = defaultTrainTestSplitSeed0;
+      const [train0a,] = defaultTrainTestSplitSeed0a;
+      const [train1,] = defaultTrainTestSplitSeed1;
       expect(train0.toString()).to.equal(train0a.toString());
       expect(train0.toString()).to.not.equal(train1.toString());
     });
@@ -228,10 +229,10 @@ describe('cross_validation', function () {
       const optimizedParameters = ms.cross_validation.grid_search({
         regression: ml.Regression.RandomForestRegression,
         parameters: {
-          seed: [2,],
-          maxFeatures: [2, 3,],
-          replacement: [false, true,],
-          nEstimators: [300, 500,],
+          seed: [2, ],
+          maxFeatures: [2, 3, ],
+          replacement: [false, true, ],
+          nEstimators: [300, 500, ],
         },
         dataset: train,
         testingset: test,
@@ -258,10 +259,10 @@ describe('cross_validation', function () {
         classifier: ml.SL.RandomForestClassifier,
         return_parameters:true,
         parameters: {
-          maxFeatures: [1.0, 0.5, ],
+          maxFeatures: [1.0, 0.5,],
           // replacement: [true, false, ],
           // useSampleBagging: [true, false, ],
-          nEstimators: [10, 20, ],
+          nEstimators: [10, 20,],
           treeOptions: [
             { minNumSamples: 3, },
             { minNumSamples: 2, },
