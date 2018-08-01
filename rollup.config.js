@@ -8,7 +8,7 @@ import pkg from './package.json';
 export default [
   // browser-friendly UMD build
   {
-    input: 'src/main.js',
+    input: 'src/main.mjs',
     output: {
       exports: 'named',
       file: pkg.browser,
@@ -24,8 +24,8 @@ export default [
           // left-hand side can be an absolute path, a path
           // relative to the current directory, or the name
           // of a module in node_modules
-          'node_modules/ml-array-utils/src/index.js': [ 'scale', ],
-          'node_modules/probability-distributions/index.js': [ 'rbeta', ],
+          // 'node_modules/ml-array-utils/src/index.js': [ 'scale', ],
+          // 'node_modules/probability-distributions/index.js': [ 'rbeta', ],
           
         },
       }), // so Rollup can convert `ms` to an ES module
@@ -43,7 +43,7 @@ export default [
   // an array for the `output` option, where we can specify 
   // `file` and `format` for each target)
   {
-    input: 'src/main.js',
+    input: 'src/main.mjs',
     external: [
       'valid-url',
       'csvtojson',
@@ -74,7 +74,7 @@ export default [
       },
       {
         exports: 'named',
-        file: pkg.module,
+        file: pkg.es,
         name: 'modelscript',
         format: 'es',
       },

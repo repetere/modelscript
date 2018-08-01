@@ -1,9 +1,7 @@
 language: node_js
 node_js:
-  - '10'
-  - '9'
-  - '8'
-  # - '6'
+  - "10"
+  - "8"
 env:
   - CXX=g++-4.8
 addons:
@@ -12,7 +10,7 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
-
+  
 notifications:
   irc:
     channels:
@@ -28,18 +26,17 @@ notifications:
     use_notice: true
     skip_join: false
 
-before_script:
+install:
+  - npm install  mocha nyc @std/esm -g
   - npm install 
-
-install: 
- - npm install  grunt-cli istanbul rollup -g
+  # - npm install --skip_app_post_install=true
 
 branches:
   only:
     - master
     - devel
 git:
-  submodules: false  
+  submodules: false
 
-script: 
-  - npm set progress=false && grunt test
+script:
+  - npm set progress=false && npm run test && npm run coverage

@@ -1,52 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl">
+  <title data-ice="title">Home | ModelScript</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you&apos;re left with the equialent R/Python toolset in JavaScript"><meta property="og:type" content="website"><meta property="og:url" content="https://repetere.github.io/modelscript"><meta property="og:site_name" content="ModelScript"><meta property="og:title" content="ModelScript"><meta property="og:image" content="https://repetere.ai/favicon.png"><meta property="og:description" content="Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you&apos;re left with the equialent R/Python toolset in JavaScript"><meta property="og:author" content="https://github.com/repetere"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="ModelScript"><meta property="twitter:description" content="Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you&apos;re left with the equialent R/Python toolset in JavaScript"><meta property="twitter:image" content="https://repetere.ai/favicon.png"></head>
+<body class="layout-container" data-ice="rootContainer">
 
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
-</head>
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/repetere/modelscript"><img width="20px" src="./image/github.png"></a></header>
 
-<body>
-
-<div id="main">
-
-    <h1 class="page-title">Home</h1>
-
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
     
+  </ul>
+</div>
+</nav>
 
-
-
-    
-
-
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-    <section>
-        <article><h1>modelscript</h1><p><a href="https://coveralls.io/github/repetere/modelscript?branch=master"><img src="https://coveralls.io/repos/github/repetere/modelscript/badge.svg?branch=master" alt="Coverage Status"></a> <a href="https://travis-ci.org/repetere/modelscript"><img src="https://travis-ci.org/repetere/modelscript.svg?branch=master" alt="Build Status"></a></p>
-<h2>Description</h2><p><strong>modelscript</strong> is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. <strong>modelscript</strong> can be used with <a href="https://github.com/mljs/ml">ML.js</a>, <a href="https://github.com/StratoDem/pandas-js">pandas-js</a>, and <a href="https://github.com/numjs/numjs">numjs</a>, to approximate the equialent R/Python tool chain in JavaScript.</p>
-<p>In Python, data preperation is typically done in a DataFrame, modelscript encourages a more R like workflow where the data prepration is in it's native structure.</p>
-<h3>Installation</h3><pre class="prettyprint source lang-sh"><code>$ npm i modelscript</code></pre><h3><a href="https://github.com/repetere/modelscript/blob/master/docs/api.md">Full Documentation</a></h3><h3>Usage (basic)</h3><pre class="prettyprint source lang-javascript"><code>&quot;modelscript&quot; : {
+<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="modelscript">modelscript</h1><p><a href="https://coveralls.io/github/repetere/modelscript?branch=master"><img src="https://coveralls.io/repos/github/repetere/modelscript/badge.svg?branch=master" alt="Coverage Status"></a> <a href="https://travis-ci.org/repetere/modelscript"><img src="https://travis-ci.org/repetere/modelscript.svg?branch=master" alt="Build Status"></a></p>
+<h2 id="description">Description</h2><p><strong>modelscript</strong> is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. <strong>modelscript</strong> can be used with <a href="https://github.com/mljs/ml">ML.js</a>, <a href="https://github.com/StratoDem/pandas-js">pandas-js</a>, and <a href="https://github.com/numjs/numjs">numjs</a>, to approximate the equialent R/Python tool chain in JavaScript.</p>
+<p>In Python, data preperation is typically done in a DataFrame, modelscript encourages a more R like workflow where the data prepration is in it&apos;s native structure.</p>
+<h3 id="installation">Installation</h3><pre><code class="lang-sh"><code class="source-code prettyprint">$ npm i modelscript</code>
+</code></pre>
+<h3 id="-a-href--https---github-com-repetere-modelscript-blob-master-docs-api-md--full-documentation--a-"><a href="https://github.com/repetere/modelscript/blob/master/docs/api.md">Full Documentation</a></h3><h3 id="usage--basic-">Usage (basic)</h3><pre><code class="lang-javascript"><code class="source-code prettyprint">&quot;modelscript&quot; : {
   ml:{ //see https://github.com/mljs/ml
     UpperConfidenceBound [Class: UpperConfidenceBound]{ // Implementation of the Upper Confidence Bound algorithm
       predict(), //returns next action based off of the upper confidence bound
@@ -135,71 +127,86 @@
   preprocessing: {
     DataSet: [Class DataSet],
   },
-}</code></pre><h3>Examples (JavaScript / Python / R)</h3><h4>Loading CSV Data</h4><h5>Javascript</h5><pre class="prettyprint source lang-javascript"><code>import { default as jsk } from 'modelscript';
+}</code>
+</code></pre>
+<h3 id="examples--javascript---python---r-">Examples (JavaScript / Python / R)</h3><h4 id="loading-csv-data">Loading CSV Data</h4><h5 id="javascript">Javascript</h5><pre><code class="lang-javascript"><code class="source-code prettyprint">import { default as jsk } from &apos;modelscript&apos;;
 let dataset;
 
 //In JavaScript, by default most I/O Operations are asynchronous, see the notes section for more
-ms.loadCSV('/some/file/path.csv')
-  .then(csvData=>{
+ms.loadCSV(&apos;/some/file/path.csv&apos;)
+  .then(csvData=&gt;{
     dataset = new ms.DataSet(csvData);
     console.log({csvData});
     /* csvData [{
-      'Country': 'Brazil',
-      'Age': '44',
-      'Salary': '72000',
-      'Purchased': 'N',
+      &apos;Country&apos;: &apos;Brazil&apos;,
+      &apos;Age&apos;: &apos;44&apos;,
+      &apos;Salary&apos;: &apos;72000&apos;,
+      &apos;Purchased&apos;: &apos;N&apos;,
     },
     ...
     {
-      'Country': 'Mexico',
-      'Age': '27',
-      'Salary': '48000',
-      'Purchased': 'Yes',
+      &apos;Country&apos;: &apos;Mexico&apos;,
+      &apos;Age&apos;: &apos;27&apos;,
+      &apos;Salary&apos;: &apos;48000&apos;,
+      &apos;Purchased&apos;: &apos;Yes&apos;,
     }] */
   })
   .catch(console.error);
 
 // or from URL
-ms.loadCSV('https://example.com/some/file/path.csv')</code></pre><h5>Python</h5><pre class="prettyprint source lang-python"><code>import pandas as pd
+ms.loadCSV(&apos;https://example.com/some/file/path.csv&apos;)
+</code>
+</code></pre>
+<h5 id="python">Python</h5><pre><code class="lang-python"><code class="source-code prettyprint">import pandas as pd
 
 #Importing the dataset
-dataset = pd.read_csv('/some/file/path.csv')</code></pre><h5>R</h5><pre class="prettyprint source lang-R"><code># Importingd the dataset
-dataset = read.csv('Data.csv')</code></pre><h4>Handling Missing Data</h4><h5>Javascript</h5><pre class="prettyprint source lang-javascript"><code>//column Array returns column of data by name
-// [ '44','27','30','38','40','35','','48','50', '37' ]
-const OringalAgeColumn = dataset.columnArray('Age'); 
+dataset = pd.read_csv(&apos;/some/file/path.csv&apos;)</code>
+</code></pre>
+<h5 id="r">R</h5><pre><code class="lang-R"><code class="source-code prettyprint"># Importingd the dataset
+dataset = read.csv(&apos;Data.csv&apos;)</code>
+</code></pre>
+<h4 id="handling-missing-data">Handling Missing Data</h4><h5 id="javascript">Javascript</h5><pre><code class="lang-javascript"><code class="source-code prettyprint">//column Array returns column of data by name
+// [ &apos;44&apos;,&apos;27&apos;,&apos;30&apos;,&apos;38&apos;,&apos;40&apos;,&apos;35&apos;,&apos;&apos;,&apos;48&apos;,&apos;50&apos;, &apos;37&apos; ]
+const OringalAgeColumn = dataset.columnArray(&apos;Age&apos;); 
 
 //column Replace returns new Array with replaced missing data
-//[ '44','27','30','38','40','35',38.77777777777778,'48','50','37' ]
-const ReplacedAgeMeanColumn = dataset.columnReplace('Age',{strategy:'mean'}); 
+//[ &apos;44&apos;,&apos;27&apos;,&apos;30&apos;,&apos;38&apos;,&apos;40&apos;,&apos;35&apos;,38.77777777777778,&apos;48&apos;,&apos;50&apos;,&apos;37&apos; ]
+const ReplacedAgeMeanColumn = dataset.columnReplace(&apos;Age&apos;,{strategy:&apos;mean&apos;}); 
 
 //fit Columns, mutates dataset
 dataset.fitColumns({
-  columns:[{name:'Age',strategy:'mean'}]
+  columns:[{name:&apos;Age&apos;,strategy:&apos;mean&apos;}]
 });
 /*
 dataset
 class DataSet
   data:[
     {
-      'Country': 'Brazil',
-      'Age': '38.77777777777778',
-      'Salary': '72000',
-      'Purchased': 'N',
+      &apos;Country&apos;: &apos;Brazil&apos;,
+      &apos;Age&apos;: &apos;38.77777777777778&apos;,
+      &apos;Salary&apos;: &apos;72000&apos;,
+      &apos;Purchased&apos;: &apos;N&apos;,
     }
     ...
   ]
-*/</code></pre><h5>Python</h5><pre class="prettyprint source lang-python"><code>X = dataset.iloc[:, :-1].values
+*/</code>
+</code></pre>
+<h5 id="python">Python</h5><pre><code class="lang-python"><code class="source-code prettyprint">X = dataset.iloc[:, :-1].values
 y = dataset.iloc[:, 3].values
 
 # Taking care of of missing data
 from sklearn.preprocessing import Imputer
-imputer = Imputer(missing_values='NaN', strategy = 'mean', axis=0)
+imputer = Imputer(missing_values=&apos;NaN&apos;, strategy = &apos;mean&apos;, axis=0)
 imputer = imputer.fit(X[:, 1:3])
-X[:, 1:3] = imputer.transform(X[:, 1:3])</code></pre><h5>R</h5><pre class="prettyprint source lang-R"><code># Taking care of the missing data
+X[:, 1:3] = imputer.transform(X[:, 1:3])</code>
+</code></pre>
+<h5 id="r">R</h5><pre><code class="lang-R"><code class="source-code prettyprint"># Taking care of the missing data
 dataset$Age = ifelse(is.na(dataset$Age),
                 ave(dataset$Age,FUN = function(x) mean(x,na.rm =TRUE)),
-                dataset$Age)</code></pre><h4>One Hot Encoding and Label Encoding</h4><h5>Javascript</h5><pre class="prettyprint source lang-javascript"><code>// [ 'Brazil','Mexico','Ghana','Mexico','Ghana','Brazil','Mexico','Brazil','Ghana', 'Brazil' ]
-const originalCountry = dataset.columnArray('Country'); 
+                dataset$Age)</code>
+</code></pre>
+<h4 id="one-hot-encoding-and-label-encoding">One Hot Encoding and Label Encoding</h4><h5 id="javascript">Javascript</h5><pre><code class="lang-javascript"><code class="source-code prettyprint">// [ &apos;Brazil&apos;,&apos;Mexico&apos;,&apos;Ghana&apos;,&apos;Mexico&apos;,&apos;Ghana&apos;,&apos;Brazil&apos;,&apos;Mexico&apos;,&apos;Brazil&apos;,&apos;Ghana&apos;, &apos;Brazil&apos; ]
+const originalCountry = dataset.columnArray(&apos;Country&apos;); 
 /*
 { originalCountry:
    { Country_Brazil: [ 1, 0, 0, 0, 0, 1, 0, 1, 0, 1 ],
@@ -207,93 +214,113 @@ const originalCountry = dataset.columnArray('Country');
      Country_Ghana: [ 0, 0, 1, 0, 1, 0, 0, 0, 1, 0 ] },
     }
 */
-const oneHotCountryColumn = dataset.oneHotEncoder('Country');
+const oneHotCountryColumn = dataset.oneHotEncoder(&apos;Country&apos;);
 
-// [ 'N', 'Yes', 'No', 'f', 'Yes', 'Yes', 'false', 'Yes', 'No', 'Yes' ]
-const originalPurchasedColumn = dataset.labelEncoder('Purchased');
+// [ &apos;N&apos;, &apos;Yes&apos;, &apos;No&apos;, &apos;f&apos;, &apos;Yes&apos;, &apos;Yes&apos;, &apos;false&apos;, &apos;Yes&apos;, &apos;No&apos;, &apos;Yes&apos; ]
+const originalPurchasedColumn = dataset.labelEncoder(&apos;Purchased&apos;);
 // [ 0, 1, 0, 0, 1, 1, 1, 1, 0, 1 ]
-const encodedBinaryPurchasedColumn = dataset.labelEncoder('Purchased',{ binary:true });
+const encodedBinaryPurchasedColumn = dataset.labelEncoder(&apos;Purchased&apos;,{ binary:true });
 // [ 0, 1, 2, 3, 1, 1, 4, 1, 2, 1 ]
-const encodedPurchasedColumn = dataset.labelEncoder('Purchased');
-// [ 'N', 'Yes', 'No', 'f', 'Yes', 'Yes', 'false', 'Yes', 'No', 'Yes' ]
-const decodedPurchased = dataset.labelDecode('Purchased', { data: encodedPurchasedColumn, });
+const encodedPurchasedColumn = dataset.labelEncoder(&apos;Purchased&apos;);
+// [ &apos;N&apos;, &apos;Yes&apos;, &apos;No&apos;, &apos;f&apos;, &apos;Yes&apos;, &apos;Yes&apos;, &apos;false&apos;, &apos;Yes&apos;, &apos;No&apos;, &apos;Yes&apos; ]
+const decodedPurchased = dataset.labelDecode(&apos;Purchased&apos;, { data: encodedPurchasedColumn, });
 
 
 //fit Columns, mutates dataset
 dataset.fitColumns({
   columns:[
     {
-      name: 'Purchased',
+      name: &apos;Purchased&apos;,
       options: {
-        strategy: 'label',
+        strategy: &apos;label&apos;,
         labelOptions: {
           binary: true,
         },
       },
     },
     {
-      name: 'Country',
+      name: &apos;Country&apos;,
       options: {
-        strategy: 'onehot',
+        strategy: &apos;onehot&apos;,
       },
     },
   ]
-});</code></pre><h5>Python</h5><pre class="prettyprint source lang-python"><code># Encoding  categorical data
+});</code>
+</code></pre>
+<h5 id="python">Python</h5><pre><code class="lang-python"><code class="source-code prettyprint"># Encoding  categorical data
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 labelencoder_X = LabelEncoder()
 X[:, 0] = labelencoder_X.fit_transform(X[:, 0])
 onehotencoder = OneHotEncoder(categorical_features=[0])
 X = onehotencoder.fit_transform(X).toarray()
 labelencoder_y = LabelEncoder()
-y = labelencoder_y.fit_transform(y)</code></pre><h5>R</h5><pre class="prettyprint source lang-R"><code># Encoding categorical data
+y = labelencoder_y.fit_transform(y)</code>
+</code></pre>
+<h5 id="r">R</h5><pre><code class="lang-R"><code class="source-code prettyprint"># Encoding categorical data
 dataset$Country = factor(dataset$Country,
-                         levels = c('Brazil', 'Mexico', 'Ghana'),
+                         levels = c(&apos;Brazil&apos;, &apos;Mexico&apos;, &apos;Ghana&apos;),
                          labels = c(1, 2, 3))
 
 dataset$Purchased = factor(dataset$Purchased,
-                         levels = c('No', 'Yes'),
-                         labels = c(0, 1))</code></pre><h4>Cross Validation</h4><h5>Javascript</h5><pre class="prettyprint source lang-javascript"><code>const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
+                         levels = c(&apos;No&apos;, &apos;Yes&apos;),
+                         labels = c(0, 1))</code>
+</code></pre>
+<h4 id="cross-validation">Cross Validation</h4><h5 id="javascript">Javascript</h5><pre><code class="lang-javascript"><code class="source-code prettyprint">const testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];
 
 // { train: [ 50, 20, 34, 33, 10, 23, 90, 42 ], test: [ 25, 19 ] }
 const trainTestSplit = ms.cross_validation.train_test_split(testArray,{ test_size:0.2, random_state: 0, });
 
 // [ [ 50, 20, 34, 33, 10 ], [ 23, 90, 42, 19, 25 ] ] 
-const crossValidationArrayKFolds = ms.cross_validation.cross_validation_split(testArray, { folds: 2, random_state: 0, });</code></pre><h5>Python</h5><pre class="prettyprint source lang-python"><code>#splitting the dataset into trnaing set and test set
+const crossValidationArrayKFolds = ms.cross_validation.cross_validation_split(testArray, { folds: 2, random_state: 0, });</code>
+</code></pre>
+<h5 id="python">Python</h5><pre><code class="lang-python"><code class="source-code prettyprint">#splitting the dataset into trnaing set and test set
 from sklearn.cross_validation import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)</code></pre><h5>R</h5><pre class="prettyprint source lang-R"><code># Splitting the dataset into the training set and test set
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)</code>
+</code></pre>
+<h5 id="r">R</h5><pre><code class="lang-R"><code class="source-code prettyprint"># Splitting the dataset into the training set and test set
 library(caTools)
 set.seed(1)
 split = sample.split(dataset$Purchased, SplitRatio = 0.8)
 training_set = subset(dataset, split == TRUE)
-test_set = subset(dataset, split == FALSE)</code></pre><h4>Scaling (z-score / min-mix)</h4><h5>Javascript</h5><pre class="prettyprint source lang-javascript"><code>dataset.columnArray('Salary',{ scale:'standard'}); 
-dataset.columnArray('Salary',{ scale:'minmax'});</code></pre><h5>Python</h5><pre class="prettyprint source lang-python"><code>from sklearn.preprocessing import StandardScaler
+test_set = subset(dataset, split == FALSE)</code>
+</code></pre>
+<h4 id="scaling--z-score---min-mix-">Scaling (z-score / min-mix)</h4><h5 id="javascript">Javascript</h5><pre><code class="lang-javascript"><code class="source-code prettyprint">dataset.columnArray(&apos;Salary&apos;,{ scale:&apos;standard&apos;}); 
+dataset.columnArray(&apos;Salary&apos;,{ scale:&apos;minmax&apos;}); </code>
+</code></pre>
+<h5 id="python">Python</h5><pre><code class="lang-python"><code class="source-code prettyprint">from sklearn.preprocessing import StandardScaler
 sc_X = StandardScaler()
 X_train = sc_X.fit_transform(X_train)
-X_test = sc_X.transform(X_test)</code></pre><h3>Development</h3><p><em>Make sure you have grunt installed</em></p>
-<pre class="prettyprint source lang-sh"><code>$ npm i -g grunt-cli jsdoc-to-markdown</code></pre><p>For generating documentation</p>
-<pre class="prettyprint source lang-sh"><code>$ grunt doc
-$ jsdoc2md src/**/*.js  > docs/api.md</code></pre><h3>Notes</h3><p>Check out <a href="https://github.com/repetere/modelscript">https://github.com/repetere/modelscript</a> for the full modelscript Documentation</p>
-<h4>A quick word about asynchronous JavaScript</h4><p>Most machine learning tutorials in Python and R are not using their asynchronous equivalents; however, there is a bias in JavaScript to default to non-blocking operations.</p>
+X_test = sc_X.transform(X_test)</code>
+</code></pre>
+<h3 id="development">Development</h3><p><em>Make sure you have grunt installed</em></p>
+<pre><code class="lang-sh"><code class="source-code prettyprint">$ npm i -g grunt-cli jsdoc-to-markdown</code>
+</code></pre>
+<p>For generating documentation</p>
+<pre><code class="lang-sh"><code class="source-code prettyprint">$ grunt doc
+$ jsdoc2md src/**/*.js  &gt; docs/api.md</code>
+</code></pre>
+<h3 id="notes">Notes</h3><p>Check out <a href="https://github.com/repetere/modelscript">https://github.com/repetere/modelscript</a> for the full modelscript Documentation</p>
+<h4 id="a-quick-word-about-asynchronous-javascript">A quick word about asynchronous JavaScript</h4><p>Most machine learning tutorials in Python and R are not using their asynchronous equivalents; however, there is a bias in JavaScript to default to non-blocking operations.</p>
 <p>With the advent of ES7 and Node.js 7+ there are syntax helpers with asynchronous functions. It may be easier to use async/await in JS if you want an approximation close to what a workflow would look like in R/Python</p>
-<pre class="prettyprint source lang-javascript"><code>import * as fs from 'fs-extra';
-import * as np from 'numjs'; 
-import { default as ml } from 'ml';
-import { default as pd } from 'pandas-js';
-import { default as mpn } from 'matplotnode';
-import { loadCSV, preprocessing } from 'modelscript';
+<pre><code class="lang-javascript"><code class="source-code prettyprint">import * as fs from &apos;fs-extra&apos;;
+import * as np from &apos;numjs&apos;; 
+import { default as ml } from &apos;ml&apos;;
+import { default as pd } from &apos;pandas-js&apos;;
+import { default as mpn } from &apos;matplotnode&apos;;
+import { loadCSV, preprocessing } from &apos;modelscript&apos;;
 const plt = mpn.plot;
 
-void async () => {
-  const csvData = await loadCSV('../Data.csv');
+void async () =&gt; {
+  const csvData = await loadCSV(&apos;../Data.csv&apos;);
   const rawData = new preprocessing.DataSet(csvData);
   const fittedData = rawData.fitColumns({
     columns: [
-      { name: 'Age' },
-      { name: 'Salary' },
+      { name: &apos;Age&apos; },
+      { name: &apos;Salary&apos; },
       {
-        name: 'Purchased',
+        name: &apos;Purchased&apos;,
         options: {
-          strategy: 'label',
+          strategy: &apos;label&apos;,
           labelOptions: {
             binary: true,
           },
@@ -312,32 +339,32 @@ void async () => {
     X,
     y
   });
-}();</code></pre><h3>Testing</h3><pre class="prettyprint source lang-sh"><code>$ npm i
-$ grunt test</code></pre><h3>Contributing</h3><p>Fork, write tests and create a pull request!</p>
-<h3>Misc</h3><p>As of Node 8, ES modules are still used behind a flag, when running natively as an ES module</p>
-<pre class="prettyprint source lang-sh"><code>$ node --experimental-modules my-machine-learning-script.mjs
-# Also there are native bindings that require Python 2.x, make sure if you're using Andaconda, you build with your Python 2.x bin
-$ npm i --python=/usr/bin/python</code></pre><h2>License</h2><p>MIT</p></article>
-    </section>
-
-
-
-
-
-
+}();
+</code>
+</code></pre>
+<h3 id="testing">Testing</h3><pre><code class="lang-sh"><code class="source-code prettyprint">$ npm i
+$ grunt test</code>
+</code></pre>
+<h3 id="contributing">Contributing</h3><p>Fork, write tests and create a pull request!</p>
+<h3 id="misc">Misc</h3><p>As of Node 8, ES modules are still used behind a flag, when running natively as an ES module</p>
+<pre><code class="lang-sh"><code class="source-code prettyprint">$ node --experimental-modules my-machine-learning-script.mjs
+# Also there are native bindings that require Python 2.x, make sure if you&apos;re using Andaconda, you build with your Python 2.x bin
+$ npm i --python=/usr/bin/python</code>
+</code></pre>
+<h2 id="license">License</h2><p>MIT</p>
+</div>
 </div>
 
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ColumnVectorizer_ColumnVectorizer.html">ColumnVectorizer</a></li><li><a href="DataSet_DataSet.html">DataSet</a></li><li><a href="ml.ReinforcedLearningBase.html">ReinforcedLearningBase</a></li><li><a href="ml.ThompsonSampling.html">ThompsonSampling</a></li><li><a href="ml.UpperConfidenceBound.html">UpperConfidenceBound</a></li><li><a href="nlp.ColumnVectorizer.html">ColumnVectorizer</a></li><li><a href="preprocessing.DataSet.html">DataSet</a></li><li><a href="ReinforcedLearningBase_ReinforcedLearningBase.html">ReinforcedLearningBase</a></li><li><a href="ThompsonSampling_ThompsonSampling.html">ThompsonSampling</a></li><li><a href="UpperConfidenceBound_UpperConfidenceBound.html">UpperConfidenceBound</a></li></ul><h3>Namespaces</h3><ul><li><a href="calc.html">calc</a></li><li><a href="cross_validation.html">cross_validation</a></li><li><a href="ml.html">ml</a></li><li><a href="nlp.html">nlp</a></li><li><a href="PD.html">PD</a></li><li><a href="preprocessing.html">preprocessing</a></li><li><a href="util.html">util</a></li></ul><h3>Global</h3><ul><li><a href="global.html#MinMaxScalerTransforms">MinMaxScalerTransforms</a></li><li><a href="global.html#rSquared">rSquared</a></li><li><a href="global.html#StandardScalerTransforms">StandardScalerTransforms</a></li></ul>
-</nav>
-
-<br class="clear">
-
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Jul 01 2018 10:51:19 GMT-0400 (EDT)
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
 </footer>
 
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
 </body>
 </html>

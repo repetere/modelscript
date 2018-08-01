@@ -1,0 +1,42 @@
+{
+  "source": "./lib",
+  "destination": "./docs",
+  "plugins": [
+    {
+      "name": "esdoc-ecmascript-proposal-plugin",
+      "option": {"all": true}
+    },
+    {
+      "name": "esdoc-standard-plugin",
+      "option":{
+        "typeInference": {
+          "enable": false
+        },
+        "lint": {
+          "enable": false
+        },
+        "brand": {
+          "title": "ModelScript",
+          "description": "Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you're left with the equialent R/Python toolset in JavaScript",
+          "repository": "https://github.com/repetere/modelscript",
+          "site": "https://repetere.github.io/modelscript",
+          "author": "https://github.com/repetere",
+          "image": "https://repetere.ai/favicon.png"
+        },
+        "test": {
+          "source": "./test/",
+          "interfaces": ["describe", "it", "context", "suite", "test"],
+          "includes": ["(spec|Spec|test|Test)\\.mjs$"],
+          "excludes": ["\\.config\\.js$"]
+        }
+      }
+    },
+    {
+      "name": "esdoc-publish-markdown-plugin",
+      "option": {
+        "filename":"./API.md"
+      }
+    }
+  ],
+  "includes": ["\\.mjs$"]
+}
