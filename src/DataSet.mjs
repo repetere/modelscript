@@ -1,6 +1,23 @@
 import { ml, } from './ml';
 import { util as utils, } from './util';
 
+const transformConfigMap = {
+  scale: 'scaleOptions',
+  descale: 'descaleOptions',
+  label: 'labelOptions',
+  labelEncoder: 'labelOptions',
+  labeldecode: 'labelOptions',
+  labelDecode: 'labelOptions',
+  labelDecoder: 'labelOptions',
+  onehot: 'oneHotOptions',
+  oneHot: 'oneHotOptions',
+  oneHotEncode: 'oneHotOptions',
+  oneHotEncoder: 'oneHotOptions',
+  reducer: 'reducerOptions',
+  reduce: 'reducerOptions',
+  merge: 'mergeData',
+};
+
 /**
  * class for manipulating an array of objects, typically from CSV data
  * @class DataSet
@@ -8,17 +25,228 @@ import { util as utils, } from './util';
  */
 export class DataSet {
   /**
+   * Allows for fit transform short hand notation
+   * @example
+DataSet.getTransforms({
+  Age: ['scale',],
+  Rating: ['label',],  }); //=> [
+//   {
+//    name: 'Age', options: { strategy: 'scale', }, },
+//   },
+//   { 
+//    name: 'Rating', options: { strategy: 'label', }, 
+//   },
+// ];
+   * @param {Object} transforms 
+   * @returns {Array<Object>} returns fit columns, columns property
+   */
+  static getTransforms(transforms = {}) {
+    return Object.keys(transforms).reduce((result, columnName) => {
+      const transformObject = {
+        name: columnName,
+        options: {
+          strategy: (Array.isArray(transforms[ columnName ]))
+            ? transforms[ columnName ][0]
+            : transforms[ columnName ],
+        },
+      };
+      if (Array.isArray(transforms[ columnName ]) && transforms[ columnName ].length > 1) {
+        transformObject.options[ transformConfigMap[transforms[ columnName ][ 0 ]] ] = transforms[ columnName ][ 1 ];
+      }
+      result.push(transformObject);
+      return result;
+    }, []);
+  }
+  
+  /**
+   * returns an array of objects by applying labels to matrix of columns
+   * @example
+const data = [{ Age: '44', Salary: '44' },
+{ Age: '27', Salary: '27' }]
+const AgeDataSet = new MS.DataSet(data);
+const dependentVariables = [ [ 'Age', ], [ 'Salary', ], ];
+const AgeSalMatrix = AgeDataSet.columnMatrix(dependentVariables); // =>
+//  [ [ '44', '72000' ],
+//  [ '27', '48000' ] ];
+MS.DataSet.reverseColumnMatrix({vectors:AgeSalMatrix,labels:dependentVariables}); // => [{ Age: '44', Salary: '44' },
+{ Age: '27', Salary: '27' }]
+   * 
+   * @param {*} options 
+   * @param {Array[]} options.vectors - array of vectors
+   * @param {String[]} options.labels - array of labels
+   * @returns {Object[]} an array of objects with properties derived from options.labels
+   */
+  static reverseColumnMatrix(options = {}) {
+    const { vectors, labels, } = options;
+    const features = (Array.isArray(labels) && Array.isArray(labels[ 0 ]))
+      ? labels
+      : labels.map(label => [label,]);
+    return vectors.reduce((result, val) => { 
+      result.push(val.reduce((prop, value, index) => { 
+        prop[ features[ index ][ 0 ] ] = val[index];
+        return prop;
+      }, {}));
+      return result;
+    }, []);
+  }
+
+  static reverseColumnVector(options = {}) {
+    const { vector, labels, } = options;
+    const features = (Array.isArray(labels) && Array.isArray(labels[ 0 ]))
+      ? labels
+      : labels.map(label => [label,]);
+    return vector.reduce((result, val) => {
+      result.push(
+        { [ features[ 0 ][ 0 ] ]: val, }
+      );
+      return result;
+    }, []);
+  }
+  
+  /**
+   * Returns an object into an one hot encoded object
+   * @example
+const labels = ['apple', 'orange', 'banana',];
+const prefix = 'fruit_';
+const name = 'fruit';
+const options = { labels, prefix, name, };
+const data = {
+  fruit: 'apple',
+};
+EncodedCSVDataSet.encodeObject(data, options); // => { fruit_apple: 1, fruit_orange: 0, fruit_banana: 0, }
+   * @param {Object} data - object to encode 
+   * @param {{labels:Array<String>,prefix:String,name:String}} options - encoded object options
+   * @returns {Object} one hot encoded object
+   */
+  static encodeObject(data, options) {
+    const { labels, prefix, name,  } = options;
+    const encodedData = labels.reduce((encodedObj, label) => { 
+      const oneHotLabelArrayName = `${prefix}${label}`;
+      encodedObj[oneHotLabelArrayName] = (data[name].toString() === label.toString()) ? 1 : 0;
+      return encodedObj;
+    }, {});
+    return encodedData;
+  }
+  /**
+ * returns a new object of one hot encoded values
+ * @example
+ * // [ 'Brazil','Mexico','Ghana','Mexico','Ghana','Brazil','Mexico','Brazil','Ghana', 'Brazil' ]
+const originalCountry = dataset.columnArray('Country'); 
+
+// { originalCountry:
+//    { Country_Brazil: [ 1, 0, 0, 0, 0, 1, 0, 1, 0, 1 ],
+//      Country_Mexico: [ 0, 1, 0, 1, 0, 0, 1, 0, 0, 0 ],
+//      Country_Ghana: [ 0, 0, 1, 0, 1, 0, 0, 0, 1, 0 ] },
+//     }
+const oneHotCountryColumn = dataset.oneHotEncoder('Country'); 
+  * @param {string} name - csv column header, or JSON object property name 
+  * @param options 
+  * @see {@link http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html}
+  * @return {Object}
+  */
+  static oneHotEncoder(name, options) {
+    const config = Object.assign({
+    }, options);
+    const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
+    const labels = Array.from(new Set(labelData).values());
+    const prefix = config.prefix||`${name}_`;
+    const encodedData = labelData.reduce(
+      (result, val, index, arr) => {
+        labels.forEach(encodedLabel => {
+          const oneHotLabelArrayName = `${prefix}${encodedLabel}`;
+          const oneHotVal = (val === encodedLabel) ? 1 : 0;
+          if (Array.isArray(result[oneHotLabelArrayName])) {
+            result[oneHotLabelArrayName].push(oneHotVal);
+          } else {
+            result[oneHotLabelArrayName] = [oneHotVal, ];
+          }
+        });
+        return result;
+      }, {});
+    this.encoders.set(name, {
+      name,
+      labels,
+      prefix,
+    });
+    return encodedData;
+  }
+  
+  /**
+   * Return one hot encoded data
+   * @example
+const csvData = [{
+    'Country': 'Brazil',
+    'Age': '44',
+    'Salary': '72000',
+    'Purchased': 'N',
+  },
+  {
+    'Country': 'Mexico',
+    'Age': '27',
+    'Salary': '48000',
+    'Purchased': 'Yes',
+  },
+  ...
+];
+const EncodedCSVDataSet = new ms.preprocessing.DataSet(csvData);
+EncodedCSVDataSet.fitColumns({
+  columns: [
+    {
+      name: 'Country',
+      options: { strategy: 'onehot', },
+    },
+  ],
+});
+
+EncodedCSVDataSet.oneHotDecoder('Country);// =>
+// [ { Country: 'Brazil' },
+//  { Country: 'Mexico' },
+//  { Country: 'Ghana' },
+//  { Country: 'Mexico' },
+//   ...]
+   * @param {string} name - column name 
+   * @param options 
+   * @returns {Array<Object>} returns an array of objects from an one hot encoded column
+   */
+  static oneHotDecoder(name, options) {
+    const config = Object.assign({
+      // handle_unknown: 'error'
+    }, options);
+    const encoderMap = config.encoders || this.encoders;
+    const prefix = config.prefix || encoderMap.get(name).prefix;
+    const encodedData = config.data || this.oneHotColumnArray(name, config.oneHotColumnArrayOptions);
+    // console.log({ encodedData, encoderMap, prefix });
+    return encodedData.reduce((result, val) => {
+      const columnName = Object.keys(val).filter(prop => val[ prop ] === 1)[0]; 
+      // console.log({ columnName });
+      const datum = {
+        [ name ]: columnName.replace(prefix, ''),
+      };
+      result.push(datum);
+      return result;
+    }, []);
+  }
+  /**
    * creates a new raw data instance for preprocessing data for machine learning
    * @example
    * const dataset = new ms.DataSet(csvData);
    * @param {Object[]} dataset
    * @returns {this} 
    */
-  constructor(data = []) {
-    this.data = [...data,];
+  constructor(data = [], options) {
+    this.config = Object.assign({
+      debug: true,
+    }, options);
+    this.data = [...data, ];
     this.labels = new Map();
     this.encoders = new Map();
     this.scalers = new Map();
+    this.encodeObject = DataSet.encodeObject;
+    this.oneHotEncoder = DataSet.oneHotEncoder;
+    this.oneHotDecoder = DataSet.oneHotDecoder;
+    this.reverseColumnMatrix = DataSet.reverseColumnMatrix;
+    this.reverseColumnVector = DataSet.reverseColumnVector;
+    this.getTransforms = DataSet.getTransforms;
     return this;
   }
   /**
@@ -48,55 +276,11 @@ csvObj.columnMatrix([['col1',{parseInt:true}],['col2']]); // =>
   columnMatrix(vectors = []) {
     const columnVectors = (Array.isArray(vectors) && Array.isArray(vectors[ 0 ]))
       ? vectors
-      : vectors.map(vector => [vector,]);
+      : vectors.map(vector => [vector, ]);
     const vectorArrays = columnVectors
       .map(vec => this.columnArray(...vec));
         
     return utils.pivotArrays(vectorArrays);
-  }
-  /**
-   * returns an array of objects by applying labels to matrix of columns
-   * @example
-const data = [{ Age: '44', Salary: '44' },
-{ Age: '27', Salary: '27' }]
-const AgeDataSet = new MS.DataSet(data);
-const dependentVariables = [ [ 'Age', ], [ 'Salary', ], ];
-const AgeSalMatrix = AgeDataSet.columnMatrix(dependentVariables); // =>
-//  [ [ '44', '72000' ],
-//  [ '27', '48000' ] ];
-MS.DataSet.reverseColumnMatrix({vectors:AgeSalMatrix,labels:dependentVariables}); // => [{ Age: '44', Salary: '44' },
-{ Age: '27', Salary: '27' }]
-   * 
-   * @param {*} options 
-   * @param {Array[]} options.vectors - array of vectors
-   * @param {String[]} options.labels - array of labels
-   * @returns {Object[]} an array of objects with properties derived from options.labels
-   */
-  static reverseColumnMatrix(options = {}) {
-    const { vectors, labels, } = options;
-    const features = (Array.isArray(labels) && Array.isArray(labels[ 0 ]))
-      ? labels
-      : labels.map(label => [ label, ]);
-    return vectors.reduce((result, val) => { 
-      result.push(val.reduce((prop, value, index) => { 
-        prop[ features[ index ][ 0 ] ] = val[index];
-        return prop;
-      }, {}));
-      return result;
-    }, []);
-  }
-
-  static reverseColumnVector(options = {}) {
-    const { vector, labels, } = options;
-    const features = (Array.isArray(labels) && Array.isArray(labels[ 0 ]))
-      ? labels
-      : labels.map(label => [ label, ]);
-    return vector.reduce((result, val) => {
-      result.push(
-        { [ features[ 0 ][ 0 ] ]: val, }
-      );
-      return result;
-    }, []);
   }
   /**
    * returns a list of objects with only selected columns as properties
@@ -203,16 +387,29 @@ dataset.scalers.get('Age').descale(3.8066624897703196) // => 45
    * @returns {number[]} returns an array of scaled values
    */
   columnScale(name, options = {}) {
+    const input = (typeof options === 'string')
+      ? { strategy: options, }
+      : options;
     const config = Object.assign({
       strategy: 'log',
-    }, options);
-    const scaleData = config.data || this.columnArray(name, config.columnArrayOptions);
+    }, input);
+    let scaleData = config.data || this.columnArray(name, config.columnArrayOptions);
     let scaledData;
     let transforms;
+      
+    scaleData = scaleData.map((datum, i) => {
+      if (typeof datum !== 'number') {
+        if (this.config.debug) {
+          console.error(TypeError(`Each value must be a number, error at index [${i}]`));
+        }
+        return Number(datum);
+      } else return datum;
+    });
     switch (config.strategy) {
     case 'standard':
       transforms = utils.StandardScalerTransforms(scaleData);     
       this.scalers.set(name, {
+        name,
         scale: transforms.scale,
         descale: transforms.descale,
         components: transforms.components,
@@ -223,6 +420,7 @@ dataset.scalers.get('Age').descale(3.8066624897703196) // => 45
     case 'minmax':
       transforms = utils.MinMaxScalerTransforms(scaleData);     
       this.scalers.set(name, {
+        name,
         scale: transforms.scale,
         descale: transforms.descale,
         components: transforms.components,
@@ -232,6 +430,7 @@ dataset.scalers.get('Age').descale(3.8066624897703196) // => 45
     case 'log':
     default:
       this.scalers.set(name, {
+        name,
         scale: Math.log,
         descale: Math.exp,
         components: {
@@ -263,6 +462,269 @@ dataset.columnDescale('Age') // => [ '44','27','30','38','40','35',38.7777777777
     const descaleFunction = this.scalers.get(name).descale;
     return scaledData.map(descaleFunction);
   }
+  /**
+   * returns a new array and label encodes a selected column
+   * @example
+   * const oneHotCountryColumn = dataset.oneHotEncoder('Country'); 
+
+// [ 'N', 'Yes', 'No', 'f', 'Yes', 'Yes', 'false', 'Yes', 'No', 'Yes' ] 
+const originalPurchasedColumn = dataset.labelEncoder('Purchased');
+// [ 0, 1, 0, 0, 1, 1, 1, 1, 0, 1 ]
+const encodedBinaryPurchasedColumn = dataset.labelEncoder('Purchased',{ binary:true });
+// [ 0, 1, 2, 3, 1, 1, 4, 1, 2, 1 ]
+const encodedPurchasedColumn = dataset.labelEncoder('Purchased'); 
+  * @param {string} name - csv column header, or JSON object property name 
+  * @param options
+  * @param {boolean} [options.binary=false] - only replace with (0,1) with binary values 
+  * @see {@link http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html} 
+  * @returns {array}
+  */
+  labelEncoder(name, options) {
+    const config = Object.assign({
+      binary: false,
+    }, options);
+    const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
+    const labels = new Map(
+      Array.from(new Set(labelData).values())
+        .reduce((result, val, i, arr) => {
+          result.push([val, i, ]);
+          result.push([i, val, ]);
+          return result;
+        }, [])
+    );
+    this.labels.set(name, labels);
+    const labeledData = (config.binary) ?
+      labelData.map(label => {
+        // console.log(label);
+        if (!label) return 0;
+        switch (label) {
+        case false:
+        case 'N':
+        case 'n':
+        case 'NO':
+        case 'No':
+        case 'no':
+        case 'False':
+        case 'F':
+        case 'f':
+          return 0;
+        default:
+          return 1;
+        }
+      }) :
+      labelData.map(label => labels.get(label));
+    return labeledData;
+  }
+  /**
+     * returns a new array and decodes an encoded column back to the original array values
+     * @param {string} name - csv column header, or JSON object property name 
+     * @param options
+     * @returns {array}
+     */
+  labelDecode(name, options) {
+    const config = Object.assign({}, options);
+    const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
+    return labelData.map(val => this.labels.get(name).get(val));
+  }
+  /**
+   * Return one hot encoded data
+   * @example
+const csvData = [{
+    'Country': 'Brazil',
+    'Age': '44',
+    'Salary': '72000',
+    'Purchased': 'N',
+  },
+  {
+    'Country': 'Mexico',
+    'Age': '27',
+    'Salary': '48000',
+    'Purchased': 'Yes',
+  },
+  ...
+];
+const EncodedCSVDataSet = new ms.preprocessing.DataSet(csvData);
+EncodedCSVDataSet.fitColumns({
+  columns: [
+    {
+      name: 'Country',
+      options: { strategy: 'onehot', },
+    },
+  ],
+});
+
+EncodedCSVDataSet.oneHotColumnArray('Country);// =>
+// [ { Country_Brazil: 1, Country_Mexico: 0, Country_Ghana: 0 },
+//   { Country_Brazil: 0, Country_Mexico: 1, Country_Ghana: 0 },
+//   { Country_Brazil: 0, Country_Mexico: 0, Country_Ghana: 1 },
+//   ...]
+   * @param {string} name - column name 
+   * @param options 
+   * @returns {Array<Object>} returns an array of objects from an one hot encoded column
+   */
+  oneHotColumnArray(name, options) {
+    const config = Object.assign({
+      // handle_unknown: 'error'
+    }, options);
+    const labels = config.labels || this.encoders.get(name).labels;
+    const prefix = config.prefix || this.encoders.get(name).prefix;
+    return this.selectColumns(labels.map(label => `${prefix}${label}`));
+  }
+  /**
+ * it returns a new column that reduces a column into a new column object, this is used in data prep to create new calculated columns for aggregrate statistics
+ * @example 
+const reducer = (result, value, index, arr) => {
+result.push(value * 2);
+return result;
+};
+CSVDataSet.columnReducer('DoubleAge', {
+columnName: 'Age',
+reducer,
+}); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }
+  * @param {String} name - name of new Column 
+  * @param {Object} options 
+  * @param {String} options.columnName - name property for columnArray selection 
+  * @param {Object} options.columnOptions - options property for columnArray  
+  * @param {Function} options.reducer - reducer function to reduce into new array, it should push values into the resulting array  
+  * @returns {Object} a new object that has reduced array as the value
+  */
+  columnReducer(name, options) {
+    const newColumn = {
+      [ name ]: this.columnArray(options.columnName, options.columnOptions).reduce(options.reducer, []),
+    };
+    return newColumn;
+  }
+  /**
+   * it returns a new column that is merged onto the data set
+   * @example 
+CSVDataSet.columnMerge('DoubleAge', [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ]); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }
+    * @param {String} name - name of new Column 
+    * @param {Array} data - new dataset data  
+    * @returns {Object} 
+    */
+  columnMerge(name, data=[]) {
+    if (this.data.length !== data.length) throw new RangeError(`Merged data column must have the same length(${data.length}) as the DataSet's length (${this.data.length})`);
+    return {
+      [name]: data,
+    };
+  }
+  inverseTransformObject(data, options) {
+    const config = Object.assign({
+      removeValues: false,
+    }, options);
+    const removedColumns = [];
+    let transformedObject = Object.assign({}, data);
+    const columnNames = Object.keys(this.data[ 0 ]);
+    const scaledData = columnNames.reduce((scaleObject, columnName) => {
+      if (this.scalers.has(columnName)){
+        scaleObject[ columnName ] = this.scalers.get(columnName).descale(data[ columnName ]);
+      }
+      return scaleObject;
+    }, {});
+    const labeledData = columnNames.reduce((labelObject, columnName) => {
+      if (this.labels.has(columnName)){
+        labelObject[ columnName ] = this.labels.get(columnName).get(data[ columnName ]);
+      }
+      return labelObject;
+    }, {});
+    const encodedData = columnNames.reduce((encodedObject, columnName) => {
+      if (this.encoders.has(columnName)) {
+        encodedObject = Object.assign({}, encodedObject, this.oneHotDecoder(columnName, {
+          data: [ data, ],
+        })[ 0 ]);
+        if (config.removeValues) {
+          removedColumns.push(...this.encoders.get(columnName).labels.map(label=>`${this.encoders.get(columnName).prefix}${label}`));
+        }
+      }
+      return encodedObject;
+    }, {});
+    transformedObject = Object.assign(transformedObject, scaledData, labeledData, encodedData);
+    if (config.removeValues && removedColumns.length) {
+      transformedObject = Object.keys(transformedObject).reduce((removedObject, propertyName) => {
+        if (removedColumns.indexOf(propertyName) === -1) removedObject[ propertyName ] = transformedObject[ propertyName ];
+        return removedObject;
+      }, {});
+    }
+    return transformedObject;
+  }
+  /**
+   * transforms an object and replaces values that have been scaled or encoded
+   * @example
+DataSet.transformObject({
+  'Country': 'Brazil',
+  'Age': '44',
+  'Salary': '72000',
+  'Purchased': 'N',
+}); // =>
+// { 
+//  Country: 'Brazil',
+//  Age: 3.784189633918261,
+//  Salary: '72000',
+//  Purchased: 'N',
+//  Country_Brazil: 1,
+//  Country_Mexico: 0,
+//  Country_Ghana: 0
+// }
+   * @param data 
+   * @param options 
+   * @returns {Object} 
+   */
+  transformObject(data, options) {
+    const config = Object.assign({
+      removeValues: false,
+    }, options);
+    const removedColumns = [];
+    // if (Array.isArray(data)) return data.map(datum => this.transformObject);
+    const encodedColumns = [].concat(...Array.from(this.encoders.keys())
+      .map(encodedColumn => this.encoders.get(encodedColumn).labels
+        .map(label=>`${this.encoders.get(encodedColumn).prefix}${label}`)
+      )
+    );
+    const currentColumns = Object.keys(this.data[ 0 ]);
+    const objectColumns = Object.keys(data).concat(encodedColumns);
+    // console.log({ encodedColumns,currentColumns,objectColumns });
+    const differentKeys = objectColumns.reduce((diffKeys, val) => {
+      if (currentColumns.indexOf(val) === -1) diffKeys.push(val);
+      return diffKeys;
+    }, []);
+    let transformedObject = Object.assign({}, data);
+    if (currentColumns.length !== objectColumns.length) {
+      throw new RangeError(`Object must have the same number of keys (${objectColumns.length}) as data in your dataset(${currentColumns.length})`);
+    } else if (differentKeys.length) {
+      throw new ReferenceError(`Object must have identical keys as data in your DataSet. Invalid keys: ${differentKeys.join(',')}`);
+    } else {
+      const scaledData = objectColumns.reduce((scaleObject, columnName) => {
+        if (this.scalers.has(columnName)){
+          scaleObject[ columnName ] = this.scalers.get(columnName).scale(data[ columnName ]);
+        }
+        return scaleObject;
+      }, {});
+      const labeledData = objectColumns.reduce((labelObject, columnName) => {
+        if (this.labels.has(columnName)){
+          labelObject[ columnName ] = this.labels.get(columnName).get(data[ columnName ]);
+        }
+        return labelObject;
+      }, {});
+      const encodedData = objectColumns.reduce((encodedObject, columnName) => {
+        if (this.encoders.has(columnName)) {
+          encodedObject = Object.assign({}, encodedObject, this.encodeObject(data, this.encoders.get(columnName)));
+          if (config.removeValues) {
+            removedColumns.push(columnName);
+          }
+        }
+        return encodedObject;
+      }, {});
+      transformedObject = Object.assign(transformedObject, scaledData, labeledData, encodedData);
+      if (config.removeValues && removedColumns.length) {
+        transformedObject = Object.keys(transformedObject).reduce((removedObject, propertyName) => {
+          if (removedColumns.indexOf(propertyName) === -1) removedObject[ propertyName ] = transformedObject[ propertyName ];
+          return removedObject;
+        }, {});
+      }
+    }
+    return transformedObject;
+  }
+  
   /**
    * returns a new array of a selected column from an array of objects and replaces empty values, encodes values and scales values
    * @example
@@ -313,6 +775,15 @@ const ReplacedAgeMeanColumn = dataset.columnReplace('Age',{strategy:'mean'});
         value: (result, val, index, arr) => replaceVal[index],
       };
       break;
+    case 'labeldecode':
+    case 'labelDecode':
+    case 'labelDecoder':
+      replaceVal = this.labelDecode(name, config.labelOptions);
+      replace = {
+        test: val => true,
+        value: (result, val, index, arr) => replaceVal[index],
+      };
+      break;
     case 'onehot':
     case 'oneHot':
     case 'oneHotEncode':
@@ -343,185 +814,6 @@ const ReplacedAgeMeanColumn = dataset.columnReplace('Age',{strategy:'mean'});
       }, options.columnOptions));
   }
   /**
-   * returns a new array and label encodes a selected column
-   * @example
-   * const oneHotCountryColumn = dataset.oneHotEncoder('Country'); 
-
-// [ 'N', 'Yes', 'No', 'f', 'Yes', 'Yes', 'false', 'Yes', 'No', 'Yes' ] 
-const originalPurchasedColumn = dataset.labelEncoder('Purchased');
-// [ 0, 1, 0, 0, 1, 1, 1, 1, 0, 1 ]
-const encodedBinaryPurchasedColumn = dataset.labelEncoder('Purchased',{ binary:true });
-// [ 0, 1, 2, 3, 1, 1, 4, 1, 2, 1 ]
-const encodedPurchasedColumn = dataset.labelEncoder('Purchased'); 
-  * @param {string} name - csv column header, or JSON object property name 
-  * @param options
-  * @param {boolean} [options.binary=false] - only replace with (0,1) with binary values 
-  * @see {@link http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html} 
-  * @returns {array}
-  */
-  labelEncoder(name, options) {
-    const config = Object.assign({
-      binary: false,
-    }, options);
-    const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
-    const labels = new Map(
-      Array.from(new Set(labelData).values())
-        .reduce((result, val, i, arr) => {
-          result.push([val, i,]);
-          result.push([i, val,]);
-          return result;
-        }, [])
-    );
-    this.labels.set(name, labels);
-    const labeledData = (config.binary) ?
-      labelData.map(label => {
-        // console.log(label);
-        if (!label) return 0;
-        switch (label) {
-        case false:
-        case 'N':
-        case 'n':
-        case 'NO':
-        case 'No':
-        case 'no':
-        case 'False':
-        case 'F':
-        case 'f':
-          return 0;
-        default:
-          return 1;
-        }
-      }) :
-      labelData.map(label => labels.get(label));
-    return labeledData;
-  }
-  /**
-     * returns a new array and decodes an encoded column back to the original array values
-     * @param {string} name - csv column header, or JSON object property name 
-     * @param options
-     * @returns {array}
-     */
-  labelDecode(name, options) {
-    const config = Object.assign({}, options);
-    const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
-    return labelData.map(val => this.labels.get(name).get(val));
-  }
-  /**
- * returns a new object of one hot encoded values
- * @example
- * // [ 'Brazil','Mexico','Ghana','Mexico','Ghana','Brazil','Mexico','Brazil','Ghana', 'Brazil' ]
-const originalCountry = dataset.columnArray('Country'); 
-
-// { originalCountry:
-//    { Country_Brazil: [ 1, 0, 0, 0, 0, 1, 0, 1, 0, 1 ],
-//      Country_Mexico: [ 0, 1, 0, 1, 0, 0, 1, 0, 0, 0 ],
-//      Country_Ghana: [ 0, 0, 1, 0, 1, 0, 0, 0, 1, 0 ] },
-//     }
-const oneHotCountryColumn = dataset.oneHotEncoder('Country'); 
-  * @param {string} name - csv column header, or JSON object property name 
-  * @param options 
-  * @see {@link http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html}
-  * @return {Object}
-  */
-  oneHotEncoder(name, options) {
-    const config = Object.assign({
-      // n_values: "auto",
-      // categorical_features: "all",
-      // prefix: true,
-      // dtype: np.float64,
-      // sparse: True,
-      // handle_unknown: 'error'
-    }, options);
-    const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
-    const labels = Array.from(new Set(labelData).values());
-    const encodedData = labelData.reduce(
-      (result, val, index, arr) => {
-        labels.forEach(encodedLabel => {
-          const oneHotLabelArrayName = `${name}_${encodedLabel}`;
-          const oneHotVal = (val === encodedLabel) ? 1 : 0;
-          if (Array.isArray(result[oneHotLabelArrayName])) {
-            result[oneHotLabelArrayName].push(oneHotVal);
-          } else {
-            result[oneHotLabelArrayName] = [oneHotVal,];
-          }
-        });
-        return result;
-      }, {});
-    this.encoders.set(name, {
-      labels,
-      prefix: `${name}_`,
-    });
-    return encodedData;
-  }
-  /**
- * it returns a new column that reduces a column into a new column object, this is used in data prep to create new calculated columns for aggregrate statistics
- * @example 
-const reducer = (result, value, index, arr) => {
-result.push(value * 2);
-return result;
-};
-CSVDataSet.columnReducer('DoubleAge', {
-columnName: 'Age',
-reducer,
-}); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }
-  * @param {String} name - name of new Column 
-  * @param {Object} options 
-  * @param {String} options.columnName - name property for columnArray selection 
-  * @param {Object} options.columnOptions - options property for columnArray  
-  * @param {Function} options.reducer - reducer function to reduce into new array, it should push values into the resulting array  
-  * @returns {Object} a new object that has reduced array as the value
-  */
-  columnReducer(name, options) {
-    const newColumn = {
-      [ name ]: this.columnArray(options.columnName, options.columnOptions).reduce(options.reducer, []),
-    };
-    return newColumn;
-  }
-  /**
-   * it returns a new column that is merged onto the data set
-   * @example 
-CSVDataSet.columnMerge('DoubleAge', [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ]); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }
-    * @param {String} name - name of new Column 
-    * @param {Array} data - new dataset data  
-    * @returns {Object} 
-    */
-  columnMerge(name, data=[]) {
-    if (this.data.length !== data.length) throw new RangeError(`Merged data column must have the same length(${data.length}) as the DataSet's length (${this.data.length})`);
-    return {
-      [name]: data,
-    };
-  }
-  /*
-  transformObject(data) {
-    // if (Array.isArray(data)) return data.map(datum => this.transformObject);
-    const currentColumns = Object.keys(this.data[ 0 ]);
-    const objectColumns = Object.keys(data);
-    const differentKeys = objectColumns.reduce((diffKeys, val) => {
-      if (currentColumns.indexOf(val) === -1) diffKeys.push(val);
-    }, []);
-    let transformedObject = Object.assign({}, data);
-    if (currentColumns.length !== objectColumns.length) {
-      throw new RangeError(`Object must have the same number of keys (${objectColumns.length}) as data in your dataset(${currentColumns.length})`);
-    } else if (differentKeys.length) {
-      throw new ReferenceError(`Object must have identical keys as data in your DataSet. Invalid keys: ${differentKeys.join(',')}`);
-    } else {
-      const labeledData = objectColumns.reduce((labelObject, columnName) => {
-        if (this.labels.has(columnName)){
-          labelObject[ columnName ] = this.labels.get(columnName).get(data[ columnName ]);
-        }
-        return labelObject;
-      }, {});
-      const encodedData = objectColumns.reduce((encodedObject, columnName) => {
-        if (this.encoders.has(columnName)){
-          labelObject[ columnName ] = this.labels.get(columnName).get(data[ columnName ]);
-        }
-        return encodedObject;
-      }, {});
-      transformedObject = Object.assign(transformedObject, labeledData, encodedData);
-    }
-    return transformedObject;
-  }*/
-  /**
      * mutates data property of DataSet by replacing multiple columns in a single command
      * @example
      * //fit Columns, mutates dataset
@@ -543,11 +835,17 @@ dataset.fitColumns({
   * @param {Object[]} options.columns - {name:'columnName',options:{strategy:'mean',labelOoptions:{}},}
   * @returns {Object[]}
   */
-  fitColumns(options) {
+  fitColumns(options = {}) {
     const config = Object.assign({
       returnData:true,
       columns: [],
     }, options);
+    if ( !options.columns || Array.isArray(options.columns) ===false) {
+      config.columns = (options.columns)
+        ? DataSet.getTransforms(options.columns)
+        : DataSet.getTransforms(options);
+    }
+
     const fittedColumns = config.columns
       .reduce((result, val, index, arr) => {
         let replacedColumn = this.columnReplace(val.name, val.options);

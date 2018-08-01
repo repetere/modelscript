@@ -25,7 +25,7 @@
     "ml-random-forest": "^1.0.3",
     "ml-regression-multivariate-linear": "^1.2.0",
     "natural": "^0.5.6",
-    "node-fpgrowth": "^1.0.0",
+    "node-fpgrowth": "^1.2.1",
     "object.values": "^1.0.4",
     "probability-distributions": "^0.9.1",
     "random-js": "^1.0.8",

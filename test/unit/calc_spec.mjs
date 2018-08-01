@@ -43,38 +43,43 @@ describe('calc', function () {
   });
   describe('assocationRuleLearning', () => {
     const gt = ms.calc.getTransactions(rawTransactions);
-    
     it('should use Eclat to associate transactions', (done) => {
-      ms.calc.assocationRuleLearning(gt.transactions, {
-        valuesMap: gt.valuesMap,
-      })
-        .then(arl => {
-          expect(arl).to.be.an('array');
-          done();
+      if (process.platform === 'darwin') {
+        ms.calc.assocationRuleLearning(gt.transactions, {
+          valuesMap: gt.valuesMap,
         })
-        .catch(done);  
-      expect(ms.calc.assocationRuleLearning).to.be.an('function');
+          .then(arl => {
+            expect(arl).to.be.an('array');
+            done();
+          })
+          .catch(done);
+        expect(ms.calc.assocationRuleLearning).to.be.an('function');
+      }
     });
-    it('should use accept options for eclat summary', (done) => {
-      ms.calc.assocationRuleLearning(gt.transactions, {
-        valuesMap: gt.valuesMap,
-        summary:false,
-      })
-        .then(arl => {
-          expect(arl).to.be.an('object');
-          done();
+    it('should use accept options for eclat summary', (done) => {  
+      if (process.platform === 'darwin') {
+        ms.calc.assocationRuleLearning(gt.transactions, {
+          valuesMap: gt.valuesMap,
+          summary:false,
         })
-        .catch(done);  
+          .then(arl => {
+            expect(arl).to.be.an('object');
+            done();
+          })
+          .catch(done); 
+      } 
     });
     it('should work with raw transactions', (done) => {
-      ms.calc.assocationRuleLearning(rawTransactions, {
-        summary:false,
-      })
-        .then(arl => {
-          expect(arl).to.be.an('object');
-          done();
+      if (process.platform === 'darwin') {
+        ms.calc.assocationRuleLearning(rawTransactions, {
+          summary:false,
         })
-        .catch(done);  
+          .then(arl => {
+            expect(arl).to.be.an('object');
+            done();
+          })
+          .catch(done); 
+      } 
     });
   });
 });
