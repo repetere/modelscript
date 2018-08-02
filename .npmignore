@@ -1,1 +1,14 @@
 node_modules
+coverage
+docs
+test
+rollup.config.js
+.vscode
+.nyc_output
+.babelrc
+.coveralls.yml
+.esdoc.json
+.eslintrc
+.eslintrc.json
+.travis.yml
+.nvmrc

@@ -1,15 +1,14 @@
 {
   "name": "modelscript",
   "description": "modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you're left with the equialent R/Python toolset in JavaScript.",
-  "version": "2.0.1",
+  "version": "2.0.4",
   "main": "build/modelscript.cjs.js",
   "es": "build/modelscript.esm.js",
   "module": "index.mjs",
   "browser": "build/modelscript.umd.js",
-  "modules.root": "lib",
+  "modules.root": "src",
   "license": "MIT",
   "dependencies": {
-    "@yawetse/js-grid-search": "^1.3.2",
     "babel-runtime": "^6.26.0",
     "csvtojson": "^1.1.9",
     "fs-extra": "^5.0.0",
@@ -71,9 +70,6 @@
     "build": "rollup -c && esdoc",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
-  "files": [
-    "dist"
-  ],
   "bugs": {
     "url": "https://github.com/repetere/modelscript/issues"
   },
