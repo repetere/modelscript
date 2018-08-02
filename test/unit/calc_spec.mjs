@@ -41,47 +41,65 @@ describe('calc', function () {
       });
     });
   });
-  if (process.platform === 'darwin') {
-    describe('assocationRuleLearning', () => {
-      const gt = ms.calc.getTransactions(rawTransactions);
-      it('should use Eclat to associate transactions', (done) => {
-        if (process.platform === 'darwin') {
-          ms.calc.assocationRuleLearning(gt.transactions, {
-            valuesMap: gt.valuesMap,
-          })
-            .then(arl => {
-              expect(arl).to.be.an('array');
-              done();
-            })
-            .catch(done);
-          expect(ms.calc.assocationRuleLearning).to.be.an('function');
-        }
-      });
-      it('should use accept options for eclat summary', (done) => {
-        if (process.platform === 'darwin') {
-          ms.calc.assocationRuleLearning(gt.transactions, {
-            valuesMap: gt.valuesMap,
-            summary: false,
-          })
-            .then(arl => {
-              expect(arl).to.be.an('object');
-              done();
-            })
-            .catch(done);
-        }
-      });
-      it('should work with raw transactions', (done) => {
-        if (process.platform === 'darwin') {
-          ms.calc.assocationRuleLearning(rawTransactions, {
-            summary: false,
-          })
-            .then(arl => {
-              expect(arl).to.be.an('object');
-              done();
-            })
-            .catch(done);
-        }
-      });
+  describe('assocationRuleLearning', () => {
+    const gt = ms.calc.getTransactions(rawTransactions);
+    it('should use Eclat to associate transactions', (done) => {
+      // if (process.platform === 'darwin') {
+      ms.calc.assocationRuleLearning(gt.transactions, {
+        valuesMap: gt.valuesMap,
+      })
+        .then(arl => {
+          // console.log('arl',arl);
+          expect(arl).to.be.an('array');
+          done();
+        })
+        .catch(done);
+      expect(ms.calc.assocationRuleLearning).to.be.an('function');
+      // }
     });
-  }
+    it('should use accept options for eclat summary', (done) => {
+      // if (process.platform === 'darwin') {
+      ms.calc.assocationRuleLearning(gt.transactions, {
+        valuesMap: gt.valuesMap,
+        summary: false,
+      })
+        .then(arl => {
+          // console.log({ arl });
+          expect(arl).to.be.an('array');
+          done();
+        })
+        .catch(done);
+      // }
+    });
+    it('should work with raw transactions', (done) => {
+      // if (process.platform === 'darwin') {
+      ms.calc.assocationRuleLearning(rawTransactions, {
+        summary: false,
+      })
+        .then(arl => {
+          expect(arl).to.be.an('array');
+          done();
+        })
+        .catch(done);
+      // }
+    });
+    it('should handle errors', (done) => {
+      if (process.platform === 'darwin') {
+        ms.calc.assocationRuleLearning(NaN, {
+          summary: NaN,
+          support: NaN,
+          minLength: NaN,
+          valuesMap: NaN,
+        })
+          .then((r) => {
+            console.log('r', r)
+            done(new Error('should not get to then'))
+          })
+          .catch(e => {
+            expect(e).to.be.a('error');
+            done();
+          });
+      }
+    });
+  });
 });

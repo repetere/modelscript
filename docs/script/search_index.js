@@ -169,13 +169,19 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/unit/calc_spec.mjs.html#lineNumber45",
+    "test-file/test/unit/calc_spec.mjs.html#lineNumber44",
     "calc assocationRuleLearning",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/calc_spec.mjs.html#lineNumber47",
+    "test-file/test/unit/calc_spec.mjs.html#lineNumber86",
+    "calc assocationRuleLearning should handle errors",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/calc_spec.mjs.html#lineNumber46",
     "calc assocationRuleLearning should use Eclat to associate transactions",
     "test"
   ],
@@ -187,7 +193,7 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/unit/calc_spec.mjs.html#lineNumber73",
+    "test-file/test/unit/calc_spec.mjs.html#lineNumber74",
     "calc assocationRuleLearning should work with raw transactions",
     "test"
   ],
@@ -643,61 +649,61 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber153",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber159",
     "preprocessing DataSet class columnArray",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber187",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber193",
     "preprocessing DataSet class columnArray should convert vals to numbers",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber235",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber241",
     "preprocessing DataSet class columnArray should exp scale values",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber165",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber171",
     "preprocessing DataSet class columnArray should filter the dataset",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber224",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber230",
     "preprocessing DataSet class columnArray should log scale values",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber159",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber165",
     "preprocessing DataSet class columnArray should prefilter the dataset",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber171",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber177",
     "preprocessing DataSet class columnArray should replace values in dataset",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber155",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber161",
     "preprocessing DataSet class columnArray should select a column from CSV Data by name",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber197",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber203",
     "preprocessing DataSet class columnArray should standardize scale values",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber210",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber216",
     "preprocessing DataSet class columnArray should z-score / MinMax scale values",
     "test"
   ],
@@ -727,67 +733,67 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber412",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber418",
     "preprocessing DataSet class columnReducer",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber413",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber419",
     "preprocessing DataSet class columnReducer should reduce column and greate a new column",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber428",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber434",
     "preprocessing DataSet class columnReplace",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber429",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber435",
     "preprocessing DataSet class columnReplace should label encode",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber440",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber446",
     "preprocessing DataSet class columnReplace should onehot encode",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber459",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber465",
     "preprocessing DataSet class columnReplace should replace empty values with mean by default",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber468",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber474",
     "preprocessing DataSet class columnReplace should replace empty values with stat function from ml.js",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber477",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber483",
     "preprocessing DataSet class columnReplace should replace values by standard scaling",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber247",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber253",
     "preprocessing DataSet class columnScale / columnDescale",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber258",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber264",
     "preprocessing DataSet class columnScale / columnDescale should descale a column",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber251",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber257",
     "preprocessing DataSet class columnScale / columnDescale should scale a column and store the transform functions",
     "test"
   ],
@@ -805,13 +811,13 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber331",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber337",
     "preprocessing DataSet class encodeObject",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber332",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber338",
     "preprocessing DataSet class encodeObject should onehot encode an object",
     "test"
   ],
@@ -835,121 +841,121 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber497",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber503",
     "preprocessing DataSet class fitColumns",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber528",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber534",
     "preprocessing DataSet class fitColumns should fit multiple columns",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber499",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber505",
     "preprocessing DataSet class fitColumns should merge columns",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber515",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber521",
     "preprocessing DataSet class fitColumns should only merge columns if data length matches",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber600",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber606",
     "preprocessing DataSet class fitInverseTransforms / fitTransforms",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber601",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber607",
     "preprocessing DataSet class fitInverseTransforms / fitTransforms should inverse transforms on dataset",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber292",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber298",
     "preprocessing DataSet class getTransforms",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber293",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber299",
     "preprocessing DataSet class getTransforms should take column fit options as an array",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber264",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber270",
     "preprocessing DataSet class labelEncoder",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber268",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber274",
     "preprocessing DataSet class labelEncoder should binary label encode",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber284",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber290",
     "preprocessing DataSet class labelEncoder should decode labels",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber276",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber282",
     "preprocessing DataSet class labelEncoder should label encode",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber392",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber398",
     "preprocessing DataSet class oneHotColumnArray",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber393",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber399",
     "preprocessing DataSet class oneHotColumnArray should return all encoded columns",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber385",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber391",
     "preprocessing DataSet class oneHotDecoder",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber386",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber392",
     "preprocessing DataSet class oneHotDecoder should one hot decode",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber399",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber405",
     "preprocessing DataSet class oneHotEncoder",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber400",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber406",
     "preprocessing DataSet class oneHotEncoder should one hot encode",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber143",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber149",
     "preprocessing DataSet class selectColumns",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber144",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber150",
     "preprocessing DataSet class selectColumns should return a list of objects with only selected columns as properties",
     "test"
   ],
@@ -967,31 +973,31 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber133",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber136",
     "preprocessing DataSet class static reverseColumnVector",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber134",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber137",
     "preprocessing DataSet class static reverseColumnVector should reverse a vector of values into labeled object",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber347",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber353",
     "preprocessing DataSet class transformObject / inverseTransformObject",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber348",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber354",
     "preprocessing DataSet class transformObject / inverseTransformObject should encode new data using existing transforms",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber365",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber371",
     "preprocessing DataSet class transformObject / inverseTransformObject should inverse transform objects",
     "test"
   ],
@@ -1579,37 +1585,37 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber115",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber139",
     "util Coefficient of correlation",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber123",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber147",
     "util Coefficient of correlation should return an error if array lengths are not the same",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber118",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber142",
     "util Coefficient of correlation should return the Coefficient of correlation",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber142",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber166",
     "util Coefficient of determination",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber149",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber173",
     "util Coefficient of determination should return an error if array lengths are not the same",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber145",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber169",
     "util Coefficient of determination should return the Coefficient of determination",
     "test"
   ],
@@ -1723,32 +1729,44 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber184",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber208",
     "util Z Scores / Standard Scores",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber194",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber218",
     "util Z Scores / Standard Scores should approximate the p-value from the z score",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber185",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber209",
     "util Z Scores / Standard Scores should calculate standard scores",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber157",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber181",
     "util adjusted coefficient of determination",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber158",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber182",
     "util adjusted coefficient of determination should return the adjusted Coefficient of determination",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber115",
+    "util getSafePropertyName",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber116",
+    "util getSafePropertyName should sanitize property names",
     "test"
   ],
   [
@@ -1789,37 +1807,37 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber178",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber202",
     "util pivotArrays",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber179",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber203",
     "util pivotArrays should pivot arrays into vectors",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber167",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber191",
     "util pivotVector",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber168",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber192",
     "util pivotVector should pivot vectors into arrays",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber131",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber155",
     "util rSquared",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber134",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber158",
     "util rSquared should return r^2",
     "test"
   ]

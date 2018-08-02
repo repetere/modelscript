@@ -112,6 +112,30 @@ describe('util', function () {
       }
     });
   });
+  describe('getSafePropertyName', () => {
+    it('should sanitize property names', () => {
+      const names = [
+        'sa les',
+        'sa.les',
+        'sa.les!!!',
+        'Sa.les!!!',
+        'Sa.leS',
+        'Sa---leS',
+        'Sa---l#eS',
+      ];
+      const sanitizedNames = names.map(ms.util.getSafePropertyName);
+      const ranSanitized = [ 'sa les',
+        'sa_les',
+        'sa_les___',
+        'Sa_les___',
+        'Sa_leS',
+        'Sa___leS',
+        'Sa___l_eS',
+      ];
+      expect(sanitizedNames).to.eql(ranSanitized);
+      // console.log({ sanitizedNames });
+    });
+  });
   describe('Coefficient of correlation', () => {
     const actuals = [ 39, 42, 67, 76, ];
     const estimates = [ 44, 40, 60, 84, ];
@@ -202,6 +226,9 @@ describe('util', function () {
       expect(p3).to.eql(0.998);
       expect(p2).to.eql(0.025);
       expect(p4).to.eql(0.975);
+      expect(ms.util.approximateZPercentile(-10)).to.eql(0);
+      expect(ms.util.approximateZPercentile(10)).to.eql(1);
+      // console.log('ms.util.approximateZPercentile(-10)', ms.util.approximateZPercentile(-10));
     });
   });
 });

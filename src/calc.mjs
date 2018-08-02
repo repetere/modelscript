@@ -74,8 +74,10 @@ export function assocationRuleLearning(transactions =[], options) {
       const fpgrowth = new FPGrowth(config.support);
       fpgrowth.exec(transactions)
         .then(results => {
+          const itemsets = (results.itemsets) ? results.itemsets : results;
+          // console.log('itemsets', itemsets)
           if (config.summary) {
-            resolve(results.itemsets
+            resolve(itemsets
               .map(itemset => ({
                 items_labels: itemset.items.map(item => config.valuesMap.get(item)),
                 items: itemset.items,

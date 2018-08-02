@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
+<!DOCTYPE html><html><head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../">
   <title data-ice="title">test/unit/preprocessing_spec.mjs | ModelScript</title>
@@ -8,7 +6,15 @@
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you&apos;re left with the equialent R/Python toolset in JavaScript"><meta property="og:type" content="website"><meta property="og:url" content="https://repetere.github.io/modelscript"><meta property="og:site_name" content="ModelScript"><meta property="og:title" content="ModelScript"><meta property="og:image" content="https://repetere.ai/favicon.png"><meta property="og:description" content="Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you&apos;re left with the equialent R/Python toolset in JavaScript"><meta property="og:author" content="https://github.com/repetere"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="ModelScript"><meta property="twitter:description" content="Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you&apos;re left with the equialent R/Python toolset in JavaScript"><meta property="twitter:image" content="https://repetere.ai/favicon.png"></head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="//www.googletagmanager.com/gtag/js?id=UA-112697260-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-112697260-3');
+  </script><meta name="description" content="Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you&apos;re left with the equivalent R/Python tool set in JavaScript"><meta property="og:type" content="website"><meta property="og:url" content="https://repetere.github.io/modelscript"><meta property="og:site_name" content="ModelScript"><meta property="og:title" content="ModelScript"><meta property="og:image" content="https://repetere.ai/favicon.png"><meta property="og:description" content="Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you&apos;re left with the equivalent R/Python tool set in JavaScript"><meta property="og:author" content="https://github.com/repetere"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="ModelScript"><meta property="twitter:description" content="Modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you&apos;re left with the equivalent R/Python tool set in JavaScript"><meta property="twitter:image" content="https://repetere.ai/favicon.png"></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -184,11 +190,14 @@ describe(&apos;preprocessing&apos;, function() {
     describe(&apos;static reverseColumnMatrix&apos;, () =&gt; {
       it(&apos;should reverse a matrix of values into labeled object&apos;, () =&gt; {
         const dependentVariables = [[&apos;Age&apos;, ], [&apos;Salary&apos;, ], ];
+        const dependentVariables2 = [&apos;Age&apos;,&apos;Salary&apos;,];
         const AgeSalMatrix = CSVDataSet.columnMatrix(dependentVariables);
+        const AgeSalMatrix2 = CSVDataSet.columnMatrix(dependentVariables2);
         const AgeArray = CSVDataSet.columnArray(&apos;Age&apos;);
         const reversedAgeSalMatrix = ms.DataSet.reverseColumnMatrix({ vectors: AgeSalMatrix, labels: dependentVariables, });
         const selectedCols = CSVDataSet.selectColumns([&apos;Age&apos;, &apos;Salary&apos;, ]);
         expect(AgeSalMatrix).to.be.lengthOf(AgeArray.length);
+        expect(AgeSalMatrix).to.eql(AgeSalMatrix2);
         expect(reversedAgeSalMatrix).to.be.lengthOf(AgeArray.length);
         expect(reversedAgeSalMatrix).to.eql(selectedCols);
       });
@@ -196,11 +205,14 @@ describe(&apos;preprocessing&apos;, function() {
     describe(&apos;static reverseColumnVector&apos;, () =&gt; {
       it(&apos;should reverse a vector of values into labeled object&apos;, () =&gt; {
         const dependentVariables = [[&apos;Age&apos;, ], [&apos;Salary&apos;, ], ];
+        const dependentVariables2 = [&apos;Age&apos;,&apos;Salary&apos;,];
         const AgeArray = CSVDataSet.columnArray(&apos;Age&apos;);
         const reversedAgeSalVector = ms.DataSet.reverseColumnVector({ vector: AgeArray, labels: dependentVariables, });
+        const reversedAgeSalVector2 = ms.DataSet.reverseColumnVector({ vector: AgeArray, labels: dependentVariables2, });
         const selectedCols = CSVDataSet.selectColumns([&apos;Age&apos;, ]);
         expect(reversedAgeSalVector).to.be.lengthOf(AgeArray.length);
         expect(reversedAgeSalVector).to.eql(selectedCols);
+        expect(reversedAgeSalVector).to.eql(reversedAgeSalVector2);
       });
     });
     describe(&apos;selectColumns&apos;, () =&gt; { 
@@ -713,5 +725,6 @@ describe(&apos;preprocessing&apos;, function() {
 <script src="script/test-summary.js"></script>
 <script src="script/inner-link.js"></script>
 <script src="script/patch-for-local.js"></script>
-</body>
-</html>
+
+
+</body></html>

@@ -121,11 +121,14 @@ describe('preprocessing', function() {
     describe('static reverseColumnMatrix', () => {
       it('should reverse a matrix of values into labeled object', () => {
         const dependentVariables = [['Age', ], ['Salary', ], ];
+        const dependentVariables2 = ['Age','Salary',];
         const AgeSalMatrix = CSVDataSet.columnMatrix(dependentVariables);
+        const AgeSalMatrix2 = CSVDataSet.columnMatrix(dependentVariables2);
         const AgeArray = CSVDataSet.columnArray('Age');
         const reversedAgeSalMatrix = ms.DataSet.reverseColumnMatrix({ vectors: AgeSalMatrix, labels: dependentVariables, });
         const selectedCols = CSVDataSet.selectColumns(['Age', 'Salary', ]);
         expect(AgeSalMatrix).to.be.lengthOf(AgeArray.length);
+        expect(AgeSalMatrix).to.eql(AgeSalMatrix2);
         expect(reversedAgeSalMatrix).to.be.lengthOf(AgeArray.length);
         expect(reversedAgeSalMatrix).to.eql(selectedCols);
       });
@@ -133,11 +136,14 @@ describe('preprocessing', function() {
     describe('static reverseColumnVector', () => {
       it('should reverse a vector of values into labeled object', () => {
         const dependentVariables = [['Age', ], ['Salary', ], ];
+        const dependentVariables2 = ['Age','Salary',];
         const AgeArray = CSVDataSet.columnArray('Age');
         const reversedAgeSalVector = ms.DataSet.reverseColumnVector({ vector: AgeArray, labels: dependentVariables, });
+        const reversedAgeSalVector2 = ms.DataSet.reverseColumnVector({ vector: AgeArray, labels: dependentVariables2, });
         const selectedCols = CSVDataSet.selectColumns(['Age', ]);
         expect(reversedAgeSalVector).to.be.lengthOf(AgeArray.length);
         expect(reversedAgeSalVector).to.eql(selectedCols);
+        expect(reversedAgeSalVector).to.eql(reversedAgeSalVector2);
       });
     });
     describe('selectColumns', () => { 

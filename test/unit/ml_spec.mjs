@@ -12,7 +12,7 @@ const {
 } = ms.ml.RL;
 
 describe('ml', function () { 
-  this.timeout(10000);
+  this.timeout(20000);
   before((done) => {
     Promise.all([
       ms.loadCSV(path.join(__dirname, '../mock/Ads_CTR_Optimisation.csv'), {
