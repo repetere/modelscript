@@ -94,6 +94,10 @@ creates a new raw data instance for preprocessing data for machine learning
 
 ### `scalers: *`
 
+### `selectColumns: *`
+
+### `columnArray: *`
+
 ### `encodeObject: *`
 
 ### `oneHotEncoder: *`
@@ -156,22 +160,6 @@ Return one hot encoded data
 | name | string |  | column name |
 | options | * |  |
 
-### `filterColumn(filter: Function): Array`
-
-returns filtered rows of data
-
-| Name | Type | Attribute | Description |
-| --- | --- | --- | --- |
-| filter | Function | optional: true | filter function |
-
-### `columnMatrix(vectors: Array): Array`
-
-returns a matrix of values by combining column arrays into a matrix
-
-| Name | Type | Attribute | Description |
-| --- | --- | --- | --- |
-| vectors | Array | optional: true, default: [] | array of arguments for columnArray to merge columns into a matrix |
-
 ### `selectColumns(names: String[], options: *): Object[]`
 
 returns a list of objects with only selected columns as properties
@@ -197,6 +185,22 @@ returns a new array of a selected column from an array of objects, can filter, s
 | options.parseFloat | boolean | optional: true, default: false | convert values to floats |
 | options.parseInt | boolean | optional: true, default: false | converts values to ints |
 | options.scale | boolean | optional: true, default: false | standard or minmax feature scale values |
+
+### `filterColumn(filter: Function): Array`
+
+returns filtered rows of data
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+| filter | Function | optional: true | filter function |
+
+### `columnMatrix(vectors: Array): Array`
+
+returns a matrix of values by combining column arrays into a matrix
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+| vectors | Array | optional: true, default: [] | array of arguments for columnArray to merge columns into a matrix |
 
 ### `columnScale(name: string, options.strategy: string): number[]`
 

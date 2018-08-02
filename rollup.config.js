@@ -68,13 +68,13 @@ export default [
     output: [
       {
         exports: 'named',
-        file: pkg.main,
+        file: pkg.commonjs,
         name: 'modelscript',
         format: 'cjs',
       },
       {
         exports: 'named',
-        file: pkg.es,
+        file: pkg.esm,
         name: 'modelscript',
         format: 'es',
       },

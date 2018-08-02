@@ -65,7 +65,8 @@
 <p>In Python, data preperation is typically done in a DataFrame, modelscript encourages a more R like workflow where the data prepration is in it&apos;s native structure.</p>
 <h3 id="installation">Installation</h3><pre><code class="lang-sh"><code class="source-code prettyprint">$ npm i modelscript</code>
 </code></pre>
-<h3 id="-a-href--https---github-com-repetere-modelscript-blob-master-docs-api-md--full-documentation--a-"><a href="https://github.com/repetere/modelscript/blob/master/docs/api.md">Full Documentation</a></h3><h3 id="usage--basic-">Usage (basic)</h3><pre><code class="lang-javascript"><code class="source-code prettyprint">&quot;modelscript&quot; : {
+<h3 id="-a-href--https---github-com-repetere-modelscript-blob-master-docs-api-md--full-documentation--a-"><a href="https://github.com/repetere/modelscript/blob/master/docs/api.md">Full Documentation</a></h3><h3 id="usage--basic-">Usage (basic)</h3><p>ModelScript is an EcmaScript module and designed to be imported in an ES2015+ environment. In order to use in older environment, please use <code>const modelscript = require(&apos;modelscript/build/modelscript.cjs.js&apos;)</code> for older versions of node and <code>&lt;script type=&quot;text/javascript&quot; src=&quot;.../path/to/.../modelscript/build/modelscript.umd.js&quot;/&gt;</code></p>
+<pre><code class="lang-javascript"><code class="source-code prettyprint">&quot;modelscript&quot; : {
   ml:{ //see https://github.com/mljs/ml
     UpperConfidenceBound [Class: UpperConfidenceBound]{ // Implementation of the Upper Confidence Bound algorithm
       predict(), //returns next action based off of the upper confidence bound

@@ -104,47 +104,49 @@ describe(&apos;calc&apos;, function () {
       });
     });
   });
-  describe(&apos;assocationRuleLearning&apos;, () =&gt; {
-    const gt = ms.calc.getTransactions(rawTransactions);
-    it(&apos;should use Eclat to associate transactions&apos;, (done) =&gt; {
-      if (process.platform === &apos;darwin&apos;) {
-        ms.calc.assocationRuleLearning(gt.transactions, {
-          valuesMap: gt.valuesMap,
-        })
-          .then(arl =&gt; {
-            expect(arl).to.be.an(&apos;array&apos;);
-            done();
+  if (process.platform === &apos;darwin&apos;) {
+    describe(&apos;assocationRuleLearning&apos;, () =&gt; {
+      const gt = ms.calc.getTransactions(rawTransactions);
+      it(&apos;should use Eclat to associate transactions&apos;, (done) =&gt; {
+        if (process.platform === &apos;darwin&apos;) {
+          ms.calc.assocationRuleLearning(gt.transactions, {
+            valuesMap: gt.valuesMap,
           })
-          .catch(done);
-        expect(ms.calc.assocationRuleLearning).to.be.an(&apos;function&apos;);
-      }
-    });
-    it(&apos;should use accept options for eclat summary&apos;, (done) =&gt; {  
-      if (process.platform === &apos;darwin&apos;) {
-        ms.calc.assocationRuleLearning(gt.transactions, {
-          valuesMap: gt.valuesMap,
-          summary:false,
-        })
-          .then(arl =&gt; {
-            expect(arl).to.be.an(&apos;object&apos;);
-            done();
+            .then(arl =&gt; {
+              expect(arl).to.be.an(&apos;array&apos;);
+              done();
+            })
+            .catch(done);
+          expect(ms.calc.assocationRuleLearning).to.be.an(&apos;function&apos;);
+        }
+      });
+      it(&apos;should use accept options for eclat summary&apos;, (done) =&gt; {
+        if (process.platform === &apos;darwin&apos;) {
+          ms.calc.assocationRuleLearning(gt.transactions, {
+            valuesMap: gt.valuesMap,
+            summary: false,
           })
-          .catch(done); 
-      } 
-    });
-    it(&apos;should work with raw transactions&apos;, (done) =&gt; {
-      if (process.platform === &apos;darwin&apos;) {
-        ms.calc.assocationRuleLearning(rawTransactions, {
-          summary:false,
-        })
-          .then(arl =&gt; {
-            expect(arl).to.be.an(&apos;object&apos;);
-            done();
+            .then(arl =&gt; {
+              expect(arl).to.be.an(&apos;object&apos;);
+              done();
+            })
+            .catch(done);
+        }
+      });
+      it(&apos;should work with raw transactions&apos;, (done) =&gt; {
+        if (process.platform === &apos;darwin&apos;) {
+          ms.calc.assocationRuleLearning(rawTransactions, {
+            summary: false,
           })
-          .catch(done); 
-      } 
+            .then(arl =&gt; {
+              expect(arl).to.be.an(&apos;object&apos;);
+              done();
+            })
+            .catch(done);
+        }
+      });
     });
-  });
+  }
 });</code></pre>
 
 </div>

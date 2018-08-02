@@ -18,6 +18,8 @@ $ npm i modelscript
 
 ### Usage (basic)
 
+ModelScript is an EcmaScript module and designed to be imported in an ES2015+ environment. In order to use in older environment, please use `const modelscript = require('modelscript/build/modelscript.cjs.js')` for older versions of node and `<script type="text/javascript" src=".../path/to/.../modelscript/build/modelscript.umd.js"/>`
+
 ```javascript
 "modelscript" : {
   ml:{ //see https://github.com/mljs/ml

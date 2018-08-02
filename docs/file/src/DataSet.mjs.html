@@ -120,7 +120,6 @@ DataSet.getTransforms({
       return result;
     }, []);
   }
-  
   /**
    * returns an array of objects by applying labels to matrix of columns
    * @example
@@ -152,7 +151,6 @@ MS.DataSet.reverseColumnMatrix({vectors:AgeSalMatrix,labels:dependentVariables})
       return result;
     }, []);
   }
-
   static reverseColumnVector(options = {}) {
     const { vector, labels, } = options;
     const features = (Array.isArray(labels) &amp;&amp; Array.isArray(labels[ 0 ]))
@@ -165,7 +163,6 @@ MS.DataSet.reverseColumnMatrix({vectors:AgeSalMatrix,labels:dependentVariables})
       return result;
     }, []);
   }
-  
   /**
    * Returns an object into an one hot encoded object
    * @example
@@ -233,7 +230,6 @@ const oneHotCountryColumn = dataset.oneHotEncoder(&apos;Country&apos;);
     });
     return encodedData;
   }
-  
   /**
    * Return one hot encoded data
    * @example
@@ -292,6 +288,100 @@ EncodedCSVDataSet.oneHotDecoder(&apos;Country);// =&gt;
     }, []);
   }
   /**
+   * returns a list of objects with only selected columns as properties
+ * @example
+const data = [{ Age: &apos;44&apos;, Salary: &apos;44&apos; , Height: &apos;34&apos; },
+{ Age: &apos;27&apos;, Salary: &apos;44&apos; , Height: &apos;50&apos;  }]
+const AgeDataSet = new MS.DataSet(data);
+const cols = [ &apos;Age&apos;, &apos;Salary&apos; ];
+const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&apos;, Salary: &apos;44&apos; },
+{ Age: &apos;27&apos;, Salary: &apos;27&apos; }]
+   * 
+   * @param {String[]} names - array of selected columns
+   * @param {*} options 
+   * @returns {Object[]} an array of objects with properties derived from names
+   */
+  static selectColumns(names, options = {}) {
+    const config = Object.assign({}, options);
+    const data = config.data || this.data;
+    return data.reduce((result, val) =&gt; {
+      const selectedData = {};
+      names.forEach(name =&gt; {
+        selectedData[ name ] = val[ name ];
+      });
+      result.push(selectedData);
+      return result;
+    }, []);
+  }
+  /**
+   * returns a new array of a selected column from an array of objects, can filter, scale and replace values
+   * @example 
+   * //column Array returns column of data by name
+// [ &apos;44&apos;,&apos;27&apos;,&apos;30&apos;,&apos;38&apos;,&apos;40&apos;,&apos;35&apos;,&apos;&apos;,&apos;48&apos;,&apos;50&apos;, &apos;37&apos; ]
+const OringalAgeColumn = dataset.columnArray(&apos;Age&apos;); 
+  * @param {string} name - csv column header, or JSON object property name 
+  * @param options 
+  * @param {function} [options.prefilter=(arr[val])=&gt;true] - prefilter values to return
+  * @param {function} [options.filter=(arr[val])=&gt;true] - filter values to return
+  * @param {function} [options.replace.test=undefined] - test function for replacing values (arr[val])
+  * @param {(string|number|function)} [options.replace.value=undefined] - value to replace (arr[val]) if replace test is true, if a function (result,val,index,arr,name)=&gt;your custom value
+  * @param {number} [options.parseIntBase=10] - radix value for parseInt
+  * @param {boolean} [options.parseFloat=false] - convert values to floats 
+  * @param {boolean} [options.parseInt=false] - converts values to ints 
+  * @param {boolean} [options.scale=false] - standard or minmax feature scale values 
+  * @returns {array}
+  */
+  static columnArray(name, options = {}) {
+    const config = Object.assign({
+      prefilter: () =&gt; true,
+      filter: () =&gt; true,
+      replace: {
+        test: undefined,
+        value: undefined,
+      },
+      parseInt: false,
+      parseIntBase: 10,
+      parseFloat: (options.scale) ? true : false,
+      scale: false,
+    }, options);
+    const data = config.data || this.data;
+    const modifiedColumn = data
+      .filter(config.prefilter)
+      .reduce((result, val, index, arr) =&gt; {
+        let objVal = val[ name ];
+        let returnVal = (typeof config.replace.test === &apos;function&apos;) ?
+          config.replace.test(objVal) ?
+            typeof config.replace.value === &apos;function&apos; ?
+              config.replace.value(result, val, index, arr, name) :
+              config.replace.value :
+            objVal :
+          objVal;
+        if (config.filter(returnVal)) {
+          if (config.parseInt) result.push(parseInt(returnVal, config.parseIntBase));
+          else if (config.parseFloat) result.push(parseFloat(returnVal));
+          else result.push(returnVal);
+        }
+        return result;
+      }, []);
+    if (typeof config.scale===&apos;function&apos;) {
+      return modifiedColumn.map(config.scale);
+    } else if (config.scale) {
+      switch (config.scale) {
+      case &apos;standard&apos;:
+        return utils.StandardScaler(modifiedColumn);
+      case &apos;log&apos;:
+        return utils.LogScaler(modifiedColumn);
+      case &apos;exp&apos;:
+        return utils.ExpScaler(modifiedColumn);
+      case &apos;normalize&apos;:
+      default:
+        return utils.MinMaxScaler(modifiedColumn);
+      }
+    } else {
+      return modifiedColumn;
+    }
+  }
+  /**
    * creates a new raw data instance for preprocessing data for machine learning
    * @example
    * const dataset = new ms.DataSet(csvData);
@@ -306,6 +396,8 @@ EncodedCSVDataSet.oneHotDecoder(&apos;Country);// =&gt;
     this.labels = new Map();
     this.encoders = new Map();
     this.scalers = new Map();
+    this.selectColumns = DataSet.selectColumns;
+    this.columnArray = DataSet.columnArray;
     this.encodeObject = DataSet.encodeObject;
     this.oneHotEncoder = DataSet.oneHotEncoder;
     this.oneHotDecoder = DataSet.oneHotDecoder;
@@ -346,97 +438,6 @@ csvObj.columnMatrix([[&apos;col1&apos;,{parseInt:true}],[&apos;col2&apos;]]); //
       .map(vec =&gt; this.columnArray(...vec));
         
     return utils.pivotArrays(vectorArrays);
-  }
-  /**
-   * returns a list of objects with only selected columns as properties
- * @example
-const data = [{ Age: &apos;44&apos;, Salary: &apos;44&apos; , Height: &apos;34&apos; },
-{ Age: &apos;27&apos;, Salary: &apos;44&apos; , Height: &apos;50&apos;  }]
-const AgeDataSet = new MS.DataSet(data);
-const cols = [ &apos;Age&apos;, &apos;Salary&apos; ];
-const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&apos;, Salary: &apos;44&apos; },
-{ Age: &apos;27&apos;, Salary: &apos;27&apos; }]
-   * 
-   * @param {String[]} names - array of selected columns
-   * @param {*} options 
-   * @returns {Object[]} an array of objects with properties derived from names
-   */
-  selectColumns(names, options = {}) {
-    return this.data.reduce((result, val) =&gt; {
-      const selectedData = {};
-      names.forEach(name =&gt; {
-        selectedData[ name ] = val[ name ];
-      });
-      result.push(selectedData);
-      return result;
-    }, []);
-  }
-  /**
-   * returns a new array of a selected column from an array of objects, can filter, scale and replace values
-   * @example 
-   * //column Array returns column of data by name
-// [ &apos;44&apos;,&apos;27&apos;,&apos;30&apos;,&apos;38&apos;,&apos;40&apos;,&apos;35&apos;,&apos;&apos;,&apos;48&apos;,&apos;50&apos;, &apos;37&apos; ]
-const OringalAgeColumn = dataset.columnArray(&apos;Age&apos;); 
-  * @param {string} name - csv column header, or JSON object property name 
-  * @param options 
-  * @param {function} [options.prefilter=(arr[val])=&gt;true] - prefilter values to return
-  * @param {function} [options.filter=(arr[val])=&gt;true] - filter values to return
-  * @param {function} [options.replace.test=undefined] - test function for replacing values (arr[val])
-  * @param {(string|number|function)} [options.replace.value=undefined] - value to replace (arr[val]) if replace test is true, if a function (result,val,index,arr,name)=&gt;your custom value
-  * @param {number} [options.parseIntBase=10] - radix value for parseInt
-  * @param {boolean} [options.parseFloat=false] - convert values to floats 
-  * @param {boolean} [options.parseInt=false] - converts values to ints 
-  * @param {boolean} [options.scale=false] - standard or minmax feature scale values 
-  * @returns {array}
-  */
-  columnArray(name, options = {}) {
-    const config = Object.assign({
-      prefilter: () =&gt; true,
-      filter: () =&gt; true,
-      replace: {
-        test: undefined,
-        value: undefined,
-      },
-      parseInt: false,
-      parseIntBase: 10,
-      parseFloat: (options.scale) ? true : false,
-      scale: false,
-    }, options);
-    const modifiedColumn = this.data
-      .filter(config.prefilter)
-      .reduce((result, val, index, arr) =&gt; {
-        let objVal = val[ name ];
-        let returnVal = (typeof config.replace.test === &apos;function&apos;) ?
-          config.replace.test(objVal) ?
-            typeof config.replace.value === &apos;function&apos; ?
-              config.replace.value(result, val, index, arr, name) :
-              config.replace.value :
-            objVal :
-          objVal;
-        if (config.filter(returnVal)) {
-          if (config.parseInt) result.push(parseInt(returnVal, config.parseIntBase));
-          else if (config.parseFloat) result.push(parseFloat(returnVal));
-          else result.push(returnVal);
-        }
-        return result;
-      }, []);
-    if (typeof config.scale===&apos;function&apos;) {
-      return modifiedColumn.map(config.scale);
-    } else if (config.scale) {
-      switch (config.scale) {
-      case &apos;standard&apos;:
-        return utils.StandardScaler(modifiedColumn);
-      case &apos;log&apos;:
-        return utils.LogScaler(modifiedColumn);
-      case &apos;exp&apos;:
-        return utils.ExpScaler(modifiedColumn);
-      case &apos;normalize&apos;:
-      default:
-        return utils.MinMaxScaler(modifiedColumn);
-      }
-    } else {
-      return modifiedColumn;
-    }
   }
   /**
    * Returns a new array of scaled values which can be reverse (descaled). The scaling transformations are stored on the DataSet

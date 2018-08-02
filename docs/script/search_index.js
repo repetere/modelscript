@@ -169,25 +169,25 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/unit/calc_spec.mjs.html#lineNumber44",
+    "test-file/test/unit/calc_spec.mjs.html#lineNumber45",
     "calc assocationRuleLearning",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/calc_spec.mjs.html#lineNumber46",
+    "test-file/test/unit/calc_spec.mjs.html#lineNumber47",
     "calc assocationRuleLearning should use Eclat to associate transactions",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/calc_spec.mjs.html#lineNumber59",
+    "test-file/test/unit/calc_spec.mjs.html#lineNumber60",
     "calc assocationRuleLearning should use accept options for eclat summary",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/calc_spec.mjs.html#lineNumber72",
+    "test-file/test/unit/calc_spec.mjs.html#lineNumber73",
     "calc assocationRuleLearning should work with raw transactions",
     "test"
   ],
@@ -1111,9 +1111,9 @@ window.esdocSearchIndex = [
   ],
   [
     "src/dataset.mjs~dataset#columnarray",
-    "class/src/DataSet.mjs~DataSet.html#instance-method-columnArray",
+    "class/src/DataSet.mjs~DataSet.html#instance-member-columnArray",
     "src/DataSet.mjs~DataSet#columnArray",
-    "method"
+    "member"
   ],
   [
     "src/dataset.mjs~dataset#columndescale",
@@ -1273,14 +1273,20 @@ window.esdocSearchIndex = [
   ],
   [
     "src/dataset.mjs~dataset#selectcolumns",
-    "class/src/DataSet.mjs~DataSet.html#instance-method-selectColumns",
+    "class/src/DataSet.mjs~DataSet.html#instance-member-selectColumns",
     "src/DataSet.mjs~DataSet#selectColumns",
-    "method"
+    "member"
   ],
   [
     "src/dataset.mjs~dataset#transformobject",
     "class/src/DataSet.mjs~DataSet.html#instance-method-transformObject",
     "src/DataSet.mjs~DataSet#transformObject",
+    "method"
+  ],
+  [
+    "src/dataset.mjs~dataset.columnarray",
+    "class/src/DataSet.mjs~DataSet.html#static-method-columnArray",
+    "src/DataSet.mjs~DataSet.columnArray",
     "method"
   ],
   [
@@ -1317,6 +1323,12 @@ window.esdocSearchIndex = [
     "src/dataset.mjs~dataset.reversecolumnvector",
     "class/src/DataSet.mjs~DataSet.html#static-method-reverseColumnVector",
     "src/DataSet.mjs~DataSet.reverseColumnVector",
+    "method"
+  ],
+  [
+    "src/dataset.mjs~dataset.selectcolumns",
+    "class/src/DataSet.mjs~DataSet.html#static-method-selectColumns",
+    "src/DataSet.mjs~DataSet.selectColumns",
     "method"
   ],
   [
@@ -1675,13 +1687,13 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber49",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber46",
     "util Standard Scaler Transforms should have a values array that is equal to the array produced by StandardScaler function",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber46",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber49",
     "util Standard Scaler Transforms should have a values array that is equal to the array produced by StandardScaler function",
     "test"
   ],
