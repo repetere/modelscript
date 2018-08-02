@@ -3,13 +3,10 @@
   "plugins": [],
   "parserOptions": {
     "sourceType": "module",
+    "ecmaVersion": 2017,
     "ecmaFeatures": {
-      "ecmaVersion": 6,
       "jsx": true
     }
-  },
-  "ecmaFeatures": {
-    "ecmaVersion": 6
   },
   "rules": {
     "jsx-quotes": ["error", "prefer-double"],

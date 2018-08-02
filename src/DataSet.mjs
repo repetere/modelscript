@@ -214,11 +214,13 @@ EncodedCSVDataSet.oneHotDecoder('Country);// =>
     }, options);
     const encoderMap = config.encoders || this.encoders;
     const prefix = config.prefix || encoderMap.get(name).prefix;
+    const labels = config.labels || encoderMap.get(name).labels;
     const encodedData = config.data || this.oneHotColumnArray(name, config.oneHotColumnArrayOptions);
     // console.log({ encodedData, encoderMap, prefix });
     return encodedData.reduce((result, val) => {
-      const columnName = Object.keys(val).filter(prop => val[ prop ] === 1)[0]; 
-      // console.log({ columnName });
+      const columnNames = Object.keys(val).filter(prop => val[ prop ] === 1 && labels.indexOf(prop.replace(prefix,''))!==-1);
+      const columnName = columnNames[ 0 ]||''; 
+      // console.log({ columnName, columnNames, labels, val},Object.keys(val));
       const datum = {
         [ name ]: columnName.replace(prefix, ''),
       };
@@ -608,6 +610,27 @@ CSVDataSet.columnMerge('DoubleAge', [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ]);
       [name]: data,
     };
   }
+  /**
+   * Inverses transform on an object
+   * @example
+DataSet.data; //[{
+//   Age: 0.6387122698222066,
+//   Salary: 72000,
+//   Purchased: 0,
+//   Country_Brazil: 1,
+//   Country_Mexico: 0,
+//   Country_Ghana: 0,
+// }, ...] 
+DataSet.inverseTransformObject(DataSet.data[0]); // => {
+//  Country: 'Brazil', 
+//  Age: 44, 
+//  Salary: 72000, 
+//  Purchased: 'N', 
+// };
+   * @param data 
+   * @param options 
+   * @returns {Object} returns object with inverse transformed data
+   */
   inverseTransformObject(data, options) {
     const config = Object.assign({
       removeValues: false,
@@ -629,9 +652,11 @@ CSVDataSet.columnMerge('DoubleAge', [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ]);
     }, {});
     const encodedData = columnNames.reduce((encodedObject, columnName) => {
       if (this.encoders.has(columnName)) {
-        encodedObject = Object.assign({}, encodedObject, this.oneHotDecoder(columnName, {
+        const encoded = this.oneHotDecoder(columnName, {
           data: [ data, ],
-        })[ 0 ]);
+        });
+        // console.log({encoded})
+        encodedObject = Object.assign({}, encodedObject, encoded[ 0 ]);
         if (config.removeValues) {
           removedColumns.push(...this.encoders.get(columnName).labels.map(label=>`${this.encoders.get(columnName).prefix}${label}`));
         }
@@ -641,7 +666,9 @@ CSVDataSet.columnMerge('DoubleAge', [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ]);
     transformedObject = Object.assign(transformedObject, scaledData, labeledData, encodedData);
     if (config.removeValues && removedColumns.length) {
       transformedObject = Object.keys(transformedObject).reduce((removedObject, propertyName) => {
-        if (removedColumns.indexOf(propertyName) === -1) removedObject[ propertyName ] = transformedObject[ propertyName ];
+        if (removedColumns.indexOf(propertyName) === -1) {
+          removedObject[ propertyName ] = transformedObject[ propertyName ];
+        }
         return removedObject;
       }, {});
     }
@@ -684,11 +711,11 @@ DataSet.transformObject({
     const objectColumns = Object.keys(data).concat(encodedColumns);
     // console.log({ encodedColumns,currentColumns,objectColumns });
     const differentKeys = objectColumns.reduce((diffKeys, val) => {
-      if (currentColumns.indexOf(val) === -1) diffKeys.push(val);
+      if (currentColumns.indexOf(val) === -1 && encodedColumns.indexOf(val) === -1) diffKeys.push(val);
       return diffKeys;
     }, []);
     let transformedObject = Object.assign({}, data);
-    if (currentColumns.length !== objectColumns.length) {
+    if (currentColumns.length !== objectColumns.length && currentColumns.length+encodedColumns.length !== objectColumns.length ) {
       throw new RangeError(`Object must have the same number of keys (${objectColumns.length}) as data in your dataset(${currentColumns.length})`);
     } else if (differentKeys.length) {
       throw new ReferenceError(`Object must have identical keys as data in your DataSet. Invalid keys: ${differentKeys.join(',')}`);
@@ -723,8 +750,7 @@ DataSet.transformObject({
       }
     }
     return transformedObject;
-  }
-  
+  } 
   /**
    * returns a new array of a selected column from an array of objects and replaces empty values, encodes values and scales values
    * @example
@@ -794,14 +820,17 @@ const ReplacedAgeMeanColumn = dataset.columnReplace('Age',{strategy:'mean'});
         value: (result, val, index, arr) => replaceVal[index],
       };
       return replaceVal;
-      break;
+      // break;
     case 'reducer':
     case 'reduce':
       replaceVal = this.columnReducer(name, config.reducerOptions); 
       return replaceVal;  
     case 'merge':
       replaceVal = this.columnMerge(name, config.mergeData); 
-      return replaceVal;  
+      return replaceVal; 
+    case 'parseNumber':
+      replaceVal = this.columnArray(name).map(num => Number(num)); 
+      return replaceVal; 
     default:
       replaceVal = ml.ArrayStat[config.strategy](this.columnArray(name, config.arrayOptions));
       replace.value = replaceVal;
@@ -876,6 +905,80 @@ dataset.fitColumns({
         }, []);
       this.data = this.data.map((val, index) => Object.assign({}, val, fittedData[index]));
     }
+    return config.returnData ? this.data : this;
+  }
+  /**
+   * Mutate dataset data by inversing all transforms
+   * @example
+DataSet.data;
+// [{ 
+//  Country: 'Brazil',
+//  Age: 3.784189633918261,
+//  Salary: '72000',
+//  Purchased: 'N',
+//  Country_Brazil: 1,
+//  Country_Mexico: 0,
+//  Country_Ghana: 0
+// },
+// ...
+// ]
+DataSet.fitInverseTransforms(); // =>
+// [{
+//   'Country': 'Brazil',
+//   'Age': '44',
+//   'Salary': '72000',
+//   'Purchased': 'N',
+// },
+// ...
+// ]
+   * @param options 
+   */
+  fitInverseTransforms(options = {}) {
+    const config = Object.assign({
+      returnData: true,
+    }, options);
+    this.data = this.data.map(val => {
+      return (options.removeValues)
+        ? this.inverseTransformObject(val, options)
+        : Object.assign({}, val, this.inverseTransformObject(val, options));
+    });
+    return config.returnData ? this.data : this;
+  }
+  /**
+   * Mutate dataset data with all transforms
+   * @param options
+   * @example
+DataSet.data;
+// [{
+//   'Country': 'Brazil',
+//   'Age': '44',
+//   'Salary': '72000',
+//   'Purchased': 'N',
+// },
+// ...
+// ]
+DataSet.fitTransforms(); // =>
+// [{ 
+//  Country: 'Brazil',
+//  Age: 3.784189633918261,
+//  Salary: '72000',
+//  Purchased: 'N',
+//  Country_Brazil: 1,
+//  Country_Mexico: 0,
+//  Country_Ghana: 0
+// },
+// ...
+// ] 
+   */
+  fitTransforms(options = {}) {
+    const config = Object.assign({
+      returnData: true,
+    }, options);
+    this.data = this.data.map(val => {
+      return (options.removeValues)
+        ? this.transformObject(val, options)
+        : Object.assign({}, val, this.transformObject(val, options));
+    });
     return config.returnData ? this.data : this;
   }
 }

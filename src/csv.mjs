@@ -12,7 +12,7 @@ import { default as csv, } from 'csvtojson';
  * @param {Object} [options] - options passed to csvtojson
  * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
  */
-export function loadCSVURI(filepath, options) {
+export async function loadCSVURI(filepath, options) {
   const reqMethod = (filepath.search('https', 'gi') > -1) ? requestHTTPS : request;
   return new Promise((resolve, reject) => {
     const csvData = [];
@@ -48,7 +48,7 @@ export function loadCSVURI(filepath, options) {
  * @param {Object} [options] - options passed to csvtojson
  * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
  */
-export function loadCSV(filepath, options) {
+export async function loadCSV(filepath, options) {
   if (validURL.isUri(filepath)) {
     return loadCSVURI(filepath, options);
   } else {
@@ -83,7 +83,7 @@ export function loadCSV(filepath, options) {
  * @param {Object} [options] - options passed to csvtojson
  * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
  */
-export function loadTSV(filepath, options) {
+export async function loadTSV(filepath, options) {
   const tsvOptions = Object.assign({
     checkType: true,
   }, options, {

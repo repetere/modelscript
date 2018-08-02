@@ -84,6 +84,8 @@ class for manipulating an array of objects, typically from CSV data
 
 creates a new raw data instance for preprocessing data for machine learning
 
+### `config: *`
+
 ### `data: *`
 
 ### `labels: *`
@@ -91,6 +93,68 @@ creates a new raw data instance for preprocessing data for machine learning
 ### `encoders: *`
 
 ### `scalers: *`
+
+### `encodeObject: *`
+
+### `oneHotEncoder: *`
+
+### `oneHotDecoder: *`
+
+### `reverseColumnMatrix: *`
+
+### `reverseColumnVector: *`
+
+### `getTransforms: *`
+
+### `getTransforms(transforms: Object): Array<Object>`
+
+Allows for fit transform short hand notation
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+| transforms | Object |  |
+
+### `reverseColumnMatrix(options: *, options.vectors: Array[], options.labels: String[]): Object[]`
+
+returns an array of objects by applying labels to matrix of columns
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+| options | * |  |
+| options.vectors | Array[] |  | array of vectors |
+| options.labels | String[] |  | array of labels |
+
+### `reverseColumnVector()`
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+
+### `encodeObject(data: Object, options: {labels:Array<String>,prefix:String,name:String}): Object`
+
+Returns an object into an one hot encoded object
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+| data | Object |  | object to encode |
+| options | {labels:Array<String>,prefix:String,name:String} |  | encoded object options |
+
+### `oneHotEncoder(name: string, options: *): Object`
+
+returns a new object of one hot encoded values
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+| name | string |  | csv column header, or JSON object property name |
+| options | * |  |
+
+### `oneHotDecoder(name: string, options: *): Array<Object>`
+
+Return one hot encoded data
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+| name | string |  | column name |
+| options | * |  |
 
 ### `filterColumn(filter: Function): Array`
 
@@ -107,21 +171,6 @@ returns a matrix of values by combining column arrays into a matrix
 | Name | Type | Attribute | Description |
 | --- | --- | --- | --- |
 | vectors | Array | optional: true, default: [] | array of arguments for columnArray to merge columns into a matrix |
-
-### `reverseColumnMatrix(options: *, options.vectors: Array[], options.labels: String[]): Object[]`
-
-returns an array of objects by applying labels to matrix of columns
-
-| Name | Type | Attribute | Description |
-| --- | --- | --- | --- |
-| options | * |  |
-| options.vectors | Array[] |  | array of vectors |
-| options.labels | String[] |  | array of labels |
-
-### `reverseColumnVector()`
-
-| Name | Type | Attribute | Description |
-| --- | --- | --- | --- |
 
 ### `selectColumns(names: String[], options: *): Object[]`
 
@@ -167,17 +216,6 @@ Returns a new array of descaled values
 | name | string |  | name - csv column header, or JSON object property name |
 | options.strategy | string | optional: true, default: "log" | strategy for scaling values |
 
-### `columnReplace(name: string, options: *, options.empty: boolean, options.strategy: boolean): array|Object[]`
-
-returns a new array of a selected column from an array of objects and replaces empty values, encodes values and scales values
-
-| Name | Type | Attribute | Description |
-| --- | --- | --- | --- |
-| name | string |  | csv column header, or JSON object property name |
-| options | * |  |
-| options.empty | boolean | optional: true, default: true | replace empty values |
-| options.strategy | boolean | optional: true, default: "mean" | strategy for replacing value, any array stat method from ml.js (mean, standardDeviation, median) or (label,labelEncoder,onehot,oneHotEncoder) |
-
 ### `labelEncoder(name: string, options: *, options.binary: boolean): array`
 
 returns a new array and label encodes a selected column
@@ -197,13 +235,13 @@ returns a new array and decodes an encoded column back to the original array val
 | name | string |  | csv column header, or JSON object property name |
 | options | * |  |
 
-### `oneHotEncoder(name: string, options: *): Object`
+### `oneHotColumnArray(name: string, options: *): Array<Object>`
 
-returns a new object of one hot encoded values
+Return one hot encoded data
 
 | Name | Type | Attribute | Description |
 | --- | --- | --- | --- |
-| name | string |  | csv column header, or JSON object property name |
+| name | string |  | column name |
 | options | * |  |
 
 ### `columnReducer(name: String, options: Object, options.columnName: String, options.columnOptions: Object, options.reducer: Function): Object`
@@ -227,6 +265,35 @@ it returns a new column that is merged onto the data set
 | name | String |  | name of new Column |
 | data | Array |  | new dataset data |
 
+### `inverseTransformObject(data: *, options: *): Object`
+
+Inverses transform on an object
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+| data | * |  |
+| options | * |  |
+
+### `transformObject(data: *, options: *): Object`
+
+transforms an object and replaces values that have been scaled or encoded
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+| data | * |  |
+| options | * |  |
+
+### `columnReplace(name: string, options: *, options.empty: boolean, options.strategy: boolean): array|Object[]`
+
+returns a new array of a selected column from an array of objects and replaces empty values, encodes values and scales values
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+| name | string |  | csv column header, or JSON object property name |
+| options | * |  |
+| options.empty | boolean | optional: true, default: true | replace empty values |
+| options.strategy | boolean | optional: true, default: "mean" | strategy for replacing value, any array stat method from ml.js (mean, standardDeviation, median) or (label,labelEncoder,onehot,oneHotEncoder) |
+
 ### `fitColumns(options.returnData: Boolean, options.columns: Object[]): Object[]`
 
 mutates data property of DataSet by replacing multiple columns in a single command
@@ -235,6 +302,22 @@ mutates data property of DataSet by replacing multiple columns in a single comma
 | --- | --- | --- | --- |
 | options.returnData | Boolean |  | return updated DataSet data property |
 | options.columns | Object[] |  | {name:'columnName',options:{strategy:'mean',labelOoptions:{}},} |
+
+### `fitInverseTransforms(options: *)`
+
+Mutate dataset data by inversing all transforms
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+| options | * |  |
+
+### `fitTransforms(options: *)`
+
+Mutate dataset data with all transforms
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+| options | * |  |
 
 ## `ReinforcedLearningBase`
 

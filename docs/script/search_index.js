@@ -175,19 +175,19 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/unit/calc_spec.mjs.html#lineNumber47",
+    "test-file/test/unit/calc_spec.mjs.html#lineNumber46",
     "calc assocationRuleLearning should use Eclat to associate transactions",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/calc_spec.mjs.html#lineNumber58",
+    "test-file/test/unit/calc_spec.mjs.html#lineNumber59",
     "calc assocationRuleLearning should use accept options for eclat summary",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/calc_spec.mjs.html#lineNumber69",
+    "test-file/test/unit/calc_spec.mjs.html#lineNumber72",
     "calc assocationRuleLearning should work with raw transactions",
     "test"
   ],
@@ -643,278 +643,356 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber145",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber153",
     "preprocessing DataSet class columnArray",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber179",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber187",
     "preprocessing DataSet class columnArray should convert vals to numbers",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber227",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber235",
     "preprocessing DataSet class columnArray should exp scale values",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber157",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber165",
     "preprocessing DataSet class columnArray should filter the dataset",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber216",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber224",
     "preprocessing DataSet class columnArray should log scale values",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber151",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber159",
     "preprocessing DataSet class columnArray should prefilter the dataset",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber163",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber171",
     "preprocessing DataSet class columnArray should replace values in dataset",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber147",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber155",
     "preprocessing DataSet class columnArray should select a column from CSV Data by name",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber189",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber197",
     "preprocessing DataSet class columnArray should standardize scale values",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber202",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber210",
     "preprocessing DataSet class columnArray should z-score / MinMax scale values",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber89",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber97",
     "preprocessing DataSet class columnMatrix",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber96",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber104",
     "preprocessing DataSet class columnMatrix should create a matrix of values from an array of column names",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber90",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber98",
     "preprocessing DataSet class columnMatrix should create a matrix of values from columns",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber105",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber113",
     "preprocessing DataSet class columnMatrix should handle invalid columns",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber298",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber412",
     "preprocessing DataSet class columnReducer",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber299",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber413",
     "preprocessing DataSet class columnReducer should reduce column and greate a new column",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber314",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber428",
     "preprocessing DataSet class columnReplace",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber315",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber429",
     "preprocessing DataSet class columnReplace should label encode",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber326",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber440",
     "preprocessing DataSet class columnReplace should onehot encode",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber345",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber459",
     "preprocessing DataSet class columnReplace should replace empty values with mean by default",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber354",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber468",
     "preprocessing DataSet class columnReplace should replace empty values with stat function from ml.js",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber363",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber477",
     "preprocessing DataSet class columnReplace should replace values by standard scaling",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber239",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber247",
     "preprocessing DataSet class columnScale / columnDescale",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber250",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber258",
     "preprocessing DataSet class columnScale / columnDescale should descale a column",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber243",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber251",
     "preprocessing DataSet class columnScale / columnDescale should scale a column and store the transform functions",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber74",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber82",
     "preprocessing DataSet class constructor",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber75",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber83",
     "preprocessing DataSet class constructor should instantiate a new DataSet Class",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber81",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber331",
+    "preprocessing DataSet class encodeObject",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber332",
+    "preprocessing DataSet class encodeObject should onehot encode an object",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber89",
     "preprocessing DataSet class filterColumn",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber82",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber90",
     "preprocessing DataSet class filterColumn should by default return full dataset",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber85",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber93",
     "preprocessing DataSet class filterColumn should filter data by a filter function",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber383",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber497",
     "preprocessing DataSet class fitColumns",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber414",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber528",
     "preprocessing DataSet class fitColumns should fit multiple columns",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber385",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber499",
     "preprocessing DataSet class fitColumns should merge columns",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber401",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber515",
     "preprocessing DataSet class fitColumns should only merge columns if data length matches",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber256",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber600",
+    "preprocessing DataSet class fitInverseTransforms / fitTransforms",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber601",
+    "preprocessing DataSet class fitInverseTransforms / fitTransforms should inverse transforms on dataset",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber292",
+    "preprocessing DataSet class getTransforms",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber293",
+    "preprocessing DataSet class getTransforms should take column fit options as an array",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber264",
     "preprocessing DataSet class labelEncoder",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber260",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber268",
     "preprocessing DataSet class labelEncoder should binary label encode",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber276",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber284",
     "preprocessing DataSet class labelEncoder should decode labels",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber268",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber276",
     "preprocessing DataSet class labelEncoder should label encode",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber284",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber392",
+    "preprocessing DataSet class oneHotColumnArray",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber393",
+    "preprocessing DataSet class oneHotColumnArray should return all encoded columns",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber385",
+    "preprocessing DataSet class oneHotDecoder",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber386",
+    "preprocessing DataSet class oneHotDecoder should one hot decode",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber399",
     "preprocessing DataSet class oneHotEncoder",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber285",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber400",
     "preprocessing DataSet class oneHotEncoder should one hot encode",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber135",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber143",
     "preprocessing DataSet class selectColumns",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber136",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber144",
     "preprocessing DataSet class selectColumns should return a list of objects with only selected columns as properties",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber113",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber121",
     "preprocessing DataSet class static reverseColumnMatrix",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber114",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber122",
     "preprocessing DataSet class static reverseColumnMatrix should reverse a matrix of values into labeled object",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber125",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber133",
     "preprocessing DataSet class static reverseColumnVector",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber126",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber134",
     "preprocessing DataSet class static reverseColumnVector should reverse a vector of values into labeled object",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber347",
+    "preprocessing DataSet class transformObject / inverseTransformObject",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber348",
+    "preprocessing DataSet class transformObject / inverseTransformObject should encode new data using existing transforms",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber365",
+    "preprocessing DataSet class transformObject / inverseTransformObject should inverse transform objects",
     "test"
   ],
   [
@@ -1074,6 +1152,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/dataset.mjs~dataset#config",
+    "class/src/DataSet.mjs~DataSet.html#instance-member-config",
+    "src/DataSet.mjs~DataSet#config",
+    "member"
+  ],
+  [
     "src/dataset.mjs~dataset#constructor",
     "class/src/DataSet.mjs~DataSet.html#instance-constructor-constructor",
     "src/DataSet.mjs~DataSet#constructor",
@@ -1083,6 +1167,12 @@ window.esdocSearchIndex = [
     "src/dataset.mjs~dataset#data",
     "class/src/DataSet.mjs~DataSet.html#instance-member-data",
     "src/DataSet.mjs~DataSet#data",
+    "member"
+  ],
+  [
+    "src/dataset.mjs~dataset#encodeobject",
+    "class/src/DataSet.mjs~DataSet.html#instance-member-encodeObject",
+    "src/DataSet.mjs~DataSet#encodeObject",
     "member"
   ],
   [
@@ -1104,6 +1194,30 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/dataset.mjs~dataset#fitinversetransforms",
+    "class/src/DataSet.mjs~DataSet.html#instance-method-fitInverseTransforms",
+    "src/DataSet.mjs~DataSet#fitInverseTransforms",
+    "method"
+  ],
+  [
+    "src/dataset.mjs~dataset#fittransforms",
+    "class/src/DataSet.mjs~DataSet.html#instance-method-fitTransforms",
+    "src/DataSet.mjs~DataSet#fitTransforms",
+    "method"
+  ],
+  [
+    "src/dataset.mjs~dataset#gettransforms",
+    "class/src/DataSet.mjs~DataSet.html#instance-member-getTransforms",
+    "src/DataSet.mjs~DataSet#getTransforms",
+    "member"
+  ],
+  [
+    "src/dataset.mjs~dataset#inversetransformobject",
+    "class/src/DataSet.mjs~DataSet.html#instance-method-inverseTransformObject",
+    "src/DataSet.mjs~DataSet#inverseTransformObject",
+    "method"
+  ],
+  [
     "src/dataset.mjs~dataset#labeldecode",
     "class/src/DataSet.mjs~DataSet.html#instance-method-labelDecode",
     "src/DataSet.mjs~DataSet#labelDecode",
@@ -1122,10 +1236,34 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "src/dataset.mjs~dataset#onehotencoder",
-    "class/src/DataSet.mjs~DataSet.html#instance-method-oneHotEncoder",
-    "src/DataSet.mjs~DataSet#oneHotEncoder",
+    "src/dataset.mjs~dataset#onehotcolumnarray",
+    "class/src/DataSet.mjs~DataSet.html#instance-method-oneHotColumnArray",
+    "src/DataSet.mjs~DataSet#oneHotColumnArray",
     "method"
+  ],
+  [
+    "src/dataset.mjs~dataset#onehotdecoder",
+    "class/src/DataSet.mjs~DataSet.html#instance-member-oneHotDecoder",
+    "src/DataSet.mjs~DataSet#oneHotDecoder",
+    "member"
+  ],
+  [
+    "src/dataset.mjs~dataset#onehotencoder",
+    "class/src/DataSet.mjs~DataSet.html#instance-member-oneHotEncoder",
+    "src/DataSet.mjs~DataSet#oneHotEncoder",
+    "member"
+  ],
+  [
+    "src/dataset.mjs~dataset#reversecolumnmatrix",
+    "class/src/DataSet.mjs~DataSet.html#instance-member-reverseColumnMatrix",
+    "src/DataSet.mjs~DataSet#reverseColumnMatrix",
+    "member"
+  ],
+  [
+    "src/dataset.mjs~dataset#reversecolumnvector",
+    "class/src/DataSet.mjs~DataSet.html#instance-member-reverseColumnVector",
+    "src/DataSet.mjs~DataSet#reverseColumnVector",
+    "member"
   ],
   [
     "src/dataset.mjs~dataset#scalers",
@@ -1137,6 +1275,36 @@ window.esdocSearchIndex = [
     "src/dataset.mjs~dataset#selectcolumns",
     "class/src/DataSet.mjs~DataSet.html#instance-method-selectColumns",
     "src/DataSet.mjs~DataSet#selectColumns",
+    "method"
+  ],
+  [
+    "src/dataset.mjs~dataset#transformobject",
+    "class/src/DataSet.mjs~DataSet.html#instance-method-transformObject",
+    "src/DataSet.mjs~DataSet#transformObject",
+    "method"
+  ],
+  [
+    "src/dataset.mjs~dataset.encodeobject",
+    "class/src/DataSet.mjs~DataSet.html#static-method-encodeObject",
+    "src/DataSet.mjs~DataSet.encodeObject",
+    "method"
+  ],
+  [
+    "src/dataset.mjs~dataset.gettransforms",
+    "class/src/DataSet.mjs~DataSet.html#static-method-getTransforms",
+    "src/DataSet.mjs~DataSet.getTransforms",
+    "method"
+  ],
+  [
+    "src/dataset.mjs~dataset.onehotdecoder",
+    "class/src/DataSet.mjs~DataSet.html#static-method-oneHotDecoder",
+    "src/DataSet.mjs~DataSet.oneHotDecoder",
+    "method"
+  ],
+  [
+    "src/dataset.mjs~dataset.onehotencoder",
+    "class/src/DataSet.mjs~DataSet.html#static-method-oneHotEncoder",
+    "src/DataSet.mjs~DataSet.oneHotEncoder",
     "method"
   ],
   [

@@ -1,7 +1,7 @@
 {
-  "coverage": "58.33%",
-  "expectCount": 120,
-  "actualCount": 70,
+  "coverage": "57.35%",
+  "expectCount": 136,
+  "actualCount": 78,
   "files": {
     "src/ColumnVectorizer.mjs": {
       "expectCount": 18,
@@ -20,14 +20,22 @@
       ]
     },
     "src/DataSet.mjs": {
-      "expectCount": 21,
-      "actualCount": 16,
+      "expectCount": 37,
+      "actualCount": 24,
       "undocumentLines": [
-        18,
-        19,
-        20,
-        21,
-        89
+        4,
+        93,
+        239,
+        242,
+        243,
+        244,
+        245,
+        246,
+        247,
+        248,
+        249,
+        250,
+        251
       ]
     },
     "src/ReinforcedLearning.mjs": {
