@@ -1123,9 +1123,9 @@ window.esdocSearchIndex = [
   ],
   [
     "src/dataset.mjs~dataset#columnmatrix",
-    "class/src/DataSet.mjs~DataSet.html#instance-method-columnMatrix",
+    "class/src/DataSet.mjs~DataSet.html#instance-member-columnMatrix",
     "src/DataSet.mjs~DataSet#columnMatrix",
-    "method"
+    "member"
   ],
   [
     "src/dataset.mjs~dataset#columnmerge",
@@ -1287,6 +1287,12 @@ window.esdocSearchIndex = [
     "src/dataset.mjs~dataset.columnarray",
     "class/src/DataSet.mjs~DataSet.html#static-method-columnArray",
     "src/DataSet.mjs~DataSet.columnArray",
+    "method"
+  ],
+  [
+    "src/dataset.mjs~dataset.columnmatrix",
+    "class/src/DataSet.mjs~DataSet.html#static-method-columnMatrix",
+    "src/DataSet.mjs~DataSet.columnMatrix",
     "method"
   ],
   [

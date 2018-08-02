@@ -104,6 +104,8 @@ creates a new raw data instance for preprocessing data for machine learning
 
 ### `oneHotDecoder: *`
 
+### `columnMatrix: *`
+
 ### `reverseColumnMatrix: *`
 
 ### `reverseColumnVector: *`
@@ -186,6 +188,15 @@ returns a new array of a selected column from an array of objects, can filter, s
 | options.parseInt | boolean | optional: true, default: false | converts values to ints |
 | options.scale | boolean | optional: true, default: false | standard or minmax feature scale values |
 
+### `columnMatrix(vectors: Array, data: Array): Array`
+
+returns a matrix of values by combining column arrays into a matrix
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+| vectors | Array | optional: true, default: [] | array of arguments for columnArray to merge columns into a matrix |
+| data | Array | optional: true, default: [] | array of data to convert to matrix |
+
 ### `filterColumn(filter: Function): Array`
 
 returns filtered rows of data
@@ -193,14 +204,6 @@ returns filtered rows of data
 | Name | Type | Attribute | Description |
 | --- | --- | --- | --- |
 | filter | Function | optional: true | filter function |
-
-### `columnMatrix(vectors: Array): Array`
-
-returns a matrix of values by combining column arrays into a matrix
-
-| Name | Type | Attribute | Description |
-| --- | --- | --- | --- |
-| vectors | Array | optional: true, default: [] | array of arguments for columnArray to merge columns into a matrix |
 
 ### `columnScale(name: string, options.strategy: string): number[]`
 

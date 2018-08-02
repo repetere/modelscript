@@ -148,6 +148,35 @@
           
           
           
+          <span class="code" data-ice="name"><span><a href="class/src/DataSet.mjs~DataSet.html#static-method-columnMatrix">columnMatrix</a></span></span><span class="code" data-ice="signature">(vectors: <span>Array</span>, data: <span>Array</span>): <span>Array</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>returns a matrix of values by combining column arrays into a matrix</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      <span data-ice="static">static</span>
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
           <span class="code" data-ice="name"><span><a href="class/src/DataSet.mjs~DataSet.html#static-method-encodeObject">encodeObject</a></span></span><span class="code" data-ice="signature">(data: <span>Object</span>, options: {labels: <span>Array</span>&lt;<span>String</span>&gt;, prefix: <span>String</span>, name: <span>String</span>}): <span>Object</span></span>
         </p>
       </div>
@@ -394,6 +423,34 @@
           
           
           <span class="code" data-ice="name"><span><a href="class/src/DataSet.mjs~DataSet.html#instance-member-columnArray">columnArray</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="class/src/DataSet.mjs~DataSet.html#instance-member-columnMatrix">columnMatrix</a></span></span>
         </p>
       </div>
       <div>
@@ -771,35 +828,6 @@
         
         
         <div data-ice="description"><p>Returns a new array of descaled values</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/DataSet.mjs~DataSet.html#instance-method-columnMatrix">columnMatrix</a></span></span><span class="code" data-ice="signature">(vectors: <span>Array</span>): <span>Array</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>returns a matrix of values by combining column arrays into a matrix</p>
 </div>
       </div>
     </td>
@@ -1336,6 +1364,101 @@
       <pre class="prettyprint source-code"><code data-ice="exampleCode">//column Array returns column of data by name
 // [ &apos;44&apos;,&apos;27&apos;,&apos;30&apos;,&apos;38&apos;,&apos;40&apos;,&apos;35&apos;,&apos;&apos;,&apos;48&apos;,&apos;50&apos;, &apos;37&apos; ]
 const OringalAgeColumn = dataset.columnArray(&apos;Age&apos;); </code></pre>
+    </div>
+</div>
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="static-method-columnMatrix">
+    <span class="access" data-ice="access">public</span>
+    <span data-ice="static">static</span>
+    
+    
+    
+    
+    <span class="code" data-ice="name">columnMatrix</span><span class="code" data-ice="signature">(vectors: <span>Array</span>, data: <span>Array</span>): <span>Array</span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber334">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>returns a matrix of values by combining column arrays into a matrix</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">vectors</td>
+      <td data-ice="type" class="code"><span>Array</span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: []</li></ul></td>
+      <td data-ice="description"><p>array of arguments for columnArray to merge columns into a matrix</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">data</td>
+      <td data-ice="type" class="code"><span>Array</span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: []</li></ul></td>
+      <td data-ice="description"><p>array of data to convert to matrix</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type code" data-ice="returnType"><span>Array</span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>a matrix of column values</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">const csvObj = new DataSet([{col1:1,col2:5},{col1:2,col2:6}]);
+csvObj.columnMatrix([[&apos;col1&apos;,{parseInt:true}],[&apos;col2&apos;]]); // =&gt;
+//[ 
+//  [1,5], 
+//  [2,6], 
+//]</code></pre>
     </div>
 </div>
 
@@ -1990,7 +2113,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber328">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber351">source</a></span></span>
     </span>
   </h3>
 
@@ -2072,7 +2195,50 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber337">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber360">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-member-columnMatrix">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">columnMatrix</span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber364">source</a></span></span>
     </span>
   </h3>
 
@@ -2115,7 +2281,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber329">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber352">source</a></span></span>
     </span>
   </h3>
 
@@ -2158,7 +2324,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber332">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber355">source</a></span></span>
     </span>
   </h3>
 
@@ -2201,7 +2367,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber338">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber361">source</a></span></span>
     </span>
   </h3>
 
@@ -2244,7 +2410,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber334">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber357">source</a></span></span>
     </span>
   </h3>
 
@@ -2287,7 +2453,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber343">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber367">source</a></span></span>
     </span>
   </h3>
 
@@ -2330,7 +2496,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber333">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber356">source</a></span></span>
     </span>
   </h3>
 
@@ -2373,7 +2539,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber340">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber363">source</a></span></span>
     </span>
   </h3>
 
@@ -2416,7 +2582,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber339">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber362">source</a></span></span>
     </span>
   </h3>
 
@@ -2459,7 +2625,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber341">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber365">source</a></span></span>
     </span>
   </h3>
 
@@ -2502,7 +2668,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber342">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber366">source</a></span></span>
     </span>
   </h3>
 
@@ -2545,7 +2711,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber335">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber358">source</a></span></span>
     </span>
   </h3>
 
@@ -2588,7 +2754,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber336">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber359">source</a></span></span>
     </span>
   </h3>
 
@@ -2634,7 +2800,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber462">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber466">source</a></span></span>
     </span>
   </h3>
 
@@ -2715,93 +2881,6 @@ dataset.columnDescale(&apos;Age&apos;) // =&gt; [ &apos;44&apos;,&apos;27&apos;,
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-columnMatrix">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">columnMatrix</span><span class="code" data-ice="signature">(vectors: <span>Array</span>): <span>Array</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber370">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>returns a matrix of values by combining column arrays into a matrix</p>
-</div>
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">vectors</td>
-      <td data-ice="type" class="code"><span>Array</span></td>
-      <td data-ice="appendix"><ul><li>optional</li>
-<li>default: []</li></ul></td>
-      <td data-ice="description"><p>array of arguments for columnArray to merge columns into a matrix</p>
-</td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type code" data-ice="returnType"><span>Array</span></td>
-          <td class="return-desc" data-ice="returnDescription"><p>a matrix of column values</p>
-</td>
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  <div data-ice="example">
-    <h4>Example:</h4>
-    
-  <div class="example-doc" data-ice="exampleDoc">
-      
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">const csvObj = new DataSet([{col1:1,col2:5},{col1:2,col2:6}]);
-csvObj.columnMatrix([[&apos;col1&apos;,{parseInt:true}],[&apos;col2&apos;]]); // =&gt;
-//[ 
-//  [1,5], 
-//  [2,6], 
-//]</code></pre>
-    </div>
-</div>
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="instance-method-columnMerge">
     <span class="access" data-ice="access">public</span>
     
@@ -2813,7 +2892,7 @@ csvObj.columnMatrix([[&apos;col1&apos;,{parseInt:true}],[&apos;col2&apos;]]); //
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber608">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber612">source</a></span></span>
     </span>
   </h3>
 
@@ -2900,7 +2979,7 @@ csvObj.columnMatrix([[&apos;col1&apos;,{parseInt:true}],[&apos;col2&apos;]]); //
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber594">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber598">source</a></span></span>
     </span>
   </h3>
 
@@ -3015,7 +3094,7 @@ reducer,
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber767">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber771">source</a></span></span>
     </span>
   </h3>
 
@@ -3119,7 +3198,7 @@ const ReplacedAgeMeanColumn = dataset.columnReplace(&apos;Age&apos;,{strategy:&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber392">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber396">source</a></span></span>
     </span>
   </h3>
 
@@ -3213,7 +3292,7 @@ dataset.scalers.get(&apos;Age&apos;).descale(3.8066624897703196) // =&gt; 45
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber356">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber380">source</a></span></span>
     </span>
   </h3>
 
@@ -3298,7 +3377,7 @@ csvObj.filterColumn((row)=&gt;row.col1&gt;=2); // =&gt;
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber868">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber872">source</a></span></span>
     </span>
   </h3>
 
@@ -3399,7 +3478,7 @@ columns:[{name:&apos;Age&apos;,options:{ strategy:&apos;mean&apos;} }]
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber937">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber941">source</a></span></span>
     </span>
   </h3>
 
@@ -3486,7 +3565,7 @@ DataSet.fitInverseTransforms(); // =&gt;
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber974">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber978">source</a></span></span>
     </span>
   </h3>
 
@@ -3573,7 +3652,7 @@ DataSet.fitTransforms(); // =&gt;
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber635">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber639">source</a></span></span>
     </span>
   </h3>
 
@@ -3672,7 +3751,7 @@ DataSet.inverseTransformObject(DataSet.data[0]); // =&gt; {
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber527">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber531">source</a></span></span>
     </span>
   </h3>
 
@@ -3751,7 +3830,7 @@ DataSet.inverseTransformObject(DataSet.data[0]); // =&gt; {
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber485">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber489">source</a></span></span>
     </span>
   </h3>
 
@@ -3852,7 +3931,7 @@ const encodedPurchasedColumn = dataset.labelEncoder(&apos;Purchased&apos;); </co
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber568">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber572">source</a></span></span>
     </span>
   </h3>
 
@@ -3967,7 +4046,7 @@ EncodedCSVDataSet.oneHotColumnArray(&apos;Country);// =&gt;
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber700">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber704">source</a></span></span>
     </span>
   </h3>
 

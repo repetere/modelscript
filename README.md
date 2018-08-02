@@ -4,9 +4,9 @@
 
 ## Description
 
-**modelscript** is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. **modelscript** can be used with [ML.js](https://github.com/mljs/ml), [pandas-js](https://github.com/StratoDem/pandas-js), and [numjs](https://github.com/numjs/numjs), to approximate the equialent R/Python tool chain in JavaScript.
+**modelscript** is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. **modelscript** can be used with [ML.js](https://github.com/mljs/ml), [pandas-js](https://github.com/StratoDem/pandas-js), and [numjs](https://github.com/numjs/numjs), to approximate the equivalent R/Python tool chain in JavaScript.
 
-In Python, data preperation is typically done in a DataFrame, modelscript encourages a more R like workflow where the data prepration is in it's native structure.
+In Python, data preparation is typically done in a DataFrame, modelscript encourages a more R like workflow where the data preparation is in it's native structure.
 
 ### Installation
 
@@ -25,12 +25,12 @@ ModelScript is an EcmaScript module and designed to be imported in an ES2015+ en
   ml:{ //see https://github.com/mljs/ml
     UpperConfidenceBound [Class: UpperConfidenceBound]{ // Implementation of the Upper Confidence Bound algorithm
       predict(), //returns next action based off of the upper confidence bound
-      learn(), //single step trainning method
+      learn(), //single step training method
       train(), //training method for upper confidence bound calculations
     },
     ThompsonSampling [Class: ThompsonSampling]{ //Implementation of the Thompson Sampling algorithm
       predict(), //returns next action based off of the thompson sampling
-      learn(), //single step trainning method
+      learn(), //single step training method
       train(), //training method for thompson sampling calculations
     },
   },
@@ -360,7 +360,7 @@ $ jsdoc2md src/**/*.js  > docs/api.md
 
 ### Notes
 
-Check out [https://github.com/repetere/modelscript](https://github.com/repetere/modelscript) for the full modelscript Documentation
+Check out [https://repetere.github.io/modelscript](https://repetere.github.io/modelscript) for the full modelscript Documentation
 
 #### A quick word about asynchronous JavaScript
 
@@ -427,7 +427,7 @@ As of Node 8, ES modules are still used behind a flag, when running natively as 
 
 ```sh
 $ node --experimental-modules my-machine-learning-script.mjs
-# Also there are native bindings that require Python 2.x, make sure if you're using Andaconda, you build with your Python 2.x bin
+# Also there are native bindings that require Python 2.x, make sure if you're using Anaconda, you build with your Python 2.x bin
 $ npm i --python=/usr/bin/python
  ```
 

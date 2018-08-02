@@ -1202,6 +1202,29 @@ const OringalAgeColumn = dataset.columnArray('Age');
       return modifiedColumn;
     }
   }
+  
+  /**
+   * returns a matrix of values by combining column arrays into a matrix
+   * @example const csvObj = new DataSet([{col1:1,col2:5},{col1:2,col2:6}]);
+csvObj.columnMatrix([['col1',{parseInt:true}],['col2']]); // =>
+//[ 
+//  [1,5], 
+//  [2,6], 
+//]
+  * @param {Array} [vectors=[]] - array of arguments for columnArray to merge columns into a matrix
+  * @param {Array} [data=[]] - array of data to convert to matrix
+  * @returns {Array} a matrix of column values 
+  */
+  static columnMatrix(vectors = [], data = []) {
+    const options = (data.length) ? { data } : {};
+    const columnVectors = (Array.isArray(vectors) && Array.isArray(vectors[ 0 ]))
+      ? vectors
+      : vectors.map(vector => [ vector, options ]);
+    const vectorArrays = columnVectors
+      .map(vec => DataSet.columnArray.call(this,...vec));
+        
+    return util.pivotArrays(vectorArrays);
+  }
   /**
    * creates a new raw data instance for preprocessing data for machine learning
    * @example
@@ -1222,6 +1245,7 @@ const OringalAgeColumn = dataset.columnArray('Age');
     this.encodeObject = DataSet.encodeObject;
     this.oneHotEncoder = DataSet.oneHotEncoder;
     this.oneHotDecoder = DataSet.oneHotDecoder;
+    this.columnMatrix = DataSet.columnMatrix;
     this.reverseColumnMatrix = DataSet.reverseColumnMatrix;
     this.reverseColumnVector = DataSet.reverseColumnVector;
     this.getTransforms = DataSet.getTransforms;
@@ -1239,26 +1263,6 @@ csvObj.filterColumn((row)=>row.col1>=2); // =>
   */
   filterColumn(filter = () => true) {
     return this.data.filter(filter);
-  }
-  /**
-   * returns a matrix of values by combining column arrays into a matrix
-   * @example const csvObj = new DataSet([{col1:1,col2:5},{col1:2,col2:6}]);
-csvObj.columnMatrix([['col1',{parseInt:true}],['col2']]); // =>
-//[ 
-//  [1,5], 
-//  [2,6], 
-//]
-  * @param {Array} [vectors=[]] - array of arguments for columnArray to merge columns into a matrix
-  * @returns {Array} a matrix of column values 
-  */
-  columnMatrix(vectors = []) {
-    const columnVectors = (Array.isArray(vectors) && Array.isArray(vectors[ 0 ]))
-      ? vectors
-      : vectors.map(vector => [vector, ]);
-    const vectorArrays = columnVectors
-      .map(vec => this.columnArray(...vec));
-        
-    return util.pivotArrays(vectorArrays);
   }
   /**
    * Returns a new array of scaled values which can be reverse (descaled). The scaling transformations are stored on the DataSet
