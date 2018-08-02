@@ -1,6 +1,6 @@
 {
-  "coverage": "57.35%",
-  "expectCount": 136,
+  "coverage": "56.11%",
+  "expectCount": 139,
   "actualCount": 78,
   "files": {
     "src/ColumnVectorizer.mjs": {
@@ -93,12 +93,15 @@
       ]
     },
     "src/ml.mjs": {
-      "expectCount": 4,
+      "expectCount": 7,
       "actualCount": 1,
       "undocumentLines": [
-        3,
-        6,
-        8
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
       ]
     },
     "src/nlp.mjs": {

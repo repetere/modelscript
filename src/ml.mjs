@@ -1,10 +1,16 @@
 import { default as MachineLearning, } from 'ml';
-import { default as mlf, } from 'ml-random-forest';
+// import { default as mlf, } from 'ml-random-forest';
+import { default as LogisticRegression, } from 'ml-logistic-regression';
+import * as mlfModule from 'ml-random-forest';
+import * as mlcModule from 'ml-cart';
+import * as mlnModule from 'ml-naivebayes';
+/* fix for rollup */
+/* istanbul ignore next */
+const mlf = (mlfModule.default) ? mlfModule.default : mlfModule;
+const mlc = (mlcModule.default) ? mlcModule.default : mlcModule;
+const mln = (mlnModule.default) ? mlnModule.default : mlnModule;
 const { RandomForestRegression, RandomForestClassifier, } = mlf;
-import { default as LogisticRegression, } from 'ml-logistic-regression/lib/logreg';
-import { default as mlc, } from 'ml-cart';
 const { DecisionTreeRegression, DecisionTreeClassifier, } = mlc;
-import { default as mln, } from 'ml-naivebayes';
 const { GaussianNB, } = mln;
 import { default as MultivariateLinearRegression, } from 'ml-regression-multivariate-linear';
 import { default as PCA, } from 'ml-pca';

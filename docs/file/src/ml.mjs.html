@@ -62,12 +62,18 @@
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/ml.mjs</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { default as MachineLearning, } from &apos;ml&apos;;
-import { default as mlf, } from &apos;ml-random-forest&apos;;
+// import { default as mlf, } from &apos;ml-random-forest&apos;;
+import { default as LogisticRegression, } from &apos;ml-logistic-regression&apos;;
+import * as mlfModule from &apos;ml-random-forest&apos;;
+import * as mlcModule from &apos;ml-cart&apos;;
+import * as mlnModule from &apos;ml-naivebayes&apos;;
+/* fix for rollup */
+/* istanbul ignore next */
+const mlf = (mlfModule.default) ? mlfModule.default : mlfModule;
+const mlc = (mlcModule.default) ? mlcModule.default : mlcModule;
+const mln = (mlnModule.default) ? mlnModule.default : mlnModule;
 const { RandomForestRegression, RandomForestClassifier, } = mlf;
-import { default as LogisticRegression, } from &apos;ml-logistic-regression/lib/logreg&apos;;
-import { default as mlc, } from &apos;ml-cart&apos;;
 const { DecisionTreeRegression, DecisionTreeClassifier, } = mlc;
-import { default as mln, } from &apos;ml-naivebayes&apos;;
 const { GaussianNB, } = mln;
 import { default as MultivariateLinearRegression, } from &apos;ml-regression-multivariate-linear&apos;;
 import { default as PCA, } from &apos;ml-pca&apos;;

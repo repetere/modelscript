@@ -27575,7 +27575,7 @@
              * @param {Object} [options] - options passed to csvtojson
              * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
              */
-            function loadCSVURI(filepath, options) {
+            async function loadCSVURI(filepath, options) {
               const reqMethod = (filepath.search('https', 'gi') > -1) ? get : get;
               return new Promise((resolve, reject) => {
                 const csvData = [];
@@ -27611,7 +27611,7 @@
              * @param {Object} [options] - options passed to csvtojson
              * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
              */
-            function loadCSV(filepath, options) {
+            async function loadCSV(filepath, options) {
               if (validUrl.isUri(filepath)) {
                 return loadCSVURI(filepath, options);
               } else {
@@ -27646,7 +27646,7 @@
              * @param {Object} [options] - options passed to csvtojson
              * @returns {Object[]} returns an array of objects from a csv where each column header is the property name  
              */
-            function loadTSV(filepath, options) {
+            async function loadTSV(filepath, options) {
               const tsvOptions = Object.assign({
                 checkType: true,
               }, options, {
@@ -57423,1402 +57423,14 @@
             exports.FPGrowth = FPGrowth;
             });
 
-            unwrapExports(fpgrowth);
+            var fpg = unwrapExports(fpgrowth);
             var fpgrowth_1 = fpgrowth.FPGrowth;
 
-            var toStr$1 = Object.prototype.toString;
-
-            var isArguments = function isArguments(value) {
-            	var str = toStr$1.call(value);
-            	var isArgs = str === '[object Arguments]';
-            	if (!isArgs) {
-            		isArgs = str !== '[object Array]' &&
-            			value !== null &&
-            			typeof value === 'object' &&
-            			typeof value.length === 'number' &&
-            			value.length >= 0 &&
-            			toStr$1.call(value.callee) === '[object Function]';
-            	}
-            	return isArgs;
-            };
-
-            // modified from https://github.com/es-shims/es5-shim
-            var has = Object.prototype.hasOwnProperty;
-            var toStr$2 = Object.prototype.toString;
-            var slice = Array.prototype.slice;
-
-            var isEnumerable = Object.prototype.propertyIsEnumerable;
-            var hasDontEnumBug = !isEnumerable.call({ toString: null }, 'toString');
-            var hasProtoEnumBug = isEnumerable.call(function () {}, 'prototype');
-            var dontEnums = [
-            	'toString',
-            	'toLocaleString',
-            	'valueOf',
-            	'hasOwnProperty',
-            	'isPrototypeOf',
-            	'propertyIsEnumerable',
-            	'constructor'
-            ];
-            var equalsConstructorPrototype = function (o) {
-            	var ctor = o.constructor;
-            	return ctor && ctor.prototype === o;
-            };
-            var excludedKeys = {
-            	$console: true,
-            	$external: true,
-            	$frame: true,
-            	$frameElement: true,
-            	$frames: true,
-            	$innerHeight: true,
-            	$innerWidth: true,
-            	$outerHeight: true,
-            	$outerWidth: true,
-            	$pageXOffset: true,
-            	$pageYOffset: true,
-            	$parent: true,
-            	$scrollLeft: true,
-            	$scrollTop: true,
-            	$scrollX: true,
-            	$scrollY: true,
-            	$self: true,
-            	$webkitIndexedDB: true,
-            	$webkitStorageInfo: true,
-            	$window: true
-            };
-            var hasAutomationEqualityBug = (function () {
-            	/* global window */
-            	if (typeof window === 'undefined') { return false; }
-            	for (var k in window) {
-            		try {
-            			if (!excludedKeys['$' + k] && has.call(window, k) && window[k] !== null && typeof window[k] === 'object') {
-            				try {
-            					equalsConstructorPrototype(window[k]);
-            				} catch (e) {
-            					return true;
-            				}
-            			}
-            		} catch (e) {
-            			return true;
-            		}
-            	}
-            	return false;
-            }());
-            var equalsConstructorPrototypeIfNotBuggy = function (o) {
-            	/* global window */
-            	if (typeof window === 'undefined' || !hasAutomationEqualityBug) {
-            		return equalsConstructorPrototype(o);
-            	}
-            	try {
-            		return equalsConstructorPrototype(o);
-            	} catch (e) {
-            		return false;
-            	}
-            };
-
-            var keysShim = function keys(object) {
-            	var isObject = object !== null && typeof object === 'object';
-            	var isFunction = toStr$2.call(object) === '[object Function]';
-            	var isArguments$$1 = isArguments(object);
-            	var isString = isObject && toStr$2.call(object) === '[object String]';
-            	var theKeys = [];
-
-            	if (!isObject && !isFunction && !isArguments$$1) {
-            		throw new TypeError('Object.keys called on a non-object');
-            	}
-
-            	var skipProto = hasProtoEnumBug && isFunction;
-            	if (isString && object.length > 0 && !has.call(object, 0)) {
-            		for (var i = 0; i < object.length; ++i) {
-            			theKeys.push(String(i));
-            		}
-            	}
-
-            	if (isArguments$$1 && object.length > 0) {
-            		for (var j = 0; j < object.length; ++j) {
-            			theKeys.push(String(j));
-            		}
-            	} else {
-            		for (var name in object) {
-            			if (!(skipProto && name === 'prototype') && has.call(object, name)) {
-            				theKeys.push(String(name));
-            			}
-            		}
-            	}
-
-            	if (hasDontEnumBug) {
-            		var skipConstructor = equalsConstructorPrototypeIfNotBuggy(object);
-
-            		for (var k = 0; k < dontEnums.length; ++k) {
-            			if (!(skipConstructor && dontEnums[k] === 'constructor') && has.call(object, dontEnums[k])) {
-            				theKeys.push(dontEnums[k]);
-            			}
-            		}
-            	}
-            	return theKeys;
-            };
-
-            keysShim.shim = function shimObjectKeys() {
-            	if (Object.keys) {
-            		var keysWorksWithArguments = (function () {
-            			// Safari 5.0 bug
-            			return (Object.keys(arguments) || '').length === 2;
-            		}(1, 2));
-            		if (!keysWorksWithArguments) {
-            			var originalKeys = Object.keys;
-            			Object.keys = function keys(object) {
-            				if (isArguments(object)) {
-            					return originalKeys(slice.call(object));
-            				} else {
-            					return originalKeys(object);
-            				}
-            			};
-            		}
-            	} else {
-            		Object.keys = keysShim;
-            	}
-            	return Object.keys || keysShim;
-            };
-
-            var objectKeys$1 = keysShim;
-
-            var hasOwn$1 = Object.prototype.hasOwnProperty;
-            var toString$2 = Object.prototype.toString;
-
-            var foreach = function forEach (obj, fn, ctx) {
-                if (toString$2.call(fn) !== '[object Function]') {
-                    throw new TypeError('iterator must be a function');
-                }
-                var l = obj.length;
-                if (l === +l) {
-                    for (var i = 0; i < l; i++) {
-                        fn.call(ctx, obj[i], i, obj);
-                    }
-                } else {
-                    for (var k in obj) {
-                        if (hasOwn$1.call(obj, k)) {
-                            fn.call(ctx, obj[k], k, obj);
-                        }
-                    }
-                }
-            };
-
-            var hasSymbols = typeof Symbol === 'function' && typeof Symbol() === 'symbol';
-
-            var toStr$3 = Object.prototype.toString;
-
-            var isFunction$5 = function (fn) {
-            	return typeof fn === 'function' && toStr$3.call(fn) === '[object Function]';
-            };
-
-            var arePropertyDescriptorsSupported = function () {
-            	var obj = {};
-            	try {
-            		Object.defineProperty(obj, 'x', { enumerable: false, value: obj });
-                    /* eslint-disable no-unused-vars, no-restricted-syntax */
-                    for (var _ in obj) { return false; }
-                    /* eslint-enable no-unused-vars, no-restricted-syntax */
-            		return obj.x === obj;
-            	} catch (e) { /* this is IE 8. */
-            		return false;
-            	}
-            };
-            var supportsDescriptors = Object.defineProperty && arePropertyDescriptorsSupported();
-
-            var defineProperty$1 = function (object, name, value, predicate) {
-            	if (name in object && (!isFunction$5(predicate) || !predicate())) {
-            		return;
-            	}
-            	if (supportsDescriptors) {
-            		Object.defineProperty(object, name, {
-            			configurable: true,
-            			enumerable: false,
-            			value: value,
-            			writable: true
-            		});
-            	} else {
-            		object[name] = value;
-            	}
-            };
-
-            var defineProperties = function (object, map) {
-            	var predicates = arguments.length > 2 ? arguments[2] : {};
-            	var props = objectKeys$1(map);
-            	if (hasSymbols) {
-            		props = props.concat(Object.getOwnPropertySymbols(map));
-            	}
-            	foreach(props, function (name) {
-            		defineProperty$1(object, name, map[name], predicates[name]);
-            	});
-            };
-
-            defineProperties.supportsDescriptors = !!supportsDescriptors;
-
-            var defineProperties_1 = defineProperties;
-
-            /* eslint no-invalid-this: 1 */
-
-            var ERROR_MESSAGE = 'Function.prototype.bind called on incompatible ';
-            var slice$1 = Array.prototype.slice;
-            var toStr$4 = Object.prototype.toString;
-            var funcType = '[object Function]';
-
-            var implementation = function bind(that) {
-                var target = this;
-                if (typeof target !== 'function' || toStr$4.call(target) !== funcType) {
-                    throw new TypeError(ERROR_MESSAGE + target);
-                }
-                var args = slice$1.call(arguments, 1);
-
-                var bound;
-                var binder = function () {
-                    if (this instanceof bound) {
-                        var result = target.apply(
-                            this,
-                            args.concat(slice$1.call(arguments))
-                        );
-                        if (Object(result) === result) {
-                            return result;
-                        }
-                        return this;
-                    } else {
-                        return target.apply(
-                            that,
-                            args.concat(slice$1.call(arguments))
-                        );
-                    }
-                };
-
-                var boundLength = Math.max(0, target.length - args.length);
-                var boundArgs = [];
-                for (var i = 0; i < boundLength; i++) {
-                    boundArgs.push('$' + i);
-                }
-
-                bound = Function('binder', 'return function (' + boundArgs.join(',') + '){ return binder.apply(this,arguments); }')(binder);
-
-                if (target.prototype) {
-                    var Empty = function Empty() {};
-                    Empty.prototype = target.prototype;
-                    bound.prototype = new Empty();
-                    Empty.prototype = null;
-                }
-
-                return bound;
-            };
-
-            var functionBind = Function.prototype.bind || implementation;
-
-            var src$o = functionBind.call(Function.call, Object.prototype.hasOwnProperty);
-
-            var isPrimitive$1 = function isPrimitive(value) {
-            	return value === null || (typeof value !== 'function' && typeof value !== 'object');
-            };
-
-            var fnToStr = Function.prototype.toString;
-
-            var constructorRegex = /^\s*class /;
-            var isES6ClassFn = function isES6ClassFn(value) {
-            	try {
-            		var fnStr = fnToStr.call(value);
-            		var singleStripped = fnStr.replace(/\/\/.*\n/g, '');
-            		var multiStripped = singleStripped.replace(/\/\*[.\s\S]*\*\//g, '');
-            		var spaceStripped = multiStripped.replace(/\n/mg, ' ').replace(/ {2}/g, ' ');
-            		return constructorRegex.test(spaceStripped);
-            	} catch (e) {
-            		return false; // not a function
-            	}
-            };
-
-            var tryFunctionObject = function tryFunctionObject(value) {
-            	try {
-            		if (isES6ClassFn(value)) { return false; }
-            		fnToStr.call(value);
-            		return true;
-            	} catch (e) {
-            		return false;
-            	}
-            };
-            var toStr$5 = Object.prototype.toString;
-            var fnClass = '[object Function]';
-            var genClass = '[object GeneratorFunction]';
-            var hasToStringTag = typeof Symbol === 'function' && typeof Symbol.toStringTag === 'symbol';
-
-            var isCallable = function isCallable(value) {
-            	if (!value) { return false; }
-            	if (typeof value !== 'function' && typeof value !== 'object') { return false; }
-            	if (hasToStringTag) { return tryFunctionObject(value); }
-            	if (isES6ClassFn(value)) { return false; }
-            	var strClass = toStr$5.call(value);
-            	return strClass === fnClass || strClass === genClass;
-            };
-
-            var getDay = Date.prototype.getDay;
-            var tryDateObject = function tryDateObject(value) {
-            	try {
-            		getDay.call(value);
-            		return true;
-            	} catch (e) {
-            		return false;
-            	}
-            };
-
-            var toStr$6 = Object.prototype.toString;
-            var dateClass = '[object Date]';
-            var hasToStringTag$1 = typeof Symbol === 'function' && typeof Symbol.toStringTag === 'symbol';
-
-            var isDateObject = function isDateObject(value) {
-            	if (typeof value !== 'object' || value === null) { return false; }
-            	return hasToStringTag$1 ? tryDateObject(value) : toStr$6.call(value) === dateClass;
-            };
-
-            var isSymbol$4 = createCommonjsModule(function (module) {
-
-            var toStr = Object.prototype.toString;
-            var hasSymbols = typeof Symbol === 'function' && typeof Symbol() === 'symbol';
-
-            if (hasSymbols) {
-            	var symToStr = Symbol.prototype.toString;
-            	var symStringRegex = /^Symbol\(.*\)$/;
-            	var isSymbolObject = function isSymbolObject(value) {
-            		if (typeof value.valueOf() !== 'symbol') { return false; }
-            		return symStringRegex.test(symToStr.call(value));
-            	};
-            	module.exports = function isSymbol(value) {
-            		if (typeof value === 'symbol') { return true; }
-            		if (toStr.call(value) !== '[object Symbol]') { return false; }
-            		try {
-            			return isSymbolObject(value);
-            		} catch (e) {
-            			return false;
-            		}
-            	};
-            } else {
-            	module.exports = function isSymbol(value) {
-            		// this environment does not support Symbols.
-            		return false;
-            	};
-            }
-            });
-
-            var hasSymbols$1 = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol';
-
-
-
-
-
-
-            var ordinaryToPrimitive = function OrdinaryToPrimitive(O, hint) {
-            	if (typeof O === 'undefined' || O === null) {
-            		throw new TypeError('Cannot call method on ' + O);
-            	}
-            	if (typeof hint !== 'string' || (hint !== 'number' && hint !== 'string')) {
-            		throw new TypeError('hint must be "string" or "number"');
-            	}
-            	var methodNames = hint === 'string' ? ['toString', 'valueOf'] : ['valueOf', 'toString'];
-            	var method, result, i;
-            	for (i = 0; i < methodNames.length; ++i) {
-            		method = O[methodNames[i]];
-            		if (isCallable(method)) {
-            			result = method.call(O);
-            			if (isPrimitive$1(result)) {
-            				return result;
-            			}
-            		}
-            	}
-            	throw new TypeError('No default value');
-            };
-
-            var GetMethod = function GetMethod(O, P) {
-            	var func = O[P];
-            	if (func !== null && typeof func !== 'undefined') {
-            		if (!isCallable(func)) {
-            			throw new TypeError(func + ' returned for property ' + P + ' of object ' + O + ' is not a function');
-            		}
-            		return func;
-            	}
-            };
-
-            // http://www.ecma-international.org/ecma-262/6.0/#sec-toprimitive
-            var es6 = function ToPrimitive(input, PreferredType) {
-            	if (isPrimitive$1(input)) {
-            		return input;
-            	}
-            	var hint = 'default';
-            	if (arguments.length > 1) {
-            		if (PreferredType === String) {
-            			hint = 'string';
-            		} else if (PreferredType === Number) {
-            			hint = 'number';
-            		}
-            	}
-
-            	var exoticToPrim;
-            	if (hasSymbols$1) {
-            		if (Symbol.toPrimitive) {
-            			exoticToPrim = GetMethod(input, Symbol.toPrimitive);
-            		} else if (isSymbol$4(input)) {
-            			exoticToPrim = Symbol.prototype.valueOf;
-            		}
-            	}
-            	if (typeof exoticToPrim !== 'undefined') {
-            		var result = exoticToPrim.call(input, hint);
-            		if (isPrimitive$1(result)) {
-            			return result;
-            		}
-            		throw new TypeError('unable to convert exotic object to primitive');
-            	}
-            	if (hint === 'default' && (isDateObject(input) || isSymbol$4(input))) {
-            		hint = 'string';
-            	}
-            	return ordinaryToPrimitive(input, hint === 'default' ? 'number' : hint);
-            };
-
-            var _isNaN = Number.isNaN || function isNaN(a) {
-            	return a !== a;
-            };
-
-            var $isNaN = Number.isNaN || function (a) { return a !== a; };
-
-            var _isFinite = Number.isFinite || function (x) { return typeof x === 'number' && !$isNaN(x) && x !== Infinity && x !== -Infinity; };
-
-            var has$1 = Object.prototype.hasOwnProperty;
-            var assign = function assign(target, source) {
-            	if (Object.assign) {
-            		return Object.assign(target, source);
-            	}
-            	for (var key in source) {
-            		if (has$1.call(source, key)) {
-            			target[key] = source[key];
-            		}
-            	}
-            	return target;
-            };
-
-            var sign = function sign(number) {
-            	return number >= 0 ? 1 : -1;
-            };
-
-            var mod = function mod(number, modulo) {
-            	var remain = number % modulo;
-            	return Math.floor(remain >= 0 ? remain : remain + modulo);
-            };
-
-            var isPrimitive$2 = function isPrimitive(value) {
-            	return value === null || (typeof value !== 'function' && typeof value !== 'object');
-            };
-
-            var toStr$7 = Object.prototype.toString;
-
-
-
-
-
-            // https://es5.github.io/#x8.12
-            var ES5internalSlots = {
-            	'[[DefaultValue]]': function (O, hint) {
-            		var actualHint = hint || (toStr$7.call(O) === '[object Date]' ? String : Number);
-
-            		if (actualHint === String || actualHint === Number) {
-            			var methods = actualHint === String ? ['toString', 'valueOf'] : ['valueOf', 'toString'];
-            			var value, i;
-            			for (i = 0; i < methods.length; ++i) {
-            				if (isCallable(O[methods[i]])) {
-            					value = O[methods[i]]();
-            					if (isPrimitive$1(value)) {
-            						return value;
-            					}
-            				}
-            			}
-            			throw new TypeError('No default value');
-            		}
-            		throw new TypeError('invalid [[DefaultValue]] hint supplied');
-            	}
-            };
-
-            // https://es5.github.io/#x9
-            var es5 = function ToPrimitive(input, PreferredType) {
-            	if (isPrimitive$1(input)) {
-            		return input;
-            	}
-            	return ES5internalSlots['[[DefaultValue]]'](input, PreferredType);
-            };
-
-            // https://es5.github.io/#x9
-            var ES5 = {
-            	ToPrimitive: es5,
-
-            	ToBoolean: function ToBoolean(value) {
-            		return !!value;
-            	},
-            	ToNumber: function ToNumber(value) {
-            		return Number(value);
-            	},
-            	ToInteger: function ToInteger(value) {
-            		var number = this.ToNumber(value);
-            		if (_isNaN(number)) { return 0; }
-            		if (number === 0 || !_isFinite(number)) { return number; }
-            		return sign(number) * Math.floor(Math.abs(number));
-            	},
-            	ToInt32: function ToInt32(x) {
-            		return this.ToNumber(x) >> 0;
-            	},
-            	ToUint32: function ToUint32(x) {
-            		return this.ToNumber(x) >>> 0;
-            	},
-            	ToUint16: function ToUint16(value) {
-            		var number = this.ToNumber(value);
-            		if (_isNaN(number) || number === 0 || !_isFinite(number)) { return 0; }
-            		var posInt = sign(number) * Math.floor(Math.abs(number));
-            		return mod(posInt, 0x10000);
-            	},
-            	ToString: function ToString(value) {
-            		return String(value);
-            	},
-            	ToObject: function ToObject(value) {
-            		this.CheckObjectCoercible(value);
-            		return Object(value);
-            	},
-            	CheckObjectCoercible: function CheckObjectCoercible(value, optMessage) {
-            		/* jshint eqnull:true */
-            		if (value == null) {
-            			throw new TypeError(optMessage || 'Cannot call method on ' + value);
-            		}
-            		return value;
-            	},
-            	IsCallable: isCallable,
-            	SameValue: function SameValue(x, y) {
-            		if (x === y) { // 0 === -0, but they are not identical.
-            			if (x === 0) { return 1 / x === 1 / y; }
-            			return true;
-            		}
-            		return _isNaN(x) && _isNaN(y);
-            	},
-
-            	// http://www.ecma-international.org/ecma-262/5.1/#sec-8
-            	Type: function Type(x) {
-            		if (x === null) {
-            			return 'Null';
-            		}
-            		if (typeof x === 'undefined') {
-            			return 'Undefined';
-            		}
-            		if (typeof x === 'function' || typeof x === 'object') {
-            			return 'Object';
-            		}
-            		if (typeof x === 'number') {
-            			return 'Number';
-            		}
-            		if (typeof x === 'boolean') {
-            			return 'Boolean';
-            		}
-            		if (typeof x === 'string') {
-            			return 'String';
-            		}
-            	},
-
-            	// http://ecma-international.org/ecma-262/6.0/#sec-property-descriptor-specification-type
-            	IsPropertyDescriptor: function IsPropertyDescriptor(Desc) {
-            		if (this.Type(Desc) !== 'Object') {
-            			return false;
-            		}
-            		var allowed = {
-            			'[[Configurable]]': true,
-            			'[[Enumerable]]': true,
-            			'[[Get]]': true,
-            			'[[Set]]': true,
-            			'[[Value]]': true,
-            			'[[Writable]]': true
-            		};
-            		// jscs:disable
-            		for (var key in Desc) { // eslint-disable-line
-            			if (src$o(Desc, key) && !allowed[key]) {
-            				return false;
-            			}
-            		}
-            		// jscs:enable
-            		var isData = src$o(Desc, '[[Value]]');
-            		var IsAccessor = src$o(Desc, '[[Get]]') || src$o(Desc, '[[Set]]');
-            		if (isData && IsAccessor) {
-            			throw new TypeError('Property Descriptors may not be both accessor and data descriptors');
-            		}
-            		return true;
-            	},
-
-            	// http://ecma-international.org/ecma-262/5.1/#sec-8.10.1
-            	IsAccessorDescriptor: function IsAccessorDescriptor(Desc) {
-            		if (typeof Desc === 'undefined') {
-            			return false;
-            		}
-
-            		if (!this.IsPropertyDescriptor(Desc)) {
-            			throw new TypeError('Desc must be a Property Descriptor');
-            		}
-
-            		if (!src$o(Desc, '[[Get]]') && !src$o(Desc, '[[Set]]')) {
-            			return false;
-            		}
-
-            		return true;
-            	},
-
-            	// http://ecma-international.org/ecma-262/5.1/#sec-8.10.2
-            	IsDataDescriptor: function IsDataDescriptor(Desc) {
-            		if (typeof Desc === 'undefined') {
-            			return false;
-            		}
-
-            		if (!this.IsPropertyDescriptor(Desc)) {
-            			throw new TypeError('Desc must be a Property Descriptor');
-            		}
-
-            		if (!src$o(Desc, '[[Value]]') && !src$o(Desc, '[[Writable]]')) {
-            			return false;
-            		}
-
-            		return true;
-            	},
-
-            	// http://ecma-international.org/ecma-262/5.1/#sec-8.10.3
-            	IsGenericDescriptor: function IsGenericDescriptor(Desc) {
-            		if (typeof Desc === 'undefined') {
-            			return false;
-            		}
-
-            		if (!this.IsPropertyDescriptor(Desc)) {
-            			throw new TypeError('Desc must be a Property Descriptor');
-            		}
-
-            		if (!this.IsAccessorDescriptor(Desc) && !this.IsDataDescriptor(Desc)) {
-            			return true;
-            		}
-
-            		return false;
-            	},
-
-            	// http://ecma-international.org/ecma-262/5.1/#sec-8.10.4
-            	FromPropertyDescriptor: function FromPropertyDescriptor(Desc) {
-            		if (typeof Desc === 'undefined') {
-            			return Desc;
-            		}
-
-            		if (!this.IsPropertyDescriptor(Desc)) {
-            			throw new TypeError('Desc must be a Property Descriptor');
-            		}
-
-            		if (this.IsDataDescriptor(Desc)) {
-            			return {
-            				value: Desc['[[Value]]'],
-            				writable: !!Desc['[[Writable]]'],
-            				enumerable: !!Desc['[[Enumerable]]'],
-            				configurable: !!Desc['[[Configurable]]']
-            			};
-            		} else if (this.IsAccessorDescriptor(Desc)) {
-            			return {
-            				get: Desc['[[Get]]'],
-            				set: Desc['[[Set]]'],
-            				enumerable: !!Desc['[[Enumerable]]'],
-            				configurable: !!Desc['[[Configurable]]']
-            			};
-            		} else {
-            			throw new TypeError('FromPropertyDescriptor must be called with a fully populated Property Descriptor');
-            		}
-            	},
-
-            	// http://ecma-international.org/ecma-262/5.1/#sec-8.10.5
-            	ToPropertyDescriptor: function ToPropertyDescriptor(Obj) {
-            		if (this.Type(Obj) !== 'Object') {
-            			throw new TypeError('ToPropertyDescriptor requires an object');
-            		}
-
-            		var desc = {};
-            		if (src$o(Obj, 'enumerable')) {
-            			desc['[[Enumerable]]'] = this.ToBoolean(Obj.enumerable);
-            		}
-            		if (src$o(Obj, 'configurable')) {
-            			desc['[[Configurable]]'] = this.ToBoolean(Obj.configurable);
-            		}
-            		if (src$o(Obj, 'value')) {
-            			desc['[[Value]]'] = Obj.value;
-            		}
-            		if (src$o(Obj, 'writable')) {
-            			desc['[[Writable]]'] = this.ToBoolean(Obj.writable);
-            		}
-            		if (src$o(Obj, 'get')) {
-            			var getter = Obj.get;
-            			if (typeof getter !== 'undefined' && !this.IsCallable(getter)) {
-            				throw new TypeError('getter must be a function');
-            			}
-            			desc['[[Get]]'] = getter;
-            		}
-            		if (src$o(Obj, 'set')) {
-            			var setter = Obj.set;
-            			if (typeof setter !== 'undefined' && !this.IsCallable(setter)) {
-            				throw new TypeError('setter must be a function');
-            			}
-            			desc['[[Set]]'] = setter;
-            		}
-
-            		if ((src$o(desc, '[[Get]]') || src$o(desc, '[[Set]]')) && (src$o(desc, '[[Value]]') || src$o(desc, '[[Writable]]'))) {
-            			throw new TypeError('Invalid property descriptor. Cannot both specify accessors and a value or writable attribute');
-            		}
-            		return desc;
-            	}
-            };
-
-            var es5$1 = ES5;
-
-            var regexExec = RegExp.prototype.exec;
-            var gOPD = Object.getOwnPropertyDescriptor;
-
-            var tryRegexExecCall = function tryRegexExec(value) {
-            	try {
-            		var lastIndex = value.lastIndex;
-            		value.lastIndex = 0;
-
-            		regexExec.call(value);
-            		return true;
-            	} catch (e) {
-            		return false;
-            	} finally {
-            		value.lastIndex = lastIndex;
-            	}
-            };
-            var toStr$8 = Object.prototype.toString;
-            var regexClass = '[object RegExp]';
-            var hasToStringTag$2 = typeof Symbol === 'function' && typeof Symbol.toStringTag === 'symbol';
-
-            var isRegex = function isRegex(value) {
-            	if (!value || typeof value !== 'object') {
-            		return false;
-            	}
-            	if (!hasToStringTag$2) {
-            		return toStr$8.call(value) === regexClass;
-            	}
-
-            	var descriptor = gOPD(value, 'lastIndex');
-            	var hasLastIndexDataProperty = descriptor && src$o(descriptor, 'value');
-            	if (!hasLastIndexDataProperty) {
-            		return false;
-            	}
-
-            	return tryRegexExecCall(value);
-            };
-
-            var toStr$9 = Object.prototype.toString;
-            var hasSymbols$2 = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol';
-
-
-
-            var MAX_SAFE_INTEGER$3 = Number.MAX_SAFE_INTEGER || Math.pow(2, 53) - 1;
-
-
-
-
-
-            var parseInteger = parseInt;
-
-            var arraySlice = functionBind.call(Function.call, Array.prototype.slice);
-            var strSlice = functionBind.call(Function.call, String.prototype.slice);
-            var isBinary = functionBind.call(Function.call, RegExp.prototype.test, /^0b[01]+$/i);
-            var isOctal = functionBind.call(Function.call, RegExp.prototype.test, /^0o[0-7]+$/i);
-            var regexExec$1 = functionBind.call(Function.call, RegExp.prototype.exec);
-            var nonWS = ['\u0085', '\u200b', '\ufffe'].join('');
-            var nonWSregex = new RegExp('[' + nonWS + ']', 'g');
-            var hasNonWS = functionBind.call(Function.call, RegExp.prototype.test, nonWSregex);
-            var invalidHexLiteral = /^[-+]0x[0-9a-f]+$/i;
-            var isInvalidHexLiteral = functionBind.call(Function.call, RegExp.prototype.test, invalidHexLiteral);
-
-            // whitespace from: http://es5.github.io/#x15.5.4.20
-            // implementation from https://github.com/es-shims/es5-shim/blob/v3.4.0/es5-shim.js#L1304-L1324
-            var ws = [
-            	'\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003',
-            	'\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028',
-            	'\u2029\uFEFF'
-            ].join('');
-            var trimRegex = new RegExp('(^[' + ws + ']+)|([' + ws + ']+$)', 'g');
-            var replace = functionBind.call(Function.call, String.prototype.replace);
-            var trim = function (value) {
-            	return replace(value, trimRegex, '');
-            };
-
-
-
-
-
-            // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-abstract-operations
-            var ES6 = assign(assign({}, es5$1), {
-
-            	// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-call-f-v-args
-            	Call: function Call(F, V) {
-            		var args = arguments.length > 2 ? arguments[2] : [];
-            		if (!this.IsCallable(F)) {
-            			throw new TypeError(F + ' is not a function');
-            		}
-            		return F.apply(V, args);
-            	},
-
-            	// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toprimitive
-            	ToPrimitive: es6,
-
-            	// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toboolean
-            	// ToBoolean: ES5.ToBoolean,
-
-            	// http://www.ecma-international.org/ecma-262/6.0/#sec-tonumber
-            	ToNumber: function ToNumber(argument) {
-            		var value = isPrimitive$2(argument) ? argument : es6(argument, Number);
-            		if (typeof value === 'symbol') {
-            			throw new TypeError('Cannot convert a Symbol value to a number');
-            		}
-            		if (typeof value === 'string') {
-            			if (isBinary(value)) {
-            				return this.ToNumber(parseInteger(strSlice(value, 2), 2));
-            			} else if (isOctal(value)) {
-            				return this.ToNumber(parseInteger(strSlice(value, 2), 8));
-            			} else if (hasNonWS(value) || isInvalidHexLiteral(value)) {
-            				return NaN;
-            			} else {
-            				var trimmed = trim(value);
-            				if (trimmed !== value) {
-            					return this.ToNumber(trimmed);
-            				}
-            			}
-            		}
-            		return Number(value);
-            	},
-
-            	// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-tointeger
-            	// ToInteger: ES5.ToNumber,
-
-            	// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toint32
-            	// ToInt32: ES5.ToInt32,
-
-            	// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-touint32
-            	// ToUint32: ES5.ToUint32,
-
-            	// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toint16
-            	ToInt16: function ToInt16(argument) {
-            		var int16bit = this.ToUint16(argument);
-            		return int16bit >= 0x8000 ? int16bit - 0x10000 : int16bit;
-            	},
-
-            	// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-touint16
-            	// ToUint16: ES5.ToUint16,
-
-            	// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toint8
-            	ToInt8: function ToInt8(argument) {
-            		var int8bit = this.ToUint8(argument);
-            		return int8bit >= 0x80 ? int8bit - 0x100 : int8bit;
-            	},
-
-            	// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-touint8
-            	ToUint8: function ToUint8(argument) {
-            		var number = this.ToNumber(argument);
-            		if (_isNaN(number) || number === 0 || !_isFinite(number)) { return 0; }
-            		var posInt = sign(number) * Math.floor(Math.abs(number));
-            		return mod(posInt, 0x100);
-            	},
-
-            	// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-touint8clamp
-            	ToUint8Clamp: function ToUint8Clamp(argument) {
-            		var number = this.ToNumber(argument);
-            		if (_isNaN(number) || number <= 0) { return 0; }
-            		if (number >= 0xFF) { return 0xFF; }
-            		var f = Math.floor(argument);
-            		if (f + 0.5 < number) { return f + 1; }
-            		if (number < f + 0.5) { return f; }
-            		if (f % 2 !== 0) { return f + 1; }
-            		return f;
-            	},
-
-            	// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-tostring
-            	ToString: function ToString(argument) {
-            		if (typeof argument === 'symbol') {
-            			throw new TypeError('Cannot convert a Symbol value to a string');
-            		}
-            		return String(argument);
-            	},
-
-            	// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-toobject
-            	ToObject: function ToObject(value) {
-            		this.RequireObjectCoercible(value);
-            		return Object(value);
-            	},
-
-            	// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-topropertykey
-            	ToPropertyKey: function ToPropertyKey(argument) {
-            		var key = this.ToPrimitive(argument, String);
-            		return typeof key === 'symbol' ? key : this.ToString(key);
-            	},
-
-            	// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-tolength
-            	ToLength: function ToLength(argument) {
-            		var len = this.ToInteger(argument);
-            		if (len <= 0) { return 0; } // includes converting -0 to +0
-            		if (len > MAX_SAFE_INTEGER$3) { return MAX_SAFE_INTEGER$3; }
-            		return len;
-            	},
-
-            	// http://www.ecma-international.org/ecma-262/6.0/#sec-canonicalnumericindexstring
-            	CanonicalNumericIndexString: function CanonicalNumericIndexString(argument) {
-            		if (toStr$9.call(argument) !== '[object String]') {
-            			throw new TypeError('must be a string');
-            		}
-            		if (argument === '-0') { return -0; }
-            		var n = this.ToNumber(argument);
-            		if (this.SameValue(this.ToString(n), argument)) { return n; }
-            		return void 0;
-            	},
-
-            	// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-requireobjectcoercible
-            	RequireObjectCoercible: es5$1.CheckObjectCoercible,
-
-            	// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-isarray
-            	IsArray: Array.isArray || function IsArray(argument) {
-            		return toStr$9.call(argument) === '[object Array]';
-            	},
-
-            	// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-iscallable
-            	// IsCallable: ES5.IsCallable,
-
-            	// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-isconstructor
-            	IsConstructor: function IsConstructor(argument) {
-            		return typeof argument === 'function' && !!argument.prototype; // unfortunately there's no way to truly check this without try/catch `new argument`
-            	},
-
-            	// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-isextensible-o
-            	IsExtensible: function IsExtensible(obj) {
-            		if (!Object.preventExtensions) { return true; }
-            		if (isPrimitive$2(obj)) {
-            			return false;
-            		}
-            		return Object.isExtensible(obj);
-            	},
-
-            	// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-isinteger
-            	IsInteger: function IsInteger(argument) {
-            		if (typeof argument !== 'number' || _isNaN(argument) || !_isFinite(argument)) {
-            			return false;
-            		}
-            		var abs = Math.abs(argument);
-            		return Math.floor(abs) === abs;
-            	},
-
-            	// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ispropertykey
-            	IsPropertyKey: function IsPropertyKey(argument) {
-            		return typeof argument === 'string' || typeof argument === 'symbol';
-            	},
-
-            	// http://www.ecma-international.org/ecma-262/6.0/#sec-isregexp
-            	IsRegExp: function IsRegExp(argument) {
-            		if (!argument || typeof argument !== 'object') {
-            			return false;
-            		}
-            		if (hasSymbols$2) {
-            			var isRegExp = argument[Symbol.match];
-            			if (typeof isRegExp !== 'undefined') {
-            				return es5$1.ToBoolean(isRegExp);
-            			}
-            		}
-            		return isRegex(argument);
-            	},
-
-            	// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevalue
-            	// SameValue: ES5.SameValue,
-
-            	// https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero
-            	SameValueZero: function SameValueZero(x, y) {
-            		return (x === y) || (_isNaN(x) && _isNaN(y));
-            	},
-
-            	/**
-            	 * 7.3.2 GetV (V, P)
-            	 * 1. Assert: IsPropertyKey(P) is true.
-            	 * 2. Let O be ToObject(V).
-            	 * 3. ReturnIfAbrupt(O).
-            	 * 4. Return O.[[Get]](P, V).
-            	 */
-            	GetV: function GetV(V, P) {
-            		// 7.3.2.1
-            		if (!this.IsPropertyKey(P)) {
-            			throw new TypeError('Assertion failed: IsPropertyKey(P) is not true');
-            		}
-
-            		// 7.3.2.2-3
-            		var O = this.ToObject(V);
-
-            		// 7.3.2.4
-            		return O[P];
-            	},
-
-            	/**
-            	 * 7.3.9 - http://www.ecma-international.org/ecma-262/6.0/#sec-getmethod
-            	 * 1. Assert: IsPropertyKey(P) is true.
-            	 * 2. Let func be GetV(O, P).
-            	 * 3. ReturnIfAbrupt(func).
-            	 * 4. If func is either undefined or null, return undefined.
-            	 * 5. If IsCallable(func) is false, throw a TypeError exception.
-            	 * 6. Return func.
-            	 */
-            	GetMethod: function GetMethod(O, P) {
-            		// 7.3.9.1
-            		if (!this.IsPropertyKey(P)) {
-            			throw new TypeError('Assertion failed: IsPropertyKey(P) is not true');
-            		}
-
-            		// 7.3.9.2
-            		var func = this.GetV(O, P);
-
-            		// 7.3.9.4
-            		if (func == null) {
-            			return void 0;
-            		}
-
-            		// 7.3.9.5
-            		if (!this.IsCallable(func)) {
-            			throw new TypeError(P + 'is not a function');
-            		}
-
-            		// 7.3.9.6
-            		return func;
-            	},
-
-            	/**
-            	 * 7.3.1 Get (O, P) - http://www.ecma-international.org/ecma-262/6.0/#sec-get-o-p
-            	 * 1. Assert: Type(O) is Object.
-            	 * 2. Assert: IsPropertyKey(P) is true.
-            	 * 3. Return O.[[Get]](P, O).
-            	 */
-            	Get: function Get(O, P) {
-            		// 7.3.1.1
-            		if (this.Type(O) !== 'Object') {
-            			throw new TypeError('Assertion failed: Type(O) is not Object');
-            		}
-            		// 7.3.1.2
-            		if (!this.IsPropertyKey(P)) {
-            			throw new TypeError('Assertion failed: IsPropertyKey(P) is not true');
-            		}
-            		// 7.3.1.3
-            		return O[P];
-            	},
-
-            	Type: function Type(x) {
-            		if (typeof x === 'symbol') {
-            			return 'Symbol';
-            		}
-            		return es5$1.Type(x);
-            	},
-
-            	// http://www.ecma-international.org/ecma-262/6.0/#sec-speciesconstructor
-            	SpeciesConstructor: function SpeciesConstructor(O, defaultConstructor) {
-            		if (this.Type(O) !== 'Object') {
-            			throw new TypeError('Assertion failed: Type(O) is not Object');
-            		}
-            		var C = O.constructor;
-            		if (typeof C === 'undefined') {
-            			return defaultConstructor;
-            		}
-            		if (this.Type(C) !== 'Object') {
-            			throw new TypeError('O.constructor is not an Object');
-            		}
-            		var S = hasSymbols$2 && Symbol.species ? C[Symbol.species] : void 0;
-            		if (S == null) {
-            			return defaultConstructor;
-            		}
-            		if (this.IsConstructor(S)) {
-            			return S;
-            		}
-            		throw new TypeError('no constructor found');
-            	},
-
-            	// http://ecma-international.org/ecma-262/6.0/#sec-completepropertydescriptor
-            	CompletePropertyDescriptor: function CompletePropertyDescriptor(Desc) {
-            		if (!this.IsPropertyDescriptor(Desc)) {
-            			throw new TypeError('Desc must be a Property Descriptor');
-            		}
-
-            		if (this.IsGenericDescriptor(Desc) || this.IsDataDescriptor(Desc)) {
-            			if (!src$o(Desc, '[[Value]]')) {
-            				Desc['[[Value]]'] = void 0;
-            			}
-            			if (!src$o(Desc, '[[Writable]]')) {
-            				Desc['[[Writable]]'] = false;
-            			}
-            		} else {
-            			if (!src$o(Desc, '[[Get]]')) {
-            				Desc['[[Get]]'] = void 0;
-            			}
-            			if (!src$o(Desc, '[[Set]]')) {
-            				Desc['[[Set]]'] = void 0;
-            			}
-            		}
-            		if (!src$o(Desc, '[[Enumerable]]')) {
-            			Desc['[[Enumerable]]'] = false;
-            		}
-            		if (!src$o(Desc, '[[Configurable]]')) {
-            			Desc['[[Configurable]]'] = false;
-            		}
-            		return Desc;
-            	},
-
-            	// http://ecma-international.org/ecma-262/6.0/#sec-set-o-p-v-throw
-            	Set: function Set(O, P, V, Throw) {
-            		if (this.Type(O) !== 'Object') {
-            			throw new TypeError('O must be an Object');
-            		}
-            		if (!this.IsPropertyKey(P)) {
-            			throw new TypeError('P must be a Property Key');
-            		}
-            		if (this.Type(Throw) !== 'Boolean') {
-            			throw new TypeError('Throw must be a Boolean');
-            		}
-            		if (Throw) {
-            			O[P] = V;
-            			return true;
-            		} else {
-            			try {
-            				O[P] = V;
-            			} catch (e) {
-            				return false;
-            			}
-            		}
-            	},
-
-            	// http://ecma-international.org/ecma-262/6.0/#sec-hasownproperty
-            	HasOwnProperty: function HasOwnProperty(O, P) {
-            		if (this.Type(O) !== 'Object') {
-            			throw new TypeError('O must be an Object');
-            		}
-            		if (!this.IsPropertyKey(P)) {
-            			throw new TypeError('P must be a Property Key');
-            		}
-            		return src$o(O, P);
-            	},
-
-            	// http://ecma-international.org/ecma-262/6.0/#sec-hasproperty
-            	HasProperty: function HasProperty(O, P) {
-            		if (this.Type(O) !== 'Object') {
-            			throw new TypeError('O must be an Object');
-            		}
-            		if (!this.IsPropertyKey(P)) {
-            			throw new TypeError('P must be a Property Key');
-            		}
-            		return P in O;
-            	},
-
-            	// http://ecma-international.org/ecma-262/6.0/#sec-isconcatspreadable
-            	IsConcatSpreadable: function IsConcatSpreadable(O) {
-            		if (this.Type(O) !== 'Object') {
-            			return false;
-            		}
-            		if (hasSymbols$2 && typeof Symbol.isConcatSpreadable === 'symbol') {
-            			var spreadable = this.Get(O, Symbol.isConcatSpreadable);
-            			if (typeof spreadable !== 'undefined') {
-            				return this.ToBoolean(spreadable);
-            			}
-            		}
-            		return this.IsArray(O);
-            	},
-
-            	// http://ecma-international.org/ecma-262/6.0/#sec-invoke
-            	Invoke: function Invoke(O, P) {
-            		if (!this.IsPropertyKey(P)) {
-            			throw new TypeError('P must be a Property Key');
-            		}
-            		var argumentsList = arraySlice(arguments, 2);
-            		var func = this.GetV(O, P);
-            		return this.Call(func, O, argumentsList);
-            	},
-
-            	// http://ecma-international.org/ecma-262/6.0/#sec-createiterresultobject
-            	CreateIterResultObject: function CreateIterResultObject(value, done) {
-            		if (this.Type(done) !== 'Boolean') {
-            			throw new TypeError('Assertion failed: Type(done) is not Boolean');
-            		}
-            		return {
-            			value: value,
-            			done: done
-            		};
-            	},
-
-            	// http://ecma-international.org/ecma-262/6.0/#sec-regexpexec
-            	RegExpExec: function RegExpExec(R, S) {
-            		if (this.Type(R) !== 'Object') {
-            			throw new TypeError('R must be an Object');
-            		}
-            		if (this.Type(S) !== 'String') {
-            			throw new TypeError('S must be a String');
-            		}
-            		var exec = this.Get(R, 'exec');
-            		if (this.IsCallable(exec)) {
-            			var result = this.Call(exec, R, [S]);
-            			if (result === null || this.Type(result) === 'Object') {
-            				return result;
-            			}
-            			throw new TypeError('"exec" method must return `null` or an Object');
-            		}
-            		return regexExec$1(R, S);
-            	},
-
-            	// http://ecma-international.org/ecma-262/6.0/#sec-arrayspeciescreate
-            	ArraySpeciesCreate: function ArraySpeciesCreate(originalArray, length) {
-            		if (!this.IsInteger(length) || length < 0) {
-            			throw new TypeError('Assertion failed: length must be an integer >= 0');
-            		}
-            		var len = length === 0 ? 0 : length;
-            		var C;
-            		var isArray = this.IsArray(originalArray);
-            		if (isArray) {
-            			C = this.Get(originalArray, 'constructor');
-            			// TODO: figure out how to make a cross-realm normal Array, a same-realm Array
-            			// if (this.IsConstructor(C)) {
-            			// 	if C is another realm's Array, C = undefined
-            			// 	Object.getPrototypeOf(Object.getPrototypeOf(Object.getPrototypeOf(Array))) === null ?
-            			// }
-            			if (this.Type(C) === 'Object' && hasSymbols$2 && Symbol.species) {
-            				C = this.Get(C, Symbol.species);
-            				if (C === null) {
-            					C = void 0;
-            				}
-            			}
-            		}
-            		if (typeof C === 'undefined') {
-            			return Array(len);
-            		}
-            		if (!this.IsConstructor(C)) {
-            			throw new TypeError('C must be a constructor');
-            		}
-            		return new C(len); // this.Construct(C, len);
-            	},
-
-            	CreateDataProperty: function CreateDataProperty(O, P, V) {
-            		if (this.Type(O) !== 'Object') {
-            			throw new TypeError('Assertion failed: Type(O) is not Object');
-            		}
-            		if (!this.IsPropertyKey(P)) {
-            			throw new TypeError('Assertion failed: IsPropertyKey(P) is not true');
-            		}
-            		var oldDesc = Object.getOwnPropertyDescriptor(O, P);
-            		var extensible = oldDesc || (typeof Object.isExtensible !== 'function' || Object.isExtensible(O));
-            		var immutable = oldDesc && (!oldDesc.writable || !oldDesc.configurable);
-            		if (immutable || !extensible) {
-            			return false;
-            		}
-            		var newDesc = {
-            			configurable: true,
-            			enumerable: true,
-            			value: V,
-            			writable: true
-            		};
-            		Object.defineProperty(O, P, newDesc);
-            		return true;
-            	},
-
-            	// http://ecma-international.org/ecma-262/6.0/#sec-createdatapropertyorthrow
-            	CreateDataPropertyOrThrow: function CreateDataPropertyOrThrow(O, P, V) {
-            		if (this.Type(O) !== 'Object') {
-            			throw new TypeError('Assertion failed: Type(O) is not Object');
-            		}
-            		if (!this.IsPropertyKey(P)) {
-            			throw new TypeError('Assertion failed: IsPropertyKey(P) is not true');
-            		}
-            		var success = this.CreateDataProperty(O, P, V);
-            		if (!success) {
-            			throw new TypeError('unable to create data property');
-            		}
-            		return success;
-            	},
-
-            	// http://ecma-international.org/ecma-262/6.0/#sec-advancestringindex
-            	AdvanceStringIndex: function AdvanceStringIndex(S, index, unicode) {
-            		if (this.Type(S) !== 'String') {
-            			throw new TypeError('Assertion failed: Type(S) is not String');
-            		}
-            		if (!this.IsInteger(index)) {
-            			throw new TypeError('Assertion failed: length must be an integer >= 0 and <= (2**53 - 1)');
-            		}
-            		if (index < 0 || index > MAX_SAFE_INTEGER$3) {
-            			throw new RangeError('Assertion failed: length must be an integer >= 0 and <= (2**53 - 1)');
-            		}
-            		if (this.Type(unicode) !== 'Boolean') {
-            			throw new TypeError('Assertion failed: Type(unicode) is not Boolean');
-            		}
-            		if (!unicode) {
-            			return index + 1;
-            		}
-            		var length = S.length;
-            		if ((index + 1) >= length) {
-            			return index + 1;
-            		}
-            		var first = S.charCodeAt(index);
-            		if (first < 0xD800 || first > 0xDBFF) {
-            			return index + 1;
-            		}
-            		var second = S.charCodeAt(index + 1);
-            		if (second < 0xDC00 || second > 0xDFFF) {
-            			return index + 1;
-            		}
-            		return index + 2;
-            	}
-            });
-
-            delete ES6.CheckObjectCoercible; // renamed in ES6 to RequireObjectCoercible
-
-            var es2015 = ES6;
-
-            var ES2016 = assign(assign({}, es2015), {
-            	// https://github.com/tc39/ecma262/pull/60
-            	SameValueNonNumber: function SameValueNonNumber(x, y) {
-            		if (typeof x === 'number' || typeof x !== typeof y) {
-            			throw new TypeError('SameValueNonNumber requires two non-number values of the same type.');
-            		}
-            		return this.SameValue(x, y);
-            	}
-            });
-
-            var es2016 = ES2016;
-
-            var es7 = es2016;
-
-            var isEnumerable$1 = functionBind.call(Function.call, Object.prototype.propertyIsEnumerable);
-
-            var implementation$1 = function values(O) {
-            	var obj = es7.RequireObjectCoercible(O);
-            	var vals = [];
-            	for (var key in obj) {
-            		if (src$o(obj, key) && isEnumerable$1(obj, key)) {
-            			vals.push(obj[key]);
-            		}
-            	}
-            	return vals;
-            };
-
-            var polyfill = function getPolyfill() {
-            	return typeof Object.values === 'function' ? Object.values : implementation$1;
-            };
-
-            var shim = function shimValues() {
-            	var polyfill$$1 = polyfill();
-            	defineProperties_1(Object, { values: polyfill$$1 }, {
-            		values: function testValues() {
-            			return Object.values !== polyfill$$1;
-            		}
-            	});
-            	return polyfill$$1;
-            };
-
-            var polyfill$1 = polyfill();
-
-            defineProperties_1(polyfill$1, {
-            	getPolyfill: polyfill,
-            	implementation: implementation$1,
-            	shim: shim
-            });
-
-            var object_values = polyfill$1;
-
-            if (!Object.values) {
-              object_values.shim();
-            }
+            const { FPGrowth, } = fpg;
+            // import { default as ObjectValues, } from 'object.values';
+            // if (!Object.values) {
+            //   ObjectValues.shim();
+            // }
 
             /**
              * Formats an array of transactions into a sparse matrix like format for Apriori/Eclat
@@ -58886,7 +57498,7 @@
                     summary: true,
                     valuesMap: new Map(),
                   }, options);
-                  const fpgrowth$$1 = new fpgrowth_1(config.support);
+                  const fpgrowth$$1 = new FPGrowth(config.support);
                   fpgrowth$$1.exec(transactions)
                     .then(results => {
                       if (config.summary) {
@@ -63096,1154 +61708,22 @@
                 }
             }
 
-            /**
-             * @param {Array<Array<number>>|Array<number>} array
-             * @param {object} [options]
-             * @param {object} [options.rows = 1]
-             * @return {WrapperMatrix1D|WrapperMatrix2D}
-             */
-            function wrap$4(array, options) {
-                if (Array.isArray(array)) {
-                    if (array[0] && Array.isArray(array[0])) {
-                        return new WrapperMatrix2D$4(array);
-                    } else {
-                        return new WrapperMatrix1D$4(array, options);
-                    }
-                } else {
-                    throw new Error('the argument is not an array');
-                }
-            }
-
-            /**
-             * @class QrDecomposition
-             * @link https://github.com/lutzroeder/Mapack/blob/master/Source/QrDecomposition.cs
-             * @param {Matrix} value
-             */
-            class QrDecomposition$$1 {
-                constructor(value) {
-                    value = WrapperMatrix2D$4.checkMatrix(value);
-
-                    var qr = value.clone();
-                    var m = value.rows;
-                    var n = value.columns;
-                    var rdiag = new Array(n);
-                    var i, j, k, s;
-
-                    for (k = 0; k < n; k++) {
-                        var nrm = 0;
-                        for (i = k; i < m; i++) {
-                            nrm = hypotenuse$4(nrm, qr.get(i, k));
-                        }
-                        if (nrm !== 0) {
-                            if (qr.get(k, k) < 0) {
-                                nrm = -nrm;
-                            }
-                            for (i = k; i < m; i++) {
-                                qr.set(i, k, qr.get(i, k) / nrm);
-                            }
-                            qr.set(k, k, qr.get(k, k) + 1);
-                            for (j = k + 1; j < n; j++) {
-                                s = 0;
-                                for (i = k; i < m; i++) {
-                                    s += qr.get(i, k) * qr.get(i, j);
-                                }
-                                s = -s / qr.get(k, k);
-                                for (i = k; i < m; i++) {
-                                    qr.set(i, j, qr.get(i, j) + s * qr.get(i, k));
-                                }
-                            }
-                        }
-                        rdiag[k] = -nrm;
-                    }
-
-                    this.QR = qr;
-                    this.Rdiag = rdiag;
-                }
-
-                /**
-                 * Solve a problem of least square (Ax=b) by using the QR decomposition. Useful when A is rectangular, but not working when A is singular.
-                 * Example : We search to approximate x, with A matrix shape m*n, x vector size n, b vector size m (m > n). We will use :
-                 * var qr = QrDecomposition(A);
-                 * var x = qr.solve(b);
-                 * @param {Matrix} value - Matrix 1D which is the vector b (in the equation Ax = b)
-                 * @return {Matrix} - The vector x
-                 */
-                solve(value) {
-                    value = Matrix$a.checkMatrix(value);
-
-                    var qr = this.QR;
-                    var m = qr.rows;
-
-                    if (value.rows !== m) {
-                        throw new Error('Matrix row dimensions must agree');
-                    }
-                    if (!this.isFullRank()) {
-                        throw new Error('Matrix is rank deficient');
-                    }
-
-                    var count = value.columns;
-                    var X = value.clone();
-                    var n = qr.columns;
-                    var i, j, k, s;
-
-                    for (k = 0; k < n; k++) {
-                        for (j = 0; j < count; j++) {
-                            s = 0;
-                            for (i = k; i < m; i++) {
-                                s += qr[i][k] * X[i][j];
-                            }
-                            s = -s / qr[k][k];
-                            for (i = k; i < m; i++) {
-                                X[i][j] += s * qr[i][k];
-                            }
-                        }
-                    }
-                    for (k = n - 1; k >= 0; k--) {
-                        for (j = 0; j < count; j++) {
-                            X[k][j] /= this.Rdiag[k];
-                        }
-                        for (i = 0; i < k; i++) {
-                            for (j = 0; j < count; j++) {
-                                X[i][j] -= X[k][j] * qr[i][k];
-                            }
-                        }
-                    }
-
-                    return X.subMatrix(0, n - 1, 0, count - 1);
-                }
-
-                /**
-                 *
-                 * @return {boolean}
-                 */
-                isFullRank() {
-                    var columns = this.QR.columns;
-                    for (var i = 0; i < columns; i++) {
-                        if (this.Rdiag[i] === 0) {
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-
-                /**
-                 *
-                 * @return {Matrix}
-                 */
-                get upperTriangularMatrix() {
-                    var qr = this.QR;
-                    var n = qr.columns;
-                    var X = new Matrix$a(n, n);
-                    var i, j;
-                    for (i = 0; i < n; i++) {
-                        for (j = 0; j < n; j++) {
-                            if (i < j) {
-                                X[i][j] = qr[i][j];
-                            } else if (i === j) {
-                                X[i][j] = this.Rdiag[i];
-                            } else {
-                                X[i][j] = 0;
-                            }
-                        }
-                    }
-                    return X;
-                }
-
-                /**
-                 *
-                 * @return {Matrix}
-                 */
-                get orthogonalMatrix() {
-                    var qr = this.QR;
-                    var rows = qr.rows;
-                    var columns = qr.columns;
-                    var X = new Matrix$a(rows, columns);
-                    var i, j, k, s;
-
-                    for (k = columns - 1; k >= 0; k--) {
-                        for (i = 0; i < rows; i++) {
-                            X[i][k] = 0;
-                        }
-                        X[k][k] = 1;
-                        for (j = k; j < columns; j++) {
-                            if (qr[k][k] !== 0) {
-                                s = 0;
-                                for (i = k; i < rows; i++) {
-                                    s += qr[i][k] * X[i][j];
-                                }
-
-                                s = -s / qr[k][k];
-
-                                for (i = k; i < rows; i++) {
-                                    X[i][j] += s * qr[i][k];
-                                }
-                            }
-                        }
-                    }
-                    return X;
-                }
-            }
-
-            /**
-             * Computes the inverse of a Matrix
-             * @param {Matrix} matrix
-             * @param {boolean} [useSVD=false]
-             * @return {Matrix}
-             */
-            function inverse$$1(matrix, useSVD = false) {
-                matrix = WrapperMatrix2D$4.checkMatrix(matrix);
-                if (useSVD) {
-                    return new SingularValueDecomposition$$1(matrix).inverse();
-                } else {
-                    return solve$$1(matrix, Matrix$a.eye(matrix.rows));
-                }
-            }
-
-            /**
-             *
-             * @param {Matrix} leftHandSide
-             * @param {Matrix} rightHandSide
-             * @param {boolean} [useSVD = false]
-             * @return {Matrix}
-             */
-            function solve$$1(leftHandSide, rightHandSide, useSVD = false) {
-                leftHandSide = WrapperMatrix2D$4.checkMatrix(leftHandSide);
-                rightHandSide = WrapperMatrix2D$4.checkMatrix(rightHandSide);
-                if (useSVD) {
-                    return new SingularValueDecomposition$$1(leftHandSide).solve(rightHandSide);
-                } else {
-                    return leftHandSide.isSquare() ? new LuDecomposition$$1(leftHandSide).solve(rightHandSide) : new QrDecomposition$$1(leftHandSide).solve(rightHandSide);
-                }
-            }
-
-            /**
-             * @class EigenvalueDecomposition
-             * @link https://github.com/lutzroeder/Mapack/blob/master/Source/EigenvalueDecomposition.cs
-             * @param {Matrix} matrix
-             * @param {object} [options]
-             * @param {boolean} [options.assumeSymmetric=false]
-             */
-            class EigenvalueDecomposition$$1 {
-                constructor(matrix, options = {}) {
-                    const {
-                        assumeSymmetric = false
-                    } = options;
-
-                    matrix = WrapperMatrix2D$4.checkMatrix(matrix);
-                    if (!matrix.isSquare()) {
-                        throw new Error('Matrix is not a square matrix');
-                    }
-
-                    var n = matrix.columns;
-                    var V = getFilled2DArray$4(n, n, 0);
-                    var d = new Array(n);
-                    var e = new Array(n);
-                    var value = matrix;
-                    var i, j;
-
-                    var isSymmetric = false;
-                    if (assumeSymmetric) {
-                        isSymmetric = true;
-                    } else {
-                        isSymmetric = matrix.isSymmetric();
-                    }
-
-                    if (isSymmetric) {
-                        for (i = 0; i < n; i++) {
-                            for (j = 0; j < n; j++) {
-                                V[i][j] = value.get(i, j);
-                            }
-                        }
-                        tred2$4(n, e, d, V);
-                        tql2$4(n, e, d, V);
-                    } else {
-                        var H = getFilled2DArray$4(n, n, 0);
-                        var ort = new Array(n);
-                        for (j = 0; j < n; j++) {
-                            for (i = 0; i < n; i++) {
-                                H[i][j] = value.get(i, j);
-                            }
-                        }
-                        orthes$4(n, H, ort, V);
-                        hqr2$4(n, e, d, V, H);
-                    }
-
-                    this.n = n;
-                    this.e = e;
-                    this.d = d;
-                    this.V = V;
-                }
-
-                /**
-                 *
-                 * @return {Array<number>}
-                 */
-                get realEigenvalues() {
-                    return this.d;
-                }
-
-                /**
-                 *
-                 * @return {Array<number>}
-                 */
-                get imaginaryEigenvalues() {
-                    return this.e;
-                }
-
-                /**
-                 *
-                 * @return {Matrix}
-                 */
-                get eigenvectorMatrix() {
-                    if (!Matrix$a.isMatrix(this.V)) {
-                        this.V = new Matrix$a(this.V);
-                    }
-                    return this.V;
-                }
-
-                /**
-                 *
-                 * @return {Matrix}
-                 */
-                get diagonalMatrix() {
-                    var n = this.n;
-                    var e = this.e;
-                    var d = this.d;
-                    var X = new Matrix$a(n, n);
-                    var i, j;
-                    for (i = 0; i < n; i++) {
-                        for (j = 0; j < n; j++) {
-                            X[i][j] = 0;
-                        }
-                        X[i][i] = d[i];
-                        if (e[i] > 0) {
-                            X[i][i + 1] = e[i];
-                        } else if (e[i] < 0) {
-                            X[i][i - 1] = e[i];
-                        }
-                    }
-                    return X;
-                }
-            }
-
-            function tred2$4(n, e, d, V) {
-                var f, g, h, i, j, k,
-                    hh, scale;
-
-                for (j = 0; j < n; j++) {
-                    d[j] = V[n - 1][j];
-                }
-
-                for (i = n - 1; i > 0; i--) {
-                    scale = 0;
-                    h = 0;
-                    for (k = 0; k < i; k++) {
-                        scale = scale + Math.abs(d[k]);
-                    }
-
-                    if (scale === 0) {
-                        e[i] = d[i - 1];
-                        for (j = 0; j < i; j++) {
-                            d[j] = V[i - 1][j];
-                            V[i][j] = 0;
-                            V[j][i] = 0;
-                        }
-                    } else {
-                        for (k = 0; k < i; k++) {
-                            d[k] /= scale;
-                            h += d[k] * d[k];
-                        }
-
-                        f = d[i - 1];
-                        g = Math.sqrt(h);
-                        if (f > 0) {
-                            g = -g;
-                        }
-
-                        e[i] = scale * g;
-                        h = h - f * g;
-                        d[i - 1] = f - g;
-                        for (j = 0; j < i; j++) {
-                            e[j] = 0;
-                        }
-
-                        for (j = 0; j < i; j++) {
-                            f = d[j];
-                            V[j][i] = f;
-                            g = e[j] + V[j][j] * f;
-                            for (k = j + 1; k <= i - 1; k++) {
-                                g += V[k][j] * d[k];
-                                e[k] += V[k][j] * f;
-                            }
-                            e[j] = g;
-                        }
-
-                        f = 0;
-                        for (j = 0; j < i; j++) {
-                            e[j] /= h;
-                            f += e[j] * d[j];
-                        }
-
-                        hh = f / (h + h);
-                        for (j = 0; j < i; j++) {
-                            e[j] -= hh * d[j];
-                        }
-
-                        for (j = 0; j < i; j++) {
-                            f = d[j];
-                            g = e[j];
-                            for (k = j; k <= i - 1; k++) {
-                                V[k][j] -= (f * e[k] + g * d[k]);
-                            }
-                            d[j] = V[i - 1][j];
-                            V[i][j] = 0;
-                        }
-                    }
-                    d[i] = h;
-                }
-
-                for (i = 0; i < n - 1; i++) {
-                    V[n - 1][i] = V[i][i];
-                    V[i][i] = 1;
-                    h = d[i + 1];
-                    if (h !== 0) {
-                        for (k = 0; k <= i; k++) {
-                            d[k] = V[k][i + 1] / h;
-                        }
-
-                        for (j = 0; j <= i; j++) {
-                            g = 0;
-                            for (k = 0; k <= i; k++) {
-                                g += V[k][i + 1] * V[k][j];
-                            }
-                            for (k = 0; k <= i; k++) {
-                                V[k][j] -= g * d[k];
-                            }
-                        }
-                    }
-
-                    for (k = 0; k <= i; k++) {
-                        V[k][i + 1] = 0;
-                    }
-                }
-
-                for (j = 0; j < n; j++) {
-                    d[j] = V[n - 1][j];
-                    V[n - 1][j] = 0;
-                }
-
-                V[n - 1][n - 1] = 1;
-                e[0] = 0;
-            }
-
-            function tql2$4(n, e, d, V) {
-
-                var g, h, i, j, k, l, m, p, r,
-                    dl1, c, c2, c3, el1, s, s2;
-
-                for (i = 1; i < n; i++) {
-                    e[i - 1] = e[i];
-                }
-
-                e[n - 1] = 0;
-
-                var f = 0;
-                var tst1 = 0;
-                var eps = Number.EPSILON;
-
-                for (l = 0; l < n; l++) {
-                    tst1 = Math.max(tst1, Math.abs(d[l]) + Math.abs(e[l]));
-                    m = l;
-                    while (m < n) {
-                        if (Math.abs(e[m]) <= eps * tst1) {
-                            break;
-                        }
-                        m++;
-                    }
-
-                    if (m > l) {
-                        do {
-
-                            g = d[l];
-                            p = (d[l + 1] - g) / (2 * e[l]);
-                            r = hypotenuse$4(p, 1);
-                            if (p < 0) {
-                                r = -r;
-                            }
-
-                            d[l] = e[l] / (p + r);
-                            d[l + 1] = e[l] * (p + r);
-                            dl1 = d[l + 1];
-                            h = g - d[l];
-                            for (i = l + 2; i < n; i++) {
-                                d[i] -= h;
-                            }
-
-                            f = f + h;
-
-                            p = d[m];
-                            c = 1;
-                            c2 = c;
-                            c3 = c;
-                            el1 = e[l + 1];
-                            s = 0;
-                            s2 = 0;
-                            for (i = m - 1; i >= l; i--) {
-                                c3 = c2;
-                                c2 = c;
-                                s2 = s;
-                                g = c * e[i];
-                                h = c * p;
-                                r = hypotenuse$4(p, e[i]);
-                                e[i + 1] = s * r;
-                                s = e[i] / r;
-                                c = p / r;
-                                p = c * d[i] - s * g;
-                                d[i + 1] = h + s * (c * g + s * d[i]);
-
-                                for (k = 0; k < n; k++) {
-                                    h = V[k][i + 1];
-                                    V[k][i + 1] = s * V[k][i] + c * h;
-                                    V[k][i] = c * V[k][i] - s * h;
-                                }
-                            }
-
-                            p = -s * s2 * c3 * el1 * e[l] / dl1;
-                            e[l] = s * p;
-                            d[l] = c * p;
-
-                        }
-                        while (Math.abs(e[l]) > eps * tst1);
-                    }
-                    d[l] = d[l] + f;
-                    e[l] = 0;
-                }
-
-                for (i = 0; i < n - 1; i++) {
-                    k = i;
-                    p = d[i];
-                    for (j = i + 1; j < n; j++) {
-                        if (d[j] < p) {
-                            k = j;
-                            p = d[j];
-                        }
-                    }
-
-                    if (k !== i) {
-                        d[k] = d[i];
-                        d[i] = p;
-                        for (j = 0; j < n; j++) {
-                            p = V[j][i];
-                            V[j][i] = V[j][k];
-                            V[j][k] = p;
-                        }
-                    }
-                }
-            }
-
-            function orthes$4(n, H, ort, V) {
-
-                var low = 0;
-                var high = n - 1;
-                var f, g, h, i, j, m;
-                var scale;
-
-                for (m = low + 1; m <= high - 1; m++) {
-                    scale = 0;
-                    for (i = m; i <= high; i++) {
-                        scale = scale + Math.abs(H[i][m - 1]);
-                    }
-
-                    if (scale !== 0) {
-                        h = 0;
-                        for (i = high; i >= m; i--) {
-                            ort[i] = H[i][m - 1] / scale;
-                            h += ort[i] * ort[i];
-                        }
-
-                        g = Math.sqrt(h);
-                        if (ort[m] > 0) {
-                            g = -g;
-                        }
-
-                        h = h - ort[m] * g;
-                        ort[m] = ort[m] - g;
-
-                        for (j = m; j < n; j++) {
-                            f = 0;
-                            for (i = high; i >= m; i--) {
-                                f += ort[i] * H[i][j];
-                            }
-
-                            f = f / h;
-                            for (i = m; i <= high; i++) {
-                                H[i][j] -= f * ort[i];
-                            }
-                        }
-
-                        for (i = 0; i <= high; i++) {
-                            f = 0;
-                            for (j = high; j >= m; j--) {
-                                f += ort[j] * H[i][j];
-                            }
-
-                            f = f / h;
-                            for (j = m; j <= high; j++) {
-                                H[i][j] -= f * ort[j];
-                            }
-                        }
-
-                        ort[m] = scale * ort[m];
-                        H[m][m - 1] = scale * g;
-                    }
-                }
-
-                for (i = 0; i < n; i++) {
-                    for (j = 0; j < n; j++) {
-                        V[i][j] = (i === j ? 1 : 0);
-                    }
-                }
-
-                for (m = high - 1; m >= low + 1; m--) {
-                    if (H[m][m - 1] !== 0) {
-                        for (i = m + 1; i <= high; i++) {
-                            ort[i] = H[i][m - 1];
-                        }
-
-                        for (j = m; j <= high; j++) {
-                            g = 0;
-                            for (i = m; i <= high; i++) {
-                                g += ort[i] * V[i][j];
-                            }
-
-                            g = (g / ort[m]) / H[m][m - 1];
-                            for (i = m; i <= high; i++) {
-                                V[i][j] += g * ort[i];
-                            }
-                        }
-                    }
-                }
-            }
-
-            function hqr2$4(nn, e, d, V, H) {
-                var n = nn - 1;
-                var low = 0;
-                var high = nn - 1;
-                var eps = Number.EPSILON;
-                var exshift = 0;
-                var norm = 0;
-                var p = 0;
-                var q = 0;
-                var r = 0;
-                var s = 0;
-                var z = 0;
-                var iter = 0;
-                var i, j, k, l, m, t, w, x, y;
-                var ra, sa, vr, vi;
-                var notlast, cdivres;
-
-                for (i = 0; i < nn; i++) {
-                    if (i < low || i > high) {
-                        d[i] = H[i][i];
-                        e[i] = 0;
-                    }
-
-                    for (j = Math.max(i - 1, 0); j < nn; j++) {
-                        norm = norm + Math.abs(H[i][j]);
-                    }
-                }
-
-                while (n >= low) {
-                    l = n;
-                    while (l > low) {
-                        s = Math.abs(H[l - 1][l - 1]) + Math.abs(H[l][l]);
-                        if (s === 0) {
-                            s = norm;
-                        }
-                        if (Math.abs(H[l][l - 1]) < eps * s) {
-                            break;
-                        }
-                        l--;
-                    }
-
-                    if (l === n) {
-                        H[n][n] = H[n][n] + exshift;
-                        d[n] = H[n][n];
-                        e[n] = 0;
-                        n--;
-                        iter = 0;
-                    } else if (l === n - 1) {
-                        w = H[n][n - 1] * H[n - 1][n];
-                        p = (H[n - 1][n - 1] - H[n][n]) / 2;
-                        q = p * p + w;
-                        z = Math.sqrt(Math.abs(q));
-                        H[n][n] = H[n][n] + exshift;
-                        H[n - 1][n - 1] = H[n - 1][n - 1] + exshift;
-                        x = H[n][n];
-
-                        if (q >= 0) {
-                            z = (p >= 0) ? (p + z) : (p - z);
-                            d[n - 1] = x + z;
-                            d[n] = d[n - 1];
-                            if (z !== 0) {
-                                d[n] = x - w / z;
-                            }
-                            e[n - 1] = 0;
-                            e[n] = 0;
-                            x = H[n][n - 1];
-                            s = Math.abs(x) + Math.abs(z);
-                            p = x / s;
-                            q = z / s;
-                            r = Math.sqrt(p * p + q * q);
-                            p = p / r;
-                            q = q / r;
-
-                            for (j = n - 1; j < nn; j++) {
-                                z = H[n - 1][j];
-                                H[n - 1][j] = q * z + p * H[n][j];
-                                H[n][j] = q * H[n][j] - p * z;
-                            }
-
-                            for (i = 0; i <= n; i++) {
-                                z = H[i][n - 1];
-                                H[i][n - 1] = q * z + p * H[i][n];
-                                H[i][n] = q * H[i][n] - p * z;
-                            }
-
-                            for (i = low; i <= high; i++) {
-                                z = V[i][n - 1];
-                                V[i][n - 1] = q * z + p * V[i][n];
-                                V[i][n] = q * V[i][n] - p * z;
-                            }
-                        } else {
-                            d[n - 1] = x + p;
-                            d[n] = x + p;
-                            e[n - 1] = z;
-                            e[n] = -z;
-                        }
-
-                        n = n - 2;
-                        iter = 0;
-                    } else {
-                        x = H[n][n];
-                        y = 0;
-                        w = 0;
-                        if (l < n) {
-                            y = H[n - 1][n - 1];
-                            w = H[n][n - 1] * H[n - 1][n];
-                        }
-
-                        if (iter === 10) {
-                            exshift += x;
-                            for (i = low; i <= n; i++) {
-                                H[i][i] -= x;
-                            }
-                            s = Math.abs(H[n][n - 1]) + Math.abs(H[n - 1][n - 2]);
-                            x = y = 0.75 * s;
-                            w = -0.4375 * s * s;
-                        }
-
-                        if (iter === 30) {
-                            s = (y - x) / 2;
-                            s = s * s + w;
-                            if (s > 0) {
-                                s = Math.sqrt(s);
-                                if (y < x) {
-                                    s = -s;
-                                }
-                                s = x - w / ((y - x) / 2 + s);
-                                for (i = low; i <= n; i++) {
-                                    H[i][i] -= s;
-                                }
-                                exshift += s;
-                                x = y = w = 0.964;
-                            }
-                        }
-
-                        iter = iter + 1;
-
-                        m = n - 2;
-                        while (m >= l) {
-                            z = H[m][m];
-                            r = x - z;
-                            s = y - z;
-                            p = (r * s - w) / H[m + 1][m] + H[m][m + 1];
-                            q = H[m + 1][m + 1] - z - r - s;
-                            r = H[m + 2][m + 1];
-                            s = Math.abs(p) + Math.abs(q) + Math.abs(r);
-                            p = p / s;
-                            q = q / s;
-                            r = r / s;
-                            if (m === l) {
-                                break;
-                            }
-                            if (Math.abs(H[m][m - 1]) * (Math.abs(q) + Math.abs(r)) < eps * (Math.abs(p) * (Math.abs(H[m - 1][m - 1]) + Math.abs(z) + Math.abs(H[m + 1][m + 1])))) {
-                                break;
-                            }
-                            m--;
-                        }
-
-                        for (i = m + 2; i <= n; i++) {
-                            H[i][i - 2] = 0;
-                            if (i > m + 2) {
-                                H[i][i - 3] = 0;
-                            }
-                        }
-
-                        for (k = m; k <= n - 1; k++) {
-                            notlast = (k !== n - 1);
-                            if (k !== m) {
-                                p = H[k][k - 1];
-                                q = H[k + 1][k - 1];
-                                r = (notlast ? H[k + 2][k - 1] : 0);
-                                x = Math.abs(p) + Math.abs(q) + Math.abs(r);
-                                if (x !== 0) {
-                                    p = p / x;
-                                    q = q / x;
-                                    r = r / x;
-                                }
-                            }
-
-                            if (x === 0) {
-                                break;
-                            }
-
-                            s = Math.sqrt(p * p + q * q + r * r);
-                            if (p < 0) {
-                                s = -s;
-                            }
-
-                            if (s !== 0) {
-                                if (k !== m) {
-                                    H[k][k - 1] = -s * x;
-                                } else if (l !== m) {
-                                    H[k][k - 1] = -H[k][k - 1];
-                                }
-
-                                p = p + s;
-                                x = p / s;
-                                y = q / s;
-                                z = r / s;
-                                q = q / p;
-                                r = r / p;
-
-                                for (j = k; j < nn; j++) {
-                                    p = H[k][j] + q * H[k + 1][j];
-                                    if (notlast) {
-                                        p = p + r * H[k + 2][j];
-                                        H[k + 2][j] = H[k + 2][j] - p * z;
-                                    }
-
-                                    H[k][j] = H[k][j] - p * x;
-                                    H[k + 1][j] = H[k + 1][j] - p * y;
-                                }
-
-                                for (i = 0; i <= Math.min(n, k + 3); i++) {
-                                    p = x * H[i][k] + y * H[i][k + 1];
-                                    if (notlast) {
-                                        p = p + z * H[i][k + 2];
-                                        H[i][k + 2] = H[i][k + 2] - p * r;
-                                    }
-
-                                    H[i][k] = H[i][k] - p;
-                                    H[i][k + 1] = H[i][k + 1] - p * q;
-                                }
-
-                                for (i = low; i <= high; i++) {
-                                    p = x * V[i][k] + y * V[i][k + 1];
-                                    if (notlast) {
-                                        p = p + z * V[i][k + 2];
-                                        V[i][k + 2] = V[i][k + 2] - p * r;
-                                    }
-
-                                    V[i][k] = V[i][k] - p;
-                                    V[i][k + 1] = V[i][k + 1] - p * q;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (norm === 0) {
-                    return;
-                }
-
-                for (n = nn - 1; n >= 0; n--) {
-                    p = d[n];
-                    q = e[n];
-
-                    if (q === 0) {
-                        l = n;
-                        H[n][n] = 1;
-                        for (i = n - 1; i >= 0; i--) {
-                            w = H[i][i] - p;
-                            r = 0;
-                            for (j = l; j <= n; j++) {
-                                r = r + H[i][j] * H[j][n];
-                            }
-
-                            if (e[i] < 0) {
-                                z = w;
-                                s = r;
-                            } else {
-                                l = i;
-                                if (e[i] === 0) {
-                                    H[i][n] = (w !== 0) ? (-r / w) : (-r / (eps * norm));
-                                } else {
-                                    x = H[i][i + 1];
-                                    y = H[i + 1][i];
-                                    q = (d[i] - p) * (d[i] - p) + e[i] * e[i];
-                                    t = (x * s - z * r) / q;
-                                    H[i][n] = t;
-                                    H[i + 1][n] = (Math.abs(x) > Math.abs(z)) ? ((-r - w * t) / x) : ((-s - y * t) / z);
-                                }
-
-                                t = Math.abs(H[i][n]);
-                                if ((eps * t) * t > 1) {
-                                    for (j = i; j <= n; j++) {
-                                        H[j][n] = H[j][n] / t;
-                                    }
-                                }
-                            }
-                        }
-                    } else if (q < 0) {
-                        l = n - 1;
-
-                        if (Math.abs(H[n][n - 1]) > Math.abs(H[n - 1][n])) {
-                            H[n - 1][n - 1] = q / H[n][n - 1];
-                            H[n - 1][n] = -(H[n][n] - p) / H[n][n - 1];
-                        } else {
-                            cdivres = cdiv$4(0, -H[n - 1][n], H[n - 1][n - 1] - p, q);
-                            H[n - 1][n - 1] = cdivres[0];
-                            H[n - 1][n] = cdivres[1];
-                        }
-
-                        H[n][n - 1] = 0;
-                        H[n][n] = 1;
-                        for (i = n - 2; i >= 0; i--) {
-                            ra = 0;
-                            sa = 0;
-                            for (j = l; j <= n; j++) {
-                                ra = ra + H[i][j] * H[j][n - 1];
-                                sa = sa + H[i][j] * H[j][n];
-                            }
-
-                            w = H[i][i] - p;
-
-                            if (e[i] < 0) {
-                                z = w;
-                                r = ra;
-                                s = sa;
-                            } else {
-                                l = i;
-                                if (e[i] === 0) {
-                                    cdivres = cdiv$4(-ra, -sa, w, q);
-                                    H[i][n - 1] = cdivres[0];
-                                    H[i][n] = cdivres[1];
-                                } else {
-                                    x = H[i][i + 1];
-                                    y = H[i + 1][i];
-                                    vr = (d[i] - p) * (d[i] - p) + e[i] * e[i] - q * q;
-                                    vi = (d[i] - p) * 2 * q;
-                                    if (vr === 0 && vi === 0) {
-                                        vr = eps * norm * (Math.abs(w) + Math.abs(q) + Math.abs(x) + Math.abs(y) + Math.abs(z));
-                                    }
-                                    cdivres = cdiv$4(x * r - z * ra + q * sa, x * s - z * sa - q * ra, vr, vi);
-                                    H[i][n - 1] = cdivres[0];
-                                    H[i][n] = cdivres[1];
-                                    if (Math.abs(x) > (Math.abs(z) + Math.abs(q))) {
-                                        H[i + 1][n - 1] = (-ra - w * H[i][n - 1] + q * H[i][n]) / x;
-                                        H[i + 1][n] = (-sa - w * H[i][n] - q * H[i][n - 1]) / x;
-                                    } else {
-                                        cdivres = cdiv$4(-r - y * H[i][n - 1], -s - y * H[i][n], z, q);
-                                        H[i + 1][n - 1] = cdivres[0];
-                                        H[i + 1][n] = cdivres[1];
-                                    }
-                                }
-
-                                t = Math.max(Math.abs(H[i][n - 1]), Math.abs(H[i][n]));
-                                if ((eps * t) * t > 1) {
-                                    for (j = i; j <= n; j++) {
-                                        H[j][n - 1] = H[j][n - 1] / t;
-                                        H[j][n] = H[j][n] / t;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                for (i = 0; i < nn; i++) {
-                    if (i < low || i > high) {
-                        for (j = i; j < nn; j++) {
-                            V[i][j] = H[i][j];
-                        }
-                    }
-                }
-
-                for (j = nn - 1; j >= low; j--) {
-                    for (i = low; i <= high; i++) {
-                        z = 0;
-                        for (k = low; k <= Math.min(j, high); k++) {
-                            z = z + V[i][k] * H[k][j];
-                        }
-                        V[i][j] = z;
-                    }
-                }
-            }
-
-            function cdiv$4(xr, xi, yr, yi) {
-                var r, d;
-                if (Math.abs(yr) > Math.abs(yi)) {
-                    r = yi / yr;
-                    d = yr + r * yi;
-                    return [(xr + r * xi) / d, (xi - r * xr) / d];
-                } else {
-                    r = yr / yi;
-                    d = yi + r * yr;
-                    return [(r * xr + xi) / d, (r * xi - xr) / d];
-                }
-            }
-
-            /**
-             * @class CholeskyDecomposition
-             * @link https://github.com/lutzroeder/Mapack/blob/master/Source/CholeskyDecomposition.cs
-             * @param {Matrix} value
-             */
-            class CholeskyDecomposition$$1 {
-                constructor(value) {
-                    value = WrapperMatrix2D$4.checkMatrix(value);
-                    if (!value.isSymmetric()) {
-                        throw new Error('Matrix is not symmetric');
-                    }
-
-                    var a = value;
-                    var dimension = a.rows;
-                    var l = new Matrix$a(dimension, dimension);
-                    var positiveDefinite = true;
-                    var i, j, k;
-
-                    for (j = 0; j < dimension; j++) {
-                        var Lrowj = l[j];
-                        var d = 0;
-                        for (k = 0; k < j; k++) {
-                            var Lrowk = l[k];
-                            var s = 0;
-                            for (i = 0; i < k; i++) {
-                                s += Lrowk[i] * Lrowj[i];
-                            }
-                            Lrowj[k] = s = (a.get(j, k) - s) / l[k][k];
-                            d = d + s * s;
-                        }
-
-                        d = a.get(j, j) - d;
-
-                        positiveDefinite &= (d > 0);
-                        l[j][j] = Math.sqrt(Math.max(d, 0));
-                        for (k = j + 1; k < dimension; k++) {
-                            l[j][k] = 0;
-                        }
-                    }
-
-                    if (!positiveDefinite) {
-                        throw new Error('Matrix is not positive definite');
-                    }
-
-                    this.L = l;
-                }
-
-                /**
-                 *
-                 * @param {Matrix} value
-                 * @return {Matrix}
-                 */
-                solve(value) {
-                    value = WrapperMatrix2D$4.checkMatrix(value);
-
-                    var l = this.L;
-                    var dimension = l.rows;
-
-                    if (value.rows !== dimension) {
-                        throw new Error('Matrix dimensions do not match');
-                    }
-
-                    var count = value.columns;
-                    var B = value.clone();
-                    var i, j, k;
-
-                    for (k = 0; k < dimension; k++) {
-                        for (j = 0; j < count; j++) {
-                            for (i = 0; i < k; i++) {
-                                B[k][j] -= B[i][j] * l[k][i];
-                            }
-                            B[k][j] /= l[k][k];
-                        }
-                    }
-
-                    for (k = dimension - 1; k >= 0; k--) {
-                        for (j = 0; j < count; j++) {
-                            for (i = k + 1; i < dimension; i++) {
-                                B[k][j] -= B[i][j] * l[i][k];
-                            }
-                            B[k][j] /= l[k][k];
-                        }
-                    }
-
-                    return B;
-                }
-
-                /**
-                 *
-                 * @return {Matrix}
-                 */
-                get lowerTriangularMatrix() {
-                    return this.L;
-                }
-            }
-
-
-
-            var src$p = /*#__PURE__*/Object.freeze({
-                        default: Matrix$a,
-                        Matrix: Matrix$a,
-                        abstractMatrix: AbstractMatrix$4,
-                        wrap: wrap$4,
-                        WrapperMatrix2D: WrapperMatrix2D$4,
-                        WrapperMatrix1D: WrapperMatrix1D$4,
-                        solve: solve$$1,
-                        inverse: inverse$$1,
-                        SingularValueDecomposition: SingularValueDecomposition$$1,
-                        SVD: SingularValueDecomposition$$1,
-                        EigenvalueDecomposition: EigenvalueDecomposition$$1,
-                        EVD: EigenvalueDecomposition$$1,
-                        CholeskyDecomposition: CholeskyDecomposition$$1,
-                        CHO: CholeskyDecomposition$$1,
-                        LuDecomposition: LuDecomposition$$1,
-                        LU: LuDecomposition$$1,
-                        QrDecomposition: QrDecomposition$$1,
-                        QR: QrDecomposition$$1
-            });
-
-            function _interopDefault$1 (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
-
-            var Matrix$b = _interopDefault$1(src$p);
-
             class LogisticRegressionTwoClasses {
                 constructor(options = {}) {
                     this.numSteps = options.numSteps || 500000;
                     this.learningRate = options.learningRate || 5e-4;
-                    this.weights = options.weights ? Matrix$b.checkMatrix(options.weights) : null;
+                    this.weights = options.weights ? Matrix$a.checkMatrix(options.weights) : null;
                 }
 
                 train(features, target) {
-                    var weights = Matrix$b.zeros(1, features.columns);
+                    var weights = Matrix$a.zeros(1, features.columns);
 
                     for (var step = 0; step < this.numSteps; step++) {
                         var scores = features.mmul(weights.transposeView());
                         var predictions = sigmoid(scores);
 
                         // Update weights with gradient
-                        var outputErrorSignal = Matrix$b.columnVector(predictions).neg().add(target);
+                        var outputErrorSignal = Matrix$a.columnVector(predictions).neg().add(target);
                         var gradient = features.transposeView().mmul(outputErrorSignal);
                         weights = weights.add(gradient.mul(this.learningRate).transposeView());
                     }
@@ -64254,14 +61734,14 @@
                 testScores(features) {
                     var finalData = features.mmul(this.weights.transposeView());
                     var predictions = sigmoid(finalData);
-                    predictions = Matrix$b.columnVector(predictions);
+                    predictions = Matrix$a.columnVector(predictions);
                     return predictions.to1DArray();
                 }
 
                 predict(features) {
                     var finalData = features.mmul(this.weights.transposeView());
                     var predictions = sigmoid(finalData);
-                    predictions = Matrix$b.columnVector(predictions).round();
+                    predictions = Matrix$a.columnVector(predictions).round();
                     return predictions.to1DArray();
                 }
 
@@ -64296,7 +61776,7 @@
                         y[i] = 1;
                     }
                 }
-                return Matrix$b.columnVector(y);
+                return Matrix$a.columnVector(y);
             }
 
             class LogisticRegression {
@@ -64360,8 +61840,6 @@
                     };
                 }
             }
-
-            var logreg = LogisticRegression;
 
             /**
              * base interface class for reinforced learning
@@ -64537,7 +62015,7 @@
                 let ad = 0; //ad is each bandit
                 let max_random = 0;
                 for (let i = 0; i < this.bounds; i++){
-                  let random_beta = probabilityDistributions_2(1, this.numbers_of_rewards_1.get(i) + 1, this.numbers_of_rewards_0.get(i) + 1);
+                  let random_beta = probabilityDistributions.rbeta(1, this.numbers_of_rewards_1.get(i) + 1, this.numbers_of_rewards_0.get(i) + 1);
                   if (random_beta > max_random) {
                     max_random = random_beta;
                     ad = i;
@@ -64593,6 +62071,15 @@
               }
             }
 
+            /* fix for rollup */
+            /* istanbul ignore next */
+            const mlf = (undefined) ? undefined : src$1;
+            const mlc = (undefined) ? undefined : src;
+            const mln = (undefined) ? undefined : src$6;
+            const { RandomForestRegression: RandomForestRegression$1, RandomForestClassifier: RandomForestClassifier$1, } = mlf;
+            const { DecisionTreeRegression: DecisionTreeRegression$1, DecisionTreeClassifier: DecisionTreeClassifier$1, } = mlc;
+            const { GaussianNB: GaussianNB$1, } = mln;
+
             src$n.Regression = Object.assign({},
               src$n.Regression);
             src$n.SL = Object.assign({},
@@ -64607,14 +62094,14 @@
               });
             src$n.UpperConfidenceBound = UpperConfidenceBound;
             src$n.ThompsonSampling = ThompsonSampling;
-            src$n.Regression.DecisionTreeRegression = DecisionTreeRegression;
-            src$n.Regression.RandomForestRegression = RandomForestRegression;
+            src$n.Regression.DecisionTreeRegression = DecisionTreeRegression$1;
+            src$n.Regression.RandomForestRegression = RandomForestRegression$1;
             src$n.Regression.MultivariateLinearRegression = MultivariateLinearRegression;
 
-            src$n.SL.GaussianNB = GaussianNB;
-            src$n.SL.LogisticRegression = logreg;
-            src$n.SL.DecisionTreeClassifier = DecisionTreeClassifier;
-            src$n.SL.RandomForestClassifier = RandomForestClassifier;
+            src$n.SL.GaussianNB = GaussianNB$1;
+            src$n.SL.LogisticRegression = LogisticRegression;
+            src$n.SL.DecisionTreeClassifier = DecisionTreeClassifier$1;
+            src$n.SL.RandomForestClassifier = RandomForestClassifier$1;
 
             src$n.Stat.PCA = pca;
 
@@ -76366,9 +73853,9 @@
             // singular value decomposition in pure javascript
             function svdJs() {
                 var A = this;
-                var V = Matrix$c.I(A.rows());
+                var V = Matrix$b.I(A.rows());
                 var S = A.transpose();
-                var U = Matrix$c.I(A.cols());
+                var U = Matrix$b.I(A.cols());
                 var err = Number.MAX_VALUE;
                 var i = 0;
                 var maxLoop = 100;
@@ -76424,7 +73911,7 @@
             function qrJs() {
                 var m = this.rows();
                 var n = this.cols();
-                var Q = Matrix$c.I(m);
+                var Q = Matrix$b.I(m);
                 var A = this;
                 
                 for(var k = 1; k < Math.min(m, n); k++) {
@@ -76437,7 +73924,7 @@
             	oneZero = $V(oneZero);
             	var vk = ak.add(oneZero.x(ak.norm() * Math.sign(ak.e(1))));
             	var Vk = $M(vk);
-            	var Hk = Matrix$c.I(m - k + 1).subtract(Vk.x(2).x(Vk.transpose()).div(Vk.transpose().x(Vk).e(1, 1)));
+            	var Hk = Matrix$b.I(m - k + 1).subtract(Vk.x(2).x(Vk.transpose()).div(Vk.transpose().x(Vk).e(1, 1)));
             	var Qk = identSize(Hk, m, n, k);
             	A = Qk.x(A);
             	// slow way to compute Q
@@ -76457,8 +73944,8 @@
                 };
             }
 
-            function Matrix$c() {}
-            Matrix$c.prototype = {
+            function Matrix$b() {}
+            Matrix$b.prototype = {
                 // solve a system of linear equations (work in progress)
                 solve: function(b) {
             	var lu = this.lu();
@@ -76573,7 +74060,7 @@
                 // one-column matrix equal to the vector.
                 eql: function(matrix, precision) {
             	var M = matrix.elements || matrix;
-            	if (typeof(M[0][0]) == 'undefined') { M = Matrix$c.create(M).elements; }
+            	if (typeof(M[0][0]) == 'undefined') { M = Matrix$b.create(M).elements; }
             	if (this.elements.length != M.length ||
                         this.elements[0].length != M[0].length) { return false; }
             	var i = this.elements.length, nj = this.elements[0].length, j;
@@ -76587,7 +74074,7 @@
 
                 // Returns a copy of the matrix
                 dup: function() {
-            	return Matrix$c.create(this.elements);
+            	return Matrix$b.create(this.elements);
                 },
 
                 // Maps the matrix to another matrix (of the same dimensions) according to the given function
@@ -76599,13 +74086,13 @@
             			  els[i][j] = fn(this.elements[i][j], i + 1, j + 1);
             		      }
             		    }
-            	return Matrix$c.create(els);
+            	return Matrix$b.create(els);
                 },
 
                 // Returns true iff the argument has the same dimensions as the matrix
                 isSameSizeAs: function(matrix) {
             	var M = matrix.elements || matrix;
-            	if (typeof(M[0][0]) == 'undefined') { M = Matrix$c.create(M).elements; }
+            	if (typeof(M[0][0]) == 'undefined') { M = Matrix$b.create(M).elements; }
             	return (this.elements.length == M.length &&
             		this.elements[0].length == M[0].length);
                 },
@@ -76616,7 +74103,7 @@
             	    return this.map(function(x, i, j) { return x + matrix});
             	} else {
             	    var M = matrix.elements || matrix;
-            	    if (typeof(M[0][0]) == 'undefined') { M = Matrix$c.create(M).elements; }
+            	    if (typeof(M[0][0]) == 'undefined') { M = Matrix$b.create(M).elements; }
             	    if (!this.isSameSizeAs(M)) { return null; }
             	    return this.map(function(x, i, j) { return x + M[i - 1][j - 1]; });
             	}
@@ -76628,7 +74115,7 @@
             	    return this.map(function(x, i, j) { return x - matrix});
             	} else {
             	    var M = matrix.elements || matrix;
-            	    if (typeof(M[0][0]) == 'undefined') { M = Matrix$c.create(M).elements; }
+            	    if (typeof(M[0][0]) == 'undefined') { M = Matrix$b.create(M).elements; }
             	    if (!this.isSameSizeAs(M)) { return null; }
             	    return this.map(function(x, i, j) { return x - M[i - 1][j - 1]; });
             	}
@@ -76637,7 +74124,7 @@
                 // Returns true iff the matrix can multiply the argument from the left
                 canMultiplyFromLeft: function(matrix) {
             	var M = matrix.elements || matrix;
-            	if (typeof(M[0][0]) == 'undefined') { M = Matrix$c.create(M).elements; }
+            	if (typeof(M[0][0]) == 'undefined') { M = Matrix$b.create(M).elements; }
             	// this.columns should equal matrix.rows
             	return (this.elements[0].length == M.length);
                 },
@@ -76654,7 +74141,7 @@
             	var returnVector = matrix.modulus ? true : false;
             	var M = matrix.elements || matrix;
             	if (typeof(M[0][0]) == 'undefined') 
-            	    M = Matrix$c.create(M).elements;
+            	    M = Matrix$b.create(M).elements;
             	if (!this.canMultiplyFromLeft(M)) 
             	    return null; 
             	var e = this.elements, rowThis, rowElem, elements = [],
@@ -76679,7 +74166,7 @@
                         elements[i] = rowElem;
             	}
 
-            	var M = Matrix$c.create(elements);
+            	var M = Matrix$b.create(elements);
             	return returnVector ? M.col(1) : M;
                 },
 
@@ -76751,7 +74238,7 @@
             		elements[i][j] = this.elements[(a + i - 1) % rows][(b + j - 1) % cols];
             	    }
             	}
-            	return Matrix$c.create(elements);
+            	return Matrix$b.create(elements);
                 },
 
                 // Returns the transpose of the matrix
@@ -76765,7 +74252,7 @@
             		elements[i][j] = this.elements[j][i];
             	    }
             	}
-            	return Matrix$c.create(elements);
+            	return Matrix$b.create(elements);
                 },
 
                 // Returns true iff the matrix is square
@@ -76893,7 +74380,7 @@
                 // Returns the result of attaching the given argument to the right-hand side of the matrix
                 augment: function(matrix) {
             	var M = matrix.elements || matrix;
-            	if (typeof(M[0][0]) == 'undefined') { M = Matrix$c.create(M).elements; }
+            	if (typeof(M[0][0]) == 'undefined') { M = Matrix$b.create(M).elements; }
             	var T = this.dup(), cols = T.elements[0].length;
             	var i = T.elements.length, nj = M[0].length, j;
             	if (i != M.length) { return null; }
@@ -76910,7 +74397,7 @@
                 inverse: function() {
             	if (!this.isSquare() || this.isSingular()) { return null; }
             	var n = this.elements.length, i = n, j;
-            	var M = this.augment(Matrix$c.I(n)).toRightTriangular();
+            	var M = this.augment(Matrix$b.I(n)).toRightTriangular();
             	var np = M.elements[0].length, p, els, divisor;
             	var inverse_elements = [], new_element;
             	// Matrix is non-singular so there will be no zeros on the diagonal
@@ -76939,7 +74426,7 @@
             		M.elements[j] = els;
             	    }
             	}
-            	return Matrix$c.create(inverse_elements);
+            	return Matrix$b.create(inverse_elements);
                 },
 
                 inv: function() { return this.inverse(); },
@@ -77168,9 +74655,9 @@
             // pure Javascript LU factorization
             function luJs() {
                 var A = this.dup();
-                var L = Matrix$c.I(A.rows());
-                var P = Matrix$c.I(A.rows());
-                var U = Matrix$c.Zeros(A.rows(), A.cols());
+                var L = Matrix$b.I(A.rows());
+                var P = Matrix$b.I(A.rows());
+                var U = Matrix$b.Zeros(A.rows(), A.cols());
                 var p = 1;
 
                 for(var k = 1; k <= Math.min(A.cols(), A.rows()); k++) {
@@ -77206,24 +74693,24 @@
 
             // if node-lapack is installed use the fast, native fortran routines
             if(lapack$1 = getLapack()) {
-                Matrix$c.prototype.svd = svdPack;
-                Matrix$c.prototype.qr = qrPack;
-                Matrix$c.prototype.lu = luPack;
+                Matrix$b.prototype.svd = svdPack;
+                Matrix$b.prototype.qr = qrPack;
+                Matrix$b.prototype.lu = luPack;
             } else {
                 // otherwise use the slower pure Javascript versions
-                Matrix$c.prototype.svd = svdJs;
-                Matrix$c.prototype.qr = qrJs;
-                Matrix$c.prototype.lu = luJs;
+                Matrix$b.prototype.svd = svdJs;
+                Matrix$b.prototype.qr = qrJs;
+                Matrix$b.prototype.lu = luJs;
             }
 
             // Constructor function
-            Matrix$c.create = function(aElements, ignoreLapack) {
-                var M = new Matrix$c().setElements(aElements);
+            Matrix$b.create = function(aElements, ignoreLapack) {
+                var M = new Matrix$b().setElements(aElements);
                 return M;
             };
 
             // Identity matrix of size n
-            Matrix$c.I = function(n) {
+            Matrix$b.I = function(n) {
                 var els = [], i = n, j;
                 while (i--) {
             	j = n;
@@ -77232,10 +74719,10 @@
             	    els[i][j] = (i == j) ? 1 : 0;
             	}
                 }
-                return Matrix$c.create(els);
+                return Matrix$b.create(els);
             };
 
-            Matrix$c.loadFile = function(file) {
+            Matrix$b.loadFile = function(file) {
                 var contents = fs.readFileSync(file, 'utf-8');
                 var matrix = [];
 
@@ -77247,14 +74734,14 @@
             	}
                 }
 
-                var M = new Matrix$c();
+                var M = new Matrix$b();
                 return M.setElements(matrix);
             };
 
             // Diagonal matrix - all off-diagonal elements are zero
-            Matrix$c.Diagonal = function(elements) {
+            Matrix$b.Diagonal = function(elements) {
                 var i = elements.length;
-                var M = Matrix$c.I(i);
+                var M = Matrix$b.I(i);
                 while (i--) {
             	M.elements[i][i] = elements[i];
                 }
@@ -77263,9 +74750,9 @@
 
             // Rotation matrix about some axis. If no axis is
             // supplied, assume we're after a 2D transform
-            Matrix$c.Rotation = function(theta, a) {
+            Matrix$b.Rotation = function(theta, a) {
                 if (!a) {
-            	return Matrix$c.create([
+            	return Matrix$b.create([
             	    [Math.cos(theta), -Math.sin(theta)],
             	    [Math.sin(theta), Math.cos(theta)]
             	]);
@@ -77278,7 +74765,7 @@
                 // Formula derived here: http://www.gamedev.net/reference/articles/article1199.asp
                 // That proof rotates the co-ordinate system so theta
                 // becomes -theta and sin becomes -sin here.
-                return Matrix$c.create([
+                return Matrix$b.create([
             	[t * x * x + c, t * x * y - s * z, t * x * z + s * y],
             	[t * x * y + s * z, t * y * y + c, t * y * z - s * x],
             	[t * x * z - s * y, t * y * z + s * x, t * z * z + c]
@@ -77286,27 +74773,27 @@
             };
 
             // Special case rotations
-            Matrix$c.RotationX = function(t) {
+            Matrix$b.RotationX = function(t) {
                 var c = Math.cos(t), s = Math.sin(t);
-                return Matrix$c.create([
+                return Matrix$b.create([
             	[1, 0, 0],
             	[0, c, -s],
             	[0, s, c]
                 ]);
             };
 
-            Matrix$c.RotationY = function(t) {
+            Matrix$b.RotationY = function(t) {
                 var c = Math.cos(t), s = Math.sin(t);
-                return Matrix$c.create([
+                return Matrix$b.create([
             	[c, 0, s],
             	[0, 1, 0],
             	[-s, 0, c]
                 ]);
             };
 
-            Matrix$c.RotationZ = function(t) {
+            Matrix$b.RotationZ = function(t) {
                 var c = Math.cos(t), s = Math.sin(t);
-                return Matrix$c.create([
+                return Matrix$b.create([
             	[c, -s, 0],
             	[s, c, 0],
             	[0, 0, 1]
@@ -77314,14 +74801,14 @@
             };
 
             // Random matrix of n rows, m columns
-            Matrix$c.Random = function(n, m) {
+            Matrix$b.Random = function(n, m) {
                 if (arguments.length === 1) m = n;
-                return Matrix$c.Zero(n, m).map(
+                return Matrix$b.Zero(n, m).map(
             	function() { return Math.random(); }
               );
             };
 
-            Matrix$c.Fill = function(n, m, v) {
+            Matrix$b.Fill = function(n, m, v) {
                 if (arguments.length === 2) {
             	v = m;
             	m = n;
@@ -77338,30 +74825,30 @@
             	}
                 }
 
-                return Matrix$c.create(els);
+                return Matrix$b.create(els);
             };
 
             // Matrix filled with zeros
-            Matrix$c.Zero = function(n, m) {
-                return Matrix$c.Fill(n, m, 0);
+            Matrix$b.Zero = function(n, m) {
+                return Matrix$b.Fill(n, m, 0);
             };
 
             // Matrix filled with zeros
-            Matrix$c.Zeros = function(n, m) {
-                return Matrix$c.Zero(n, m);
+            Matrix$b.Zeros = function(n, m) {
+                return Matrix$b.Zero(n, m);
             };
 
             // Matrix filled with ones
-            Matrix$c.One = function(n, m) {
-                return Matrix$c.Fill(n, m, 1);
+            Matrix$b.One = function(n, m) {
+                return Matrix$b.Fill(n, m, 1);
             };
 
             // Matrix filled with ones
-            Matrix$c.Ones = function(n, m) {
-                return Matrix$c.One(n, m);
+            Matrix$b.Ones = function(n, m) {
+                return Matrix$b.One(n, m);
             };
 
-            var matrix$2 = Matrix$c;
+            var matrix$2 = Matrix$b;
 
             // Copyright (c) 2011, Chris Umbel, James Coglan
             // This file is required in order for any other classes to work. Some Vector methods work with the
@@ -78479,7 +75966,7 @@
 
 
 
-            var Matrix$d = nodeSylvester.Matrix,
+            var Matrix$c = nodeSylvester.Matrix,
             Vector$1 = nodeSylvester.Vector;
 
             function sigmoid$1(z) {
@@ -78507,7 +75994,7 @@
                 var learningRate = 3;
                 var learningRateFound = false;
 
-                Examples = Matrix$d.One(Examples.rows(), 1).augment(Examples);
+                Examples = Matrix$c.One(Examples.rows(), 1).augment(Examples);
                 theta = theta.augment([0]);
 
                 while(!learningRateFound) {
@@ -78668,7 +76155,7 @@
             THE SOFTWARE.
             */
 
-            var Matrix$e = nodeSylvester.Matrix,
+            var Matrix$d = nodeSylvester.Matrix,
             Vector$2 = nodeSylvester.Vector;
 
             function KMeans(Observations) {
@@ -78721,7 +76208,7 @@
             // containing the results.
             function cluster(k) {
                 var Centroids = this.createCentroids(k);
-                var LastDistances = Matrix$e.Zero(this.Observations.rows(), this.Observations.cols());
+                var LastDistances = Matrix$d.Zero(this.Observations.rows(), this.Observations.cols());
                 var Distances = this.distanceFrom(Centroids);
                 var Groups;
 
@@ -85297,6 +82784,23 @@
             	Corpus: Corpus$1
             };
 
+            const transformConfigMap = {
+              scale: 'scaleOptions',
+              descale: 'descaleOptions',
+              label: 'labelOptions',
+              labelEncoder: 'labelOptions',
+              labeldecode: 'labelOptions',
+              labelDecode: 'labelOptions',
+              labelDecoder: 'labelOptions',
+              onehot: 'oneHotOptions',
+              oneHot: 'oneHotOptions',
+              oneHotEncode: 'oneHotOptions',
+              oneHotEncoder: 'oneHotOptions',
+              reducer: 'reducerOptions',
+              reduce: 'reducerOptions',
+              merge: 'mergeData',
+            };
+
             /**
              * class for manipulating an array of objects, typically from CSV data
              * @class DataSet
@@ -85304,17 +82808,230 @@
              */
             class DataSet {
               /**
+               * Allows for fit transform short hand notation
+               * @example
+            DataSet.getTransforms({
+              Age: ['scale',],
+              Rating: ['label',],  }); //=> [
+            //   {
+            //    name: 'Age', options: { strategy: 'scale', }, },
+            //   },
+            //   { 
+            //    name: 'Rating', options: { strategy: 'label', }, 
+            //   },
+            // ];
+               * @param {Object} transforms 
+               * @returns {Array<Object>} returns fit columns, columns property
+               */
+              static getTransforms(transforms = {}) {
+                return Object.keys(transforms).reduce((result, columnName) => {
+                  const transformObject = {
+                    name: columnName,
+                    options: {
+                      strategy: (Array.isArray(transforms[ columnName ]))
+                        ? transforms[ columnName ][0]
+                        : transforms[ columnName ],
+                    },
+                  };
+                  if (Array.isArray(transforms[ columnName ]) && transforms[ columnName ].length > 1) {
+                    transformObject.options[ transformConfigMap[transforms[ columnName ][ 0 ]] ] = transforms[ columnName ][ 1 ];
+                  }
+                  result.push(transformObject);
+                  return result;
+                }, []);
+              }
+              
+              /**
+               * returns an array of objects by applying labels to matrix of columns
+               * @example
+            const data = [{ Age: '44', Salary: '44' },
+            { Age: '27', Salary: '27' }]
+            const AgeDataSet = new MS.DataSet(data);
+            const dependentVariables = [ [ 'Age', ], [ 'Salary', ], ];
+            const AgeSalMatrix = AgeDataSet.columnMatrix(dependentVariables); // =>
+            //  [ [ '44', '72000' ],
+            //  [ '27', '48000' ] ];
+            MS.DataSet.reverseColumnMatrix({vectors:AgeSalMatrix,labels:dependentVariables}); // => [{ Age: '44', Salary: '44' },
+            { Age: '27', Salary: '27' }]
+               * 
+               * @param {*} options 
+               * @param {Array[]} options.vectors - array of vectors
+               * @param {String[]} options.labels - array of labels
+               * @returns {Object[]} an array of objects with properties derived from options.labels
+               */
+              static reverseColumnMatrix(options = {}) {
+                const { vectors, labels, } = options;
+                const features = (Array.isArray(labels) && Array.isArray(labels[ 0 ]))
+                  ? labels
+                  : labels.map(label => [label,]);
+                return vectors.reduce((result, val) => { 
+                  result.push(val.reduce((prop, value, index) => { 
+                    prop[ features[ index ][ 0 ] ] = val[index];
+                    return prop;
+                  }, {}));
+                  return result;
+                }, []);
+              }
+
+              static reverseColumnVector(options = {}) {
+                const { vector, labels, } = options;
+                const features = (Array.isArray(labels) && Array.isArray(labels[ 0 ]))
+                  ? labels
+                  : labels.map(label => [label,]);
+                return vector.reduce((result, val) => {
+                  result.push(
+                    { [ features[ 0 ][ 0 ] ]: val, }
+                  );
+                  return result;
+                }, []);
+              }
+              
+              /**
+               * Returns an object into an one hot encoded object
+               * @example
+            const labels = ['apple', 'orange', 'banana',];
+            const prefix = 'fruit_';
+            const name = 'fruit';
+            const options = { labels, prefix, name, };
+            const data = {
+              fruit: 'apple',
+            };
+            EncodedCSVDataSet.encodeObject(data, options); // => { fruit_apple: 1, fruit_orange: 0, fruit_banana: 0, }
+               * @param {Object} data - object to encode 
+               * @param {{labels:Array<String>,prefix:String,name:String}} options - encoded object options
+               * @returns {Object} one hot encoded object
+               */
+              static encodeObject(data, options) {
+                const { labels, prefix, name,  } = options;
+                const encodedData = labels.reduce((encodedObj, label) => { 
+                  const oneHotLabelArrayName = `${prefix}${label}`;
+                  encodedObj[oneHotLabelArrayName] = (data[name].toString() === label.toString()) ? 1 : 0;
+                  return encodedObj;
+                }, {});
+                return encodedData;
+              }
+              /**
+             * returns a new object of one hot encoded values
+             * @example
+             * // [ 'Brazil','Mexico','Ghana','Mexico','Ghana','Brazil','Mexico','Brazil','Ghana', 'Brazil' ]
+            const originalCountry = dataset.columnArray('Country'); 
+
+            // { originalCountry:
+            //    { Country_Brazil: [ 1, 0, 0, 0, 0, 1, 0, 1, 0, 1 ],
+            //      Country_Mexico: [ 0, 1, 0, 1, 0, 0, 1, 0, 0, 0 ],
+            //      Country_Ghana: [ 0, 0, 1, 0, 1, 0, 0, 0, 1, 0 ] },
+            //     }
+            const oneHotCountryColumn = dataset.oneHotEncoder('Country'); 
+              * @param {string} name - csv column header, or JSON object property name 
+              * @param options 
+              * @see {@link http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html}
+              * @return {Object}
+              */
+              static oneHotEncoder(name, options) {
+                const config = Object.assign({
+                }, options);
+                const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
+                const labels = Array.from(new Set(labelData).values());
+                const prefix = config.prefix||`${name}_`;
+                const encodedData = labelData.reduce(
+                  (result, val, index, arr) => {
+                    labels.forEach(encodedLabel => {
+                      const oneHotLabelArrayName = `${prefix}${encodedLabel}`;
+                      const oneHotVal = (val === encodedLabel) ? 1 : 0;
+                      if (Array.isArray(result[oneHotLabelArrayName])) {
+                        result[oneHotLabelArrayName].push(oneHotVal);
+                      } else {
+                        result[oneHotLabelArrayName] = [oneHotVal, ];
+                      }
+                    });
+                    return result;
+                  }, {});
+                this.encoders.set(name, {
+                  name,
+                  labels,
+                  prefix,
+                });
+                return encodedData;
+              }
+              
+              /**
+               * Return one hot encoded data
+               * @example
+            const csvData = [{
+                'Country': 'Brazil',
+                'Age': '44',
+                'Salary': '72000',
+                'Purchased': 'N',
+              },
+              {
+                'Country': 'Mexico',
+                'Age': '27',
+                'Salary': '48000',
+                'Purchased': 'Yes',
+              },
+              ...
+            ];
+            const EncodedCSVDataSet = new ms.preprocessing.DataSet(csvData);
+            EncodedCSVDataSet.fitColumns({
+              columns: [
+                {
+                  name: 'Country',
+                  options: { strategy: 'onehot', },
+                },
+              ],
+            });
+
+            EncodedCSVDataSet.oneHotDecoder('Country);// =>
+            // [ { Country: 'Brazil' },
+            //  { Country: 'Mexico' },
+            //  { Country: 'Ghana' },
+            //  { Country: 'Mexico' },
+            //   ...]
+               * @param {string} name - column name 
+               * @param options 
+               * @returns {Array<Object>} returns an array of objects from an one hot encoded column
+               */
+              static oneHotDecoder(name, options) {
+                const config = Object.assign({
+                  // handle_unknown: 'error'
+                }, options);
+                const encoderMap = config.encoders || this.encoders;
+                const prefix = config.prefix || encoderMap.get(name).prefix;
+                const labels = config.labels || encoderMap.get(name).labels;
+                const encodedData = config.data || this.oneHotColumnArray(name, config.oneHotColumnArrayOptions);
+                // console.log({ encodedData, encoderMap, prefix });
+                return encodedData.reduce((result, val) => {
+                  const columnNames = Object.keys(val).filter(prop => val[ prop ] === 1 && labels.indexOf(prop.replace(prefix,''))!==-1);
+                  const columnName = columnNames[ 0 ]||''; 
+                  // console.log({ columnName, columnNames, labels, val},Object.keys(val));
+                  const datum = {
+                    [ name ]: columnName.replace(prefix, ''),
+                  };
+                  result.push(datum);
+                  return result;
+                }, []);
+              }
+              /**
                * creates a new raw data instance for preprocessing data for machine learning
                * @example
                * const dataset = new ms.DataSet(csvData);
                * @param {Object[]} dataset
                * @returns {this} 
                */
-              constructor(data = []) {
-                this.data = [...data,];
+              constructor(data = [], options) {
+                this.config = Object.assign({
+                  debug: true,
+                }, options);
+                this.data = [...data, ];
                 this.labels = new Map();
                 this.encoders = new Map();
                 this.scalers = new Map();
+                this.encodeObject = DataSet.encodeObject;
+                this.oneHotEncoder = DataSet.oneHotEncoder;
+                this.oneHotDecoder = DataSet.oneHotDecoder;
+                this.reverseColumnMatrix = DataSet.reverseColumnMatrix;
+                this.reverseColumnVector = DataSet.reverseColumnVector;
+                this.getTransforms = DataSet.getTransforms;
                 return this;
               }
               /**
@@ -85344,55 +83061,11 @@
               columnMatrix(vectors = []) {
                 const columnVectors = (Array.isArray(vectors) && Array.isArray(vectors[ 0 ]))
                   ? vectors
-                  : vectors.map(vector => [vector,]);
+                  : vectors.map(vector => [vector, ]);
                 const vectorArrays = columnVectors
                   .map(vec => this.columnArray(...vec));
                     
                 return util$3.pivotArrays(vectorArrays);
-              }
-              /**
-               * returns an array of objects by applying labels to matrix of columns
-               * @example
-            const data = [{ Age: '44', Salary: '44' },
-            { Age: '27', Salary: '27' }]
-            const AgeDataSet = new MS.DataSet(data);
-            const dependentVariables = [ [ 'Age', ], [ 'Salary', ], ];
-            const AgeSalMatrix = AgeDataSet.columnMatrix(dependentVariables); // =>
-            //  [ [ '44', '72000' ],
-            //  [ '27', '48000' ] ];
-            MS.DataSet.reverseColumnMatrix({vectors:AgeSalMatrix,labels:dependentVariables}); // => [{ Age: '44', Salary: '44' },
-            { Age: '27', Salary: '27' }]
-               * 
-               * @param {*} options 
-               * @param {Array[]} options.vectors - array of vectors
-               * @param {String[]} options.labels - array of labels
-               * @returns {Object[]} an array of objects with properties derived from options.labels
-               */
-              static reverseColumnMatrix(options = {}) {
-                const { vectors, labels, } = options;
-                const features = (Array.isArray(labels) && Array.isArray(labels[ 0 ]))
-                  ? labels
-                  : labels.map(label => [ label, ]);
-                return vectors.reduce((result, val) => { 
-                  result.push(val.reduce((prop, value, index) => { 
-                    prop[ features[ index ][ 0 ] ] = val[index];
-                    return prop;
-                  }, {}));
-                  return result;
-                }, []);
-              }
-
-              static reverseColumnVector(options = {}) {
-                const { vector, labels, } = options;
-                const features = (Array.isArray(labels) && Array.isArray(labels[ 0 ]))
-                  ? labels
-                  : labels.map(label => [ label, ]);
-                return vector.reduce((result, val) => {
-                  result.push(
-                    { [ features[ 0 ][ 0 ] ]: val, }
-                  );
-                  return result;
-                }, []);
               }
               /**
                * returns a list of objects with only selected columns as properties
@@ -85499,16 +83172,29 @@
                * @returns {number[]} returns an array of scaled values
                */
               columnScale(name, options = {}) {
+                const input = (typeof options === 'string')
+                  ? { strategy: options, }
+                  : options;
                 const config = Object.assign({
                   strategy: 'log',
-                }, options);
-                const scaleData = config.data || this.columnArray(name, config.columnArrayOptions);
+                }, input);
+                let scaleData = config.data || this.columnArray(name, config.columnArrayOptions);
                 let scaledData;
                 let transforms;
+                  
+                scaleData = scaleData.map((datum, i) => {
+                  if (typeof datum !== 'number') {
+                    if (this.config.debug) {
+                      console.error(TypeError(`Each value must be a number, error at index [${i}]`));
+                    }
+                    return Number(datum);
+                  } else return datum;
+                });
                 switch (config.strategy) {
                 case 'standard':
                   transforms = util$3.StandardScalerTransforms(scaleData);     
                   this.scalers.set(name, {
+                    name,
                     scale: transforms.scale,
                     descale: transforms.descale,
                     components: transforms.components,
@@ -85519,6 +83205,7 @@
                 case 'minmax':
                   transforms = util$3.MinMaxScalerTransforms(scaleData);     
                   this.scalers.set(name, {
+                    name,
                     scale: transforms.scale,
                     descale: transforms.descale,
                     components: transforms.components,
@@ -85528,6 +83215,7 @@
                 case 'log':
                 default:
                   this.scalers.set(name, {
+                    name,
                     scale: Math.log,
                     descale: Math.exp,
                     components: {
@@ -85559,6 +83247,293 @@
                 const descaleFunction = this.scalers.get(name).descale;
                 return scaledData.map(descaleFunction);
               }
+              /**
+               * returns a new array and label encodes a selected column
+               * @example
+               * const oneHotCountryColumn = dataset.oneHotEncoder('Country'); 
+
+            // [ 'N', 'Yes', 'No', 'f', 'Yes', 'Yes', 'false', 'Yes', 'No', 'Yes' ] 
+            const originalPurchasedColumn = dataset.labelEncoder('Purchased');
+            // [ 0, 1, 0, 0, 1, 1, 1, 1, 0, 1 ]
+            const encodedBinaryPurchasedColumn = dataset.labelEncoder('Purchased',{ binary:true });
+            // [ 0, 1, 2, 3, 1, 1, 4, 1, 2, 1 ]
+            const encodedPurchasedColumn = dataset.labelEncoder('Purchased'); 
+              * @param {string} name - csv column header, or JSON object property name 
+              * @param options
+              * @param {boolean} [options.binary=false] - only replace with (0,1) with binary values 
+              * @see {@link http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html} 
+              * @returns {array}
+              */
+              labelEncoder(name, options) {
+                const config = Object.assign({
+                  binary: false,
+                }, options);
+                const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
+                const labels = new Map(
+                  Array.from(new Set(labelData).values())
+                    .reduce((result, val, i, arr) => {
+                      result.push([val, i, ]);
+                      result.push([i, val, ]);
+                      return result;
+                    }, [])
+                );
+                this.labels.set(name, labels);
+                const labeledData = (config.binary) ?
+                  labelData.map(label => {
+                    // console.log(label);
+                    if (!label) return 0;
+                    switch (label) {
+                    case false:
+                    case 'N':
+                    case 'n':
+                    case 'NO':
+                    case 'No':
+                    case 'no':
+                    case 'False':
+                    case 'F':
+                    case 'f':
+                      return 0;
+                    default:
+                      return 1;
+                    }
+                  }) :
+                  labelData.map(label => labels.get(label));
+                return labeledData;
+              }
+              /**
+                 * returns a new array and decodes an encoded column back to the original array values
+                 * @param {string} name - csv column header, or JSON object property name 
+                 * @param options
+                 * @returns {array}
+                 */
+              labelDecode(name, options) {
+                const config = Object.assign({}, options);
+                const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
+                return labelData.map(val => this.labels.get(name).get(val));
+              }
+              /**
+               * Return one hot encoded data
+               * @example
+            const csvData = [{
+                'Country': 'Brazil',
+                'Age': '44',
+                'Salary': '72000',
+                'Purchased': 'N',
+              },
+              {
+                'Country': 'Mexico',
+                'Age': '27',
+                'Salary': '48000',
+                'Purchased': 'Yes',
+              },
+              ...
+            ];
+            const EncodedCSVDataSet = new ms.preprocessing.DataSet(csvData);
+            EncodedCSVDataSet.fitColumns({
+              columns: [
+                {
+                  name: 'Country',
+                  options: { strategy: 'onehot', },
+                },
+              ],
+            });
+
+            EncodedCSVDataSet.oneHotColumnArray('Country);// =>
+            // [ { Country_Brazil: 1, Country_Mexico: 0, Country_Ghana: 0 },
+            //   { Country_Brazil: 0, Country_Mexico: 1, Country_Ghana: 0 },
+            //   { Country_Brazil: 0, Country_Mexico: 0, Country_Ghana: 1 },
+            //   ...]
+               * @param {string} name - column name 
+               * @param options 
+               * @returns {Array<Object>} returns an array of objects from an one hot encoded column
+               */
+              oneHotColumnArray(name, options) {
+                const config = Object.assign({
+                  // handle_unknown: 'error'
+                }, options);
+                const labels = config.labels || this.encoders.get(name).labels;
+                const prefix = config.prefix || this.encoders.get(name).prefix;
+                return this.selectColumns(labels.map(label => `${prefix}${label}`));
+              }
+              /**
+             * it returns a new column that reduces a column into a new column object, this is used in data prep to create new calculated columns for aggregrate statistics
+             * @example 
+            const reducer = (result, value, index, arr) => {
+            result.push(value * 2);
+            return result;
+            };
+            CSVDataSet.columnReducer('DoubleAge', {
+            columnName: 'Age',
+            reducer,
+            }); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }
+              * @param {String} name - name of new Column 
+              * @param {Object} options 
+              * @param {String} options.columnName - name property for columnArray selection 
+              * @param {Object} options.columnOptions - options property for columnArray  
+              * @param {Function} options.reducer - reducer function to reduce into new array, it should push values into the resulting array  
+              * @returns {Object} a new object that has reduced array as the value
+              */
+              columnReducer(name, options) {
+                const newColumn = {
+                  [ name ]: this.columnArray(options.columnName, options.columnOptions).reduce(options.reducer, []),
+                };
+                return newColumn;
+              }
+              /**
+               * it returns a new column that is merged onto the data set
+               * @example 
+            CSVDataSet.columnMerge('DoubleAge', [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ]); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }
+                * @param {String} name - name of new Column 
+                * @param {Array} data - new dataset data  
+                * @returns {Object} 
+                */
+              columnMerge(name, data=[]) {
+                if (this.data.length !== data.length) throw new RangeError(`Merged data column must have the same length(${data.length}) as the DataSet's length (${this.data.length})`);
+                return {
+                  [name]: data,
+                };
+              }
+              /**
+               * Inverses transform on an object
+               * @example
+            DataSet.data; //[{
+            //   Age: 0.6387122698222066,
+            //   Salary: 72000,
+            //   Purchased: 0,
+            //   Country_Brazil: 1,
+            //   Country_Mexico: 0,
+            //   Country_Ghana: 0,
+            // }, ...] 
+            DataSet.inverseTransformObject(DataSet.data[0]); // => {
+            //  Country: 'Brazil', 
+            //  Age: 44, 
+            //  Salary: 72000, 
+            //  Purchased: 'N', 
+            // };
+               * @param data 
+               * @param options 
+               * @returns {Object} returns object with inverse transformed data
+               */
+              inverseTransformObject(data, options) {
+                const config = Object.assign({
+                  removeValues: false,
+                }, options);
+                const removedColumns = [];
+                let transformedObject = Object.assign({}, data);
+                const columnNames = Object.keys(this.data[ 0 ]);
+                const scaledData = columnNames.reduce((scaleObject, columnName) => {
+                  if (this.scalers.has(columnName)){
+                    scaleObject[ columnName ] = this.scalers.get(columnName).descale(data[ columnName ]);
+                  }
+                  return scaleObject;
+                }, {});
+                const labeledData = columnNames.reduce((labelObject, columnName) => {
+                  if (this.labels.has(columnName)){
+                    labelObject[ columnName ] = this.labels.get(columnName).get(data[ columnName ]);
+                  }
+                  return labelObject;
+                }, {});
+                const encodedData = columnNames.reduce((encodedObject, columnName) => {
+                  if (this.encoders.has(columnName)) {
+                    const encoded = this.oneHotDecoder(columnName, {
+                      data: [ data, ],
+                    });
+                    // console.log({encoded})
+                    encodedObject = Object.assign({}, encodedObject, encoded[ 0 ]);
+                    if (config.removeValues) {
+                      removedColumns.push(...this.encoders.get(columnName).labels.map(label=>`${this.encoders.get(columnName).prefix}${label}`));
+                    }
+                  }
+                  return encodedObject;
+                }, {});
+                transformedObject = Object.assign(transformedObject, scaledData, labeledData, encodedData);
+                if (config.removeValues && removedColumns.length) {
+                  transformedObject = Object.keys(transformedObject).reduce((removedObject, propertyName) => {
+                    if (removedColumns.indexOf(propertyName) === -1) {
+                      removedObject[ propertyName ] = transformedObject[ propertyName ];
+                    }
+                    return removedObject;
+                  }, {});
+                }
+                return transformedObject;
+              }
+              /**
+               * transforms an object and replaces values that have been scaled or encoded
+               * @example
+            DataSet.transformObject({
+              'Country': 'Brazil',
+              'Age': '44',
+              'Salary': '72000',
+              'Purchased': 'N',
+            }); // =>
+            // { 
+            //  Country: 'Brazil',
+            //  Age: 3.784189633918261,
+            //  Salary: '72000',
+            //  Purchased: 'N',
+            //  Country_Brazil: 1,
+            //  Country_Mexico: 0,
+            //  Country_Ghana: 0
+            // }
+               * @param data 
+               * @param options 
+               * @returns {Object} 
+               */
+              transformObject(data, options) {
+                const config = Object.assign({
+                  removeValues: false,
+                }, options);
+                const removedColumns = [];
+                // if (Array.isArray(data)) return data.map(datum => this.transformObject);
+                const encodedColumns = [].concat(...Array.from(this.encoders.keys())
+                  .map(encodedColumn => this.encoders.get(encodedColumn).labels
+                    .map(label=>`${this.encoders.get(encodedColumn).prefix}${label}`)
+                  )
+                );
+                const currentColumns = Object.keys(this.data[ 0 ]);
+                const objectColumns = Object.keys(data).concat(encodedColumns);
+                // console.log({ encodedColumns,currentColumns,objectColumns });
+                const differentKeys = objectColumns.reduce((diffKeys, val) => {
+                  if (currentColumns.indexOf(val) === -1 && encodedColumns.indexOf(val) === -1) diffKeys.push(val);
+                  return diffKeys;
+                }, []);
+                let transformedObject = Object.assign({}, data);
+                if (currentColumns.length !== objectColumns.length && currentColumns.length+encodedColumns.length !== objectColumns.length ) {
+                  throw new RangeError(`Object must have the same number of keys (${objectColumns.length}) as data in your dataset(${currentColumns.length})`);
+                } else if (differentKeys.length) {
+                  throw new ReferenceError(`Object must have identical keys as data in your DataSet. Invalid keys: ${differentKeys.join(',')}`);
+                } else {
+                  const scaledData = objectColumns.reduce((scaleObject, columnName) => {
+                    if (this.scalers.has(columnName)){
+                      scaleObject[ columnName ] = this.scalers.get(columnName).scale(data[ columnName ]);
+                    }
+                    return scaleObject;
+                  }, {});
+                  const labeledData = objectColumns.reduce((labelObject, columnName) => {
+                    if (this.labels.has(columnName)){
+                      labelObject[ columnName ] = this.labels.get(columnName).get(data[ columnName ]);
+                    }
+                    return labelObject;
+                  }, {});
+                  const encodedData = objectColumns.reduce((encodedObject, columnName) => {
+                    if (this.encoders.has(columnName)) {
+                      encodedObject = Object.assign({}, encodedObject, this.encodeObject(data, this.encoders.get(columnName)));
+                      if (config.removeValues) {
+                        removedColumns.push(columnName);
+                      }
+                    }
+                    return encodedObject;
+                  }, {});
+                  transformedObject = Object.assign(transformedObject, scaledData, labeledData, encodedData);
+                  if (config.removeValues && removedColumns.length) {
+                    transformedObject = Object.keys(transformedObject).reduce((removedObject, propertyName) => {
+                      if (removedColumns.indexOf(propertyName) === -1) removedObject[ propertyName ] = transformedObject[ propertyName ];
+                      return removedObject;
+                    }, {});
+                  }
+                }
+                return transformedObject;
+              } 
               /**
                * returns a new array of a selected column from an array of objects and replaces empty values, encodes values and scales values
                * @example
@@ -85609,6 +83584,15 @@
                     value: (result, val, index, arr) => replaceVal[index],
                   };
                   break;
+                case 'labeldecode':
+                case 'labelDecode':
+                case 'labelDecoder':
+                  replaceVal = this.labelDecode(name, config.labelOptions);
+                  replace = {
+                    test: val => true,
+                    value: (result, val, index, arr) => replaceVal[index],
+                  };
+                  break;
                 case 'onehot':
                 case 'oneHot':
                 case 'oneHotEncode':
@@ -85619,14 +83603,17 @@
                     value: (result, val, index, arr) => replaceVal[index],
                   };
                   return replaceVal;
-                  break;
+                  // break;
                 case 'reducer':
                 case 'reduce':
                   replaceVal = this.columnReducer(name, config.reducerOptions); 
                   return replaceVal;  
                 case 'merge':
                   replaceVal = this.columnMerge(name, config.mergeData); 
-                  return replaceVal;  
+                  return replaceVal; 
+                case 'parseNumber':
+                  replaceVal = this.columnArray(name).map(num => Number(num)); 
+                  return replaceVal; 
                 default:
                   replaceVal = ml.ArrayStat[config.strategy](this.columnArray(name, config.arrayOptions));
                   replace.value = replaceVal;
@@ -85638,185 +83625,6 @@
                     scale: options.scale,
                   }, options.columnOptions));
               }
-              /**
-               * returns a new array and label encodes a selected column
-               * @example
-               * const oneHotCountryColumn = dataset.oneHotEncoder('Country'); 
-
-            // [ 'N', 'Yes', 'No', 'f', 'Yes', 'Yes', 'false', 'Yes', 'No', 'Yes' ] 
-            const originalPurchasedColumn = dataset.labelEncoder('Purchased');
-            // [ 0, 1, 0, 0, 1, 1, 1, 1, 0, 1 ]
-            const encodedBinaryPurchasedColumn = dataset.labelEncoder('Purchased',{ binary:true });
-            // [ 0, 1, 2, 3, 1, 1, 4, 1, 2, 1 ]
-            const encodedPurchasedColumn = dataset.labelEncoder('Purchased'); 
-              * @param {string} name - csv column header, or JSON object property name 
-              * @param options
-              * @param {boolean} [options.binary=false] - only replace with (0,1) with binary values 
-              * @see {@link http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html} 
-              * @returns {array}
-              */
-              labelEncoder(name, options) {
-                const config = Object.assign({
-                  binary: false,
-                }, options);
-                const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
-                const labels = new Map(
-                  Array.from(new Set(labelData).values())
-                    .reduce((result, val, i, arr) => {
-                      result.push([val, i,]);
-                      result.push([i, val,]);
-                      return result;
-                    }, [])
-                );
-                this.labels.set(name, labels);
-                const labeledData = (config.binary) ?
-                  labelData.map(label => {
-                    // console.log(label);
-                    if (!label) return 0;
-                    switch (label) {
-                    case false:
-                    case 'N':
-                    case 'n':
-                    case 'NO':
-                    case 'No':
-                    case 'no':
-                    case 'False':
-                    case 'F':
-                    case 'f':
-                      return 0;
-                    default:
-                      return 1;
-                    }
-                  }) :
-                  labelData.map(label => labels.get(label));
-                return labeledData;
-              }
-              /**
-                 * returns a new array and decodes an encoded column back to the original array values
-                 * @param {string} name - csv column header, or JSON object property name 
-                 * @param options
-                 * @returns {array}
-                 */
-              labelDecode(name, options) {
-                const config = Object.assign({}, options);
-                const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
-                return labelData.map(val => this.labels.get(name).get(val));
-              }
-              /**
-             * returns a new object of one hot encoded values
-             * @example
-             * // [ 'Brazil','Mexico','Ghana','Mexico','Ghana','Brazil','Mexico','Brazil','Ghana', 'Brazil' ]
-            const originalCountry = dataset.columnArray('Country'); 
-
-            // { originalCountry:
-            //    { Country_Brazil: [ 1, 0, 0, 0, 0, 1, 0, 1, 0, 1 ],
-            //      Country_Mexico: [ 0, 1, 0, 1, 0, 0, 1, 0, 0, 0 ],
-            //      Country_Ghana: [ 0, 0, 1, 0, 1, 0, 0, 0, 1, 0 ] },
-            //     }
-            const oneHotCountryColumn = dataset.oneHotEncoder('Country'); 
-              * @param {string} name - csv column header, or JSON object property name 
-              * @param options 
-              * @see {@link http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html}
-              * @return {Object}
-              */
-              oneHotEncoder(name, options) {
-                const config = Object.assign({
-                  // n_values: "auto",
-                  // categorical_features: "all",
-                  // prefix: true,
-                  // dtype: np.float64,
-                  // sparse: True,
-                  // handle_unknown: 'error'
-                }, options);
-                const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
-                const labels = Array.from(new Set(labelData).values());
-                const encodedData = labelData.reduce(
-                  (result, val, index, arr) => {
-                    labels.forEach(encodedLabel => {
-                      const oneHotLabelArrayName = `${name}_${encodedLabel}`;
-                      const oneHotVal = (val === encodedLabel) ? 1 : 0;
-                      if (Array.isArray(result[oneHotLabelArrayName])) {
-                        result[oneHotLabelArrayName].push(oneHotVal);
-                      } else {
-                        result[oneHotLabelArrayName] = [oneHotVal,];
-                      }
-                    });
-                    return result;
-                  }, {});
-                this.encoders.set(name, {
-                  labels,
-                  prefix: `${name}_`,
-                });
-                return encodedData;
-              }
-              /**
-             * it returns a new column that reduces a column into a new column object, this is used in data prep to create new calculated columns for aggregrate statistics
-             * @example 
-            const reducer = (result, value, index, arr) => {
-            result.push(value * 2);
-            return result;
-            };
-            CSVDataSet.columnReducer('DoubleAge', {
-            columnName: 'Age',
-            reducer,
-            }); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }
-              * @param {String} name - name of new Column 
-              * @param {Object} options 
-              * @param {String} options.columnName - name property for columnArray selection 
-              * @param {Object} options.columnOptions - options property for columnArray  
-              * @param {Function} options.reducer - reducer function to reduce into new array, it should push values into the resulting array  
-              * @returns {Object} a new object that has reduced array as the value
-              */
-              columnReducer(name, options) {
-                const newColumn = {
-                  [ name ]: this.columnArray(options.columnName, options.columnOptions).reduce(options.reducer, []),
-                };
-                return newColumn;
-              }
-              /**
-               * it returns a new column that is merged onto the data set
-               * @example 
-            CSVDataSet.columnMerge('DoubleAge', [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ]); //=> { DoubleAge: [ 88, 54, 60, 76, 80, 70, 0, 96, 100, 74 ] }
-                * @param {String} name - name of new Column 
-                * @param {Array} data - new dataset data  
-                * @returns {Object} 
-                */
-              columnMerge(name, data=[]) {
-                if (this.data.length !== data.length) throw new RangeError(`Merged data column must have the same length(${data.length}) as the DataSet's length (${this.data.length})`);
-                return {
-                  [name]: data,
-                };
-              }
-              /*
-              transformObject(data) {
-                // if (Array.isArray(data)) return data.map(datum => this.transformObject);
-                const currentColumns = Object.keys(this.data[ 0 ]);
-                const objectColumns = Object.keys(data);
-                const differentKeys = objectColumns.reduce((diffKeys, val) => {
-                  if (currentColumns.indexOf(val) === -1) diffKeys.push(val);
-                }, []);
-                let transformedObject = Object.assign({}, data);
-                if (currentColumns.length !== objectColumns.length) {
-                  throw new RangeError(`Object must have the same number of keys (${objectColumns.length}) as data in your dataset(${currentColumns.length})`);
-                } else if (differentKeys.length) {
-                  throw new ReferenceError(`Object must have identical keys as data in your DataSet. Invalid keys: ${differentKeys.join(',')}`);
-                } else {
-                  const labeledData = objectColumns.reduce((labelObject, columnName) => {
-                    if (this.labels.has(columnName)){
-                      labelObject[ columnName ] = this.labels.get(columnName).get(data[ columnName ]);
-                    }
-                    return labelObject;
-                  }, {});
-                  const encodedData = objectColumns.reduce((encodedObject, columnName) => {
-                    if (this.encoders.has(columnName)){
-                      labelObject[ columnName ] = this.labels.get(columnName).get(data[ columnName ]);
-                    }
-                    return encodedObject;
-                  }, {});
-                  transformedObject = Object.assign(transformedObject, labeledData, encodedData);
-                }
-                return transformedObject;
-              }*/
               /**
                  * mutates data property of DataSet by replacing multiple columns in a single command
                  * @example
@@ -85839,11 +83647,17 @@
               * @param {Object[]} options.columns - {name:'columnName',options:{strategy:'mean',labelOoptions:{}},}
               * @returns {Object[]}
               */
-              fitColumns(options) {
+              fitColumns(options = {}) {
                 const config = Object.assign({
                   returnData:true,
                   columns: [],
                 }, options);
+                if ( !options.columns || Array.isArray(options.columns) ===false) {
+                  config.columns = (options.columns)
+                    ? DataSet.getTransforms(options.columns)
+                    : DataSet.getTransforms(options);
+                }
+
                 const fittedColumns = config.columns
                   .reduce((result, val, index, arr) => {
                     let replacedColumn = this.columnReplace(val.name, val.options);
@@ -85874,6 +83688,80 @@
                     }, []);
                   this.data = this.data.map((val, index) => Object.assign({}, val, fittedData[index]));
                 }
+                return config.returnData ? this.data : this;
+              }
+              /**
+               * Mutate dataset data by inversing all transforms
+               * @example
+            DataSet.data;
+            // [{ 
+            //  Country: 'Brazil',
+            //  Age: 3.784189633918261,
+            //  Salary: '72000',
+            //  Purchased: 'N',
+            //  Country_Brazil: 1,
+            //  Country_Mexico: 0,
+            //  Country_Ghana: 0
+            // },
+            // ...
+            // ]
+            DataSet.fitInverseTransforms(); // =>
+            // [{
+            //   'Country': 'Brazil',
+            //   'Age': '44',
+            //   'Salary': '72000',
+            //   'Purchased': 'N',
+            // },
+            // ...
+            // ]
+               * @param options 
+               */
+              fitInverseTransforms(options = {}) {
+                const config = Object.assign({
+                  returnData: true,
+                }, options);
+                this.data = this.data.map(val => {
+                  return (options.removeValues)
+                    ? this.inverseTransformObject(val, options)
+                    : Object.assign({}, val, this.inverseTransformObject(val, options));
+                });
+                return config.returnData ? this.data : this;
+              }
+              /**
+               * Mutate dataset data with all transforms
+               * @param options
+               * @example
+            DataSet.data;
+            // [{
+            //   'Country': 'Brazil',
+            //   'Age': '44',
+            //   'Salary': '72000',
+            //   'Purchased': 'N',
+            // },
+            // ...
+            // ]
+            DataSet.fitTransforms(); // =>
+            // [{ 
+            //  Country: 'Brazil',
+            //  Age: 3.784189633918261,
+            //  Salary: '72000',
+            //  Purchased: 'N',
+            //  Country_Brazil: 1,
+            //  Country_Mexico: 0,
+            //  Country_Ghana: 0
+            // },
+            // ...
+            // ] 
+               */
+              fitTransforms(options = {}) {
+                const config = Object.assign({
+                  returnData: true,
+                }, options);
+                this.data = this.data.map(val => {
+                  return (options.removeValues)
+                    ? this.transformObject(val, options)
+                    : Object.assign({}, val, this.transformObject(val, options));
+                });
                 return config.returnData ? this.data : this;
               }
             }
@@ -86293,7 +84181,12 @@
 
             var GridSearch_1 = GridSearch;
 
-            const Matrix$f = ml.Matrix;
+            var grid_search = {
+            	GridSearch: GridSearch_1
+            };
+
+            const { GridSearch: GridSearch$1, } = grid_search;
+            const Matrix$e = ml.Matrix;
             const ConfusionMatrix$1 = ml.ConfusionMatrix;
 
             /**
@@ -86334,7 +84227,7 @@
                 // console.log({ index });
                 training_set.push(dataset_copy.splice(index, 1)[0]);
               }
-              return (options.return_array) ? [training_set, dataset_copy, ] : {
+              return (options.return_array) ? [training_set, dataset_copy,] : {
                 train: training_set,
                 test: dataset_copy,
               };
@@ -86389,8 +84282,8 @@
                 // regression,
                 // dataset,
                 // testingset,
-                dependentFeatures: [['X',],],
-                independentFeatures: [['Y',],],
+                dependentFeatures: [['X', ], ],
+                independentFeatures: [['Y', ], ],
                 // random_state,
                 folds: 10,
                 accuracy: 'standardError',
@@ -86415,10 +84308,10 @@
                 const x_train = trainingDataSet.columnMatrix(config.dependentFeatures);
                 const y_train = trainingDataSet.columnMatrix(config.independentFeatures);
                 const x_train_matrix = (config.use_train_x_matrix)
-                  ? new Matrix$f(x_train)
+                  ? new Matrix$e(x_train)
                   : x_train;
                 const y_train_matrix = (config.use_train_y_matrix)
-                  ? new Matrix$f(y_train)
+                  ? new Matrix$e(y_train)
                   : (config.use_train_y_vector)
                     ? util$3.pivotVector(y_train)[0]
                     : y_train;
@@ -86483,7 +84376,7 @@
                 : config.sortAccuracyScore;
               
               // const scoreSorter = ;
-              const gs = new GridSearch_1({
+              const gs = new GridSearch$1({
                 params: config.parameters,
                 run_callback: (params) => {
                   if (config.regression) {
@@ -86518,7 +84411,7 @@
               kfolds: cross_validation_split,
               cross_validate_score,
               grid_search: grid_search$1,
-              GridSearch: GridSearch_1,
+              GridSearch: GridSearch$1,
             };
 
             const loadCSV$1 = loadCSV;
