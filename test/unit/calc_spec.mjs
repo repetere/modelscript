@@ -84,22 +84,20 @@ describe('calc', function () {
       // }
     });
     it('should handle errors', (done) => {
-      if (process.platform === 'darwin') {
-        ms.calc.assocationRuleLearning(NaN, {
-          summary: NaN,
-          support: NaN,
-          minLength: NaN,
-          valuesMap: NaN,
+      ms.calc.assocationRuleLearning(NaN, {
+        summary: NaN,
+        support: NaN,
+        minLength: NaN,
+        valuesMap: NaN,
+      })
+        .then((r) => {
+          console.log('r', r)
+          done(new Error('should not get to then'))
         })
-          .then((r) => {
-            console.log('r', r)
-            done(new Error('should not get to then'))
-          })
-          .catch(e => {
-            expect(e).to.be.a('error');
-            done();
-          });
-      }
+        .catch(e => {
+          expect(e).to.be.a('error');
+          done();
+        });
     });
   });
 });

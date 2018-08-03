@@ -1,12 +1,12 @@
-# modelscript
+# ModelScript
 
 [![Coverage Status](https://coveralls.io/repos/github/repetere/modelscript/badge.svg?branch=master)](https://coveralls.io/github/repetere/modelscript?branch=master) [![Build Status](https://travis-ci.org/repetere/modelscript.svg?branch=master)](https://travis-ci.org/repetere/modelscript)
 
 ## Description
 
-**modelscript** is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. **modelscript** can be used with [ML.js](https://github.com/mljs/ml), [pandas-js](https://github.com/StratoDem/pandas-js), and [numjs](https://github.com/numjs/numjs), to approximate the equivalent R/Python tool chain in JavaScript.
+**ModelScript** is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. **ModelScript** can be used with [ML.js](https://github.com/mljs/ml), [pandas-js](https://github.com/StratoDem/pandas-js), and [numjs](https://github.com/numjs/numjs), to approximate the equivalent R/Python tool chain in JavaScript.
 
-In Python, data preparation is typically done in a DataFrame, modelscript encourages a more R like workflow where the data preparation is in it's native structure.
+In Python, data preparation is typically done in a DataFrame, ModelScript encourages a more R like workflow where the data preparation is in it's native structure.
 
 ### Installation
 
