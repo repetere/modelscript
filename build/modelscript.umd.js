@@ -56945,18 +56945,21 @@
                  * @param  {FPNode<T>} onNewChild Callback function to call if a child is actually created for the first time. It helps keeping track of Node-Links
                  * @return {[type]}               The FPNode representing the given item.
                  */
-                FPNode.prototype.upsertChild = function (item, onNewChild) {
+                FPNode.prototype.upsertChild = function (item, onNewChild, support) {
+                    if (support === void 0) { support = 1; }
                     var child = this.getChild(item);
                     // If no child exists, creating a new node.
                     if (!child) {
                         child = new FPNode(item, this);
+                        child.support = support;
                         this._children.push(child);
                         // Calls callback function if any.
                         if (onNewChild)
                             onNewChild(child);
                     }
+                    // Else, increment the support of the child.
                     else
-                        child.support++;
+                        child.support += support;
                     return child;
                 };
                 /**
@@ -57029,7 +57032,9 @@
                     // Items not meeting the minimum support are pruned.
                     transactions.forEach(function (transaction) {
                         var items = transaction
+                            // Pruning.
                             .filter(function (item) { return _this.supports[JSON.stringify(item)] >= _this._support; })
+                            // Sorting.
                             .sort(function (a, b) {
                             var res = _this.supports[JSON.stringify(b)] - _this.supports[JSON.stringify(a)];
                             if (res == 0)
@@ -57037,7 +57042,7 @@
                             return res;
                         });
                         // Pushing formatted transaction to the tree.
-                        _this._addTransaction(items);
+                        _this._addItems(items);
                     });
                     // Generating headers.
                     this._headers = this._getHeaderList();
@@ -57054,19 +57059,21 @@
                     var _this = this;
                     if (this._isInit)
                         throw new Error('Error building the FPTree');
+                    // Sorting the items of each transaction by their support, descendingly.
+                    // Items not meeting the minimum support are pruned.
                     prefixPaths.forEach(function (prefixPath) {
                         var items = prefixPath.path
-                            .filter(function (item) { return _this.supports[JSON.stringify(item)] >= _this._support; });
-                        /*
-                        //Not mandatory, actually for displaying purposes only.
-                        .sort( (a: T, b: T) => {
-                            let res: number = this.supports[JSON.stringify(b)] - this.supports[JSON.stringify(a)];
-                            if(res == 0) return JSON.stringify(b).localeCompare(JSON.stringify(a));
+                            // Pruning.
+                            .filter(function (item) { return _this.supports[JSON.stringify(item)] >= _this._support; })
+                            // Sorting.
+                            .sort(function (a, b) {
+                            var res = _this.supports[JSON.stringify(b)] - _this.supports[JSON.stringify(a)];
+                            if (res == 0)
+                                return JSON.stringify(b).localeCompare(JSON.stringify(a));
                             return res;
                         });
-                        */
                         // Pushing each prefix path to the tree.
-                        _this._addTransaction(items);
+                        _this._addItems(items, prefixPath.support);
                     });
                     // Generating headers.
                     this._headers = this._getHeaderList();
@@ -57085,12 +57092,13 @@
                     // Trivial pre-condition.
                     if (!start)
                         return null;
+                    var s = this.supports[JSON.stringify(item)];
                     // In order to make the conditional FPTree of the given item, we need both the prefix
                     // paths of the item, as well as the support of each item which composes this sub-tree.
                     var conditionalTreeSupports = {};
                     // Getting all prefixPaths of the given item. On pushing a new item to a prefix path, a callback
                     // function is called, allowing us to update the item support.
-                    var prefixPaths = this._getPrefixPaths(start, start.support, function (i, count) {
+                    var prefixPaths = this._getPrefixPaths(start, s, function (i, count) {
                         conditionalTreeSupports[JSON.stringify(i)] = (conditionalTreeSupports[JSON.stringify(i)] || 0) + count;
                     });
                     // FP-Tree is built from the conditional tree supports and the processed prefix paths.
@@ -57160,14 +57168,16 @@
                 /**
                  * Inserts a sorted transaction to the FPTree.
                  *
-                 * @param {T[]} transaction The set of item you want to add.
+                 * @param {T[]} items The set of sorted items you want to add (Either a transaction of a prefix part).
+                 * @param {number} prefixSupport Optional: The base support to associate with the set of items.
                  */
-                FPTree.prototype._addTransaction = function (transaction) {
+                FPTree.prototype._addItems = function (items, prefixSupport) {
                     var _this = this;
+                    if (prefixSupport === void 0) { prefixSupport = 1; }
                     // For each transaction, we start up from the root element.
                     var current = this.root;
                     // Keep in mind items are sorted by their support descendingly.
-                    transaction.forEach(function (item) {
+                    items.forEach(function (item) {
                         // If current item is a child of current node, updating its support and returning the child.
                         // Else creating a new item element and returing this new element.
                         current = current.upsertChild(item, function (child) {
@@ -57175,7 +57185,7 @@
                             // Keeping track of first and last inserted elements of this type on Node creation.
                             _this._updateLastInserted(itemKey, child);
                             _this._updateFirstInserted(itemKey, child);
-                        });
+                        }, prefixSupport);
                     });
                 };
                 /**
@@ -57300,7 +57310,7 @@
                  */
                 function FPGrowth(_support /*, private _confidence: number*/) {
                     var _this = _super.call(this) || this;
-                    _this._support = _support; /*, private _confidence: number*/
+                    _this._support = _support;
                     /**
                      * Output of the algorithm: The mined frequent itemsets.
                      */
@@ -57318,26 +57328,17 @@
                  */
                 FPGrowth.prototype.exec = function (transactions, cb) {
                     var _this = this;
-                    // Starting execution timer.
-                    var time = process.hrtime();
                     this._transactions = transactions;
                     // Relative support.
                     this._support = Math.ceil(this._support * transactions.length);
                     // First scan to determine the occurence of each unique item.
                     var supports = this._getDistinctItemsCount(this._transactions);
                     return new Promise(function (resolve, reject) {
-                        var time = process.hrtime();
                         // Building the FP-Tree...
                         var tree = new fptree.FPTree(supports, _this._support).fromTransactions(_this._transactions);
                         // Running the algorithm on the main tree.
                         // All the frequent itemsets are returned at the end of the execution.
-                        var frequentItemsets = _this._fpGrowth(tree, _this._transactions.length);
-                        var elapsedTime = process.hrtime(time);
-                        // Formatting results.
-                        var result = {
-                            itemsets: frequentItemsets,
-                            executionTime: Math.round((elapsedTime[0] * 1000) + (elapsedTime[1] / 1000000))
-                        };
+                        var result = _this._fpGrowth(tree, _this._transactions.length);
                         if (cb)
                             cb(result);
                         resolve(result);
@@ -57352,16 +57353,15 @@
                  * @return {Itemset<T>}               The mined itemsets.
                  */
                 FPGrowth.prototype._fpGrowth = function (tree, prefixSupport, prefix) {
-                    var _this = this;
-                    if (prefix === void 0) { prefix = []; }
                     // Test whether or not the FP-Tree is single path.
                     // If it is, we can short-cut the mining process pretty efficiently.
-                    var singlePath = tree.getSinglePath();
+                    // TODO: let singlePath: FPNode<T>[] = tree.getSinglePath();
                     // TODO: if(singlePath) return this._handleSinglePath(singlePath, prefix);
+                    var _this = this;
+                    if (prefix === void 0) { prefix = []; }
                     // For each header, ordered ascendingly by their support, determining the prefix paths.
-                    // of each each they represent.
                     // These prefix paths represent new transactions to mine in a new FPTree.
-                    // If no prefix path can be found, the algorithm stops.
+                    // If no prefix path can be mined, the algorithm stops.
                     return tree.headers.reduce(function (itemsets, item) {
                         var support = Math.min(tree.supports[JSON.stringify(item)], prefixSupport);
                         // Array copy.
@@ -57501,8 +57501,10 @@
                   const fpgrowth$$1 = new FPGrowth(config.support);
                   fpgrowth$$1.exec(transactions)
                     .then(results => {
+                      const itemsets = (results.itemsets) ? results.itemsets : results;
+                      // console.log('itemsets', itemsets)
                       if (config.summary) {
-                        resolve(results.itemsets
+                        resolve(itemsets
                           .map(itemset => ({
                             items_labels: itemset.items.map(item => config.valuesMap.get(item)),
                             items: itemset.items,
@@ -83487,6 +83489,7 @@
               transformObject(data, options) {
                 const config = Object.assign({
                   removeValues: false,
+                  checkColumnLength: true,
                 }, options);
                 const removedColumns = [];
                 // if (Array.isArray(data)) return data.map(datum => this.transformObject);
@@ -83503,9 +83506,9 @@
                   return diffKeys;
                 }, []);
                 let transformedObject = Object.assign({}, data);
-                if (currentColumns.length !== objectColumns.length && currentColumns.length+encodedColumns.length !== objectColumns.length ) {
+                if (config.checkColumnLength && currentColumns.length !== objectColumns.length && currentColumns.length+encodedColumns.length !== objectColumns.length ) {
                   throw new RangeError(`Object must have the same number of keys (${objectColumns.length}) as data in your dataset(${currentColumns.length})`);
-                } else if (differentKeys.length) {
+                } else if (config.checkColumnLength && differentKeys.length) {
                   throw new ReferenceError(`Object must have identical keys as data in your DataSet. Invalid keys: ${differentKeys.join(',')}`);
                 } else {
                   const scaledData = objectColumns.reduce((scaleObject, columnName) => {

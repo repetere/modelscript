@@ -704,6 +704,7 @@ DataSet.transformObject({
   transformObject(data, options) {
     const config = Object.assign({
       removeValues: false,
+      checkColumnLength: true,
     }, options);
     const removedColumns = [];
     // if (Array.isArray(data)) return data.map(datum => this.transformObject);
@@ -720,9 +721,9 @@ DataSet.transformObject({
       return diffKeys;
     }, []);
     let transformedObject = Object.assign({}, data);
-    if (currentColumns.length !== objectColumns.length && currentColumns.length+encodedColumns.length !== objectColumns.length ) {
+    if (config.checkColumnLength && currentColumns.length !== objectColumns.length && currentColumns.length+encodedColumns.length !== objectColumns.length ) {
       throw new RangeError(`Object must have the same number of keys (${objectColumns.length}) as data in your dataset(${currentColumns.length})`);
-    } else if (differentKeys.length) {
+    } else if (config.checkColumnLength && differentKeys.length) {
       throw new ReferenceError(`Object must have identical keys as data in your DataSet. Invalid keys: ${differentKeys.join(',')}`);
     } else {
       const scaledData = objectColumns.reduce((scaleObject, columnName) => {

@@ -153,22 +153,20 @@ describe(&apos;calc&apos;, function () {
       // }
     });
     it(&apos;should handle errors&apos;, (done) =&gt; {
-      if (process.platform === &apos;darwin&apos;) {
-        ms.calc.assocationRuleLearning(NaN, {
-          summary: NaN,
-          support: NaN,
-          minLength: NaN,
-          valuesMap: NaN,
+      ms.calc.assocationRuleLearning(NaN, {
+        summary: NaN,
+        support: NaN,
+        minLength: NaN,
+        valuesMap: NaN,
+      })
+        .then((r) =&gt; {
+          console.log(&apos;r&apos;, r)
+          done(new Error(&apos;should not get to then&apos;))
         })
-          .then((r) =&gt; {
-            console.log(&apos;r&apos;, r)
-            done(new Error(&apos;should not get to then&apos;))
-          })
-          .catch(e =&gt; {
-            expect(e).to.be.a(&apos;error&apos;);
-            done();
-          });
-      }
+        .catch(e =&gt; {
+          expect(e).to.be.a(&apos;error&apos;);
+          done();
+        });
     });
   });
 });</code></pre>
