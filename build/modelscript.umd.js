@@ -82864,7 +82864,7 @@
                 const { vectors, labels, } = options;
                 const features = (Array.isArray(labels) && Array.isArray(labels[ 0 ]))
                   ? labels
-                  : labels.map(label => [label,]);
+                  : labels.map(label => [label, ]);
                 return vectors.reduce((result, val) => { 
                   result.push(val.reduce((prop, value, index) => { 
                     prop[ features[ index ][ 0 ] ] = val[index];
@@ -82877,7 +82877,7 @@
                 const { vector, labels, } = options;
                 const features = (Array.isArray(labels) && Array.isArray(labels[ 0 ]))
                   ? labels
-                  : labels.map(label => [label,]);
+                  : labels.map(label => [label, ]);
                 return vector.reduce((result, val) => {
                   result.push(
                     { [ features[ 0 ][ 0 ] ]: val, }
@@ -82940,7 +82940,7 @@
                       if (Array.isArray(result[oneHotLabelArrayName])) {
                         result[oneHotLabelArrayName].push(oneHotVal);
                       } else {
-                        result[oneHotLabelArrayName] = [oneHotVal, ];
+                        result[oneHotLabelArrayName] = [oneHotVal,];
                       }
                     });
                     return result;
@@ -82999,7 +82999,7 @@
                 const encodedData = config.data || this.oneHotColumnArray(name, config.oneHotColumnArrayOptions);
                 // console.log({ encodedData, encoderMap, prefix });
                 return encodedData.reduce((result, val) => {
-                  const columnNames = Object.keys(val).filter(prop => val[ prop ] === 1 && labels.indexOf(prop.replace(prefix,''))!==-1);
+                  const columnNames = Object.keys(val).filter(prop => val[ prop ] === 1 && labels.indexOf(prop.replace(prefix, ''))!==-1);
                   const columnName = columnNames[ 0 ]||''; 
                   // console.log({ columnName, columnNames, labels, val},Object.keys(val));
                   const datum = {
@@ -83117,12 +83117,12 @@
               * @returns {Array} a matrix of column values 
               */
               static columnMatrix(vectors = [], data = []) {
-                const options = (data.length) ? { data } : {};
+                const options = (data.length) ? { data, } : {};
                 const columnVectors = (Array.isArray(vectors) && Array.isArray(vectors[ 0 ]))
                   ? vectors
-                  : vectors.map(vector => [ vector, options ]);
+                  : vectors.map(vector => [vector, options,]);
                 const vectorArrays = columnVectors
-                  .map(vec => DataSet.columnArray.call(this,...vec));
+                  .map(vec => DataSet.columnArray.call(this, ...vec));
                     
                 return util$3.pivotArrays(vectorArrays);
               }
@@ -83137,7 +83137,7 @@
                 this.config = Object.assign({
                   debug: true,
                 }, options);
-                this.data = [...data, ];
+                this.data = [...data,];
                 this.labels = new Map();
                 this.encoders = new Map();
                 this.scalers = new Map();
@@ -83189,14 +83189,17 @@
                 let scaledData;
                 let transforms;
                   
-                scaleData = scaleData.map((datum, i) => {
-                  if (typeof datum !== 'number') {
-                    if (this.config.debug) {
-                      console.error(TypeError(`Each value must be a number, error at index [${i}]`));
-                    }
-                    return Number(datum);
-                  } else return datum;
-                });
+                scaleData = scaleData.filter(datum => typeof datum !== 'undefined')
+                  .map((datum, i) => {
+                    if (typeof datum !== 'number') {
+                      if (this.config.debug) {
+                        console.error(TypeError(`Each value must be a number, error at index [${i}]`));
+                      }
+                      const num = Number(datum);
+                      if (isNaN(num)) throw TypeError('Only numerical values can be scaled i: ' + i + ' datum:' + datum);
+                      return num;
+                    } else return datum;
+                  });
                 switch (config.strategy) {
                 case 'standard':
                   transforms = util$3.StandardScalerTransforms(scaleData);     
@@ -83279,8 +83282,8 @@
                 const labels = new Map(
                   Array.from(new Set(labelData).values())
                     .reduce((result, val, i, arr) => {
-                      result.push([val, i, ]);
-                      result.push([i, val, ]);
+                      result.push([val, i,]);
+                      result.push([i, val,]);
                       return result;
                     }, [])
                 );
@@ -83443,7 +83446,7 @@
                 const encodedData = columnNames.reduce((encodedObject, columnName) => {
                   if (this.encoders.has(columnName)) {
                     const encoded = this.oneHotDecoder(columnName, {
-                      data: [ data, ],
+                      data: [data,],
                     });
                     // console.log({encoded})
                     encodedObject = Object.assign({}, encodedObject, encoded[ 0 ]);
