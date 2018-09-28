@@ -267,7 +267,7 @@ function pivotVector(vectors=[]) {
   return vectors.reduce((result, val, index/*, arr*/) =&gt; {
     val.forEach((vecVal, i) =&gt; {
       (index === 0)
-        ? (result.push([vecVal,]))
+        ? (result.push([vecVal, ]))
         : (result[ i ].push(vecVal));
     });
     return result;
@@ -322,14 +322,28 @@ const StandardScaler = (z) =&gt; scale(z, sd(z));
  * @param {Number[]} values - array of numbers
  * @returns {Object} - {scale[ Function ], descale[ Function ]}
 */
-function StandardScalerTransforms(vector = []) {
+function StandardScalerTransforms(vector = [], nan_value = -1, return_nan=false) {
   const average = avg(vector);
   const standard_dev = sd(vector);
   const maximum = max(vector);
   const minimum = min(vector);
-  const scale = (z)=&gt; (z - average) / standard_dev; // equivalent to MinMaxScaler(z)
-  const descale = (scaledZ) =&gt; (scaledZ * standard_dev) + average;
-  const values = vector.map(scale);
+  const scale = (z) =&gt; {
+    const scaledValue = (z - average) / standard_dev;
+    if (isNaN(scaledValue) &amp;&amp; return_nan) return scaledValue;
+    else if (isNaN(scaledValue) &amp;&amp; return_nan === false) return (isNaN(standard_dev)) ? z : standard_dev;
+    else return scaledValue;
+  }; // equivalent to MinMaxScaler(z)
+  const descale = (scaledZ) =&gt; {
+    const descaledValue = (scaledZ * standard_dev) + average;
+    if (isNaN(descaledValue) &amp;&amp; return_nan) return descaledValue;
+    else if (isNaN(descaledValue) &amp;&amp; return_nan === false) return (isNaN(standard_dev)) ? scaledZ : standard_dev;
+    else return descaledValue;
+  };
+  const values = vector.map(scale)
+    .map(val =&gt; {
+      if (isNaN(val)) return nan_value;
+      else return val;
+    });
   return {
     components: {
       average,
@@ -356,14 +370,28 @@ const MinMaxScaler= (z) =&gt; scale(z, (max(z) - min(z)));
  * @param {Number[]} values - array of numbers
  * @returns {Object} - {scale[ Function ], descale[ Function ]}
 */
-function MinMaxScalerTransforms(vector = []) {
+function MinMaxScalerTransforms(vector = [], nan_value = -1, return_nan=false) {
   const average = avg(vector);
   const standard_dev = sd(vector);
   const maximum = max(vector);
   const minimum = min(vector);
-  const scale = (z)=&gt; (z - average) / (maximum - minimum); // equivalent to MinMaxScaler(z)
-  const descale = (scaledZ) =&gt; (scaledZ * (maximum - minimum)) + average;
-  const values = vector.map(scale);
+  const scale = (z) =&gt; {
+    const scaledValue = (z - average) / (maximum - minimum);
+    if (isNaN(scaledValue) &amp;&amp; return_nan) return scaledValue;
+    else if (isNaN(scaledValue) &amp;&amp; return_nan === false) return (isNaN(standard_dev)) ? z : standard_dev;
+    else return scaledValue;
+  }; // equivalent to MinMaxScaler(z)
+  const descale = (scaledZ) =&gt; {
+    const descaledValue = (scaledZ * (maximum - minimum)) + average;
+    if (isNaN(descaledValue) &amp;&amp; return_nan) return descaledValue;
+    else if (isNaN(descaledValue) &amp;&amp; return_nan === false) return (isNaN(standard_dev)) ? scaledZ : standard_dev;
+    else return descaledValue;
+  };
+  const values = vector.map(scale)
+    .map(val =&gt; {
+      if (isNaN(val)) return nan_value;
+      else return val;
+    });
   return {
     components: {
       average,
