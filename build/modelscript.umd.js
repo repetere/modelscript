@@ -56892,6 +56892,110 @@
             }
 
             /**
+             * The errors (residuals) from acutals and estimates
+             * @memberOf util
+             * @example
+              const actuals = [ 45, 38, 43, 39 ];
+              const estimates = [ 41, 43, 41, 42 ];
+              const errors = ms.util.forecastErrors(actuals, estimates); // => [ 4, -5, 2, -3 ]
+             * @param {Number[]} actuals - numerical samples 
+             * @param {Number[]} estimates - estimates values
+             * @returns {Number[]} errors (residuals)
+             */
+            function forecastErrors(actuals, estimates) {
+              return actuals.map((act, i) => act - estimates[ i ]);
+            }
+
+            /**
+             * The bias of forecast accuracy
+             * @memberOf util
+             * @see {@link https://scm.ncsu.edu/scm-articles/article/measuring-forecast-accuracy-approaches-to-forecasting-a-tutorial}
+             * @example
+              const actuals = [ 45, 38, 43, 39 ];
+              const estimates = [ 41, 43, 41, 42 ];
+              const MFE = ms.util.meanForecastError(actuals, estimates); // =>  -0.5
+             * @param {Number[]} actuals - numerical samples 
+             * @param {Number[]} estimates - estimates values
+             * @returns {Number} MFE (bias)
+             */
+            function meanForecastError(actuals, estimates) { 
+              const errors = forecastErrors(actuals, estimates);
+              return avg$2(errors);
+            }
+
+            /**
+             * Mean Absolute Deviation (MAD) indicates the absolute size of the errors
+             * @memberOf util
+             * @see {@link https://scm.ncsu.edu/scm-articles/article/measuring-forecast-accuracy-approaches-to-forecasting-a-tutorial}
+             * @example
+              const actuals = [ 45, 38, 43, 39 ];
+              const estimates = [ 41, 43, 41, 42 ];
+              const MAD = ms.util.meanAbsoluteDeviation(actuals, estimates); // =>  3.5
+             * @param {Number[]} actuals - numerical samples 
+             * @param {Number[]} estimates - estimates values
+             * @returns {Number} MAD
+             */
+            function meanAbsoluteDeviation(actuals, estimates) { 
+              const errors = forecastErrors(actuals, estimates).map(e=>Math.abs(e));
+              return avg$2(errors);
+            }
+
+            /**
+             * Tracking Signal - Used to pinpoint forecasting models that need adjustment
+             * @memberOf util
+             * @see {@link https://scm.ncsu.edu/scm-articles/article/measuring-forecast-accuracy-approaches-to-forecasting-a-tutorial}
+             * @example
+              const actuals = [ 45, 38, 43, 39 ];
+              const estimates = [ 41, 43, 41, 42 ];
+              const trackingSignal = ms.util.trackingSignal(actuals, estimates); 
+              trackingSignal.toFixed(2) // =>  -0.57
+             * @param {Number[]} actuals - numerical samples 
+             * @param {Number[]} estimates - estimates values
+             * @returns {Number} trackingSignal
+             */
+            function trackingSignal(actuals, estimates) {
+              const runningSumOfForecastErrors = sum(forecastErrors(actuals, estimates));
+              const MAD = meanAbsoluteDeviation(actuals, estimates);
+              return runningSumOfForecastErrors / MAD;
+            }
+
+            /**
+             * The standard error of the estimate is a measure of the accuracy of predictions made with a regression line. Compares the estimate to the actual value
+             * @memberOf util
+             * @see {@link http://onlinestatbook.com/2/regression/accuracy.html}
+             * @example
+              const actuals = [ 45, 38, 43, 39 ];
+              const estimates = [ 41, 43, 41, 42 ];   
+              const MSE = ms.util.meanSquaredError(actuals, estimates); // => 13.5
+             * @param {Number[]} actuals - numerical samples 
+             * @param {Number[]} estimates - estimates values
+             * @returns {Number} MSE
+             */
+            function meanSquaredError(actuals, estimates) {
+              const squaredErrors = forecastErrors(actuals, estimates).map(e=>e*e);
+              return avg$2(squaredErrors);
+            }
+
+            /**
+             * MAPE (Mean Absolute Percent Error) measures the size of the error in percentage terms
+             * @memberOf util
+             * @see {@link https://www.forecastpro.com/Trends/forecasting101August2011.html}
+             * @example
+              const actuals = [ 45, 38, 43, 39 ];
+              const estimates = [ 41, 43, 41, 42 ];
+              const MAPE = ms.util.meanAbsolutePercentageError(actuals, estimates);
+              MAPE.toFixed(2) // => 0.86
+             * @param {Number[]} actuals - numerical samples 
+             * @param {Number[]} estimates - estimates values
+             * @returns {Number} MAPE
+             */
+            function meanAbsolutePercentageError(actuals, estimates) {
+              const errors = forecastErrors(actuals, estimates).map(e=>Math.abs(e));
+              const absErrorPercent = errors.map((e, i) => e / actuals[ i ]);
+              return avg$2(absErrorPercent);
+            }
+
+            /**
              * @namespace
              */
             const util$3 = {
@@ -56926,6 +57030,17 @@
               approximateZPercentile,
               // approximatePercentileZ,
               getSafePropertyName,
+              forecastErrors,
+              meanForecastError,
+              MFE: meanForecastError,
+              meanAbsoluteDeviation,
+              MAD: meanAbsoluteDeviation,
+              trackingSignal,
+              TS: trackingSignal,
+              meanSquaredError,
+              MSE: meanSquaredError,
+              meanAbsolutePercentageError,
+              MAPE: meanAbsolutePercentageError,
             };
 
             var fpnode = createCommonjsModule(function (module, exports) {

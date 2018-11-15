@@ -1585,259 +1585,337 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber139",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber188",
     "util Coefficient of correlation",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber147",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber196",
     "util Coefficient of correlation should return an error if array lengths are not the same",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber142",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber191",
     "util Coefficient of correlation should return the Coefficient of correlation",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber166",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber215",
     "util Coefficient of determination",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber173",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber222",
     "util Coefficient of determination should return an error if array lengths are not the same",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber169",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber218",
     "util Coefficient of determination should return the Coefficient of determination",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber93",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber142",
     "util Exponent Scaler",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber94",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber143",
     "util Exponent Scaler should return exponent scaled values",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber86",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber135",
     "util Log Scaler",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber87",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber136",
     "util Log Scaler should return log scaled values",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber61",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber110",
     "util MinMax Scaler Transforms",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber74",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber123",
     "util MinMax Scaler Transforms should have a values array that is equal to the array produced by MinMaxScaler function",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber81",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber130",
     "util MinMax Scaler Transforms should properly descale single values",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber77",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber126",
     "util MinMax Scaler Transforms should properly scale single values",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber64",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber113",
     "util MinMax Scaler Transforms should return an object with a scale function, descale function and values array",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber100",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber149",
     "util Standard Error of the Estimate",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber107",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber156",
     "util Standard Error of the Estimate should return an error if array lengths are not the same",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber103",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber152",
     "util Standard Error of the Estimate should return the Standard Error of the Estimate",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber34",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber83",
     "util Standard Scaler Transforms",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber46",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber95",
     "util Standard Scaler Transforms should have a values array that is equal to the array produced by StandardScaler function",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber49",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber98",
     "util Standard Scaler Transforms should have a values array that is equal to the array produced by StandardScaler function",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber56",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber105",
     "util Standard Scaler Transforms should properly descale single values",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber52",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber101",
     "util Standard Scaler Transforms should properly scale single values",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber37",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber86",
     "util Standard Scaler Transforms should return an object with a scale function, descale function and values array",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber208",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber257",
     "util Z Scores / Standard Scores",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber218",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber267",
     "util Z Scores / Standard Scores should approximate the p-value from the z score",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber209",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber258",
     "util Z Scores / Standard Scores should calculate standard scores",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber181",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber230",
     "util adjusted coefficient of determination",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber182",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber231",
     "util adjusted coefficient of determination should return the adjusted Coefficient of determination",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber115",
-    "util getSafePropertyName",
-    "test"
-  ],
-  [
-    "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber116",
-    "util getSafePropertyName should sanitize property names",
-    "test"
-  ],
-  [
-    "",
     "test-file/test/unit/util_spec.mjs.html#lineNumber18",
-    "util max",
+    "util forecasting metrics",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber19",
-    "util max should return max value",
-    "test"
-  ],
-  [
-    "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber29",
-    "util mean",
-    "test"
-  ],
-  [
-    "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber30",
-    "util mean should return mean value",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber23",
+    "util forecasting metrics forecastErrors",
     "test"
   ],
   [
     "",
     "test-file/test/unit/util_spec.mjs.html#lineNumber24",
+    "util forecasting metrics forecastErrors should return array of residuals",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber36",
+    "util forecasting metrics meanAbsoluteDeviation",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber37",
+    "util forecasting metrics meanAbsoluteDeviation should return absolute size of the errors",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber58",
+    "util forecasting metrics meanAbsolutePercentageError",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber59",
+    "util forecasting metrics meanAbsolutePercentageError should return MAPE",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber29",
+    "util forecasting metrics meanForecastError",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber30",
+    "util forecasting metrics meanForecastError should return bias of forecast accuracy",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber51",
+    "util forecasting metrics meanSquaredError",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber52",
+    "util forecasting metrics meanSquaredError should return MSE",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber43",
+    "util forecasting metrics trackingSignal",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber44",
+    "util forecasting metrics trackingSignal should return tracking Signal",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber164",
+    "util getSafePropertyName",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber165",
+    "util getSafePropertyName should sanitize property names",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber67",
+    "util max",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber68",
+    "util max should return max value",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber78",
+    "util mean",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber79",
+    "util mean should return mean value",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber73",
     "util min",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber25",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber74",
     "util min should return min value",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber202",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber251",
     "util pivotArrays",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber203",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber252",
     "util pivotArrays should pivot arrays into vectors",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber191",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber240",
     "util pivotVector",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber192",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber241",
     "util pivotVector should pivot vectors into arrays",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber155",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber204",
     "util rSquared",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/util_spec.mjs.html#lineNumber158",
+    "test-file/test/unit/util_spec.mjs.html#lineNumber207",
     "util rSquared should return r^2",
     "test"
   ]

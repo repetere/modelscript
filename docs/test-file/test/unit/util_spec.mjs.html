@@ -70,20 +70,69 @@
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import * as ms from &apos;../../index.mjs&apos;;
 import chai from &apos;chai&apos;;
 const expect = chai.expect;
-const testArray = [20, 25, 10, 33, 50, 42, 19,];
+const testArray = [20, 25, 10, 33, 50, 42, 19, ];
 const vectors = [
-  [1, 2, 3, ],
-  [1, 2, 3, ],
-  [3, 3, 4, ],
-  [3, 3, 3, ],
+  [1, 2, 3,],
+  [1, 2, 3,],
+  [3, 3, 4,],
+  [3, 3, 3,],
 ];
 const arrays = [
-  [1, 1, 3, 3,],
-  [2, 2, 3, 3,],
-  [3, 3, 4, 3,],
+  [1, 1, 3, 3, ],
+  [2, 2, 3, 3, ],
+  [3, 3, 4, 3, ],
 ];
 
 describe(&apos;util&apos;, function () { 
+  describe(&apos;forecasting metrics&apos;, () =&gt; {
+    const actuals = [45, 38, 43, 39,];
+    const estimates = [41, 43, 41, 42,];
+    const actuals2 = [120, 90, 101, 91, 115, 83,];
+    const estimates2 = [100, 106, 102, 101, 98, 103,];
+    describe(&apos;forecastErrors&apos;, () =&gt; {
+      it(&apos;should return array of residuals&apos;, () =&gt; {
+        expect(ms.util.forecastErrors).to.be.a(&apos;function&apos;);
+        expect(ms.util.forecastErrors(actuals, estimates)).to.eql([4, -5, 2, -3,]);
+      });
+    });
+    describe(&apos;meanForecastError&apos;, () =&gt; {
+      it(&apos;should return bias of forecast accuracy&apos;, () =&gt; {
+        expect(ms.util.meanForecastError).to.be.a(&apos;function&apos;);
+        expect(ms.util.MFE).to.eql(ms.util.meanForecastError);
+        expect(ms.util.meanForecastError(actuals, estimates)).to.eql(-0.5);
+      });
+    });
+    describe(&apos;meanAbsoluteDeviation&apos;, () =&gt; {
+      it(&apos;should return absolute size of the errors&apos;, () =&gt; {
+        expect(ms.util.meanAbsoluteDeviation).to.be.a(&apos;function&apos;);
+        expect(ms.util.MAD).to.eql(ms.util.meanAbsoluteDeviation);
+        expect(ms.util.meanAbsoluteDeviation(actuals, estimates)).to.eql(3.5);
+      });
+    });
+    describe(&apos;trackingSignal&apos;, () =&gt; {
+      it(&apos;should return tracking Signal&apos;, () =&gt; {
+        expect(ms.util.trackingSignal).to.be.a(&apos;function&apos;);
+        expect(ms.util.TS).to.eql(ms.util.trackingSignal);
+        const TSig = ms.util.trackingSignal(actuals, estimates);
+        expect(TSig.toFixed(2)).to.eql(&apos;-0.57&apos;);
+      });
+    });
+    describe(&apos;meanSquaredError&apos;, () =&gt; {
+      it(&apos;should return MSE&apos;, () =&gt; {
+        expect(ms.util.meanSquaredError).to.be.a(&apos;function&apos;);
+        expect(ms.util.MSE).to.eql(ms.util.meanSquaredError);
+        expect(ms.util.meanSquaredError(actuals, estimates)).to.eql(13.5);
+      });
+    });
+    describe(&apos;meanAbsolutePercentageError&apos;, () =&gt; {
+      it(&apos;should return MAPE&apos;, () =&gt; {
+        expect(ms.util.meanAbsolutePercentageError).to.be.a(&apos;function&apos;);
+        expect(ms.util.MAPE).to.eql(ms.util.meanAbsolutePercentageError);
+        const MAPE = ms.util.meanAbsolutePercentageError(actuals, estimates);
+        expect(MAPE.toFixed(2)).to.eql(&apos;0.09&apos;);
+      });
+    });
+  });
   describe(&apos;max&apos;, () =&gt; {
     it(&apos;should return max value&apos;, () =&gt; {
       expect(ms.util).to.be.an(&apos;object&apos;);
@@ -167,15 +216,15 @@ describe(&apos;util&apos;, function () {
     });
   });
   describe(&apos;Standard Error of the Estimate&apos;, () =&gt; {
-    const actuals = [2, 4, 5, 4, 5,];
-    const estimates = [2.8, 3.4, 4, 4.6, 5.2,];
+    const actuals = [2, 4, 5, 4, 5, ];
+    const estimates = [2.8, 3.4, 4, 4.6, 5.2, ];
     it(&apos;should return the Standard Error of the Estimate&apos;, () =&gt; {
       const SE = ms.util.standardError(actuals, estimates);
       expect(SE.toFixed(2)).to.eql(0.89.toString());
     });
     it(&apos;should return an error if array lengths are not the same&apos;, () =&gt; {
       try {
-        ms.util.standardError(actuals, [2,]);
+        ms.util.standardError(actuals, [2, ]);
       } catch (e) {
         expect(e).to.be.an(&apos;error&apos;);
       }
@@ -193,7 +242,7 @@ describe(&apos;util&apos;, function () {
         &apos;Sa---l#eS&apos;,
       ];
       const sanitizedNames = names.map(ms.util.getSafePropertyName);
-      const ranSanitized = [ &apos;sa les&apos;,
+      const ranSanitized = [&apos;sa les&apos;,
         &apos;sa_les&apos;,
         &apos;sa_les___&apos;,
         &apos;Sa_les___&apos;,
@@ -206,8 +255,8 @@ describe(&apos;util&apos;, function () {
     });
   });
   describe(&apos;Coefficient of correlation&apos;, () =&gt; {
-    const actuals = [ 39, 42, 67, 76, ];
-    const estimates = [ 44, 40, 60, 84, ];
+    const actuals = [39, 42, 67, 76,];
+    const estimates = [44, 40, 60, 84,];
     it(&apos;should return the Coefficient of correlation&apos;, () =&gt; {
       const R = ms.util.coefficientOfCorrelation(actuals, estimates);
       expect(R.toFixed(4)).to.eql(0.9408.toString());
@@ -215,15 +264,15 @@ describe(&apos;util&apos;, function () {
     });
     it(&apos;should return an error if array lengths are not the same&apos;, () =&gt; {
       try {
-        ms.util.coefficientOfCorrelation(actuals, [2,]);
+        ms.util.coefficientOfCorrelation(actuals, [2, ]);
       } catch (e) {
         expect(e).to.be.an(&apos;error&apos;);
       }
     });
   });
   describe(&apos;rSquared&apos;, () =&gt; {
-    const actuals = [ 39, 42, 67, 76, ];
-    const estimates = [ 44, 40, 60, 84, ];
+    const actuals = [39, 42, 67, 76,];
+    const estimates = [44, 40, 60, 84,];
     it(&apos;should return r^2&apos;, () =&gt; {
       const R = ms.util.coefficientOfCorrelation(actuals, estimates);
       const rSquared = ms.util.rSquared(actuals, estimates);
@@ -233,15 +282,15 @@ describe(&apos;util&apos;, function () {
     });
   });
   describe(&apos;Coefficient of determination&apos;, () =&gt; {
-    const actuals = [2, 4, 5, 4, 5,];
-    const estimates = [2.8, 3.4, 4, 4.6, 5.2,];
+    const actuals = [2, 4, 5, 4, 5, ];
+    const estimates = [2.8, 3.4, 4, 4.6, 5.2, ];
     it(&apos;should return the Coefficient of determination&apos;, () =&gt; {
       const r2 = ms.util.coefficientOfDetermination(actuals, estimates);
       expect(r2.toFixed(1)).to.eql(0.6.toString());
     });
     it(&apos;should return an error if array lengths are not the same&apos;, () =&gt; {
       try {
-        ms.util.coefficientOfDetermination(actuals, [2,]);
+        ms.util.coefficientOfDetermination(actuals, [2, ]);
       } catch (e) {
         expect(e).to.be.an(&apos;error&apos;);
       }
@@ -261,11 +310,11 @@ describe(&apos;util&apos;, function () {
     it(&apos;should pivot vectors into arrays&apos;, () =&gt; {
       const arrays = ms.util.pivotVector(vectors); // =&gt; [ [1,2,3,3], [2,2,3,3], [3,3,4,3] ];
       expect(arrays[ 0 ]).to.be.lengthOf(4);
-      expect(arrays[ 0 ]).to.eql([1, 1, 3, 3, ]);
+      expect(arrays[ 0 ]).to.eql([1, 1, 3, 3,]);
       expect(arrays[ 1 ]).to.be.lengthOf(4);
-      expect(arrays[ 1 ]).to.eql([2, 2, 3, 3, ]);
+      expect(arrays[ 1 ]).to.eql([2, 2, 3, 3,]);
       expect(arrays[ 2 ]).to.be.lengthOf(4);
-      expect(arrays[ 2 ]).to.eql([3, 3, 4, 3, ]);
+      expect(arrays[ 2 ]).to.eql([3, 3, 4, 3,]);
     });
   });
   describe(&apos;pivotArrays&apos;, () =&gt; {

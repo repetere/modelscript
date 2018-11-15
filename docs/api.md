@@ -683,3 +683,57 @@ returns a safe column name / url slug from a string
 | Name | Type | Attribute | Description |
 | --- | --- | --- | --- |
 | name | String |  |
+
+## `forecastErrors(actuals: Number[], estimates: Number[]): Number[]`
+
+The errors (residuals) from acutals and estimates
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+| actuals | Number[] |  | numerical samples |
+| estimates | Number[] |  | estimates values |
+
+## `meanForecastError(actuals: Number[], estimates: Number[]): Number`
+
+The bias of forecast accuracy
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+| actuals | Number[] |  | numerical samples |
+| estimates | Number[] |  | estimates values |
+
+## `meanAbsoluteDeviation(actuals: Number[], estimates: Number[]): Number`
+
+Mean Absolute Deviation (MAD) indicates the absolute size of the errors
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+| actuals | Number[] |  | numerical samples |
+| estimates | Number[] |  | estimates values |
+
+## `trackingSignal(actuals: Number[], estimates: Number[]): Number`
+
+Tracking Signal - Used to pinpoint forecasting models that need adjustment
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+| actuals | Number[] |  | numerical samples |
+| estimates | Number[] |  | estimates values |
+
+## `meanSquaredError(actuals: Number[], estimates: Number[]): Number`
+
+The standard error of the estimate is a measure of the accuracy of predictions made with a regression line. Compares the estimate to the actual value
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+| actuals | Number[] |  | numerical samples |
+| estimates | Number[] |  | estimates values |
+
+## `meanAbsolutePercentageError(actuals: Number[], estimates: Number[]): Number`
+
+MAPE (Mean Absolute Percent Error) measures the size of the error in percentage terms
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+| actuals | Number[] |  | numerical samples |
+| estimates | Number[] |  | estimates values |
