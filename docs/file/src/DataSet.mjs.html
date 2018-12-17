@@ -283,7 +283,7 @@ EncodedCSVDataSet.oneHotDecoder(&apos;Country);// =&gt;
     const encodedData = config.data || this.oneHotColumnArray(name, config.oneHotColumnArrayOptions);
     // console.log({ encodedData, encoderMap, prefix });
     return encodedData.reduce((result, val) =&gt; {
-      const columnNames = Object.keys(val).filter(prop =&gt; val[ prop ] === 1 &amp;&amp; labels.indexOf(prop.replace(prefix, &apos;&apos;))!==-1);
+      const columnNames = Object.keys(val).filter(prop =&gt; val[ prop ] === 1 &amp;&amp; (labels.indexOf(prop.replace(prefix, &apos;&apos;))!==-1 || labels.map(label=&gt;String(label)).indexOf(prop.replace(prefix, &apos;&apos;))!==-1));
       const columnName = columnNames[ 0 ]||&apos;&apos;; 
       // console.log({ columnName, columnNames, labels, val},Object.keys(val));
       const datum = {

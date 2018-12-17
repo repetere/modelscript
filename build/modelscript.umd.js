@@ -83142,7 +83142,7 @@
                 const encodedData = config.data || this.oneHotColumnArray(name, config.oneHotColumnArrayOptions);
                 // console.log({ encodedData, encoderMap, prefix });
                 return encodedData.reduce((result, val) => {
-                  const columnNames = Object.keys(val).filter(prop => val[ prop ] === 1 && labels.indexOf(prop.replace(prefix, ''))!==-1);
+                  const columnNames = Object.keys(val).filter(prop => val[ prop ] === 1 && (labels.indexOf(prop.replace(prefix, ''))!==-1 || labels.map(label=>String(label)).indexOf(prop.replace(prefix, ''))!==-1));
                   const columnName = columnNames[ 0 ]||''; 
                   // console.log({ columnName, columnNames, labels, val},Object.keys(val));
                   const datum = {
