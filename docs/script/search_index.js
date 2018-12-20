@@ -847,31 +847,37 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber534",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber505",
+    "preprocessing DataSet class fitColumns should accept simple format for transformations",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber570",
     "preprocessing DataSet class fitColumns should fit multiple columns",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber505",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber541",
     "preprocessing DataSet class fitColumns should merge columns",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber521",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber557",
     "preprocessing DataSet class fitColumns should only merge columns if data length matches",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber606",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber642",
     "preprocessing DataSet class fitInverseTransforms / fitTransforms",
     "test"
   ],
   [
     "",
-    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber607",
+    "test-file/test/unit/preprocessing_spec.mjs.html#lineNumber643",
     "preprocessing DataSet class fitInverseTransforms / fitTransforms should inverse transforms on dataset",
     "test"
   ],

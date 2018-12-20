@@ -82970,16 +82970,17 @@
                */
               static getTransforms(transforms = {}) {
                 return Object.keys(transforms).reduce((result, columnName) => {
+                  const transformColumnObject = transforms[ columnName ];
                   const transformObject = {
                     name: columnName,
                     options: {
-                      strategy: (Array.isArray(transforms[ columnName ]))
-                        ? transforms[ columnName ][0]
-                        : transforms[ columnName ],
+                      strategy: (Array.isArray(transformColumnObject))
+                        ? transformColumnObject[0]
+                        : transformColumnObject,
                     },
                   };
-                  if (Array.isArray(transforms[ columnName ]) && transforms[ columnName ].length > 1) {
-                    transformObject.options[ transformConfigMap[transforms[ columnName ][ 0 ]] ] = transforms[ columnName ][ 1 ];
+                  if (Array.isArray(transformColumnObject) && transformColumnObject.length > 1) {
+                    transformObject.options[ transformConfigMap[transformColumnObject[ 0 ]] ] = transformColumnObject[ 1 ];
                   }
                   result.push(transformObject);
                   return result;

@@ -24,9 +24,8 @@
       "actualCount": 24,
       "undocumentLines": [
         4,
-        91,
-        352,
-        355,
+        92,
+        353,
         356,
         357,
         358,
@@ -38,7 +37,8 @@
         364,
         365,
         366,
-        367
+        367,
+        368
       ]
     },
     "src/ReinforcedLearning.mjs": {
