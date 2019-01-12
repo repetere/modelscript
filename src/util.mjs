@@ -393,6 +393,7 @@ function getSafePropertyName(name) {
  * @returns {Number[]} errors (residuals)
  */
 function forecastErrors(actuals, estimates) {
+  if (actuals.length !== estimates.length) throw new Error(`Actuals length (${actuals.length}) must equal Estimates length (${estimates.length})`);
   return actuals.map((act, i) => act - estimates[ i ]);
 }
 
@@ -467,6 +468,25 @@ function meanSquaredError(actuals, estimates) {
 }
 
 /**
+ * MAD over Mean Ratio - The MAD/Mean ratio is an alternative to the MAPE that is better suited to intermittent and low-volume data. As stated previously, percentage errors cannot be calculated when the actual equals zero and can take on extreme values when dealing with low-volume data. These issues become magnified when you start to average MAPEs over multiple time series. The MAD/Mean ratio tries to overcome this problem by dividing the MAD by the Mean—essentially rescaling the error to make it comparable across time series of varying scales
+ * @memberOf util
+ * @see {@link https://www.forecastpro.com/Trends/forecasting101August2011.html}
+ * @example
+  const actuals = [ 45, 38, 43, 39 ];
+  const estimates = [ 41, 43, 41, 42 ];
+  const MMR = ms.util.MADMeanRatio(actuals, estimates);
+  MAPE.toFixed(2) // => 0.08
+ * @param {Number[]} actuals - numerical samples 
+ * @param {Number[]} estimates - estimates values
+ * @returns {Number} MMR
+ */
+function MADMeanRatio(actuals, estimates) {
+  const MAD = meanAbsoluteDeviation(actuals, estimates);
+  const mean = avg(actuals);
+  return MAD / mean;
+}
+
+/**
  * MAPE (Mean Absolute Percent Error) measures the size of the error in percentage terms
  * @memberOf util
  * @see {@link https://www.forecastpro.com/Trends/forecasting101August2011.html}
@@ -529,6 +549,8 @@ export const util = {
   TS: trackingSignal,
   meanSquaredError,
   MSE: meanSquaredError,
+  MADMeanRatio,
+  MMR: MADMeanRatio,
   meanAbsolutePercentageError,
   MAPE: meanAbsolutePercentageError,
 };
