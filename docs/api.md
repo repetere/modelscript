@@ -729,6 +729,15 @@ The standard error of the estimate is a measure of the accuracy of predictions m
 | actuals | Number[] |  | numerical samples |
 | estimates | Number[] |  | estimates values |
 
+## `MADMeanRatio(actuals: Number[], estimates: Number[]): Number`
+
+MAD over Mean Ratio - The MAD/Mean ratio is an alternative to the MAPE that is better suited to intermittent and low-volume data. As stated previously, percentage errors cannot be calculated when the actual equals zero and can take on extreme values when dealing with low-volume data. These issues become magnified when you start to average MAPEs over multiple time series. The MAD/Mean ratio tries to overcome this problem by dividing the MAD by the Mean—essentially rescaling the error to make it comparable across time series of varying scales
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+| actuals | Number[] |  | numerical samples |
+| estimates | Number[] |  | estimates values |
+
 ## `meanAbsolutePercentageError(actuals: Number[], estimates: Number[]): Number`
 
 MAPE (Mean Absolute Percent Error) measures the size of the error in percentage terms

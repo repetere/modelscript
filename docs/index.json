@@ -3810,7 +3810,7 @@
     "__docId__": 137,
     "kind": "file",
     "name": "src/util.mjs",
-    "content": "import { default as ml, } from 'ml';\r\nimport { default as range, } from 'lodash.range';\r\nimport { default as rangeRight, } from 'lodash.rangeright';\r\n\r\nconst avg = ml.ArrayStat.mean;\r\nconst mean = avg;\r\nconst sum = ml.ArrayStat.sum;\r\nconst scale = (a, d) => a.map(x => (x - avg(a)) / d);\r\nconst max = a => a.concat([]).sort((x, y) => x < y)[0];\r\nconst min = a => a.concat([]).sort((x, y) => x > y)[0];\r\nconst sd = ml.ArrayStat.standardDeviation; //(a, av) => Math.sqrt(avg(a.map(x => (x - av) * x)));\r\n\r\n\r\n/**\r\n * Returns an array of the squared different of two arrays\r\n * @memberOf util\r\n * @param {Number[]} left \r\n * @param {Number[]} right \r\n * @returns {Number[]} Squared difference of left minus right array\r\n */\r\nfunction squaredDifference(left, right) {\r\n  return left.reduce((result, val, index, arr) => { \r\n    result.push(Math.pow((right[index]-val), 2));\r\n    return result;\r\n  }, []);\r\n}\r\n\r\n/**\r\n * The standard error of the estimate is a measure of the accuracy of predictions made with a regression line. Compares the estimate to the actual value\r\n * @memberOf util\r\n * @see {@link http://onlinestatbook.com/2/regression/accuracy.html}\r\n * @example\r\n  const actuals = [ 2, 4, 5, 4, 5, ];\r\n  const estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];\r\n  const SE = ms.util.standardError(actuals, estimates);\r\n  SE.toFixed(2) // => 0.89\r\n * @param {Number[]} actuals - numerical samples \r\n * @param {Number[]} estimates - estimates values\r\n * @returns {Number} Standard Error of the Estimate\r\n */\r\nfunction standardError(actuals=[], estimates=[]) {\r\n  if (actuals.length !== estimates.length) throw new RangeError('arrays must have the same length');\r\n  const squaredDiff = squaredDifference(actuals, estimates);\r\n  return Math.sqrt((sum(squaredDiff)) / (actuals.length - 2));\r\n}\r\n\r\n/**\r\n * Calculates the z score of each value in the sample, relative to the sample mean and standard deviation.\r\n * @memberOf util\r\n * @see {@link https://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.stats.mstats.zscore.html}\r\n * @param {Number[]} observations - An array like object containing the sample data.\r\n * @returns {Number[]} The z-scores, standardized by mean and standard deviation of input array \r\n */\r\nfunction standardScore(observations = []) {\r\n  const mean = avg(observations);\r\n  const stdDev = sd(observations);\r\n  return observations.map(x => ((x - mean) / stdDev));\r\n}\r\n\r\n/**\r\n * In statistics, the coefficient of determination, denoted R2 or r2 and pronounced \"R squared\", is the proportion of the variance in the dependent variable that is predictable from the independent variable(s). Compares distance of estimated values to the mean.\r\n * {\\bar {y}}={\\frac {1}{n}}\\sum _{i=1}^{n}y_{i}\r\n * @example\r\nconst actuals = [ 2, 4, 5, 4, 5, ];\r\nconst estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];\r\nconst r2 = ms.util.coefficientOfDetermination(actuals, estimates); \r\nr2.toFixed(1) // => 0.6\r\n * @memberOf util\r\n * @see {@link https://en.wikipedia.org/wiki/Coefficient_of_determination} {@link http://statisticsbyjim.com/regression/standard-error-regression-vs-r-squared/}\r\n * @param {Number[]} actuals - numerical samples \r\n * @param {Number[]} estimates - estimates values\r\n * @returns {Number} r^2\r\n */\r\nfunction coefficientOfDetermination(actuals = [], estimates = []) {\r\n  if (actuals.length !== estimates.length) throw new RangeError('arrays must have the same length');\r\n  const actualsMean = mean(actuals);\r\n\r\n  const totalVariation = sum(actuals.reduce((result, val, index) => {\r\n    result.push(Math.pow((actuals[index]-actualsMean), 2));\r\n    return result;\r\n  }, []));\r\n  const unexplainedVariation = sum(actuals.reduce((result, val, index) => {\r\n    result.push(Math.pow((actuals[ index ] - estimates[ index ]), 2));\r\n    return result;\r\n  }, []));\r\n  const rSquared = ((totalVariation - unexplainedVariation) / totalVariation);\r\n\r\n  return rSquared;\r\n  /*\r\n  @see  {@link https://math.tutorvista.com/statistics/coefficient-of-determination.html}\r\n  Some Properties of Coefficient of Determination are as follow:\r\n  It helps to provide the proportion of the variance of one variable which is predictable from the other variable.\r\n  It is a way of measurement which allows determining how clear it can be in making predictions from a certain data provided.\r\n  It can be taken as a ratio of the explained variation to the total variation.\r\n  It denotes the strength of the linear association between the variables.\r\n  The square of the coefficient of determination will always b e between 0 and1, which is 0 ≤\r\n  ≤\r\n  r2 ≤\r\n  ≤\r\n  1. Here r2 will always be a positive value.\r\n  As r2 gets close to 1, the Y data values get close to the regression line.\r\n  As r2 gets close to 0, the Y data values get further from the regression line.\r\n  It helps to provide the proportion of the variance of one variable which is predictable from the other variable.\r\n  It is a way of measurement which allows determining how clear it can be in making predictions from a certain data provided.\r\n  It can be taken as a ratio of the explained variation to the total variation.\r\n  It denotes the strength of the linear association between the variables.\r\n  */  \r\n}\r\n\r\n/**\r\n * You can use the adjusted coefficient of determination to determine how well a multiple regression equation “fits” the sample data. The adjusted coefficient of determination is closely related to the coefficient of determination (also known as R2) that you use to test the results of a simple regression equation.\r\n * @example\r\nconst adjr2 = ms.util.adjustedCoefficentOfDetermination({\r\n  rSquared: 0.944346527,\r\n  sampleSize: 8,\r\n  independentVariables: 2,\r\n}); \r\nr2.toFixed(3) // => 0.922\r\n * @memberOf util\r\n * @see {@link http://www.dummies.com/education/math/business-statistics/how-to-calculate-the-adjusted-coefficient-of-determination/}\r\n * @param {Object} [options={}] \r\n * @param {Number[]} [options.actuals] - numerical samples \r\n * @param {Number[]} [options.estimates] - estimate values \r\n * @param {Number} [options.rSquared] - coefficent of determination \r\n * @param {Number} [options.sampleSize] - the sample size \r\n * @param {Number} options.independentVariables - the number of independent variables in the regression equation\r\n * @returns {Number} adjusted r^2 for multiple linear regression\r\n */\r\nfunction adjustedCoefficentOfDetermination(options = {}) {\r\n  const { actuals, estimates, rSquared, independentVariables, sampleSize, } = options;\r\n  const r2 = rSquared || coefficientOfDetermination(actuals, estimates);\r\n  const n = sampleSize || actuals.length;\r\n  const k = independentVariables;\r\n\r\n  return (1 - (1 - r2) * ((n - 1) / (n - (k + 1))));\r\n}\r\n\r\n/**\r\n * The coefficent of Correlation is given by R decides how well the given data fits a line or a curve.\r\n * @example\r\nconst actuals = [ 39, 42, 67, 76, ];\r\nconst estimates = [ 44, 40, 60, 84, ];\r\nconst R = ms.util.coefficientOfCorrelation(actuals, estimates); \r\nR.toFixed(4) // => 0.9408\r\n * @memberOf util\r\n * @see {@link https://calculator.tutorvista.com/r-squared-calculator.html}\r\n * @param {Number[]} actuals - numerical samples \r\n * @param {Number[]} estimates - estimates values\r\n * @returns {Number} R\r\n */\r\nfunction coefficientOfCorrelation(actuals = [], estimates = []) {\r\n  if (actuals.length !== estimates.length) throw new RangeError('arrays must have the same length');\r\n  const sumX = sum(actuals);\r\n  const sumY = sum(estimates);\r\n  const sumProdXY = actuals.reduce((result, val, index) => { \r\n    result = result + (actuals[ index ] * estimates[ index ]);\r\n    return result;\r\n  }, 0);\r\n  const sumXSquared = actuals.reduce((result, val) => { \r\n    result = result + (val * val);\r\n    return result;\r\n  }, 0);\r\n  const sumYSquared = estimates.reduce((result, val) => { \r\n    result = result + (val * val);\r\n    return result;\r\n  }, 0);\r\n  const N = actuals.length;\r\n  const R = (\r\n    (N * sumProdXY - sumX * sumY) /\r\n    Math.sqrt(\r\n      (N * sumXSquared - Math.pow(sumX, 2)) * (N * sumYSquared - Math.pow(sumY, 2))\r\n    )\r\n  );\r\n  return R;\r\n}\r\n\r\n/**\r\n * The coefficent of determination is given by r^2 decides how well the given data fits a line or a curve.\r\n * \r\n * @param {Number[]} [actuals=[]] \r\n * @param {Number[]}  [estimates=[]]  \r\n * @returns {Number} r^2\r\n */\r\nfunction rSquared(actuals = [], estimates=[]) {\r\n  return Math.pow(coefficientOfCorrelation(actuals, estimates), 2);\r\n}\r\n\r\n/**\r\n * returns an array of vectors as an array of arrays\r\n * @example\r\nconst vectors = [ [1,2,3], [1,2,3], [3,3,4], [3,3,3] ];\r\nconst arrays = pivotVector(vectors); // => [ [1,2,3,3], [2,2,3,3], [3,3,4,3] ];\r\n * @memberOf util\r\n * @param {Array[]} vectors \r\n * @returns {Array[]}\r\n */\r\nfunction pivotVector(vectors=[]) {\r\n  return vectors.reduce((result, val, index/*, arr*/) => {\r\n    val.forEach((vecVal, i) => {\r\n      (index === 0)\r\n        ? (result.push([vecVal, ]))\r\n        : (result[ i ].push(vecVal));\r\n    });\r\n    return result;\r\n  }, []);\r\n} \r\n\r\n/**\r\n * returns a matrix of values by combining arrays into a matrix\r\n * @memberOf util\r\n * @example \r\n  const arrays = [\r\n    [ 1, 1, 3, 3 ],\r\n    [ 2, 2, 3, 3 ],\r\n    [ 3, 3, 4, 3 ],\r\n  ];\r\n  pivotArrays(arrays); //=>\r\n  // [\r\n  //   [1, 2, 3,],\r\n  //   [1, 2, 3,],\r\n  //   [3, 3, 4,],\r\n  //   [3, 3, 3,],\r\n  // ];\r\n  * @param {Array} [vectors=[]] - array of arguments for columnArray to merge columns into a matrix\r\n  * @returns {Array} a matrix of column values \r\n  */\r\nfunction pivotArrays(arrays = []) {\r\n  return (arrays.length)\r\n    ? arrays[ 0 ].map((vectorItem, index) => {\r\n      const returnArray = [];\r\n      arrays.forEach((v, i) => {\r\n        returnArray.push(arrays[ i ][ index ]);\r\n      });\r\n      return returnArray;\r\n    })\r\n    : arrays;\r\n}\r\n\r\n/**\r\n  * Standardize features by removing the mean and scaling to unit variance\r\n\r\n  Centering and scaling happen independently on each feature by computing the relevant statistics on the samples in the training set. Mean and standard deviation are then stored to be used on later data using the transform method.\r\n\r\n  Standardization of a dataset is a common requirement for many machine learning estimators: they might behave badly if the individual feature do not more or less look like standard normally distributed data (e.g. Gaussian with 0 mean and unit variance)\r\n  * @memberOf util\r\n  * @param {number[]} z - array of integers or floats\r\n  * @returns {number[]}\r\n  */\r\nconst StandardScaler = (z) => scale(z, sd(z));\r\n\r\n\r\n/** This function returns two functions that can standard scale new inputs and reverse scale new outputs\r\n * @param {Number[]} values - array of numbers\r\n * @returns {Object} - {scale[ Function ], descale[ Function ]}\r\n*/\r\nfunction StandardScalerTransforms(vector = [], nan_value = -1, return_nan=false) {\r\n  const average = avg(vector);\r\n  const standard_dev = sd(vector);\r\n  const maximum = max(vector);\r\n  const minimum = min(vector);\r\n  const scale = (z) => {\r\n    const scaledValue = (z - average) / standard_dev;\r\n    if (isNaN(scaledValue) && return_nan) return scaledValue;\r\n    else if (isNaN(scaledValue) && return_nan === false) return (isNaN(standard_dev)) ? z : standard_dev;\r\n    else return scaledValue;\r\n  }; // equivalent to MinMaxScaler(z)\r\n  const descale = (scaledZ) => {\r\n    const descaledValue = (scaledZ * standard_dev) + average;\r\n    if (isNaN(descaledValue) && return_nan) return descaledValue;\r\n    else if (isNaN(descaledValue) && return_nan === false) return (isNaN(standard_dev)) ? scaledZ : standard_dev;\r\n    else return descaledValue;\r\n  };\r\n  const values = vector.map(scale)\r\n    .map(val => {\r\n      if (isNaN(val)) return nan_value;\r\n      else return val;\r\n    });\r\n  return {\r\n    components: {\r\n      average,\r\n      standard_dev,\r\n      maximum,\r\n      minimum,\r\n    },\r\n    scale,\r\n    descale,\r\n    values,\r\n  };\r\n}\r\n\r\n/**\r\n * Transforms features by scaling each feature to a given range.\r\n  This estimator scales and translates each feature individually such that it is in the given range on the training set, i.e. between zero and one.\r\n  * @memberOf util\r\n  * @param {number[]} z - array of integers or floats\r\n  * @returns {number[]}\r\n  */\r\nconst MinMaxScaler= (z) => scale(z, (max(z) - min(z)));\r\n\r\n/** This function returns two functions that can mix max scale new inputs and reverse scale new outputs\r\n * @param {Number[]} values - array of numbers\r\n * @returns {Object} - {scale[ Function ], descale[ Function ]}\r\n*/\r\nfunction MinMaxScalerTransforms(vector = [], nan_value = -1, return_nan=false) {\r\n  const average = avg(vector);\r\n  const standard_dev = sd(vector);\r\n  const maximum = max(vector);\r\n  const minimum = min(vector);\r\n  const scale = (z) => {\r\n    const scaledValue = (z - average) / (maximum - minimum);\r\n    if (isNaN(scaledValue) && return_nan) return scaledValue;\r\n    else if (isNaN(scaledValue) && return_nan === false) return (isNaN(standard_dev)) ? z : standard_dev;\r\n    else return scaledValue;\r\n  }; // equivalent to MinMaxScaler(z)\r\n  const descale = (scaledZ) => {\r\n    const descaledValue = (scaledZ * (maximum - minimum)) + average;\r\n    if (isNaN(descaledValue) && return_nan) return descaledValue;\r\n    else if (isNaN(descaledValue) && return_nan === false) return (isNaN(standard_dev)) ? scaledZ : standard_dev;\r\n    else return descaledValue;\r\n  };\r\n  const values = vector.map(scale)\r\n    .map(val => {\r\n      if (isNaN(val)) return nan_value;\r\n      else return val;\r\n    });\r\n  return {\r\n    components: {\r\n      average,\r\n      standard_dev,\r\n      maximum,\r\n      minimum,\r\n    },\r\n    scale,\r\n    descale,\r\n    values,\r\n  };\r\n}\r\n\r\n/**\r\n  * Converts z-score into the probability\r\n  * @memberOf util\r\n  * @see {@link https://stackoverflow.com/questions/36575743/how-do-i-convert-probability-into-z-score}\r\n  * @param {number} z - Number of standard deviations from the mean.\r\n  * @returns {number} p  - p-value\r\n  */\r\nfunction approximateZPercentile(z, alpha=true) {\r\n  // If z is greater than 6.5 standard deviations from the mean\r\n  // the number of significant digits will be outside of a reasonable \r\n  // range.\r\n  if (z < -6.5)\r\n    return 0.0;\r\n\r\n  if (z > 6.5)\r\n    return 1.0;\r\n\r\n  let factK    = 1;\r\n  let sum      = 0;\r\n  let term     = 1;\r\n  let k        = 0;\r\n  let loopStop = Math.exp(-23);\r\n   \r\n  while (Math.abs(term) > loopStop) {\r\n    term = 0.3989422804 * Math.pow(-1, k) * Math.pow(z, k) / (2 * k + 1) /\r\n            Math.pow(2, k) * Math.pow(z, k + 1) / factK;\r\n    sum += term;\r\n    k++;\r\n    factK *= k;\r\n  }\r\n\r\n  sum += 0.5;\r\n\r\n  return (alpha) ? 1 - sum : sum;\r\n}\r\n\r\n/**\r\n * returns a safe column name / url slug from a string\r\n * @param {String} name \r\n * @returns {String}\r\n */\r\nfunction getSafePropertyName(name) {\r\n  return name.replace(/[^\\w\\s]/gi, '_');\r\n}\r\n\r\n/**\r\n * The errors (residuals) from acutals and estimates\r\n * @memberOf util\r\n * @example\r\n  const actuals = [ 45, 38, 43, 39 ];\r\n  const estimates = [ 41, 43, 41, 42 ];\r\n  const errors = ms.util.forecastErrors(actuals, estimates); // => [ 4, -5, 2, -3 ]\r\n * @param {Number[]} actuals - numerical samples \r\n * @param {Number[]} estimates - estimates values\r\n * @returns {Number[]} errors (residuals)\r\n */\r\nfunction forecastErrors(actuals, estimates) {\r\n  return actuals.map((act, i) => act - estimates[ i ]);\r\n}\r\n\r\n/**\r\n * The bias of forecast accuracy\r\n * @memberOf util\r\n * @see {@link https://scm.ncsu.edu/scm-articles/article/measuring-forecast-accuracy-approaches-to-forecasting-a-tutorial}\r\n * @example\r\n  const actuals = [ 45, 38, 43, 39 ];\r\n  const estimates = [ 41, 43, 41, 42 ];\r\n  const MFE = ms.util.meanForecastError(actuals, estimates); // =>  -0.5\r\n * @param {Number[]} actuals - numerical samples \r\n * @param {Number[]} estimates - estimates values\r\n * @returns {Number} MFE (bias)\r\n */\r\nfunction meanForecastError(actuals, estimates) { \r\n  const errors = forecastErrors(actuals, estimates);\r\n  return avg(errors);\r\n}\r\n\r\n/**\r\n * Mean Absolute Deviation (MAD) indicates the absolute size of the errors\r\n * @memberOf util\r\n * @see {@link https://scm.ncsu.edu/scm-articles/article/measuring-forecast-accuracy-approaches-to-forecasting-a-tutorial}\r\n * @example\r\n  const actuals = [ 45, 38, 43, 39 ];\r\n  const estimates = [ 41, 43, 41, 42 ];\r\n  const MAD = ms.util.meanAbsoluteDeviation(actuals, estimates); // =>  3.5\r\n * @param {Number[]} actuals - numerical samples \r\n * @param {Number[]} estimates - estimates values\r\n * @returns {Number} MAD\r\n */\r\nfunction meanAbsoluteDeviation(actuals, estimates) { \r\n  const errors = forecastErrors(actuals, estimates).map(e=>Math.abs(e));\r\n  return avg(errors);\r\n}\r\n\r\n/**\r\n * Tracking Signal - Used to pinpoint forecasting models that need adjustment\r\n * @memberOf util\r\n * @see {@link https://scm.ncsu.edu/scm-articles/article/measuring-forecast-accuracy-approaches-to-forecasting-a-tutorial}\r\n * @example\r\n  const actuals = [ 45, 38, 43, 39 ];\r\n  const estimates = [ 41, 43, 41, 42 ];\r\n  const trackingSignal = ms.util.trackingSignal(actuals, estimates); \r\n  trackingSignal.toFixed(2) // =>  -0.57\r\n * @param {Number[]} actuals - numerical samples \r\n * @param {Number[]} estimates - estimates values\r\n * @returns {Number} trackingSignal\r\n */\r\nfunction trackingSignal(actuals, estimates) {\r\n  const runningSumOfForecastErrors = sum(forecastErrors(actuals, estimates));\r\n  const MAD = meanAbsoluteDeviation(actuals, estimates);\r\n  return runningSumOfForecastErrors / MAD;\r\n}\r\n\r\n/**\r\n * The standard error of the estimate is a measure of the accuracy of predictions made with a regression line. Compares the estimate to the actual value\r\n * @memberOf util\r\n * @see {@link http://onlinestatbook.com/2/regression/accuracy.html}\r\n * @example\r\n  const actuals = [ 45, 38, 43, 39 ];\r\n  const estimates = [ 41, 43, 41, 42 ];   \r\n  const MSE = ms.util.meanSquaredError(actuals, estimates); // => 13.5\r\n * @param {Number[]} actuals - numerical samples \r\n * @param {Number[]} estimates - estimates values\r\n * @returns {Number} MSE\r\n */\r\nfunction meanSquaredError(actuals, estimates) {\r\n  const squaredErrors = forecastErrors(actuals, estimates).map(e=>e*e);\r\n  return avg(squaredErrors);\r\n}\r\n\r\n/**\r\n * MAPE (Mean Absolute Percent Error) measures the size of the error in percentage terms\r\n * @memberOf util\r\n * @see {@link https://www.forecastpro.com/Trends/forecasting101August2011.html}\r\n * @example\r\n  const actuals = [ 45, 38, 43, 39 ];\r\n  const estimates = [ 41, 43, 41, 42 ];\r\n  const MAPE = ms.util.meanAbsolutePercentageError(actuals, estimates);\r\n  MAPE.toFixed(2) // => 0.86\r\n * @param {Number[]} actuals - numerical samples \r\n * @param {Number[]} estimates - estimates values\r\n * @returns {Number} MAPE\r\n */\r\nfunction meanAbsolutePercentageError(actuals, estimates) {\r\n  const errors = forecastErrors(actuals, estimates).map(e=>Math.abs(e));\r\n  const absErrorPercent = errors.map((e, i) => e / actuals[ i ]);\r\n  return avg(absErrorPercent);\r\n}\r\n\r\n/**\r\n * @namespace\r\n */\r\nexport const util = {\r\n  range,\r\n  rangeRight,\r\n  scale,\r\n  avg,\r\n  mean: avg,\r\n  sum,\r\n  max,\r\n  min,\r\n  sd,\r\n  StandardScaler,\r\n  StandardScalerTransforms,\r\n  MinMaxScaler,\r\n  MinMaxScalerTransforms,\r\n  LogScaler: (z) => z.map(Math.log),\r\n  ExpScaler: (z) => z.map(Math.exp),\r\n  squaredDifference,\r\n  standardError,\r\n  coefficientOfDetermination,\r\n  coefficientOfCorrelation,\r\n  r: coefficientOfCorrelation,\r\n  rSquared,\r\n  adjustedCoefficentOfDetermination,\r\n  rBarSquared: adjustedCoefficentOfDetermination,\r\n  adjustedRSquared: adjustedCoefficentOfDetermination,\r\n  pivotVector,\r\n  pivotArrays,\r\n  standardScore,\r\n  zScore: standardScore,\r\n  approximateZPercentile,\r\n  // approximatePercentileZ,\r\n  getSafePropertyName,\r\n  forecastErrors,\r\n  meanForecastError,\r\n  MFE: meanForecastError,\r\n  meanAbsoluteDeviation,\r\n  MAD: meanAbsoluteDeviation,\r\n  trackingSignal,\r\n  TS: trackingSignal,\r\n  meanSquaredError,\r\n  MSE: meanSquaredError,\r\n  meanAbsolutePercentageError,\r\n  MAPE: meanAbsolutePercentageError,\r\n};",
+    "content": "import { default as ml, } from 'ml';\r\nimport { default as range, } from 'lodash.range';\r\nimport { default as rangeRight, } from 'lodash.rangeright';\r\n\r\nconst avg = ml.ArrayStat.mean;\r\nconst mean = avg;\r\nconst sum = ml.ArrayStat.sum;\r\nconst scale = (a, d) => a.map(x => (x - avg(a)) / d);\r\nconst max = a => a.concat([]).sort((x, y) => x < y)[0];\r\nconst min = a => a.concat([]).sort((x, y) => x > y)[0];\r\nconst sd = ml.ArrayStat.standardDeviation; //(a, av) => Math.sqrt(avg(a.map(x => (x - av) * x)));\r\n\r\n\r\n/**\r\n * Returns an array of the squared different of two arrays\r\n * @memberOf util\r\n * @param {Number[]} left \r\n * @param {Number[]} right \r\n * @returns {Number[]} Squared difference of left minus right array\r\n */\r\nfunction squaredDifference(left, right) {\r\n  return left.reduce((result, val, index, arr) => { \r\n    result.push(Math.pow((right[index]-val), 2));\r\n    return result;\r\n  }, []);\r\n}\r\n\r\n/**\r\n * The standard error of the estimate is a measure of the accuracy of predictions made with a regression line. Compares the estimate to the actual value\r\n * @memberOf util\r\n * @see {@link http://onlinestatbook.com/2/regression/accuracy.html}\r\n * @example\r\n  const actuals = [ 2, 4, 5, 4, 5, ];\r\n  const estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];\r\n  const SE = ms.util.standardError(actuals, estimates);\r\n  SE.toFixed(2) // => 0.89\r\n * @param {Number[]} actuals - numerical samples \r\n * @param {Number[]} estimates - estimates values\r\n * @returns {Number} Standard Error of the Estimate\r\n */\r\nfunction standardError(actuals=[], estimates=[]) {\r\n  if (actuals.length !== estimates.length) throw new RangeError('arrays must have the same length');\r\n  const squaredDiff = squaredDifference(actuals, estimates);\r\n  return Math.sqrt((sum(squaredDiff)) / (actuals.length - 2));\r\n}\r\n\r\n/**\r\n * Calculates the z score of each value in the sample, relative to the sample mean and standard deviation.\r\n * @memberOf util\r\n * @see {@link https://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.stats.mstats.zscore.html}\r\n * @param {Number[]} observations - An array like object containing the sample data.\r\n * @returns {Number[]} The z-scores, standardized by mean and standard deviation of input array \r\n */\r\nfunction standardScore(observations = []) {\r\n  const mean = avg(observations);\r\n  const stdDev = sd(observations);\r\n  return observations.map(x => ((x - mean) / stdDev));\r\n}\r\n\r\n/**\r\n * In statistics, the coefficient of determination, denoted R2 or r2 and pronounced \"R squared\", is the proportion of the variance in the dependent variable that is predictable from the independent variable(s). Compares distance of estimated values to the mean.\r\n * {\\bar {y}}={\\frac {1}{n}}\\sum _{i=1}^{n}y_{i}\r\n * @example\r\nconst actuals = [ 2, 4, 5, 4, 5, ];\r\nconst estimates = [ 2.8, 3.4, 4, 4.6, 5.2, ];\r\nconst r2 = ms.util.coefficientOfDetermination(actuals, estimates); \r\nr2.toFixed(1) // => 0.6\r\n * @memberOf util\r\n * @see {@link https://en.wikipedia.org/wiki/Coefficient_of_determination} {@link http://statisticsbyjim.com/regression/standard-error-regression-vs-r-squared/}\r\n * @param {Number[]} actuals - numerical samples \r\n * @param {Number[]} estimates - estimates values\r\n * @returns {Number} r^2\r\n */\r\nfunction coefficientOfDetermination(actuals = [], estimates = []) {\r\n  if (actuals.length !== estimates.length) throw new RangeError('arrays must have the same length');\r\n  const actualsMean = mean(actuals);\r\n\r\n  const totalVariation = sum(actuals.reduce((result, val, index) => {\r\n    result.push(Math.pow((actuals[index]-actualsMean), 2));\r\n    return result;\r\n  }, []));\r\n  const unexplainedVariation = sum(actuals.reduce((result, val, index) => {\r\n    result.push(Math.pow((actuals[ index ] - estimates[ index ]), 2));\r\n    return result;\r\n  }, []));\r\n  const rSquared = ((totalVariation - unexplainedVariation) / totalVariation);\r\n\r\n  return rSquared;\r\n  /*\r\n  @see  {@link https://math.tutorvista.com/statistics/coefficient-of-determination.html}\r\n  Some Properties of Coefficient of Determination are as follow:\r\n  It helps to provide the proportion of the variance of one variable which is predictable from the other variable.\r\n  It is a way of measurement which allows determining how clear it can be in making predictions from a certain data provided.\r\n  It can be taken as a ratio of the explained variation to the total variation.\r\n  It denotes the strength of the linear association between the variables.\r\n  The square of the coefficient of determination will always b e between 0 and1, which is 0 ≤\r\n  ≤\r\n  r2 ≤\r\n  ≤\r\n  1. Here r2 will always be a positive value.\r\n  As r2 gets close to 1, the Y data values get close to the regression line.\r\n  As r2 gets close to 0, the Y data values get further from the regression line.\r\n  It helps to provide the proportion of the variance of one variable which is predictable from the other variable.\r\n  It is a way of measurement which allows determining how clear it can be in making predictions from a certain data provided.\r\n  It can be taken as a ratio of the explained variation to the total variation.\r\n  It denotes the strength of the linear association between the variables.\r\n  */  \r\n}\r\n\r\n/**\r\n * You can use the adjusted coefficient of determination to determine how well a multiple regression equation “fits” the sample data. The adjusted coefficient of determination is closely related to the coefficient of determination (also known as R2) that you use to test the results of a simple regression equation.\r\n * @example\r\nconst adjr2 = ms.util.adjustedCoefficentOfDetermination({\r\n  rSquared: 0.944346527,\r\n  sampleSize: 8,\r\n  independentVariables: 2,\r\n}); \r\nr2.toFixed(3) // => 0.922\r\n * @memberOf util\r\n * @see {@link http://www.dummies.com/education/math/business-statistics/how-to-calculate-the-adjusted-coefficient-of-determination/}\r\n * @param {Object} [options={}] \r\n * @param {Number[]} [options.actuals] - numerical samples \r\n * @param {Number[]} [options.estimates] - estimate values \r\n * @param {Number} [options.rSquared] - coefficent of determination \r\n * @param {Number} [options.sampleSize] - the sample size \r\n * @param {Number} options.independentVariables - the number of independent variables in the regression equation\r\n * @returns {Number} adjusted r^2 for multiple linear regression\r\n */\r\nfunction adjustedCoefficentOfDetermination(options = {}) {\r\n  const { actuals, estimates, rSquared, independentVariables, sampleSize, } = options;\r\n  const r2 = rSquared || coefficientOfDetermination(actuals, estimates);\r\n  const n = sampleSize || actuals.length;\r\n  const k = independentVariables;\r\n\r\n  return (1 - (1 - r2) * ((n - 1) / (n - (k + 1))));\r\n}\r\n\r\n/**\r\n * The coefficent of Correlation is given by R decides how well the given data fits a line or a curve.\r\n * @example\r\nconst actuals = [ 39, 42, 67, 76, ];\r\nconst estimates = [ 44, 40, 60, 84, ];\r\nconst R = ms.util.coefficientOfCorrelation(actuals, estimates); \r\nR.toFixed(4) // => 0.9408\r\n * @memberOf util\r\n * @see {@link https://calculator.tutorvista.com/r-squared-calculator.html}\r\n * @param {Number[]} actuals - numerical samples \r\n * @param {Number[]} estimates - estimates values\r\n * @returns {Number} R\r\n */\r\nfunction coefficientOfCorrelation(actuals = [], estimates = []) {\r\n  if (actuals.length !== estimates.length) throw new RangeError('arrays must have the same length');\r\n  const sumX = sum(actuals);\r\n  const sumY = sum(estimates);\r\n  const sumProdXY = actuals.reduce((result, val, index) => { \r\n    result = result + (actuals[ index ] * estimates[ index ]);\r\n    return result;\r\n  }, 0);\r\n  const sumXSquared = actuals.reduce((result, val) => { \r\n    result = result + (val * val);\r\n    return result;\r\n  }, 0);\r\n  const sumYSquared = estimates.reduce((result, val) => { \r\n    result = result + (val * val);\r\n    return result;\r\n  }, 0);\r\n  const N = actuals.length;\r\n  const R = (\r\n    (N * sumProdXY - sumX * sumY) /\r\n    Math.sqrt(\r\n      (N * sumXSquared - Math.pow(sumX, 2)) * (N * sumYSquared - Math.pow(sumY, 2))\r\n    )\r\n  );\r\n  return R;\r\n}\r\n\r\n/**\r\n * The coefficent of determination is given by r^2 decides how well the given data fits a line or a curve.\r\n * \r\n * @param {Number[]} [actuals=[]] \r\n * @param {Number[]}  [estimates=[]]  \r\n * @returns {Number} r^2\r\n */\r\nfunction rSquared(actuals = [], estimates=[]) {\r\n  return Math.pow(coefficientOfCorrelation(actuals, estimates), 2);\r\n}\r\n\r\n/**\r\n * returns an array of vectors as an array of arrays\r\n * @example\r\nconst vectors = [ [1,2,3], [1,2,3], [3,3,4], [3,3,3] ];\r\nconst arrays = pivotVector(vectors); // => [ [1,2,3,3], [2,2,3,3], [3,3,4,3] ];\r\n * @memberOf util\r\n * @param {Array[]} vectors \r\n * @returns {Array[]}\r\n */\r\nfunction pivotVector(vectors=[]) {\r\n  return vectors.reduce((result, val, index/*, arr*/) => {\r\n    val.forEach((vecVal, i) => {\r\n      (index === 0)\r\n        ? (result.push([vecVal, ]))\r\n        : (result[ i ].push(vecVal));\r\n    });\r\n    return result;\r\n  }, []);\r\n} \r\n\r\n/**\r\n * returns a matrix of values by combining arrays into a matrix\r\n * @memberOf util\r\n * @example \r\n  const arrays = [\r\n    [ 1, 1, 3, 3 ],\r\n    [ 2, 2, 3, 3 ],\r\n    [ 3, 3, 4, 3 ],\r\n  ];\r\n  pivotArrays(arrays); //=>\r\n  // [\r\n  //   [1, 2, 3,],\r\n  //   [1, 2, 3,],\r\n  //   [3, 3, 4,],\r\n  //   [3, 3, 3,],\r\n  // ];\r\n  * @param {Array} [vectors=[]] - array of arguments for columnArray to merge columns into a matrix\r\n  * @returns {Array} a matrix of column values \r\n  */\r\nfunction pivotArrays(arrays = []) {\r\n  return (arrays.length)\r\n    ? arrays[ 0 ].map((vectorItem, index) => {\r\n      const returnArray = [];\r\n      arrays.forEach((v, i) => {\r\n        returnArray.push(arrays[ i ][ index ]);\r\n      });\r\n      return returnArray;\r\n    })\r\n    : arrays;\r\n}\r\n\r\n/**\r\n  * Standardize features by removing the mean and scaling to unit variance\r\n\r\n  Centering and scaling happen independently on each feature by computing the relevant statistics on the samples in the training set. Mean and standard deviation are then stored to be used on later data using the transform method.\r\n\r\n  Standardization of a dataset is a common requirement for many machine learning estimators: they might behave badly if the individual feature do not more or less look like standard normally distributed data (e.g. Gaussian with 0 mean and unit variance)\r\n  * @memberOf util\r\n  * @param {number[]} z - array of integers or floats\r\n  * @returns {number[]}\r\n  */\r\nconst StandardScaler = (z) => scale(z, sd(z));\r\n\r\n\r\n/** This function returns two functions that can standard scale new inputs and reverse scale new outputs\r\n * @param {Number[]} values - array of numbers\r\n * @returns {Object} - {scale[ Function ], descale[ Function ]}\r\n*/\r\nfunction StandardScalerTransforms(vector = [], nan_value = -1, return_nan=false) {\r\n  const average = avg(vector);\r\n  const standard_dev = sd(vector);\r\n  const maximum = max(vector);\r\n  const minimum = min(vector);\r\n  const scale = (z) => {\r\n    const scaledValue = (z - average) / standard_dev;\r\n    if (isNaN(scaledValue) && return_nan) return scaledValue;\r\n    else if (isNaN(scaledValue) && return_nan === false) return (isNaN(standard_dev)) ? z : standard_dev;\r\n    else return scaledValue;\r\n  }; // equivalent to MinMaxScaler(z)\r\n  const descale = (scaledZ) => {\r\n    const descaledValue = (scaledZ * standard_dev) + average;\r\n    if (isNaN(descaledValue) && return_nan) return descaledValue;\r\n    else if (isNaN(descaledValue) && return_nan === false) return (isNaN(standard_dev)) ? scaledZ : standard_dev;\r\n    else return descaledValue;\r\n  };\r\n  const values = vector.map(scale)\r\n    .map(val => {\r\n      if (isNaN(val)) return nan_value;\r\n      else return val;\r\n    });\r\n  return {\r\n    components: {\r\n      average,\r\n      standard_dev,\r\n      maximum,\r\n      minimum,\r\n    },\r\n    scale,\r\n    descale,\r\n    values,\r\n  };\r\n}\r\n\r\n/**\r\n * Transforms features by scaling each feature to a given range.\r\n  This estimator scales and translates each feature individually such that it is in the given range on the training set, i.e. between zero and one.\r\n  * @memberOf util\r\n  * @param {number[]} z - array of integers or floats\r\n  * @returns {number[]}\r\n  */\r\nconst MinMaxScaler= (z) => scale(z, (max(z) - min(z)));\r\n\r\n/** This function returns two functions that can mix max scale new inputs and reverse scale new outputs\r\n * @param {Number[]} values - array of numbers\r\n * @returns {Object} - {scale[ Function ], descale[ Function ]}\r\n*/\r\nfunction MinMaxScalerTransforms(vector = [], nan_value = -1, return_nan=false) {\r\n  const average = avg(vector);\r\n  const standard_dev = sd(vector);\r\n  const maximum = max(vector);\r\n  const minimum = min(vector);\r\n  const scale = (z) => {\r\n    const scaledValue = (z - average) / (maximum - minimum);\r\n    if (isNaN(scaledValue) && return_nan) return scaledValue;\r\n    else if (isNaN(scaledValue) && return_nan === false) return (isNaN(standard_dev)) ? z : standard_dev;\r\n    else return scaledValue;\r\n  }; // equivalent to MinMaxScaler(z)\r\n  const descale = (scaledZ) => {\r\n    const descaledValue = (scaledZ * (maximum - minimum)) + average;\r\n    if (isNaN(descaledValue) && return_nan) return descaledValue;\r\n    else if (isNaN(descaledValue) && return_nan === false) return (isNaN(standard_dev)) ? scaledZ : standard_dev;\r\n    else return descaledValue;\r\n  };\r\n  const values = vector.map(scale)\r\n    .map(val => {\r\n      if (isNaN(val)) return nan_value;\r\n      else return val;\r\n    });\r\n  return {\r\n    components: {\r\n      average,\r\n      standard_dev,\r\n      maximum,\r\n      minimum,\r\n    },\r\n    scale,\r\n    descale,\r\n    values,\r\n  };\r\n}\r\n\r\n/**\r\n  * Converts z-score into the probability\r\n  * @memberOf util\r\n  * @see {@link https://stackoverflow.com/questions/36575743/how-do-i-convert-probability-into-z-score}\r\n  * @param {number} z - Number of standard deviations from the mean.\r\n  * @returns {number} p  - p-value\r\n  */\r\nfunction approximateZPercentile(z, alpha=true) {\r\n  // If z is greater than 6.5 standard deviations from the mean\r\n  // the number of significant digits will be outside of a reasonable \r\n  // range.\r\n  if (z < -6.5)\r\n    return 0.0;\r\n\r\n  if (z > 6.5)\r\n    return 1.0;\r\n\r\n  let factK    = 1;\r\n  let sum      = 0;\r\n  let term     = 1;\r\n  let k        = 0;\r\n  let loopStop = Math.exp(-23);\r\n   \r\n  while (Math.abs(term) > loopStop) {\r\n    term = 0.3989422804 * Math.pow(-1, k) * Math.pow(z, k) / (2 * k + 1) /\r\n            Math.pow(2, k) * Math.pow(z, k + 1) / factK;\r\n    sum += term;\r\n    k++;\r\n    factK *= k;\r\n  }\r\n\r\n  sum += 0.5;\r\n\r\n  return (alpha) ? 1 - sum : sum;\r\n}\r\n\r\n/**\r\n * returns a safe column name / url slug from a string\r\n * @param {String} name \r\n * @returns {String}\r\n */\r\nfunction getSafePropertyName(name) {\r\n  return name.replace(/[^\\w\\s]/gi, '_');\r\n}\r\n\r\n/**\r\n * The errors (residuals) from acutals and estimates\r\n * @memberOf util\r\n * @example\r\n  const actuals = [ 45, 38, 43, 39 ];\r\n  const estimates = [ 41, 43, 41, 42 ];\r\n  const errors = ms.util.forecastErrors(actuals, estimates); // => [ 4, -5, 2, -3 ]\r\n * @param {Number[]} actuals - numerical samples \r\n * @param {Number[]} estimates - estimates values\r\n * @returns {Number[]} errors (residuals)\r\n */\r\nfunction forecastErrors(actuals, estimates) {\r\n  if (actuals.length !== estimates.length) throw new Error(`Actuals length (${actuals.length}) must equal Estimates length (${estimates.length})`);\r\n  return actuals.map((act, i) => act - estimates[ i ]);\r\n}\r\n\r\n/**\r\n * The bias of forecast accuracy\r\n * @memberOf util\r\n * @see {@link https://scm.ncsu.edu/scm-articles/article/measuring-forecast-accuracy-approaches-to-forecasting-a-tutorial}\r\n * @example\r\n  const actuals = [ 45, 38, 43, 39 ];\r\n  const estimates = [ 41, 43, 41, 42 ];\r\n  const MFE = ms.util.meanForecastError(actuals, estimates); // =>  -0.5\r\n * @param {Number[]} actuals - numerical samples \r\n * @param {Number[]} estimates - estimates values\r\n * @returns {Number} MFE (bias)\r\n */\r\nfunction meanForecastError(actuals, estimates) { \r\n  const errors = forecastErrors(actuals, estimates);\r\n  return avg(errors);\r\n}\r\n\r\n/**\r\n * Mean Absolute Deviation (MAD) indicates the absolute size of the errors\r\n * @memberOf util\r\n * @see {@link https://scm.ncsu.edu/scm-articles/article/measuring-forecast-accuracy-approaches-to-forecasting-a-tutorial}\r\n * @example\r\n  const actuals = [ 45, 38, 43, 39 ];\r\n  const estimates = [ 41, 43, 41, 42 ];\r\n  const MAD = ms.util.meanAbsoluteDeviation(actuals, estimates); // =>  3.5\r\n * @param {Number[]} actuals - numerical samples \r\n * @param {Number[]} estimates - estimates values\r\n * @returns {Number} MAD\r\n */\r\nfunction meanAbsoluteDeviation(actuals, estimates) { \r\n  const errors = forecastErrors(actuals, estimates).map(e=>Math.abs(e));\r\n  return avg(errors);\r\n}\r\n\r\n/**\r\n * Tracking Signal - Used to pinpoint forecasting models that need adjustment\r\n * @memberOf util\r\n * @see {@link https://scm.ncsu.edu/scm-articles/article/measuring-forecast-accuracy-approaches-to-forecasting-a-tutorial}\r\n * @example\r\n  const actuals = [ 45, 38, 43, 39 ];\r\n  const estimates = [ 41, 43, 41, 42 ];\r\n  const trackingSignal = ms.util.trackingSignal(actuals, estimates); \r\n  trackingSignal.toFixed(2) // =>  -0.57\r\n * @param {Number[]} actuals - numerical samples \r\n * @param {Number[]} estimates - estimates values\r\n * @returns {Number} trackingSignal\r\n */\r\nfunction trackingSignal(actuals, estimates) {\r\n  const runningSumOfForecastErrors = sum(forecastErrors(actuals, estimates));\r\n  const MAD = meanAbsoluteDeviation(actuals, estimates);\r\n  return runningSumOfForecastErrors / MAD;\r\n}\r\n\r\n/**\r\n * The standard error of the estimate is a measure of the accuracy of predictions made with a regression line. Compares the estimate to the actual value\r\n * @memberOf util\r\n * @see {@link http://onlinestatbook.com/2/regression/accuracy.html}\r\n * @example\r\n  const actuals = [ 45, 38, 43, 39 ];\r\n  const estimates = [ 41, 43, 41, 42 ];   \r\n  const MSE = ms.util.meanSquaredError(actuals, estimates); // => 13.5\r\n * @param {Number[]} actuals - numerical samples \r\n * @param {Number[]} estimates - estimates values\r\n * @returns {Number} MSE\r\n */\r\nfunction meanSquaredError(actuals, estimates) {\r\n  const squaredErrors = forecastErrors(actuals, estimates).map(e=>e*e);\r\n  return avg(squaredErrors);\r\n}\r\n\r\n/**\r\n * MAD over Mean Ratio - The MAD/Mean ratio is an alternative to the MAPE that is better suited to intermittent and low-volume data. As stated previously, percentage errors cannot be calculated when the actual equals zero and can take on extreme values when dealing with low-volume data. These issues become magnified when you start to average MAPEs over multiple time series. The MAD/Mean ratio tries to overcome this problem by dividing the MAD by the Mean—essentially rescaling the error to make it comparable across time series of varying scales\r\n * @memberOf util\r\n * @see {@link https://www.forecastpro.com/Trends/forecasting101August2011.html}\r\n * @example\r\n  const actuals = [ 45, 38, 43, 39 ];\r\n  const estimates = [ 41, 43, 41, 42 ];\r\n  const MMR = ms.util.MADMeanRatio(actuals, estimates);\r\n  MAPE.toFixed(2) // => 0.08\r\n * @param {Number[]} actuals - numerical samples \r\n * @param {Number[]} estimates - estimates values\r\n * @returns {Number} MMR\r\n */\r\nfunction MADMeanRatio(actuals, estimates) {\r\n  const MAD = meanAbsoluteDeviation(actuals, estimates);\r\n  const mean = avg(actuals);\r\n  return MAD / mean;\r\n}\r\n\r\n/**\r\n * MAPE (Mean Absolute Percent Error) measures the size of the error in percentage terms\r\n * @memberOf util\r\n * @see {@link https://www.forecastpro.com/Trends/forecasting101August2011.html}\r\n * @example\r\n  const actuals = [ 45, 38, 43, 39 ];\r\n  const estimates = [ 41, 43, 41, 42 ];\r\n  const MAPE = ms.util.meanAbsolutePercentageError(actuals, estimates);\r\n  MAPE.toFixed(2) // => 0.86\r\n * @param {Number[]} actuals - numerical samples \r\n * @param {Number[]} estimates - estimates values\r\n * @returns {Number} MAPE\r\n */\r\nfunction meanAbsolutePercentageError(actuals, estimates) {\r\n  const errors = forecastErrors(actuals, estimates).map(e=>Math.abs(e));\r\n  const absErrorPercent = errors.map((e, i) => e / actuals[ i ]);\r\n  return avg(absErrorPercent);\r\n}\r\n\r\n/**\r\n * @namespace\r\n */\r\nexport const util = {\r\n  range,\r\n  rangeRight,\r\n  scale,\r\n  avg,\r\n  mean: avg,\r\n  sum,\r\n  max,\r\n  min,\r\n  sd,\r\n  StandardScaler,\r\n  StandardScalerTransforms,\r\n  MinMaxScaler,\r\n  MinMaxScalerTransforms,\r\n  LogScaler: (z) => z.map(Math.log),\r\n  ExpScaler: (z) => z.map(Math.exp),\r\n  squaredDifference,\r\n  standardError,\r\n  coefficientOfDetermination,\r\n  coefficientOfCorrelation,\r\n  r: coefficientOfCorrelation,\r\n  rSquared,\r\n  adjustedCoefficentOfDetermination,\r\n  rBarSquared: adjustedCoefficentOfDetermination,\r\n  adjustedRSquared: adjustedCoefficentOfDetermination,\r\n  pivotVector,\r\n  pivotArrays,\r\n  standardScore,\r\n  zScore: standardScore,\r\n  approximateZPercentile,\r\n  // approximatePercentileZ,\r\n  getSafePropertyName,\r\n  forecastErrors,\r\n  meanForecastError,\r\n  MFE: meanForecastError,\r\n  meanAbsoluteDeviation,\r\n  MAD: meanAbsoluteDeviation,\r\n  trackingSignal,\r\n  TS: trackingSignal,\r\n  meanSquaredError,\r\n  MSE: meanSquaredError,\r\n  MADMeanRatio,\r\n  MMR: MADMeanRatio,\r\n  meanAbsolutePercentageError,\r\n  MAPE: meanAbsolutePercentageError,\r\n};",
     "static": true,
     "longname": "/Users/yawjosephetse/Developer/github/repetere/modelscript/src/util.mjs",
     "access": "public",
@@ -4848,7 +4848,7 @@
     "see": [
       "{@link https://scm.ncsu.edu/scm-articles/article/measuring-forecast-accuracy-approaches-to-forecasting-a-tutorial}"
     ],
-    "lineNumber": 411,
+    "lineNumber": 412,
     "unknown": [
       {
         "tagName": "@memberOf",
@@ -4911,7 +4911,7 @@
     "see": [
       "{@link https://scm.ncsu.edu/scm-articles/article/measuring-forecast-accuracy-approaches-to-forecasting-a-tutorial}"
     ],
-    "lineNumber": 428,
+    "lineNumber": 429,
     "unknown": [
       {
         "tagName": "@memberOf",
@@ -4974,7 +4974,7 @@
     "see": [
       "{@link https://scm.ncsu.edu/scm-articles/article/measuring-forecast-accuracy-approaches-to-forecasting-a-tutorial}"
     ],
-    "lineNumber": 446,
+    "lineNumber": 447,
     "unknown": [
       {
         "tagName": "@memberOf",
@@ -5037,7 +5037,7 @@
     "see": [
       "{@link http://onlinestatbook.com/2/regression/accuracy.html}"
     ],
-    "lineNumber": 464,
+    "lineNumber": 465,
     "unknown": [
       {
         "tagName": "@memberOf",
@@ -5083,6 +5083,69 @@
   {
     "__docId__": 165,
     "kind": "function",
+    "name": "MADMeanRatio",
+    "memberof": "src/util.mjs",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/util.mjs~MADMeanRatio",
+    "access": "public",
+    "export": false,
+    "importPath": "modelscript/src/util.mjs",
+    "importStyle": null,
+    "description": "MAD over Mean Ratio - The MAD/Mean ratio is an alternative to the MAPE that is better suited to intermittent and low-volume data. As stated previously, percentage errors cannot be calculated when the actual equals zero and can take on extreme values when dealing with low-volume data. These issues become magnified when you start to average MAPEs over multiple time series. The MAD/Mean ratio tries to overcome this problem by dividing the MAD by the Mean—essentially rescaling the error to make it comparable across time series of varying scales",
+    "examples": [
+      "const actuals = [ 45, 38, 43, 39 ];\nconst estimates = [ 41, 43, 41, 42 ];\nconst MMR = ms.util.MADMeanRatio(actuals, estimates);\nMAPE.toFixed(2) // => 0.08"
+    ],
+    "see": [
+      "{@link https://www.forecastpro.com/Trends/forecasting101August2011.html}"
+    ],
+    "lineNumber": 483,
+    "unknown": [
+      {
+        "tagName": "@memberOf",
+        "tagValue": "util"
+      },
+      {
+        "tagName": "@returns",
+        "tagValue": "{Number} MMR"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Number[]"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "actuals",
+        "description": "numerical samples"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Number[]"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "estimates",
+        "description": "estimates values"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Number"
+      ],
+      "spread": false,
+      "description": "MMR"
+    },
+    "ignore": true
+  },
+  {
+    "__docId__": 166,
+    "kind": "function",
     "name": "meanAbsolutePercentageError",
     "memberof": "src/util.mjs",
     "generator": false,
@@ -5100,7 +5163,7 @@
     "see": [
       "{@link https://www.forecastpro.com/Trends/forecasting101August2011.html}"
     ],
-    "lineNumber": 482,
+    "lineNumber": 502,
     "unknown": [
       {
         "tagName": "@memberOf",
@@ -5144,7 +5207,7 @@
     "ignore": true
   },
   {
-    "__docId__": 166,
+    "__docId__": 167,
     "kind": "variable",
     "name": "util",
     "memberof": "src/util.mjs",
@@ -5155,7 +5218,7 @@
     "importPath": "modelscript/src/util.mjs",
     "importStyle": "{util}",
     "description": "",
-    "lineNumber": 491,
+    "lineNumber": 511,
     "unknown": [
       {
         "tagName": "@namespace",
@@ -5172,7 +5235,7 @@
     "access": "public"
   },
   {
-    "__docId__": 167,
+    "__docId__": 168,
     "kind": "testFile",
     "name": "test/unit/calc_spec.mjs",
     "content": "import * as ms from '../../index.mjs';\r\nimport chai from 'chai';\r\nconst expect = chai.expect;\r\nconst rawTransactions = [\r\n  ['Cookies', 'Milk', 'Plates', ],\r\n  ['Cups', 'Milk', 'Silverware', ],\r\n  ['Cookies', 'Cups', 'Milk', 'Silverware', ],\r\n  ['Cups', 'Silverware', ],\r\n  ['Cookies', 'Cups', 'Milk', 'Silverware', ],\r\n];\r\n\r\n// if (!Object.values) {\r\n//   ObjectValues.shim();\r\n// }\r\ndescribe('calc', function () { \r\n  describe('getTransactions', () => {\r\n    const gt = ms.calc.getTransactions(rawTransactions);\r\n    // console.log(gt);\r\n    it('should return values', () => {\r\n      expect(gt).to.haveOwnProperty('values');\r\n      expect(gt.values).to.be.a('set');\r\n    });\r\n    it('should contain all unique values of all transactions', () => {\r\n      expect(Array.from(gt.values.values())).to.include.all.members([\r\n        'Cookies', 'Milk', 'Plates', 'Cups', 'Silverware',\r\n      ]);\r\n    });\r\n    it('should have a map of all unique values and indexes', () => {\r\n      expect(gt.valuesMap).to.be.a('map');\r\n      gt.values.forEach((val, i) => {\r\n        expect(gt.valuesMap.has(val.toString())).to.be.true;\r\n        expect(gt.valuesMap.get(val.toString())).to.eql(gt.valuesMap.get(i.toString()));\r\n        expect(gt.valuesMap.has(i.toString())).to.be.true;\r\n        expect(gt.valuesMap.get(i.toString())).to.eql(gt.valuesMap.get(val.toString()));\r\n      });\r\n    });\r\n    it('should map values onto transactions', () => {\r\n      expect(gt.transactions.length).to.eql(rawTransactions.length);\r\n      rawTransactions.forEach((rt, i) => {\r\n        expect(rt.length).to.eql(gt.transactions[ i ].length);\r\n      });\r\n    });\r\n  });\r\n  describe('assocationRuleLearning', () => {\r\n    const gt = ms.calc.getTransactions(rawTransactions);\r\n    it('should use Eclat to associate transactions', (done) => {\r\n      // if (process.platform === 'darwin') {\r\n      ms.calc.assocationRuleLearning(gt.transactions, {\r\n        valuesMap: gt.valuesMap,\r\n      })\r\n        .then(arl => {\r\n          // console.log('arl',arl);\r\n          expect(arl).to.be.an('array');\r\n          done();\r\n        })\r\n        .catch(done);\r\n      expect(ms.calc.assocationRuleLearning).to.be.an('function');\r\n      // }\r\n    });\r\n    it('should use accept options for eclat summary', (done) => {\r\n      // if (process.platform === 'darwin') {\r\n      ms.calc.assocationRuleLearning(gt.transactions, {\r\n        valuesMap: gt.valuesMap,\r\n        summary: false,\r\n      })\r\n        .then(arl => {\r\n          // console.log({ arl });\r\n          expect(arl).to.be.an('array');\r\n          done();\r\n        })\r\n        .catch(done);\r\n      // }\r\n    });\r\n    it('should work with raw transactions', (done) => {\r\n      // if (process.platform === 'darwin') {\r\n      ms.calc.assocationRuleLearning(rawTransactions, {\r\n        summary: false,\r\n      })\r\n        .then(arl => {\r\n          expect(arl).to.be.an('array');\r\n          done();\r\n        })\r\n        .catch(done);\r\n      // }\r\n    });\r\n    it('should handle errors', (done) => {\r\n      ms.calc.assocationRuleLearning(NaN, {\r\n        summary: NaN,\r\n        support: NaN,\r\n        minLength: NaN,\r\n        valuesMap: NaN,\r\n      })\r\n        .then((r) => {\r\n          console.log('r', r)\r\n          done(new Error('should not get to then'))\r\n        })\r\n        .catch(e => {\r\n          expect(e).to.be.a('error');\r\n          done();\r\n        });\r\n    });\r\n  });\r\n});",
@@ -5183,7 +5246,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 168,
+    "__docId__": 169,
     "kind": "test",
     "name": "describe0",
     "testId": 0,
@@ -5196,7 +5259,7 @@
     "lineNumber": 15
   },
   {
-    "__docId__": 169,
+    "__docId__": 170,
     "kind": "test",
     "name": "describe1",
     "testId": 1,
@@ -5209,7 +5272,7 @@
     "lineNumber": 16
   },
   {
-    "__docId__": 170,
+    "__docId__": 171,
     "kind": "test",
     "name": "it2",
     "testId": 2,
@@ -5222,7 +5285,7 @@
     "lineNumber": 19
   },
   {
-    "__docId__": 171,
+    "__docId__": 172,
     "kind": "test",
     "name": "it3",
     "testId": 3,
@@ -5235,7 +5298,7 @@
     "lineNumber": 23
   },
   {
-    "__docId__": 172,
+    "__docId__": 173,
     "kind": "test",
     "name": "it4",
     "testId": 4,
@@ -5248,7 +5311,7 @@
     "lineNumber": 28
   },
   {
-    "__docId__": 173,
+    "__docId__": 174,
     "kind": "test",
     "name": "it5",
     "testId": 5,
@@ -5261,7 +5324,7 @@
     "lineNumber": 37
   },
   {
-    "__docId__": 174,
+    "__docId__": 175,
     "kind": "test",
     "name": "describe6",
     "testId": 6,
@@ -5274,7 +5337,7 @@
     "lineNumber": 44
   },
   {
-    "__docId__": 175,
+    "__docId__": 176,
     "kind": "test",
     "name": "it7",
     "testId": 7,
@@ -5287,7 +5350,7 @@
     "lineNumber": 46
   },
   {
-    "__docId__": 176,
+    "__docId__": 177,
     "kind": "test",
     "name": "it8",
     "testId": 8,
@@ -5300,7 +5363,7 @@
     "lineNumber": 60
   },
   {
-    "__docId__": 177,
+    "__docId__": 178,
     "kind": "test",
     "name": "it9",
     "testId": 9,
@@ -5313,7 +5376,7 @@
     "lineNumber": 74
   },
   {
-    "__docId__": 178,
+    "__docId__": 179,
     "kind": "test",
     "name": "it10",
     "testId": 10,
@@ -5326,7 +5389,7 @@
     "lineNumber": 86
   },
   {
-    "__docId__": 179,
+    "__docId__": 180,
     "kind": "testFile",
     "name": "test/unit/columnvectorizer_spec.mjs",
     "content": "import * as ms from '../../index.mjs';\r\nimport chai from 'chai';\r\nconst expect = chai.expect;\r\nconst csvData = [\r\n  {\r\n    'Review': 'This is really good',\r\n    'Liked': 1,\r\n  },\r\n  {\r\n    'Review': 'I would definitely recommend',\r\n    'Liked': 1,\r\n  },\r\n  {\r\n    'Review': 'The wait staff was really rude',\r\n    'Liked': 0,\r\n  },\r\n  {\r\n    'Review': 'Great views',\r\n    'Liked': 1,\r\n  },\r\n  {\r\n    'Review': 'the food was not great',\r\n    'Liked': 0,\r\n  },\r\n  {\r\n    'Review': 'food came out cold, took forever to get seated',\r\n    'Liked': 0,\r\n  },\r\n  {\r\n    'Review': 'we had a great time, and they were really prompt and attentive',\r\n    'Liked': 1,\r\n  },\r\n  {\r\n    'Review': 'the food was bland',\r\n    'Liked': 0,\r\n  },\r\n  {\r\n    'Review': 'not very flavorful',\r\n    'Liked': 0,\r\n  },\r\n  {\r\n    'Review': 'it was kind of so-so',\r\n    'Liked': 0,\r\n  },\r\n];\r\nconst eVString = 'I would rate everything Great, views Great, food Great';\r\n\r\ndescribe('nlp', function() {\r\n  describe('ColumnVectorizer class', () => {\r\n    const CSVDataSet = new ms.DataSet(csvData);\r\n    const nlpVectors = new ms.nlp.ColumnVectorizer({\r\n      data: CSVDataSet.columnArray('Review'),\r\n      maxFeatures: 9,\r\n    });\r\n    nlpVectors.fit_transform();\r\n    // console.log({ nlpVectors });\r\n    describe('constructor', () => {\r\n      it('should instantiate a new ColumnVectorizer Class', () => {\r\n        expect(ms.nlp).to.be.an('object');\r\n        expect(ms.nlp.ColumnVectorizer).to.be.a('function');\r\n        expect(nlpVectors).to.be.instanceof(ms.nlp.ColumnVectorizer);\r\n        expect(nlpVectors.maxFeatures).to.eql(9);\r\n        // console.log({ nlpVectors });\r\n      });\r\n    });\r\n    describe('get_tokens', () => {\r\n      it('should return an array of all tokens', () => {\r\n        const toks = nlpVectors.get_tokens();\r\n        expect(toks).to.be.an('array');\r\n        expect(toks).to.have.lengthOf(nlpVectors.tokens.size);\r\n      });\r\n    });\r\n    describe('get_vector_array', () => {\r\n      it('should return an array of tokens as vectors', () => {\r\n        const toks = nlpVectors.get_vector_array();\r\n        expect(toks).to.be.an('array');\r\n        expect(toks[0]).to.be.an('array');\r\n        expect(toks).to.have.lengthOf(nlpVectors.tokens.size);\r\n      });\r\n    });\r\n    describe('get_limited_features', () => {\r\n      it('should return a count of maxFeatures in array of tokens as vectors', () => {\r\n        const feats = nlpVectors.get_limited_features();\r\n        expect(feats).to.be.an('array');\r\n        expect(feats[0]).to.be.an('array');\r\n        expect(feats).to.have.lengthOf(nlpVectors.maxFeatures);\r\n      });\r\n      it('should limit features in array of tokens as vectors', () => {\r\n        const feats = nlpVectors.get_limited_features({ maxFeatures: 5, });\r\n        expect(feats).to.be.an('array');\r\n        expect(feats[0]).to.be.an('array');\r\n        expect(feats).to.have.lengthOf(5);\r\n      });\r\n    });\r\n    describe('evaluateString', () => {\r\n      it('should return object of tokens and counts', () => {\r\n        const estring = nlpVectors.evaluateString(eVString);\r\n        expect(estring.great).to.eql(3);\r\n        expect(estring.view).to.eql(1);\r\n        expect(estring.food).to.eql(1);\r\n      });\r\n    });\r\n    describe('evaluate', () => {\r\n      it('should return matrix vector for new predictions', () => {\r\n        const estring = nlpVectors.evaluate(eVString);\r\n        // console.log({estring})\r\n        expect(estring).to.be.an('array');\r\n        expect(estring[ 0 ]).to.have.lengthOf(9);\r\n        expect(estring[ 0 ].filter(val => val === 3).length).to.eql(1);\r\n      });\r\n    });\r\n    describe('fit_transform', () => {\r\n      it('should create a set of unique tokens this.tokens', () => {\r\n        const tokens = csvData.reduce((result, value) => {\r\n          const val = value.Review.toLowerCase();\r\n          const stringVal = ms.nlp.PorterStemmer.tokenizeAndStem(val).join(' ');\r\n          result += stringVal+' ';\r\n          return result;\r\n        }, '');\r\n        const tokenSet = new Set(tokens.split(' ').filter(val => val));\r\n        expect(nlpVectors.tokens.size).to.eql(tokenSet.size);\r\n        tokenSet.forEach((val) => {\r\n          expect(nlpVectors.tokens.has(val)).to.be.true;\r\n        });\r\n      });\r\n      it('should create a dictionary of total word counts in this.wordCountMap', () => {\r\n        const wordCountMap = csvData.reduce((result, value) => {\r\n          const val = value.Review.toLowerCase();\r\n          const stringVals = ms.nlp.PorterStemmer.tokenizeAndStem(val);\r\n          stringVals.forEach(token => {\r\n            result[ token ] = (result[ token ])\r\n              ? result[ token ] + 1\r\n              : 1;\r\n          });\r\n          return result;\r\n        }, {});\r\n        Object.keys(wordCountMap).forEach(word => {\r\n          expect(wordCountMap[ word ]).to.eql(nlpVectors.wordCountMap[ word ]);\r\n        });\r\n      });\r\n      it('should create a dictionary of all words this.wordMap', () => {\r\n        Array.from(nlpVectors.tokens).forEach(token => {\r\n          expect(nlpVectors.wordMap[ token ]).to.eql(0);\r\n        });\r\n      });\r\n      it('should create an array of all sorted words in this.sortedWordCount by word count', () => {\r\n        nlpVectors.sortedWordCount.forEach((wordObj, i) => { \r\n          if (i < nlpVectors.sortedWordCount.length-1) {\r\n            const currentSWC = nlpVectors.sortedWordCount[ i ];\r\n            const nextSWC = nlpVectors.sortedWordCount[ i + 1 ];\r\n            expect(nlpVectors.wordCountMap[ currentSWC ]).to.be.gte(nlpVectors.wordCountMap[ nextSWC ]);\r\n          }\r\n        });\r\n      });\r\n      it('should create a sparse matrix dictionary words from corpus in this.data as this.vectors', () => {\r\n        const firstSentence = csvData[ 0 ].Review;\r\n        const firstSentenceWordMap = nlpVectors.evaluateString(firstSentence);\r\n        expect(firstSentenceWordMap).to.eql(nlpVectors.vectors[ 0 ]);\r\n      });\r\n      it('should create a sparse matrix of words from corpus in this.data', () => {\r\n        const firstSentence = csvData[ 0 ].Review;\r\n        const firstSentenceWordMap = nlpVectors.evaluate(firstSentence);\r\n        expect(firstSentenceWordMap[0]).to.eql(nlpVectors.matrix[ 0 ]);\r\n      });\r\n    });\r\n  });\r\n});",
@@ -5337,7 +5400,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 180,
+    "__docId__": 181,
     "kind": "test",
     "name": "describe11",
     "testId": 11,
@@ -5350,7 +5413,7 @@
     "lineNumber": 48
   },
   {
-    "__docId__": 181,
+    "__docId__": 182,
     "kind": "test",
     "name": "describe12",
     "testId": 12,
@@ -5363,7 +5426,7 @@
     "lineNumber": 49
   },
   {
-    "__docId__": 182,
+    "__docId__": 183,
     "kind": "test",
     "name": "describe13",
     "testId": 13,
@@ -5376,7 +5439,7 @@
     "lineNumber": 57
   },
   {
-    "__docId__": 183,
+    "__docId__": 184,
     "kind": "test",
     "name": "it14",
     "testId": 14,
@@ -5389,7 +5452,7 @@
     "lineNumber": 58
   },
   {
-    "__docId__": 184,
+    "__docId__": 185,
     "kind": "test",
     "name": "describe15",
     "testId": 15,
@@ -5402,7 +5465,7 @@
     "lineNumber": 66
   },
   {
-    "__docId__": 185,
+    "__docId__": 186,
     "kind": "test",
     "name": "it16",
     "testId": 16,
@@ -5415,7 +5478,7 @@
     "lineNumber": 67
   },
   {
-    "__docId__": 186,
+    "__docId__": 187,
     "kind": "test",
     "name": "describe17",
     "testId": 17,
@@ -5428,7 +5491,7 @@
     "lineNumber": 73
   },
   {
-    "__docId__": 187,
+    "__docId__": 188,
     "kind": "test",
     "name": "it18",
     "testId": 18,
@@ -5441,7 +5504,7 @@
     "lineNumber": 74
   },
   {
-    "__docId__": 188,
+    "__docId__": 189,
     "kind": "test",
     "name": "describe19",
     "testId": 19,
@@ -5454,7 +5517,7 @@
     "lineNumber": 81
   },
   {
-    "__docId__": 189,
+    "__docId__": 190,
     "kind": "test",
     "name": "it20",
     "testId": 20,
@@ -5467,7 +5530,7 @@
     "lineNumber": 82
   },
   {
-    "__docId__": 190,
+    "__docId__": 191,
     "kind": "test",
     "name": "it21",
     "testId": 21,
@@ -5480,7 +5543,7 @@
     "lineNumber": 88
   },
   {
-    "__docId__": 191,
+    "__docId__": 192,
     "kind": "test",
     "name": "describe22",
     "testId": 22,
@@ -5493,7 +5556,7 @@
     "lineNumber": 95
   },
   {
-    "__docId__": 192,
+    "__docId__": 193,
     "kind": "test",
     "name": "it23",
     "testId": 23,
@@ -5506,7 +5569,7 @@
     "lineNumber": 96
   },
   {
-    "__docId__": 193,
+    "__docId__": 194,
     "kind": "test",
     "name": "describe24",
     "testId": 24,
@@ -5519,7 +5582,7 @@
     "lineNumber": 103
   },
   {
-    "__docId__": 194,
+    "__docId__": 195,
     "kind": "test",
     "name": "it25",
     "testId": 25,
@@ -5532,7 +5595,7 @@
     "lineNumber": 104
   },
   {
-    "__docId__": 195,
+    "__docId__": 196,
     "kind": "test",
     "name": "describe26",
     "testId": 26,
@@ -5545,7 +5608,7 @@
     "lineNumber": 112
   },
   {
-    "__docId__": 196,
+    "__docId__": 197,
     "kind": "test",
     "name": "it27",
     "testId": 27,
@@ -5558,7 +5621,7 @@
     "lineNumber": 113
   },
   {
-    "__docId__": 197,
+    "__docId__": 198,
     "kind": "test",
     "name": "it28",
     "testId": 28,
@@ -5571,7 +5634,7 @@
     "lineNumber": 126
   },
   {
-    "__docId__": 198,
+    "__docId__": 199,
     "kind": "test",
     "name": "it29",
     "testId": 29,
@@ -5584,7 +5647,7 @@
     "lineNumber": 141
   },
   {
-    "__docId__": 199,
+    "__docId__": 200,
     "kind": "test",
     "name": "it30",
     "testId": 30,
@@ -5597,7 +5660,7 @@
     "lineNumber": 146
   },
   {
-    "__docId__": 200,
+    "__docId__": 201,
     "kind": "test",
     "name": "it31",
     "testId": 31,
@@ -5610,7 +5673,7 @@
     "lineNumber": 155
   },
   {
-    "__docId__": 201,
+    "__docId__": 202,
     "kind": "test",
     "name": "it32",
     "testId": 32,
@@ -5623,7 +5686,7 @@
     "lineNumber": 160
   },
   {
-    "__docId__": 202,
+    "__docId__": 203,
     "kind": "testFile",
     "name": "test/unit/cross_validation_spec.mjs",
     "content": "import * as ms from '../../index.mjs';\r\nimport chai from 'chai';\r\nimport path from 'path';\r\nimport expose from './expose.js';\r\nconst { __dirname, } = expose;\r\nconst expect = chai.expect;\r\nconst testArray = [20, 25, 10, 33, 50, 42, 19, 34, 90, 23, ];\r\nconst ml = ms.ml;\r\nconst DTClassifier = ml.SL.DecisionTreeClassifier;\r\nconst RFRegression = ml.Regression.RandomForestRegression;\r\nconst dependentFeatures = [['Age', ], ['EstimatedSalary', ], ];\r\nconst independentFeatures = [['Purchased', ], ];\r\nconst regressionDependentFeatures = [['R&D Spend', ], ['Administration', ], ['Marketing Spend', ], ];\r\nconst regressionIndependentFeatures = [['Profit', ], ];\r\nlet SNA_csv;\r\nlet Start50_csv;\r\nlet Start50DataSet;\r\n\r\ndescribe('cross_validation', function () { \r\n  this.timeout(10000);\r\n  before((done) => {\r\n    Promise.all([\r\n      ms.loadCSV(path.join(__dirname, '../mock/Social_Network_Ads.csv'), {\r\n        colParser: {\r\n          Age: 'number',\r\n          EstimatedSalary: 'number',\r\n          Purchased: 'number',\r\n        },\r\n      }),\r\n      ms.loadCSV(path.join(__dirname, '../mock/50_Startups.csv'), {\r\n        colParser: {\r\n          'Administration': 'number',\r\n          'R&D Spend': 'number',\r\n          'Marketing Spend': 'number',\r\n          'Profit': 'number',\r\n        },\r\n      }),\r\n    ])\r\n      .then(csvs => {\r\n        const [\r\n          SNA_csv_list,\r\n          S50_csv_list,\r\n        ] = csvs;\r\n        SNA_csv = SNA_csv_list;\r\n        Start50_csv = S50_csv_list;\r\n        Start50DataSet = new ms.DataSet(Start50_csv)\r\n          .fitColumns({\r\n            columns: [\r\n              {\r\n                name: 'State',\r\n                options: {\r\n                  strategy: 'onehot',\r\n                },\r\n              },\r\n            ],\r\n          });\r\n        done();\r\n      })\r\n      .catch(done);\r\n  });\r\n  describe('train_test_split', () => {\r\n    const defaultTrainTestSplit = ms.cross_validation.train_test_split(testArray);\r\n    it('should split dataset with default values', () => {\r\n      expect(ms.cross_validation).to.be.an('object');\r\n      expect(defaultTrainTestSplit.train.length).to.equal(8);\r\n      expect(defaultTrainTestSplit.test.length).to.equal(2);\r\n    });\r\n    it('should split the data into two arrays', () => {\r\n      const defaultTrainTestSplitArray = ms.cross_validation.train_test_split(testArray, { return_array: true, });\r\n      const [train, test,] = defaultTrainTestSplitArray;\r\n      expect(train.length).to.equal(8);\r\n      expect(test.length).to.equal(2);\r\n    });\r\n    it('should split with defined test size', () => {\r\n      const defaultTrainTestSplitSize = ms.cross_validation.train_test_split(testArray, { test_size: 0.4, });\r\n      const { train, test, } = defaultTrainTestSplitSize;\r\n      expect(train.length).to.equal(6);\r\n      expect(test.length).to.equal(4);\r\n    });\r\n    it('should split with defined train size', () => {\r\n      const defaultTrainTestSplitSize = ms.cross_validation.train_test_split(testArray, { train_size: 0.5, });\r\n      const { train, test, } = defaultTrainTestSplitSize;\r\n      expect(train.length).to.equal(5);\r\n      expect(test.length).to.equal(5);\r\n    });\r\n    it('should use a randomized seed', () => {\r\n      const defaultTrainTestSplitSeed0 = ms.cross_validation.train_test_split(testArray, { random_state: 0, return_array: true, });\r\n      const defaultTrainTestSplitSeed0a = ms.cross_validation.train_test_split(testArray, { random_state: 0, return_array: true, });\r\n      const defaultTrainTestSplitSeed1 = ms.cross_validation.train_test_split(testArray, { random_state: 1, return_array: true, });\r\n      const [train0,] = defaultTrainTestSplitSeed0;\r\n      const [train0a,] = defaultTrainTestSplitSeed0a;\r\n      const [train1,] = defaultTrainTestSplitSeed1;\r\n      expect(train0.toString()).to.equal(train0a.toString());\r\n      expect(train0.toString()).to.not.equal(train1.toString());\r\n    });\r\n  });\r\n  describe('cross_validation_split', () => {\r\n    const defaultCrossValidation = ms.cross_validation.cross_validation_split(testArray);\r\n    it('should split dataset with default values', () => {\r\n      expect(defaultCrossValidation.length).to.equal(3);\r\n    });\r\n    it('should split the data into k-folds', () => {\r\n      const defaultCrossValidationArray = ms.cross_validation.cross_validation_split(testArray, {\r\n        folds: 2,\r\n      });\r\n      expect(defaultCrossValidationArray[0].length).to.equal(5);\r\n      expect(defaultCrossValidationArray.length).to.equal(2);\r\n    });\r\n    it('should use a randomized seed', () => {\r\n      const defaultCrossValidationSeed0 = ms.cross_validation.cross_validation_split(testArray, { random_state: 0, });\r\n      const defaultCrossValidationSeed0a = ms.cross_validation.cross_validation_split(testArray, { random_state: 0, });\r\n      const defaultCrossValidationSeed1 = ms.cross_validation.cross_validation_split(testArray, { random_state: 1, });\r\n      \r\n      expect(JSON.stringify(defaultCrossValidationSeed0)).to.equal(JSON.stringify(defaultCrossValidationSeed0a));\r\n      expect(JSON.stringify(defaultCrossValidationSeed0)).to.not.equal(JSON.stringify(defaultCrossValidationSeed1));\r\n    });\r\n  });\r\n  describe('cross_validate_score', () => {\r\n    it('should validate classification', () => {\r\n      // console.log({ SNA_csv });\r\n      const { train, test, } = ms.cross_validation.train_test_split(SNA_csv, {\r\n        test_size: 0.25,\r\n        random_state: 0,\r\n        parse_int_train_size: true,\r\n      });\r\n      const classifier = new DTClassifier({\r\n        gainFunction: 'gini',\r\n        minNumSamples: 4,\r\n      });\r\n      const accuracy = ms.cross_validation.cross_validate_score({\r\n        dataset: train,\r\n        testingset: test,\r\n        classifier,\r\n        dependentFeatures,\r\n        independentFeatures,\r\n      });\r\n      expect(accuracy).to.have.lengthOf(10);\r\n      expect(ms.util.mean(accuracy)).to.be.greaterThan(0.75);\r\n      expect(ms.util.sd(accuracy)).to.be.lessThan(0.08);\r\n      // console.log('accuracy', accuracy);\r\n      // console.log('acc avg', ms.util.mean(accuracy));\r\n      // console.log('acc sd', ms.util.sd(accuracy));   \r\n    });\r\n    it('should validate classification constructor', () => {\r\n      // console.log({ SNA_csv });\r\n      const { train, test, } = ms.cross_validation.train_test_split(SNA_csv, {\r\n        test_size: 0.25,\r\n        random_state: 0,\r\n        parse_int_train_size: true,\r\n      });\r\n      const classifier = ml.KNN;\r\n      const accuracy = ms.cross_validation.cross_validate_score({\r\n        dataset: train,\r\n        testingset: test,\r\n        classifier,\r\n        modelOptions: { k: 5, },\r\n        use_estimates_y_vector: true,\r\n        dependentFeatures,\r\n        independentFeatures,\r\n      });\r\n      expect(accuracy).to.have.lengthOf(10);\r\n      expect(ms.util.mean(accuracy)).to.be.greaterThan(0.65);\r\n      expect(ms.util.sd(accuracy)).to.be.lessThan(0.08);\r\n      // console.log('accuracy', accuracy);\r\n      // console.log('acc avg', ms.util.mean(accuracy));\r\n      // console.log('acc sd', ms.util.sd(accuracy));   \r\n    });\r\n    it('should validate regression with train method', () => {\r\n      const { train, test, } = ms.cross_validation.train_test_split(Start50DataSet, {\r\n        test_size: 0.25,\r\n        random_state: 0,\r\n        parse_int_train_size: true,\r\n      });\r\n      const regression = new RFRegression({\r\n        seed: 3,\r\n        maxFeatures: 2,\r\n        replacement: false,\r\n        nEstimators: 300,\r\n      });\r\n      const accuracy = ms.cross_validation.cross_validate_score({\r\n        dataset: train,\r\n        testingset: test,\r\n        folds: 2,\r\n        // accuracy:'rSquared',\r\n        use_train_y_vector:true,\r\n        regression,\r\n        dependentFeatures: regressionDependentFeatures,\r\n        independentFeatures: regressionIndependentFeatures,\r\n      });\r\n      // console.log('accuracy', accuracy);\r\n      // console.log('acc avg', ms.util.mean(accuracy));\r\n      expect(accuracy).to.have.lengthOf(2);\r\n      expect(ms.util.mean(accuracy)).to.be.lessThan(40000);\r\n      // expect(ms.util.sd(accuracy)).to.be.lessThan(0.08);\r\n      // console.log('acc sd', ms.util.sd(accuracy));   \r\n    });\r\n    it('should validate regression with constructor methods', () => {\r\n      const { train, test, } = ms.cross_validation.train_test_split(Start50DataSet, {\r\n        test_size: 0.25,\r\n        random_state: 0,\r\n        parse_int_train_size: true,\r\n      });\r\n      const regression = ml.MultivariateLinearRegression;\r\n      const accuracy = ms.cross_validation.cross_validate_score({\r\n        dataset: train,\r\n        testingset: test,\r\n        folds: 2,\r\n        // accuracy:'rSquared',\r\n        use_train_y_vector:false,\r\n        regression,\r\n        dependentFeatures: regressionDependentFeatures,\r\n        independentFeatures: regressionIndependentFeatures,\r\n      });\r\n      // console.log('accuracy', accuracy);\r\n      // console.log('acc avg', ms.util.mean(accuracy));\r\n      expect(accuracy).to.have.lengthOf(2);\r\n      expect(ms.util.mean(accuracy)).to.be.lessThan(9000);\r\n      // expect(ms.util.sd(accuracy)).to.be.lessThan(0.08);\r\n      // console.log('acc sd', ms.util.sd(accuracy));   \r\n    });\r\n  });\r\n  describe('grid_search', () => {\r\n    it('should return sorted best regression parameters', (done) => {\r\n      const { train, test, } = ms.cross_validation.train_test_split(Start50DataSet, {\r\n        test_size: 0.25,\r\n        random_state: 0,\r\n        parse_int_train_size: true,\r\n      }); \r\n      const optimizedParameters = ms.cross_validation.grid_search({\r\n        regression: ml.Regression.RandomForestRegression,\r\n        parameters: {\r\n          seed: [2, ],\r\n          maxFeatures: [2, 3, ],\r\n          replacement: [false, true, ],\r\n          nEstimators: [300, 500, ],\r\n        },\r\n        dataset: train,\r\n        testingset: test,\r\n        folds: 2,\r\n        // accuracy:'rSquared',\r\n        use_train_y_vector:true,\r\n        dependentFeatures: regressionDependentFeatures,\r\n        independentFeatures: regressionIndependentFeatures,\r\n      });\r\n      // console.log(JSON.stringify(optimizedParameters, null, 2));\r\n      expect(optimizedParameters).to.haveOwnProperty('params');\r\n      expect(optimizedParameters).to.haveOwnProperty('results');\r\n      done();\r\n    });\r\n    it('should return sorted best classification parameters', () => {\r\n      const { train, test, } = ms.cross_validation.train_test_split(SNA_csv, {\r\n        test_size: 0.25,\r\n        random_state: 0,\r\n        parse_int_train_size: true,\r\n      });\r\n      const optimizedParameters = ms.cross_validation.grid_search({\r\n        dataset: train,\r\n        testingset: test,\r\n        classifier: ml.SL.RandomForestClassifier,\r\n        return_parameters:true,\r\n        parameters: {\r\n          maxFeatures: [1.0, 0.5,],\r\n          // replacement: [true, false, ],\r\n          // useSampleBagging: [true, false, ],\r\n          nEstimators: [10, 20,],\r\n          treeOptions: [\r\n            { minNumSamples: 3, },\r\n            { minNumSamples: 2, },\r\n          ],\r\n        },\r\n        dependentFeatures,\r\n        independentFeatures,\r\n      });\r\n      // console.log(JSON.stringify(optimizedParameters, null, 2));\r\n      expect(optimizedParameters).to.be.an('array');\r\n      expect(optimizedParameters).to.have.lengthOf(8);\r\n    });\r\n    it('should sort parameter performance logically for regression', () => {\r\n      //TODO\r\n    });\r\n    it('should sort parameter performance logically for classification', () => {\r\n      //TODO\r\n    });\r\n  });\r\n});",
@@ -5634,7 +5697,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 203,
+    "__docId__": 204,
     "kind": "test",
     "name": "describe33",
     "testId": 33,
@@ -5647,7 +5710,7 @@
     "lineNumber": 19
   },
   {
-    "__docId__": 204,
+    "__docId__": 205,
     "kind": "test",
     "name": "describe34",
     "testId": 34,
@@ -5660,7 +5723,7 @@
     "lineNumber": 61
   },
   {
-    "__docId__": 205,
+    "__docId__": 206,
     "kind": "test",
     "name": "it35",
     "testId": 35,
@@ -5673,7 +5736,7 @@
     "lineNumber": 63
   },
   {
-    "__docId__": 206,
+    "__docId__": 207,
     "kind": "test",
     "name": "it36",
     "testId": 36,
@@ -5686,7 +5749,7 @@
     "lineNumber": 68
   },
   {
-    "__docId__": 207,
+    "__docId__": 208,
     "kind": "test",
     "name": "it37",
     "testId": 37,
@@ -5699,7 +5762,7 @@
     "lineNumber": 74
   },
   {
-    "__docId__": 208,
+    "__docId__": 209,
     "kind": "test",
     "name": "it38",
     "testId": 38,
@@ -5712,7 +5775,7 @@
     "lineNumber": 80
   },
   {
-    "__docId__": 209,
+    "__docId__": 210,
     "kind": "test",
     "name": "it39",
     "testId": 39,
@@ -5725,7 +5788,7 @@
     "lineNumber": 86
   },
   {
-    "__docId__": 210,
+    "__docId__": 211,
     "kind": "test",
     "name": "describe40",
     "testId": 40,
@@ -5738,7 +5801,7 @@
     "lineNumber": 97
   },
   {
-    "__docId__": 211,
+    "__docId__": 212,
     "kind": "test",
     "name": "it41",
     "testId": 41,
@@ -5751,7 +5814,7 @@
     "lineNumber": 99
   },
   {
-    "__docId__": 212,
+    "__docId__": 213,
     "kind": "test",
     "name": "it42",
     "testId": 42,
@@ -5764,7 +5827,7 @@
     "lineNumber": 102
   },
   {
-    "__docId__": 213,
+    "__docId__": 214,
     "kind": "test",
     "name": "it43",
     "testId": 43,
@@ -5777,7 +5840,7 @@
     "lineNumber": 109
   },
   {
-    "__docId__": 214,
+    "__docId__": 215,
     "kind": "test",
     "name": "describe44",
     "testId": 44,
@@ -5790,7 +5853,7 @@
     "lineNumber": 118
   },
   {
-    "__docId__": 215,
+    "__docId__": 216,
     "kind": "test",
     "name": "it45",
     "testId": 45,
@@ -5803,7 +5866,7 @@
     "lineNumber": 119
   },
   {
-    "__docId__": 216,
+    "__docId__": 217,
     "kind": "test",
     "name": "it46",
     "testId": 46,
@@ -5816,7 +5879,7 @@
     "lineNumber": 144
   },
   {
-    "__docId__": 217,
+    "__docId__": 218,
     "kind": "test",
     "name": "it47",
     "testId": 47,
@@ -5829,7 +5892,7 @@
     "lineNumber": 168
   },
   {
-    "__docId__": 218,
+    "__docId__": 219,
     "kind": "test",
     "name": "it48",
     "testId": 48,
@@ -5842,7 +5905,7 @@
     "lineNumber": 197
   },
   {
-    "__docId__": 219,
+    "__docId__": 220,
     "kind": "test",
     "name": "describe49",
     "testId": 49,
@@ -5855,7 +5918,7 @@
     "lineNumber": 222
   },
   {
-    "__docId__": 220,
+    "__docId__": 221,
     "kind": "test",
     "name": "it50",
     "testId": 50,
@@ -5868,7 +5931,7 @@
     "lineNumber": 223
   },
   {
-    "__docId__": 221,
+    "__docId__": 222,
     "kind": "test",
     "name": "it51",
     "testId": 51,
@@ -5881,7 +5944,7 @@
     "lineNumber": 250
   },
   {
-    "__docId__": 222,
+    "__docId__": 223,
     "kind": "test",
     "name": "it52",
     "testId": 52,
@@ -5894,7 +5957,7 @@
     "lineNumber": 278
   },
   {
-    "__docId__": 223,
+    "__docId__": 224,
     "kind": "test",
     "name": "it53",
     "testId": 53,
@@ -5907,7 +5970,7 @@
     "lineNumber": 281
   },
   {
-    "__docId__": 224,
+    "__docId__": 225,
     "kind": "testFile",
     "name": "test/unit/load_csv_spec.mjs",
     "content": "import * as ms from '../../index.mjs';\r\nimport chai from 'chai';\r\nimport path from 'path';\r\nimport expose from './expose.js';\r\nconst { __dirname, } = expose;\r\nconst expect = chai.expect;\r\n\r\ndescribe('loadCSV', function () { \r\n  this.timeout(5000);\r\n  describe('loading CSV from File', () => {\r\n    it('should load a csv from a filepath', (done) => {\r\n      expect(ms.loadCSV).to.be.an('function');\r\n      ms.loadCSV(path.join(__dirname, '../mock/data.csv'))\r\n        .then(csv => {\r\n          expect(csv.length).to.be.greaterThan(0);\r\n          done();\r\n        })\r\n        .catch(done);    \r\n    });\r\n    it('should handle errors with invalid files', (done) => {\r\n      ms.loadCSV(path.join(__dirname, '../mock/invalid-file.csv'))\r\n        .then(() => {\r\n          done(new Error('should not load CSV'));\r\n        })\r\n        .catch(err => {\r\n          expect(err).to.be.an('error');\r\n          done();\r\n        });\r\n    });\r\n  });\r\n  describe('loading CSV from remote URI', () => {\r\n    it('should load a csv from a remote URI', (done) => {\r\n      // ms.loadCSV('https://www.arttimesjournal.com/data/events-August-2015.csv')\r\n      ms.loadCSV('https://raw.githubusercontent.com/repetere/modelscript/master/test/mock/data.csv')\r\n        .then(csv => {\r\n          expect(csv.length).to.be.greaterThan(0);\r\n          done();\r\n        })\r\n        .catch(done);      \r\n    });\r\n    it('should handle errors with invalid url', (done) => {\r\n      ms.loadCSV('https://raw.githubusercontent.com/repetere/modelscript/master/test/mock/INVALID.csv')\r\n        .then(csv => {\r\n          expect(csv.length).to.be.equal(0);\r\n          done();\r\n        })\r\n        .catch(done); \r\n    });\r\n    it('should load a csv from a remote URI directly', (done) => {\r\n      expect(ms.loadCSVURI).to.be.an('function');\r\n      // ms.loadCSV('https://www.arttimesjournal.com/data/events-August-2015.csv')\r\n      ms.loadCSVURI('https://raw.githubusercontent.com/repetere/modelscript/master/test/mock/data.csv')\r\n        .then(csv => {\r\n          expect(csv.length).to.be.greaterThan(0);\r\n          done();\r\n        })\r\n        .catch(done);      \r\n    });\r\n    it('should handle errors with invalid url directly', (done) => {\r\n      ms.loadCSVURI('https://raw.githubusercontent.com/repetere/modelscript/master/test/mock/INVALID.csv')\r\n        .then(csv => {\r\n          expect(csv.length).to.be.equal(0);\r\n          done();\r\n        })\r\n        .catch(done); \r\n    });\r\n  });\r\n  describe('loadTSV', () => {\r\n    it('should load tab separated values', (done) => {\r\n      expect(ms.csv.loadTSV).to.be.an('function');\r\n      ms.csv.loadTSV(path.join(__dirname, '../mock/Restaurant_Reviews.tsv'))\r\n        .then(tsv => {\r\n          const firstRow = tsv[ 0 ];\r\n          expect(tsv.length).to.be.greaterThan(0);\r\n          expect(firstRow.Review).to.be.a('string');\r\n          expect(firstRow.Liked).to.be.a('number');\r\n          done();\r\n        })\r\n        .catch(done);  \r\n    });\r\n  });\r\n});",
@@ -5918,7 +5981,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 225,
+    "__docId__": 226,
     "kind": "test",
     "name": "describe54",
     "testId": 54,
@@ -5931,7 +5994,7 @@
     "lineNumber": 8
   },
   {
-    "__docId__": 226,
+    "__docId__": 227,
     "kind": "test",
     "name": "describe55",
     "testId": 55,
@@ -5944,7 +6007,7 @@
     "lineNumber": 10
   },
   {
-    "__docId__": 227,
+    "__docId__": 228,
     "kind": "test",
     "name": "it56",
     "testId": 56,
@@ -5957,7 +6020,7 @@
     "lineNumber": 11
   },
   {
-    "__docId__": 228,
+    "__docId__": 229,
     "kind": "test",
     "name": "it57",
     "testId": 57,
@@ -5970,7 +6033,7 @@
     "lineNumber": 20
   },
   {
-    "__docId__": 229,
+    "__docId__": 230,
     "kind": "test",
     "name": "describe58",
     "testId": 58,
@@ -5983,7 +6046,7 @@
     "lineNumber": 31
   },
   {
-    "__docId__": 230,
+    "__docId__": 231,
     "kind": "test",
     "name": "it59",
     "testId": 59,
@@ -5996,7 +6059,7 @@
     "lineNumber": 32
   },
   {
-    "__docId__": 231,
+    "__docId__": 232,
     "kind": "test",
     "name": "it60",
     "testId": 60,
@@ -6009,7 +6072,7 @@
     "lineNumber": 41
   },
   {
-    "__docId__": 232,
+    "__docId__": 233,
     "kind": "test",
     "name": "it61",
     "testId": 61,
@@ -6022,7 +6085,7 @@
     "lineNumber": 49
   },
   {
-    "__docId__": 233,
+    "__docId__": 234,
     "kind": "test",
     "name": "it62",
     "testId": 62,
@@ -6035,7 +6098,7 @@
     "lineNumber": 59
   },
   {
-    "__docId__": 234,
+    "__docId__": 235,
     "kind": "test",
     "name": "describe63",
     "testId": 63,
@@ -6048,7 +6111,7 @@
     "lineNumber": 68
   },
   {
-    "__docId__": 235,
+    "__docId__": 236,
     "kind": "test",
     "name": "it64",
     "testId": 64,
@@ -6061,7 +6124,7 @@
     "lineNumber": 69
   },
   {
-    "__docId__": 236,
+    "__docId__": 237,
     "kind": "testFile",
     "name": "test/unit/ml_spec.mjs",
     "content": "import * as ms from '../../index.mjs';\r\nimport chai from 'chai';\r\nimport path from 'path';\r\nimport expose from './expose.js';\r\nconst { __dirname, } = expose;\r\nconst expect = chai.expect;\r\nlet SNA_csv;\r\nconst {\r\n  ReinforcedLearningBase,\r\n  UpperConfidenceBound,\r\n  ThompsonSampling,\r\n} = ms.ml.RL;\r\n\r\ndescribe('ml', function () { \r\n  this.timeout(20000);\r\n  before((done) => {\r\n    Promise.all([\r\n      ms.loadCSV(path.join(__dirname, '../mock/Ads_CTR_Optimisation.csv'), {\r\n        colParser: 'Ad 1,Ad 2,Ad 3,Ad 4,Ad 5,Ad 6,Ad 7,Ad 8,Ad 9,Ad 10'\r\n          .split(',')\r\n          .reduce((result, value) => {\r\n            result[ value ] = 'number';\r\n            return result;  \r\n          }, {}),\r\n      }),\r\n    ])\r\n      .then(csvs => {\r\n        const [\r\n          SNA_csv_list,\r\n        ] = csvs;\r\n        SNA_csv = SNA_csv_list;\r\n        done();\r\n      })\r\n      .catch(done);\r\n  });\r\n  describe('ReinforcedLearningBase', () => {\r\n    it('should create an instance with default values', () => {\r\n      const baseRL = new ReinforcedLearningBase();\r\n      expect(baseRL.bounds).to.eql(5);\r\n      expect(baseRL.last_selected).to.be.an('array');\r\n      expect(baseRL.total_reward).to.eql(0);\r\n      expect(baseRL.iteration).to.eql(0);\r\n    });\r\n    it('should create configurable instance', () => {\r\n      const baseRL = new ReinforcedLearningBase({ bounds:10, });\r\n      expect(baseRL.bounds).to.eql(10);\r\n    });\r\n    it('should require implementations of learn, train and predict methods', () => {\r\n      const baseRL = new ReinforcedLearningBase();\r\n      try {\r\n        baseRL.learn();\r\n      } catch (e) {\r\n        expect(e.message).to.eql('Missing learn method implementation');\r\n      }\r\n      try {\r\n        baseRL.train();\r\n      } catch (e) {\r\n        expect(e.message).to.eql('Missing train method implementation');\r\n      }\r\n      try {\r\n        baseRL.predict();\r\n      } catch (e) {\r\n        expect(e.message).to.eql('Missing predict method implementation');\r\n      }\r\n    });\r\n  });\r\n  describe('UpperConfidenceBound', () => {\r\n    const UCB = new UpperConfidenceBound({\r\n      bounds: 10,\r\n    });\r\n    it('should create number of selections and sum of selections', () => {\r\n      expect(UCB.numbers_of_selections.size).to.equal(10);\r\n      expect(UCB.numbers_of_selections).to.be.a('map');\r\n      expect(UCB.sums_of_rewards.size).to.equal(10);\r\n      expect(UCB.sums_of_rewards).to.be.a('map');\r\n      for (let value of UCB.numbers_of_selections.values()) {\r\n        expect(value).to.eql(0);\r\n      }\r\n      for (let value of UCB.sums_of_rewards.values()) {\r\n        expect(value).to.eql(0);\r\n      }\r\n    });\r\n    it('should predict the next value using the upper confidence bound', () => {\r\n      const UCBPred = new UpperConfidenceBound({\r\n        bounds: 10,\r\n      });\r\n      UCBPred.train({\r\n        ucbRow: SNA_csv, //csvData[ x ],\r\n        getBound: ad => `Ad ${ad + 1}`,\r\n      });\r\n      const prediction = UCBPred.predict();\r\n      expect(prediction).to.eql(4);\r\n      expect(prediction).to.be.a('number');\r\n    });\r\n    it('should initially select each bandit', () => {\r\n      const UCBPredNew = new UpperConfidenceBound({\r\n        bounds: 10,\r\n      });\r\n      for (let i = 0; i < 10; i++){\r\n        expect(UCBPredNew.predict()).to.eql(i);\r\n        UCBPredNew.train({\r\n          ucbRow: SNA_csv.concat([]).slice(i, i+1), //csvData[ x ],\r\n          getBound: ad => `Ad ${ad + 1}`,\r\n        });\r\n        expect(UCBPredNew.iteration).to.eql(i + 1);\r\n      }\r\n    });\r\n    it('should train the next upper confidence bound', () => {\r\n      const UCBTrain = new UpperConfidenceBound({\r\n        bounds: 10,\r\n      });\r\n      const getBound= ad => `Ad ${ad + 1}`;\r\n      UCBTrain.train({\r\n        ucbRow: SNA_csv.slice(0, 9998), //csvData[ x ],\r\n        getBound,\r\n      });\r\n      expect(UCBTrain.iteration).to.eql(9998);\r\n      expect(UCBTrain.predict()).to.eql(4);\r\n      expect(UCBTrain.last_selected).to.be.lengthOf(9998);\r\n\r\n      const trainedUCB = UCBTrain.train({\r\n        ucbRow: SNA_csv[ 9998 ],\r\n        getBound,\r\n      });\r\n      expect(UCBTrain.iteration).to.eql(9999);\r\n      expect(trainedUCB).to.be.an.instanceOf(UpperConfidenceBound);\r\n\r\n      const learnedUCB = UCBTrain.learn({\r\n        ucbRow: SNA_csv[ 9999 ],\r\n        getBound,\r\n      });\r\n      expect(UCBTrain.iteration).to.eql(10000);\r\n      expect(learnedUCB).to.be.an.instanceOf(UpperConfidenceBound);\r\n    });\r\n  });\r\n  describe('ThompsonSampling', () => {\r\n    const TS = new ThompsonSampling({\r\n      bounds: 10,\r\n    });\r\n    it('should create the number of rewards', () => {\r\n      expect(TS.numbers_of_rewards_1.size).to.equal(10);\r\n      expect(TS.numbers_of_rewards_1).to.be.a('map');\r\n      expect(TS.numbers_of_rewards_0.size).to.equal(10);\r\n      expect(TS.numbers_of_rewards_0).to.be.a('map');\r\n      for (let value of TS.numbers_of_rewards_1.values()) {\r\n        expect(value).to.eql(0);\r\n      }\r\n      for (let value of TS.numbers_of_rewards_0.values()) {\r\n        expect(value).to.eql(0);\r\n      }\r\n    });\r\n    it('should predict the next value using thompson sampling', () => {\r\n      const TSPred = new ThompsonSampling({\r\n        bounds: 10,\r\n      });\r\n      TSPred.train({\r\n        tsRow: SNA_csv, //csvData[ x ],\r\n        getBound: ad => `Ad ${ad + 1}`,\r\n      });\r\n      const prediction = TSPred.predict();\r\n      expect(prediction).to.eql(4);\r\n      expect(prediction).to.be.a('number');\r\n    });\r\n    it('should evaluate the next thompson sampling sample', () => {\r\n      const getBound= ad => `Ad ${ad + 1}`;\r\n      const TSTrain = new ThompsonSampling({\r\n        bounds: 10,\r\n        getBound,\r\n      });\r\n      TSTrain.train({\r\n        tsRow: SNA_csv.slice(0, 9998), //csvData[ x ],\r\n      });\r\n      expect(TSTrain.iteration).to.eql(9998);\r\n      expect(TSTrain.predict()).to.eql(4);\r\n      expect(TSTrain.last_selected).to.be.lengthOf(9998);\r\n\r\n      const trainedTS = TSTrain.train({\r\n        tsRow: SNA_csv[ 9998 ],\r\n      });\r\n      expect(TSTrain.iteration).to.eql(9999);\r\n      expect(trainedTS).to.be.an.instanceOf(ThompsonSampling);\r\n\r\n      const learnedTS = TSTrain.learn({\r\n        tsRow: SNA_csv[ 9999 ],\r\n        getBound,\r\n      });\r\n      expect(TSTrain.iteration).to.eql(10000);\r\n      expect(learnedTS).to.be.an.instanceOf(ThompsonSampling);\r\n    });\r\n  });\r\n});",
@@ -6072,7 +6135,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 237,
+    "__docId__": 238,
     "kind": "test",
     "name": "describe65",
     "testId": 65,
@@ -6085,7 +6148,7 @@
     "lineNumber": 14
   },
   {
-    "__docId__": 238,
+    "__docId__": 239,
     "kind": "test",
     "name": "describe66",
     "testId": 66,
@@ -6098,7 +6161,7 @@
     "lineNumber": 36
   },
   {
-    "__docId__": 239,
+    "__docId__": 240,
     "kind": "test",
     "name": "it67",
     "testId": 67,
@@ -6111,7 +6174,7 @@
     "lineNumber": 37
   },
   {
-    "__docId__": 240,
+    "__docId__": 241,
     "kind": "test",
     "name": "it68",
     "testId": 68,
@@ -6124,7 +6187,7 @@
     "lineNumber": 44
   },
   {
-    "__docId__": 241,
+    "__docId__": 242,
     "kind": "test",
     "name": "it69",
     "testId": 69,
@@ -6137,7 +6200,7 @@
     "lineNumber": 48
   },
   {
-    "__docId__": 242,
+    "__docId__": 243,
     "kind": "test",
     "name": "describe70",
     "testId": 70,
@@ -6150,7 +6213,7 @@
     "lineNumber": 67
   },
   {
-    "__docId__": 243,
+    "__docId__": 244,
     "kind": "test",
     "name": "it71",
     "testId": 71,
@@ -6163,7 +6226,7 @@
     "lineNumber": 71
   },
   {
-    "__docId__": 244,
+    "__docId__": 245,
     "kind": "test",
     "name": "it72",
     "testId": 72,
@@ -6176,7 +6239,7 @@
     "lineNumber": 83
   },
   {
-    "__docId__": 245,
+    "__docId__": 246,
     "kind": "test",
     "name": "it73",
     "testId": 73,
@@ -6189,7 +6252,7 @@
     "lineNumber": 95
   },
   {
-    "__docId__": 246,
+    "__docId__": 247,
     "kind": "test",
     "name": "it74",
     "testId": 74,
@@ -6202,7 +6265,7 @@
     "lineNumber": 108
   },
   {
-    "__docId__": 247,
+    "__docId__": 248,
     "kind": "test",
     "name": "describe75",
     "testId": 75,
@@ -6215,7 +6278,7 @@
     "lineNumber": 136
   },
   {
-    "__docId__": 248,
+    "__docId__": 249,
     "kind": "test",
     "name": "it76",
     "testId": 76,
@@ -6228,7 +6291,7 @@
     "lineNumber": 140
   },
   {
-    "__docId__": 249,
+    "__docId__": 250,
     "kind": "test",
     "name": "it77",
     "testId": 77,
@@ -6241,7 +6304,7 @@
     "lineNumber": 152
   },
   {
-    "__docId__": 250,
+    "__docId__": 251,
     "kind": "test",
     "name": "it78",
     "testId": 78,
@@ -6254,7 +6317,7 @@
     "lineNumber": 164
   },
   {
-    "__docId__": 251,
+    "__docId__": 252,
     "kind": "testFile",
     "name": "test/unit/preprocessing_spec.mjs",
     "content": "import * as ms from '../../index.mjs';\r\nimport chai from 'chai';\r\nimport { fullData, } from '../mock/dataset';\r\n// import path from 'path';\r\n// const __dirname = path.dirname(new URL(import.meta.url).pathname);\r\nconst expect = chai.expect;\r\nconst csvData = [{\r\n  'Country': 'Brazil',\r\n  'Age': '44',\r\n  'Salary': '72000',\r\n  'Purchased': 'N',\r\n},\r\n{\r\n  'Country': 'Mexico',\r\n  'Age': '27',\r\n  'Salary': '48000',\r\n  'Purchased': 'Yes',\r\n},\r\n{\r\n  'Country': 'Ghana',\r\n  'Age': '30',\r\n  'Salary': '54000',\r\n  'Purchased': 'No',\r\n},\r\n{\r\n  'Country': 'Mexico',\r\n  'Age': '38',\r\n  'Salary': '61000',\r\n  'Purchased': 'f',\r\n},\r\n{\r\n  'Country': 'Ghana',\r\n  'Age': '40',\r\n  'Salary': '',\r\n  'Purchased': 'Yes',\r\n},\r\n{\r\n  'Country': 'Brazil',\r\n  'Age': '35',\r\n  'Salary': '58000',\r\n  'Purchased': 'Yes',\r\n},\r\n{\r\n  'Country': 'Mexico',\r\n  'Age': '',\r\n  'Salary': '52000',\r\n  'Purchased': 'false',\r\n},\r\n{\r\n  'Country': 'Brazil',\r\n  'Age': '48',\r\n  'Salary': '79000',\r\n  'Purchased': 'Yes',\r\n},\r\n{\r\n  'Country': 'Ghana',\r\n  'Age': '50',\r\n  'Salary': '83000',\r\n  'Purchased': 'No',\r\n},\r\n{\r\n  'Country': 'Brazil',\r\n  'Age': '37',\r\n  'Salary': '67000',\r\n  'Purchased': 'Yes',\r\n},\r\n];\r\nconst unmodifiedCSVData = [...csvData, ];\r\n\r\ndescribe('preprocessing', function() {\r\n  describe('DataSet class', () => {\r\n    const CSVDataSet = new ms.preprocessing.DataSet(csvData, { debug: false, });\r\n    const CSVFullDataSet = new ms.preprocessing.DataSet(fullData, { debug: false,  });\r\n    const EncodedCSVDataSet = new ms.preprocessing.DataSet(csvData, { debug: false,  });\r\n    EncodedCSVDataSet.fitColumns({\r\n      Country:'onehot',\r\n      Salary:'parseNumber',\r\n      Age:['scale', 'standard', ],\r\n      Purchased:['label', ],\r\n    });\r\n    // console.log('EncodedCSVDataSet.data', EncodedCSVDataSet.data);\r\n    describe('constructor', () => {\r\n      it('should instantiate a new DataSet Class', () => {\r\n        expect(ms.preprocessing).to.be.an('object');\r\n        expect(ms.preprocessing.DataSet).to.be.a('function');\r\n        expect(CSVDataSet).to.be.instanceof(ms.preprocessing.DataSet);\r\n      });\r\n    });\r\n    describe('filterColumn', () => {\r\n      it('should by default return full dataset', () => {\r\n        expect(CSVDataSet.filterColumn()).to.eql(CSVDataSet.data);\r\n      });\r\n      it('should filter data by a filter function', () => {\r\n        expect(CSVDataSet.filterColumn(row => row.Salary.toString() === '83000')).to.have.lengthOf(1);\r\n      });\r\n    });\r\n    describe('columnMatrix', () => { \r\n      it('should create a matrix of values from columns', () => {\r\n        const AgeSalMatrix = CSVDataSet.columnMatrix([['Age',], ['Salary',],]);\r\n        const AgeArray = CSVDataSet.columnArray('Age');\r\n        expect(AgeSalMatrix).to.be.lengthOf(AgeArray.length);\r\n        expect(AgeSalMatrix[ 0 ][0]).to.eql(AgeArray[0]);\r\n      });\r\n      it('should create a matrix of values from an array of column names', () => {\r\n        const columns = [\r\n          'Age', 'Salary',\r\n        ];\r\n        const AgeSalMatrix = CSVDataSet.columnMatrix(columns);\r\n        const AgeArray = CSVDataSet.columnArray('Age');\r\n        expect(AgeSalMatrix).to.be.lengthOf(AgeArray.length);\r\n        expect(AgeSalMatrix[ 0 ][0]).to.eql(AgeArray[0]);\r\n      });\r\n      it('should handle invalid columns', () => {\r\n        const invalidMatrix = CSVDataSet.columnMatrix([\r\n          ['iojf', ],\r\n        ]);\r\n        expect(invalidMatrix).to.be.an('Array');\r\n        expect(invalidMatrix[ 0 ][ 0 ]).to.be.undefined;\r\n      });\r\n    });\r\n    describe('static reverseColumnMatrix', () => {\r\n      it('should reverse a matrix of values into labeled object', () => {\r\n        const dependentVariables = [['Age',], ['Salary',],];\r\n        const dependentVariables2 = ['Age', 'Salary', ];\r\n        const AgeSalMatrix = CSVDataSet.columnMatrix(dependentVariables);\r\n        const AgeSalMatrix2 = CSVDataSet.columnMatrix(dependentVariables2);\r\n        const AgeArray = CSVDataSet.columnArray('Age');\r\n        const reversedAgeSalMatrix = ms.DataSet.reverseColumnMatrix({ vectors: AgeSalMatrix, labels: dependentVariables, });\r\n        const selectedCols = CSVDataSet.selectColumns(['Age', 'Salary',]);\r\n        expect(AgeSalMatrix).to.be.lengthOf(AgeArray.length);\r\n        expect(AgeSalMatrix).to.eql(AgeSalMatrix2);\r\n        expect(reversedAgeSalMatrix).to.be.lengthOf(AgeArray.length);\r\n        expect(reversedAgeSalMatrix).to.eql(selectedCols);\r\n      });\r\n    });\r\n    describe('static reverseColumnVector', () => {\r\n      it('should reverse a vector of values into labeled object', () => {\r\n        const dependentVariables = [['Age',], ['Salary',],];\r\n        const dependentVariables2 = ['Age', 'Salary', ];\r\n        const AgeArray = CSVDataSet.columnArray('Age');\r\n        const reversedAgeSalVector = ms.DataSet.reverseColumnVector({ vector: AgeArray, labels: dependentVariables, });\r\n        const reversedAgeSalVector2 = ms.DataSet.reverseColumnVector({ vector: AgeArray, labels: dependentVariables2, });\r\n        const selectedCols = CSVDataSet.selectColumns(['Age',]);\r\n        expect(reversedAgeSalVector).to.be.lengthOf(AgeArray.length);\r\n        expect(reversedAgeSalVector).to.eql(selectedCols);\r\n        expect(reversedAgeSalVector).to.eql(reversedAgeSalVector2);\r\n      });\r\n    });\r\n    describe('selectColumns', () => { \r\n      it('should return a list of objects with only selected columns as properties', () => {\r\n        const cols = ['Age', 'Salary',];\r\n        const selectedCols = CSVDataSet.selectColumns(cols);\r\n        expect(Object.keys(selectedCols[ 0 ])).to.eql(cols);\r\n        expect(Object.keys(selectedCols[ 0 ])).to.have.lengthOf(cols.length);\r\n        expect(selectedCols[ 0 ].Age).to.eql(CSVDataSet.data[ 0 ].Age);\r\n        expect(selectedCols[ 0 ].Salary).to.eql(CSVDataSet.data[ 0 ].Salary);\r\n      });\r\n    });\r\n    describe('columnArray', () => {\r\n      const countryColumn = CSVDataSet.columnArray('Country');\r\n      it('should select a column from CSV Data by name', () => {\r\n        expect(countryColumn.length).to.equal(10);\r\n        expect(countryColumn[0]).to.equal(csvData[0].Country);\r\n      });\r\n      it('should prefilter the dataset', () => {\r\n        const countryColumnPreFiltered = CSVDataSet.columnArray('Country', {\r\n          prefilter: row => row.Country === 'Ghana',\r\n        });\r\n        expect(countryColumnPreFiltered.length).to.equal(3);\r\n      });\r\n      it('should filter the dataset', () => {\r\n        const countryColumnPostFiltered = CSVDataSet.columnArray('Country', {\r\n          filter: val => val === 'Brazil',\r\n        });\r\n        expect(countryColumnPostFiltered.length).to.equal(4);\r\n      });\r\n      it('should replace values in dataset', () => {\r\n        const countryColumnReplaced = CSVDataSet.columnArray('Country', {\r\n          replace: {\r\n            test: val => val === 'Brazil',\r\n            value: 'China',\r\n          },\r\n        });\r\n        const ageColumnReplacedFuncVal = CSVDataSet.columnArray('Age', {\r\n          replace: {\r\n            test: val => val,\r\n            value: (result, val, index, arr, name) => parseInt(val[name]) * 10,\r\n          },\r\n        });\r\n        expect(ageColumnReplacedFuncVal[0]).to.equal(440);\r\n        expect(countryColumnReplaced[0]).to.equal('China');\r\n      });\r\n      it('should convert vals to numbers', () => {\r\n        const ageColumnInt = CSVDataSet.columnArray('Age', {\r\n          parseInt: true,\r\n        });\r\n        const ageColumnFloat = CSVDataSet.columnArray('Age', {\r\n          parseFloat: true,\r\n        });\r\n        expect(ageColumnInt[0]).to.be.a('number');\r\n        expect(ageColumnFloat[0]).to.be.a('number');\r\n      });\r\n      it('should standardize scale values', () => {\r\n        const salaryColumn = CSVDataSet.columnArray('Salary', {\r\n          prefilter: row => row.Salary,\r\n          parseInt: true,\r\n        });\r\n        const standardScaleSalary = CSVDataSet.columnArray('Salary', {\r\n          prefilter: row => row.Salary,\r\n          scale: 'standard',\r\n        });\r\n        expect(JSON.stringify(standardScaleSalary)).to.equal(JSON.stringify(ms.util.StandardScaler(salaryColumn)));\r\n        expect(ms.util.sd(standardScaleSalary)).to.equal(1);\r\n        expect(parseInt(Math.round(ms.util.mean(standardScaleSalary)))).to.equal(0);\r\n      });\r\n      it('should z-score / MinMax scale values', () => {\r\n        const salaryColumn = CSVDataSet.columnArray('Salary', {\r\n          prefilter: row => row.Salary,\r\n          parseInt: true,\r\n        });\r\n        const minMaxScaleSalary = CSVDataSet.columnArray('Salary', {\r\n          prefilter: row => row.Salary,\r\n          scale: 'minMax',\r\n        });\r\n        // console.log('ms.util.mean(minMaxScaleSalary)', ms.util.mean(minMaxScaleSalary));\r\n        expect(JSON.stringify(minMaxScaleSalary)).to.equal(JSON.stringify(ms.util.MinMaxScaler(salaryColumn)));\r\n        expect(parseInt(Math.round(ms.util.sd(minMaxScaleSalary)))).to.equal(0);\r\n        expect(parseInt(Math.round(ms.util.mean(minMaxScaleSalary)))).to.equal(0);\r\n      });\r\n      it('should log scale values', () => {\r\n        const salaryColumn = CSVDataSet.columnArray('Salary', {\r\n          prefilter: row => row.Salary,\r\n          parseInt: true,\r\n        });\r\n        const logScaleSalary = CSVDataSet.columnArray('Salary', {\r\n          prefilter: row => row.Salary,\r\n          scale: 'log',\r\n        });\r\n        expect(JSON.stringify(logScaleSalary)).to.equal(JSON.stringify(ms.util.LogScaler(salaryColumn)));\r\n      });\r\n      it('should exp scale values', () => {\r\n        const salaryColumn = CSVDataSet.columnArray('Salary', {\r\n          prefilter: row => row.Salary,\r\n          parseInt: true,\r\n        });\r\n        const logScaleSalary = CSVDataSet.columnArray('Salary', {\r\n          prefilter: row => row.Salary,\r\n          scale: 'exp',\r\n        });\r\n        expect(JSON.stringify(logScaleSalary)).to.equal(JSON.stringify(ms.util.ExpScaler(salaryColumn)));\r\n      });\r\n    });\r\n    describe('columnScale / columnDescale', () => {\r\n      const salaryColumn = CSVFullDataSet.columnArray('Salary', { parseInt:true, });\r\n      const salaryColumnScaled = CSVFullDataSet.columnArray('Salary', { scale:'log', });\r\n      const scaledSalaryColumn = CSVFullDataSet.columnScale('Salary', { strategy: 'log', });\r\n      it('should scale a column and store the transform functions', () => {\r\n        expect(CSVFullDataSet.scalers).to.be.a('map');\r\n        expect(CSVFullDataSet.scalers.has('Salary')).to.be.true;\r\n        expect(scaledSalaryColumn).to.eql(salaryColumnScaled);\r\n        expect(CSVFullDataSet.scalers.get('Salary').scale(72000)).to.eql(11.184421397998193);\r\n        expect(CSVFullDataSet.scalers.get('Salary').scale(44)).to.eql( 3.784189633918261);\r\n      });\r\n      it('should descale a column', () => {\r\n        const descaledColumn = CSVFullDataSet.columnDescale('Salary', { data: scaledSalaryColumn, });\r\n        expect(parseInt(CSVFullDataSet.scalers.get('Salary').descale(11.184421397998193))).to.eql(72000);\r\n        expect(descaledColumn.map(Math.round)).to.eql(salaryColumn);\r\n      });\r\n    });\r\n    describe('labelEncoder', () => {\r\n      const purchasedColumn = CSVDataSet.columnArray('Purchased');\r\n      let encodedPurchased;\r\n      let encodedCountry;\r\n      it('should binary label encode', () => {\r\n        const binaryEncodedColumn = CSVDataSet.labelEncoder('Purchased', {\r\n          data: purchasedColumn,\r\n          binary: true,\r\n        });\r\n        encodedPurchased = binaryEncodedColumn;\r\n        expect(binaryEncodedColumn).to.include.members([0, 1, ]);\r\n      });\r\n      it('should label encode', () => {\r\n        const labelEncodedColumn = CSVDataSet.labelEncoder('Country');\r\n        encodedCountry = labelEncodedColumn;\r\n        // console.log({ CSVDataSet }, CSVDataSet.data);\r\n        expect(labelEncodedColumn).to.include.members([0, 1, 2, ]);\r\n        labelEncodedColumn.forEach(lec => expect(lec).to.be.a('number'));\r\n        expect(CSVDataSet.labels.size).equal(2);\r\n      });\r\n      it('should decode labels', () => {\r\n        const decodedCountry = CSVDataSet.labelDecode('Country', { data: encodedCountry, });\r\n        // console.log({ decodedCountry, encodedCountry });\r\n        expect(decodedCountry[0]).to.be.a('string');\r\n        expect(decodedCountry[0]).to.eql('Brazil');\r\n        expect(CSVDataSet.labels.get('Country').get(decodedCountry[0])).to.equal(encodedCountry[0]);\r\n      });\r\n    });\r\n    describe('getTransforms', () => {\r\n      it('should take column fit options as an array', () => {\r\n        const e = EncodedCSVDataSet.getTransforms({\r\n          Age: ['scale',],\r\n          Rating: ['label',],  });\r\n        const e1 = EncodedCSVDataSet.getTransforms({\r\n          Age: 'scale',\r\n          Rating:  'label',  });\r\n        const e2 = EncodedCSVDataSet.getTransforms({\r\n        });\r\n        const e3 = EncodedCSVDataSet.getTransforms({\r\n          Age: ['scale', 'standard', ],\r\n          Rating: 'label',\r\n        });\r\n        const fitConf1 = [\r\n          { name: 'Age', options: { strategy: 'scale', }, \r\n          },\r\n          { name: 'Rating', options: { strategy: 'label', }, \r\n          },\r\n        ];\r\n        expect(e).to.eql(fitConf1);\r\n        expect(e1).to.eql(fitConf1);\r\n        expect(e2).to.eql([]);\r\n        expect(e3).to.eql([\r\n          {\r\n            name: 'Age',\r\n            options: {\r\n              strategy: 'scale',\r\n              scaleOptions: 'standard',\r\n            },\r\n          }, {\r\n            name: 'Rating',\r\n            options: {\r\n              strategy: 'label',\r\n            },\r\n          },\r\n        ]);\r\n      });\r\n    });\r\n    describe('encodeObject', () => {\r\n      it('should onehot encode an object', () => {\r\n        const labels = ['apple', 'orange', 'banana', ];\r\n        const prefix = 'fruit_';\r\n        const name = 'fruit';\r\n        const options = { labels, prefix, name, };\r\n        const data = {\r\n          fruit: 'apple',\r\n        };\r\n        const encodedObject = EncodedCSVDataSet.encodeObject(data, options);\r\n        expect(encodedObject).to.eql({ fruit_apple: 1, fruit_orange: 0, fruit_banana: 0, });\r\n        expect(EncodedCSVDataSet.encodeObject({ fruit:'orange',  }, options)).to.eql({ fruit_apple: 0, fruit_orange: 1, fruit_banana: 0, });\r\n        expect(EncodedCSVDataSet.encodeObject({ fruit:'banana', }, options)).to.eql({ fruit_apple: 0, fruit_orange: 0, fruit_banana: 1, });\r\n        expect(EncodedCSVDataSet.encodeObject({ fruit: 'kiwi', veggie:true, }, options)).to.eql({ fruit_apple: 0, fruit_orange: 0, fruit_banana: 0, });\r\n      });\r\n    });\r\n    describe('transformObject / inverseTransformObject', () => {\r\n      it('should encode new data using existing transforms', () => {\r\n        const transformedObject = EncodedCSVDataSet.transformObject({\r\n          'Country': 'Brazil',\r\n          'Age': '44',\r\n          'Salary': 72000,\r\n          'Purchased': 'N',\r\n        });\r\n        const transformedObject2 = EncodedCSVDataSet.transformObject({\r\n          'Country': 'Brazil',\r\n          'Age': '44',\r\n          'Salary': 72000,\r\n          'Purchased': 'N',\r\n        }, { removeValues: true, });\r\n        expect(transformedObject).to.eql(EncodedCSVDataSet.data[ 0 ]);\r\n        expect(transformedObject2).to.not.haveOwnProperty('Country');\r\n        // console.log({ transformedObject2, });\r\n      });\r\n      it('should inverse transform objects', () => {\r\n        const tranformedObj = {\r\n          Age: 0.6387122698222066,\r\n          Salary: '72000',\r\n          Purchased: 0,\r\n          Country_Brazil: 1,\r\n          Country_Mexico: 0,\r\n          Country_Ghana: 0,\r\n        };\r\n        const inverseTransformedObject = EncodedCSVDataSet.inverseTransformObject(tranformedObj);\r\n        const inverseTransformedObject2 = EncodedCSVDataSet.inverseTransformObject(tranformedObj, { removeValues: true, });\r\n        expect(inverseTransformedObject.Age.toString()).to.eql(csvData[0].Age);\r\n        expect(inverseTransformedObject2.Age.toString()).to.eql(csvData[0].Age);\r\n        expect(inverseTransformedObject.Salary).to.eql(csvData[0].Salary);\r\n        expect(inverseTransformedObject2.Salary).to.eql(csvData[0].Salary);\r\n        expect(inverseTransformedObject2.Purchased).to.eql(csvData[0].Purchased);\r\n        expect(inverseTransformedObject2.Country).to.eql(csvData[0].Country);\r\n        // console.log({ inverseTransformedObject, inverseTransformedObject2 });\r\n      });\r\n    });\r\n    describe('oneHotDecoder', () => {\r\n      it('should one hot decode', () => {\r\n        const oneHotDecodeCountry = EncodedCSVDataSet.oneHotDecoder('Country');\r\n        const countryColumn = EncodedCSVDataSet.selectColumns(['Country', ]);\r\n        expect(oneHotDecodeCountry).to.eql(countryColumn);\r\n      });\r\n    });\r\n    describe('oneHotColumnArray', () => {\r\n      it('should return all encoded columns', () => {\r\n        const selectedColumns = EncodedCSVDataSet.selectColumns(['Country_Brazil', 'Country_Mexico', 'Country_Ghana', ]);\r\n        const oneHotArrayed = EncodedCSVDataSet.oneHotColumnArray('Country');\r\n        expect(oneHotArrayed).to.eql(selectedColumns);\r\n      });\r\n    });\r\n    describe('oneHotEncoder', () => {\r\n      it('should one hot encode', () => {\r\n        const oneHotCountry = CSVDataSet.oneHotEncoder('Country');\r\n        expect(Object.keys(oneHotCountry).length).to.equal(3);\r\n        expect(oneHotCountry).to.haveOwnProperty('Country_Brazil');\r\n        expect(csvData[0].Country).to.equal('Brazil');\r\n        expect(oneHotCountry.Country_Brazil[0]).to.eql(1);\r\n        expect(oneHotCountry.Country_Mexico[0]).to.eql(0);\r\n        expect(oneHotCountry.Country_Ghana[0]).to.eql(0);\r\n        expect(CSVDataSet.encoders.size).to.equal(1);\r\n        expect(CSVDataSet.encoders.has('Country')).to.be.true;\r\n      });\r\n    });\r\n    describe('columnReducer', () => { \r\n      it('should reduce column and greate a new column', () => {\r\n        const reducer = (result, value, index, arr) => {\r\n          result.push(value * 2);\r\n          return result;\r\n        };\r\n        const DoubleAgeColumn = CSVDataSet.columnReducer('DoubleAge', {\r\n          columnName: 'Age',\r\n          reducer,\r\n        });\r\n        const AgeColumn = CSVDataSet.columnArray('Age');\r\n        // console.log({ DoubleAgeColumn, AgeColumn, });\r\n        expect(AgeColumn[ 0 ] * 2).to.eql(DoubleAgeColumn.DoubleAge[ 0 ]);\r\n        expect(DoubleAgeColumn.DoubleAge).to.eql(AgeColumn.reduce(reducer, []));\r\n      });\r\n    });\r\n    describe('columnReplace', () => {\r\n      it('should label encode', () => {\r\n        const leCountry = CSVDataSet.labelEncoder('Country');\r\n        const crCountry = CSVDataSet.columnReplace('Country', {\r\n          strategy: 'label',\r\n        });\r\n        const cr2Country = CSVDataSet.columnReplace('Country', {\r\n          strategy: 'labelEncoder',\r\n        });\r\n        expect(leCountry).to.have.ordered.members(crCountry);\r\n        expect(leCountry).to.have.ordered.members(cr2Country);\r\n      });\r\n      it('should onehot encode', () => {\r\n        const ohCountry = CSVDataSet.oneHotEncoder('Country');\r\n        const oh1Country = CSVDataSet.columnReplace('Country', {\r\n          strategy: 'onehot',\r\n        });\r\n        const oh2Country = CSVDataSet.columnReplace('Country', {\r\n          strategy: 'oneHot',\r\n        });\r\n        const oh3Country = CSVDataSet.columnReplace('Country', {\r\n          strategy: 'oneHotEncode',\r\n        });\r\n        const oh4Country = CSVDataSet.columnReplace('Country', {\r\n          strategy: 'oneHotEncoder',\r\n        });\r\n        expect(ohCountry).to.deep.eq(oh1Country);\r\n        expect(ohCountry).to.deep.eq(oh2Country);\r\n        expect(ohCountry).to.deep.eq(oh3Country);\r\n        expect(ohCountry).to.deep.eq(oh4Country);\r\n      });\r\n      it('should replace empty values with mean by default', () => {\r\n        const colSalary = CSVDataSet.columnArray('Salary', {\r\n          parseFloat: true,\r\n          filter: val => val,\r\n        });\r\n        const meanColSalary = CSVDataSet.columnReplace('Salary');\r\n        const meanSal = ms.util.mean(colSalary);\r\n        expect(meanColSalary).to.include(meanSal);\r\n      });\r\n      it('should replace empty values with stat function from ml.js', () => {\r\n        const colSalary = CSVDataSet.columnArray('Salary', {\r\n          parseFloat: true,\r\n          filter: val => val,\r\n        });\r\n        const standardDeviationColSalary = CSVDataSet.columnReplace('Salary', { strategy: 'standardDeviation', });\r\n        const sdSal = ms.util.sd(colSalary);\r\n        expect(standardDeviationColSalary).to.include(sdSal);\r\n      });\r\n      it('should replace values by standard scaling', () => {\r\n        const salaryColumn = CSVDataSet.columnArray('Salary', {\r\n          prefilter: row => row.Salary,\r\n          parseInt: true,\r\n        });\r\n        const salaryMean = ms.util.mean(salaryColumn);\r\n        const formattedSalaryColumn = CSVDataSet.columnArray('Salary', {\r\n          replace: {\r\n            test: val => !val,\r\n            value: salaryMean,\r\n          },\r\n          parseFloat: true,\r\n        });\r\n        const scaledSalaryColumn = ms.util.StandardScaler(formattedSalaryColumn);\r\n        const standardScaleSalary = CSVDataSet.columnReplace('Salary', {\r\n          scale: 'standard',\r\n        });\r\n        expect(standardScaleSalary).to.include.ordered.members(scaledSalaryColumn);\r\n      });\r\n    });\r\n    describe('fitColumns', () => {\r\n      const extraColumn = [89, 12, 32, 45, 53, 52, 56, 21, 34, 56,];\r\n      it('should accept simple format for transformations', () => {\r\n        const trainningData = [\r\n          {\r\n            'Country': 'Brazil',\r\n            'Age': '',\r\n            'Salary': '58000',\r\n            'Purchased': 'Yes',\r\n          },\r\n          {\r\n            'Country': 'Mexico',\r\n            'Age': '',\r\n            'Salary': '52000',\r\n            'Purchased': 'false',\r\n          },\r\n          {\r\n            'Country': 'China',\r\n            'Age': '58',\r\n            'Salary': '48000',\r\n            'Purchased': undefined,\r\n          },\r\n        ].concat(csvData);\r\n        const fittingOptions = {\r\n          Country: 'onehot',\r\n          Salary: ['scale', 'standard',],\r\n          Age: ['parseNumber',],\r\n        };\r\n        const preprocessingOptions = {\r\n          Salary: ['parseNumber',],\r\n          Purchased: ['label', { binary:true, },],\r\n          Age: ['median',],\r\n        };\r\n    \r\n        const trainningDataSet = new ms.DataSet(trainningData);\r\n        trainningDataSet.fitColumns(preprocessingOptions);\r\n        trainningDataSet.fitColumns(fittingOptions);\r\n      });\r\n      it('should merge columns', () => {\r\n        const fittedOriginalData = new ms.DataSet([...unmodifiedCSVData, ]);\r\n        fittedOriginalData.fitColumns({\r\n          columns: [\r\n            { name: 'Age', },\r\n            {\r\n              name: 'Extra',\r\n              options: {\r\n                strategy: 'merge',\r\n                mergeData: extraColumn,\r\n              },\r\n            },\r\n          ],\r\n        });\r\n        expect(fittedOriginalData.columnArray('Extra')).to.eql(extraColumn);\r\n      });\r\n      it('should only merge columns if data length matches', () => { \r\n        const fittedOriginalData = new ms.DataSet([...unmodifiedCSVData,]);\r\n        const newColumn = fittedOriginalData.columnMerge('err', [1, 2, 3, 4, 5, 6, 7, 8, 9, 0,]);\r\n        expect(newColumn).to.be.an('Object');\r\n        expect(newColumn).to.haveOwnProperty('err');\r\n        expect(newColumn.err).to.be.an('array');\r\n        try {\r\n          fittedOriginalData.columnMerge('err', [1, 2,]);\r\n        } catch (e) {\r\n          expect(e).to.be.an('error');\r\n          expect(e.toString()).to.eql(`RangeError: Merged data column must have the same length(2) as the DataSet's length (${10})`);\r\n        }\r\n      });\r\n      it('should fit multiple columns', () => {\r\n        const unmodifiedData = new ms.DataSet(unmodifiedCSVData);\r\n        const fittedOriginalData = new ms.DataSet([...unmodifiedCSVData, ]);\r\n        const reducer = (result, value, index, arr) => {\r\n          result.push(value * 2);\r\n          return result;\r\n        };\r\n\r\n        const fitdata = fittedOriginalData.fitColumns({\r\n          columns: [\r\n            { name: 'Age', },\r\n            {\r\n              name: 'Salary',\r\n              options: {\r\n                scale: 'standard',\r\n              },\r\n            },\r\n            {\r\n              name: 'DoubleSalary',\r\n              options: {\r\n                strategy:'reduce',\r\n                reducerOptions: {\r\n                  columnName: 'Salary',\r\n                  reducer,\r\n                },\r\n              },\r\n            },\r\n            {\r\n              name: 'Purchased',\r\n              options: {\r\n                strategy: 'label',\r\n                labelOptions: {\r\n                  binary: true,\r\n                },\r\n              },\r\n            },\r\n            {\r\n              name: 'Country',\r\n              options: {\r\n                strategy: 'onehot',\r\n                labelOptions: {\r\n                  binary: true,\r\n                },\r\n              },\r\n            },\r\n          ],\r\n        });\r\n        expect(fitdata).to.eql(fittedOriginalData.data);\r\n        const fitObject = fittedOriginalData.fitColumns({\r\n          returnData: false,\r\n          columns: [\r\n            {\r\n              name: 'DoubleAge',\r\n              options: {\r\n                strategy:'reduce',\r\n                reducerOptions: {\r\n                  columnName: 'Age',\r\n                  reducer,\r\n                },\r\n              },\r\n            },\r\n          ],\r\n        });\r\n        expect(fitObject).to.eql(fittedOriginalData);\r\n        expect(unmodifiedData === fittedOriginalData).to.be.false;\r\n        expect(fittedOriginalData.data).to.not.eq(unmodifiedCSVData);\r\n        expect(fittedOriginalData.columnArray('Age')).to.have.ordered.members(unmodifiedData.columnReplace('Age'));\r\n        expect(fittedOriginalData.columnArray('Salary')).to.have.ordered.members(unmodifiedData.columnReplace('Salary', {\r\n          scale: 'standard',\r\n        }));\r\n      });\r\n    });\r\n    describe('fitInverseTransforms / fitTransforms', () => {\r\n      it('should inverse transforms on dataset', () => {\r\n        const refitDataSet = new ms.preprocessing.DataSet(csvData, { debug: false, });\r\n        const transformedObject = {\r\n          Age: 0.6387122698222066,\r\n          Salary: 72000,\r\n          Purchased: 0,\r\n          Country_Brazil: 1,\r\n          Country_Mexico: 0,\r\n          Country_Ghana: 0,\r\n        };\r\n        const transformedFullObject = {\r\n          Age: 0.6387122698222066,\r\n          Salary: 72000,\r\n          Purchased: 0,\r\n          Country: 'Brazil',\r\n          Country_Brazil: 1,\r\n          Country_Mexico: 0,\r\n          Country_Ghana: 0,\r\n        };\r\n        const originalObject = { Country: 'Brazil', Age: 44, Salary: 72000, Purchased: 'N', };\r\n        refitDataSet.fitColumns({\r\n          Country:'onehot',\r\n          Salary:'parseNumber',\r\n          Age:['scale', 'standard', ],\r\n          Purchased:['label', ],\r\n        });\r\n        expect(refitDataSet.data[ 0 ]).to.eql(transformedFullObject);\r\n        refitDataSet.fitInverseTransforms({ removeValues: true, });\r\n        expect(refitDataSet.data[ 0 ]).to.eql(originalObject);\r\n        refitDataSet.fitTransforms({ removeValues: true, });\r\n        expect(refitDataSet.data[ 0 ]).to.eql(transformedObject);\r\n        // console.log('BEFORE refitDataSet.data', refitDataSet.data);\r\n        // console.log('AFTER refitDataSet.data', refitDataSet.data);\r\n        // console.log('AFTER REFITREFIT refitDataSet.data', refitDataSet.data);\r\n      });\r\n    });\r\n  });\r\n});",
@@ -6265,7 +6328,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 252,
+    "__docId__": 253,
     "kind": "test",
     "name": "describe79",
     "testId": 79,
@@ -6278,7 +6341,7 @@
     "lineNumber": 70
   },
   {
-    "__docId__": 253,
+    "__docId__": 254,
     "kind": "test",
     "name": "describe80",
     "testId": 80,
@@ -6291,7 +6354,7 @@
     "lineNumber": 71
   },
   {
-    "__docId__": 254,
+    "__docId__": 255,
     "kind": "test",
     "name": "describe81",
     "testId": 81,
@@ -6304,7 +6367,7 @@
     "lineNumber": 82
   },
   {
-    "__docId__": 255,
+    "__docId__": 256,
     "kind": "test",
     "name": "it82",
     "testId": 82,
@@ -6317,7 +6380,7 @@
     "lineNumber": 83
   },
   {
-    "__docId__": 256,
+    "__docId__": 257,
     "kind": "test",
     "name": "describe83",
     "testId": 83,
@@ -6330,7 +6393,7 @@
     "lineNumber": 89
   },
   {
-    "__docId__": 257,
+    "__docId__": 258,
     "kind": "test",
     "name": "it84",
     "testId": 84,
@@ -6343,7 +6406,7 @@
     "lineNumber": 90
   },
   {
-    "__docId__": 258,
+    "__docId__": 259,
     "kind": "test",
     "name": "it85",
     "testId": 85,
@@ -6356,7 +6419,7 @@
     "lineNumber": 93
   },
   {
-    "__docId__": 259,
+    "__docId__": 260,
     "kind": "test",
     "name": "describe86",
     "testId": 86,
@@ -6369,7 +6432,7 @@
     "lineNumber": 97
   },
   {
-    "__docId__": 260,
+    "__docId__": 261,
     "kind": "test",
     "name": "it87",
     "testId": 87,
@@ -6382,7 +6445,7 @@
     "lineNumber": 98
   },
   {
-    "__docId__": 261,
+    "__docId__": 262,
     "kind": "test",
     "name": "it88",
     "testId": 88,
@@ -6395,7 +6458,7 @@
     "lineNumber": 104
   },
   {
-    "__docId__": 262,
+    "__docId__": 263,
     "kind": "test",
     "name": "it89",
     "testId": 89,
@@ -6408,7 +6471,7 @@
     "lineNumber": 113
   },
   {
-    "__docId__": 263,
+    "__docId__": 264,
     "kind": "test",
     "name": "describe90",
     "testId": 90,
@@ -6421,7 +6484,7 @@
     "lineNumber": 121
   },
   {
-    "__docId__": 264,
+    "__docId__": 265,
     "kind": "test",
     "name": "it91",
     "testId": 91,
@@ -6434,7 +6497,7 @@
     "lineNumber": 122
   },
   {
-    "__docId__": 265,
+    "__docId__": 266,
     "kind": "test",
     "name": "describe92",
     "testId": 92,
@@ -6447,7 +6510,7 @@
     "lineNumber": 136
   },
   {
-    "__docId__": 266,
+    "__docId__": 267,
     "kind": "test",
     "name": "it93",
     "testId": 93,
@@ -6460,7 +6523,7 @@
     "lineNumber": 137
   },
   {
-    "__docId__": 267,
+    "__docId__": 268,
     "kind": "test",
     "name": "describe94",
     "testId": 94,
@@ -6473,7 +6536,7 @@
     "lineNumber": 149
   },
   {
-    "__docId__": 268,
+    "__docId__": 269,
     "kind": "test",
     "name": "it95",
     "testId": 95,
@@ -6486,7 +6549,7 @@
     "lineNumber": 150
   },
   {
-    "__docId__": 269,
+    "__docId__": 270,
     "kind": "test",
     "name": "describe96",
     "testId": 96,
@@ -6499,7 +6562,7 @@
     "lineNumber": 159
   },
   {
-    "__docId__": 270,
+    "__docId__": 271,
     "kind": "test",
     "name": "it97",
     "testId": 97,
@@ -6512,7 +6575,7 @@
     "lineNumber": 161
   },
   {
-    "__docId__": 271,
+    "__docId__": 272,
     "kind": "test",
     "name": "it98",
     "testId": 98,
@@ -6525,7 +6588,7 @@
     "lineNumber": 165
   },
   {
-    "__docId__": 272,
+    "__docId__": 273,
     "kind": "test",
     "name": "it99",
     "testId": 99,
@@ -6538,7 +6601,7 @@
     "lineNumber": 171
   },
   {
-    "__docId__": 273,
+    "__docId__": 274,
     "kind": "test",
     "name": "it100",
     "testId": 100,
@@ -6551,7 +6614,7 @@
     "lineNumber": 177
   },
   {
-    "__docId__": 274,
+    "__docId__": 275,
     "kind": "test",
     "name": "it101",
     "testId": 101,
@@ -6564,7 +6627,7 @@
     "lineNumber": 193
   },
   {
-    "__docId__": 275,
+    "__docId__": 276,
     "kind": "test",
     "name": "it102",
     "testId": 102,
@@ -6577,7 +6640,7 @@
     "lineNumber": 203
   },
   {
-    "__docId__": 276,
+    "__docId__": 277,
     "kind": "test",
     "name": "it103",
     "testId": 103,
@@ -6590,7 +6653,7 @@
     "lineNumber": 216
   },
   {
-    "__docId__": 277,
+    "__docId__": 278,
     "kind": "test",
     "name": "it104",
     "testId": 104,
@@ -6603,7 +6666,7 @@
     "lineNumber": 230
   },
   {
-    "__docId__": 278,
+    "__docId__": 279,
     "kind": "test",
     "name": "it105",
     "testId": 105,
@@ -6616,7 +6679,7 @@
     "lineNumber": 241
   },
   {
-    "__docId__": 279,
+    "__docId__": 280,
     "kind": "test",
     "name": "describe106",
     "testId": 106,
@@ -6629,7 +6692,7 @@
     "lineNumber": 253
   },
   {
-    "__docId__": 280,
+    "__docId__": 281,
     "kind": "test",
     "name": "it107",
     "testId": 107,
@@ -6642,7 +6705,7 @@
     "lineNumber": 257
   },
   {
-    "__docId__": 281,
+    "__docId__": 282,
     "kind": "test",
     "name": "it108",
     "testId": 108,
@@ -6655,7 +6718,7 @@
     "lineNumber": 264
   },
   {
-    "__docId__": 282,
+    "__docId__": 283,
     "kind": "test",
     "name": "describe109",
     "testId": 109,
@@ -6668,7 +6731,7 @@
     "lineNumber": 270
   },
   {
-    "__docId__": 283,
+    "__docId__": 284,
     "kind": "test",
     "name": "it110",
     "testId": 110,
@@ -6681,7 +6744,7 @@
     "lineNumber": 274
   },
   {
-    "__docId__": 284,
+    "__docId__": 285,
     "kind": "test",
     "name": "it111",
     "testId": 111,
@@ -6694,7 +6757,7 @@
     "lineNumber": 282
   },
   {
-    "__docId__": 285,
+    "__docId__": 286,
     "kind": "test",
     "name": "it112",
     "testId": 112,
@@ -6707,7 +6770,7 @@
     "lineNumber": 290
   },
   {
-    "__docId__": 286,
+    "__docId__": 287,
     "kind": "test",
     "name": "describe113",
     "testId": 113,
@@ -6720,7 +6783,7 @@
     "lineNumber": 298
   },
   {
-    "__docId__": 287,
+    "__docId__": 288,
     "kind": "test",
     "name": "it114",
     "testId": 114,
@@ -6733,7 +6796,7 @@
     "lineNumber": 299
   },
   {
-    "__docId__": 288,
+    "__docId__": 289,
     "kind": "test",
     "name": "describe115",
     "testId": 115,
@@ -6746,7 +6809,7 @@
     "lineNumber": 337
   },
   {
-    "__docId__": 289,
+    "__docId__": 290,
     "kind": "test",
     "name": "it116",
     "testId": 116,
@@ -6759,7 +6822,7 @@
     "lineNumber": 338
   },
   {
-    "__docId__": 290,
+    "__docId__": 291,
     "kind": "test",
     "name": "describe117",
     "testId": 117,
@@ -6772,7 +6835,7 @@
     "lineNumber": 353
   },
   {
-    "__docId__": 291,
+    "__docId__": 292,
     "kind": "test",
     "name": "it118",
     "testId": 118,
@@ -6785,7 +6848,7 @@
     "lineNumber": 354
   },
   {
-    "__docId__": 292,
+    "__docId__": 293,
     "kind": "test",
     "name": "it119",
     "testId": 119,
@@ -6798,7 +6861,7 @@
     "lineNumber": 371
   },
   {
-    "__docId__": 293,
+    "__docId__": 294,
     "kind": "test",
     "name": "describe120",
     "testId": 120,
@@ -6811,7 +6874,7 @@
     "lineNumber": 391
   },
   {
-    "__docId__": 294,
+    "__docId__": 295,
     "kind": "test",
     "name": "it121",
     "testId": 121,
@@ -6824,7 +6887,7 @@
     "lineNumber": 392
   },
   {
-    "__docId__": 295,
+    "__docId__": 296,
     "kind": "test",
     "name": "describe122",
     "testId": 122,
@@ -6837,7 +6900,7 @@
     "lineNumber": 398
   },
   {
-    "__docId__": 296,
+    "__docId__": 297,
     "kind": "test",
     "name": "it123",
     "testId": 123,
@@ -6850,7 +6913,7 @@
     "lineNumber": 399
   },
   {
-    "__docId__": 297,
+    "__docId__": 298,
     "kind": "test",
     "name": "describe124",
     "testId": 124,
@@ -6863,7 +6926,7 @@
     "lineNumber": 405
   },
   {
-    "__docId__": 298,
+    "__docId__": 299,
     "kind": "test",
     "name": "it125",
     "testId": 125,
@@ -6876,7 +6939,7 @@
     "lineNumber": 406
   },
   {
-    "__docId__": 299,
+    "__docId__": 300,
     "kind": "test",
     "name": "describe126",
     "testId": 126,
@@ -6889,7 +6952,7 @@
     "lineNumber": 418
   },
   {
-    "__docId__": 300,
+    "__docId__": 301,
     "kind": "test",
     "name": "it127",
     "testId": 127,
@@ -6902,7 +6965,7 @@
     "lineNumber": 419
   },
   {
-    "__docId__": 301,
+    "__docId__": 302,
     "kind": "test",
     "name": "describe128",
     "testId": 128,
@@ -6915,7 +6978,7 @@
     "lineNumber": 434
   },
   {
-    "__docId__": 302,
+    "__docId__": 303,
     "kind": "test",
     "name": "it129",
     "testId": 129,
@@ -6928,7 +6991,7 @@
     "lineNumber": 435
   },
   {
-    "__docId__": 303,
+    "__docId__": 304,
     "kind": "test",
     "name": "it130",
     "testId": 130,
@@ -6941,7 +7004,7 @@
     "lineNumber": 446
   },
   {
-    "__docId__": 304,
+    "__docId__": 305,
     "kind": "test",
     "name": "it131",
     "testId": 131,
@@ -6954,7 +7017,7 @@
     "lineNumber": 465
   },
   {
-    "__docId__": 305,
+    "__docId__": 306,
     "kind": "test",
     "name": "it132",
     "testId": 132,
@@ -6967,7 +7030,7 @@
     "lineNumber": 474
   },
   {
-    "__docId__": 306,
+    "__docId__": 307,
     "kind": "test",
     "name": "it133",
     "testId": 133,
@@ -6980,7 +7043,7 @@
     "lineNumber": 483
   },
   {
-    "__docId__": 307,
+    "__docId__": 308,
     "kind": "test",
     "name": "describe134",
     "testId": 134,
@@ -6993,7 +7056,7 @@
     "lineNumber": 503
   },
   {
-    "__docId__": 308,
+    "__docId__": 309,
     "kind": "test",
     "name": "it135",
     "testId": 135,
@@ -7006,7 +7069,7 @@
     "lineNumber": 505
   },
   {
-    "__docId__": 309,
+    "__docId__": 310,
     "kind": "test",
     "name": "it136",
     "testId": 136,
@@ -7019,7 +7082,7 @@
     "lineNumber": 541
   },
   {
-    "__docId__": 310,
+    "__docId__": 311,
     "kind": "test",
     "name": "it137",
     "testId": 137,
@@ -7032,7 +7095,7 @@
     "lineNumber": 557
   },
   {
-    "__docId__": 311,
+    "__docId__": 312,
     "kind": "test",
     "name": "it138",
     "testId": 138,
@@ -7045,7 +7108,7 @@
     "lineNumber": 570
   },
   {
-    "__docId__": 312,
+    "__docId__": 313,
     "kind": "test",
     "name": "describe139",
     "testId": 139,
@@ -7058,7 +7121,7 @@
     "lineNumber": 642
   },
   {
-    "__docId__": 313,
+    "__docId__": 314,
     "kind": "test",
     "name": "it140",
     "testId": 140,
@@ -7071,10 +7134,10 @@
     "lineNumber": 643
   },
   {
-    "__docId__": 314,
+    "__docId__": 315,
     "kind": "testFile",
     "name": "test/unit/util_spec.mjs",
-    "content": "import * as ms from '../../index.mjs';\r\nimport chai from 'chai';\r\nconst expect = chai.expect;\r\nconst testArray = [20, 25, 10, 33, 50, 42, 19, ];\r\nconst vectors = [\r\n  [1, 2, 3,],\r\n  [1, 2, 3,],\r\n  [3, 3, 4,],\r\n  [3, 3, 3,],\r\n];\r\nconst arrays = [\r\n  [1, 1, 3, 3, ],\r\n  [2, 2, 3, 3, ],\r\n  [3, 3, 4, 3, ],\r\n];\r\n\r\ndescribe('util', function () { \r\n  describe('forecasting metrics', () => {\r\n    const actuals = [45, 38, 43, 39,];\r\n    const estimates = [41, 43, 41, 42,];\r\n    const actuals2 = [120, 90, 101, 91, 115, 83,];\r\n    const estimates2 = [100, 106, 102, 101, 98, 103,];\r\n    describe('forecastErrors', () => {\r\n      it('should return array of residuals', () => {\r\n        expect(ms.util.forecastErrors).to.be.a('function');\r\n        expect(ms.util.forecastErrors(actuals, estimates)).to.eql([4, -5, 2, -3,]);\r\n      });\r\n    });\r\n    describe('meanForecastError', () => {\r\n      it('should return bias of forecast accuracy', () => {\r\n        expect(ms.util.meanForecastError).to.be.a('function');\r\n        expect(ms.util.MFE).to.eql(ms.util.meanForecastError);\r\n        expect(ms.util.meanForecastError(actuals, estimates)).to.eql(-0.5);\r\n      });\r\n    });\r\n    describe('meanAbsoluteDeviation', () => {\r\n      it('should return absolute size of the errors', () => {\r\n        expect(ms.util.meanAbsoluteDeviation).to.be.a('function');\r\n        expect(ms.util.MAD).to.eql(ms.util.meanAbsoluteDeviation);\r\n        expect(ms.util.meanAbsoluteDeviation(actuals, estimates)).to.eql(3.5);\r\n      });\r\n    });\r\n    describe('trackingSignal', () => {\r\n      it('should return tracking Signal', () => {\r\n        expect(ms.util.trackingSignal).to.be.a('function');\r\n        expect(ms.util.TS).to.eql(ms.util.trackingSignal);\r\n        const TSig = ms.util.trackingSignal(actuals, estimates);\r\n        expect(TSig.toFixed(2)).to.eql('-0.57');\r\n      });\r\n    });\r\n    describe('meanSquaredError', () => {\r\n      it('should return MSE', () => {\r\n        expect(ms.util.meanSquaredError).to.be.a('function');\r\n        expect(ms.util.MSE).to.eql(ms.util.meanSquaredError);\r\n        expect(ms.util.meanSquaredError(actuals, estimates)).to.eql(13.5);\r\n      });\r\n    });\r\n    describe('meanAbsolutePercentageError', () => {\r\n      it('should return MAPE', () => {\r\n        expect(ms.util.meanAbsolutePercentageError).to.be.a('function');\r\n        expect(ms.util.MAPE).to.eql(ms.util.meanAbsolutePercentageError);\r\n        const MAPE = ms.util.meanAbsolutePercentageError(actuals, estimates);\r\n        expect(MAPE.toFixed(2)).to.eql('0.09');\r\n      });\r\n    });\r\n  });\r\n  describe('max', () => {\r\n    it('should return max value', () => {\r\n      expect(ms.util).to.be.an('object');\r\n      expect(ms.util.max(testArray)).to.equal(50);   \r\n    });\r\n  });\r\n  describe('min', () => {\r\n    it('should return min value', () => {\r\n      expect(ms.util.min(testArray)).to.equal(10);   \r\n    });\r\n  });\r\n  describe('mean', () => {\r\n    it('should return mean value', () => {\r\n      expect(ms.util.mean(testArray)).to.equal(ms.util.sum(testArray) / testArray.length);   \r\n    });\r\n  });\r\n  describe('Standard Scaler Transforms', () => { \r\n    const standardScaledTestArray = ms.util.StandardScaler(testArray);\r\n    const standardScaledTransformsTestObj = ms.util.StandardScalerTransforms(testArray);\r\n    it('should return an object with a scale function, descale function and values array', () => {\r\n      expect(standardScaledTransformsTestObj).to.be.an('object');\r\n      expect(standardScaledTransformsTestObj).to.have.property('scale');\r\n      expect(standardScaledTransformsTestObj).to.have.property('descale');\r\n      expect(standardScaledTransformsTestObj).to.have.property('values');\r\n      expect(standardScaledTransformsTestObj.scale).to.be.a('function');\r\n      expect(standardScaledTransformsTestObj.descale).to.be.a('function');\r\n      expect(standardScaledTransformsTestObj.values).to.be.an('array');\r\n    });\r\n    it('should have a values array that is equal to the array produced by StandardScaler function', () => {\r\n      expect(standardScaledTransformsTestObj.values).to.eql(standardScaledTestArray);\r\n    });\r\n    it('should have a values array that is equal to the array produced by StandardScaler function', () => {\r\n      expect(standardScaledTransformsTestObj.values).to.eql(standardScaledTestArray);\r\n    });\r\n    it('should properly scale single values', () => {\r\n      expect(standardScaledTransformsTestObj.scale(testArray[0])).to.equal(standardScaledTestArray[0]);\r\n      expect(standardScaledTransformsTestObj.scale(testArray[1])).to.equal(standardScaledTestArray[1]);\r\n    });\r\n    it('should properly descale single values', () => {\r\n      expect(standardScaledTransformsTestObj.descale(standardScaledTestArray[0])).to.equal(testArray[0]);\r\n      expect(standardScaledTransformsTestObj.descale(standardScaledTestArray[1])).to.equal(testArray[1]);\r\n    });\r\n  });\r\n  describe('MinMax Scaler Transforms', () => { \r\n    const minMaxScaledTestArray = ms.util.MinMaxScaler(testArray);\r\n    const minMaxScaledTransformsTestObj = ms.util.MinMaxScalerTransforms(testArray);\r\n    it('should return an object with a scale function, descale function and values array', () => {\r\n      expect(minMaxScaledTransformsTestObj).to.be.an('object');\r\n      expect(minMaxScaledTransformsTestObj).to.have.property('scale');\r\n      expect(minMaxScaledTransformsTestObj).to.have.property('descale');\r\n      expect(minMaxScaledTransformsTestObj).to.have.property('values');\r\n      expect(minMaxScaledTransformsTestObj.scale).to.be.a('function');\r\n      expect(minMaxScaledTransformsTestObj.descale).to.be.a('function');\r\n      expect(minMaxScaledTransformsTestObj.values).to.be.an('array');\r\n      expect(minMaxScaledTransformsTestObj.values).to.eql(minMaxScaledTestArray);\r\n    });\r\n    it('should have a values array that is equal to the array produced by MinMaxScaler function', () => {\r\n      expect(minMaxScaledTransformsTestObj.values).to.eql(minMaxScaledTestArray);\r\n    });\r\n    it('should properly scale single values', () => {\r\n      expect(minMaxScaledTransformsTestObj.scale(testArray[0])).to.equal(minMaxScaledTestArray[0]);\r\n      expect(minMaxScaledTransformsTestObj.scale(testArray[1])).to.equal(minMaxScaledTestArray[1]);\r\n    });\r\n    it('should properly descale single values', () => {\r\n      expect(minMaxScaledTransformsTestObj.descale(minMaxScaledTestArray[0])).to.equal(testArray[0]);\r\n      expect(minMaxScaledTransformsTestObj.descale(minMaxScaledTestArray[1])).to.equal(testArray[1]);\r\n    });\r\n  });\r\n  describe('Log Scaler', () => { \r\n    it('should return log scaled values', () => {\r\n      const logScaledTestArray = ms.util.LogScaler(testArray);\r\n      expect(logScaledTestArray[ 0 ]).to.equal(Math.log(testArray[ 0 ]));\r\n      expect(logScaledTestArray[ 3 ]).to.equal(Math.log(testArray[ 3 ]));\r\n    });\r\n  });\r\n  describe('Exponent Scaler', () => {\r\n    it('should return exponent scaled values', () => {\r\n      const expScaledTestArray = ms.util.ExpScaler(testArray);\r\n      expect(expScaledTestArray[ 0 ]).to.equal(Math.exp(testArray[ 0 ]));\r\n      expect(expScaledTestArray[ 3 ]).to.equal(Math.exp(testArray[ 3 ]));\r\n    });\r\n  });\r\n  describe('Standard Error of the Estimate', () => {\r\n    const actuals = [2, 4, 5, 4, 5, ];\r\n    const estimates = [2.8, 3.4, 4, 4.6, 5.2, ];\r\n    it('should return the Standard Error of the Estimate', () => {\r\n      const SE = ms.util.standardError(actuals, estimates);\r\n      expect(SE.toFixed(2)).to.eql(0.89.toString());\r\n    });\r\n    it('should return an error if array lengths are not the same', () => {\r\n      try {\r\n        ms.util.standardError(actuals, [2, ]);\r\n      } catch (e) {\r\n        expect(e).to.be.an('error');\r\n      }\r\n    });\r\n  });\r\n  describe('getSafePropertyName', () => {\r\n    it('should sanitize property names', () => {\r\n      const names = [\r\n        'sa les',\r\n        'sa.les',\r\n        'sa.les!!!',\r\n        'Sa.les!!!',\r\n        'Sa.leS',\r\n        'Sa---leS',\r\n        'Sa---l#eS',\r\n      ];\r\n      const sanitizedNames = names.map(ms.util.getSafePropertyName);\r\n      const ranSanitized = ['sa les',\r\n        'sa_les',\r\n        'sa_les___',\r\n        'Sa_les___',\r\n        'Sa_leS',\r\n        'Sa___leS',\r\n        'Sa___l_eS',\r\n      ];\r\n      expect(sanitizedNames).to.eql(ranSanitized);\r\n      // console.log({ sanitizedNames });\r\n    });\r\n  });\r\n  describe('Coefficient of correlation', () => {\r\n    const actuals = [39, 42, 67, 76,];\r\n    const estimates = [44, 40, 60, 84,];\r\n    it('should return the Coefficient of correlation', () => {\r\n      const R = ms.util.coefficientOfCorrelation(actuals, estimates);\r\n      expect(R.toFixed(4)).to.eql(0.9408.toString());\r\n\r\n    });\r\n    it('should return an error if array lengths are not the same', () => {\r\n      try {\r\n        ms.util.coefficientOfCorrelation(actuals, [2, ]);\r\n      } catch (e) {\r\n        expect(e).to.be.an('error');\r\n      }\r\n    });\r\n  });\r\n  describe('rSquared', () => {\r\n    const actuals = [39, 42, 67, 76,];\r\n    const estimates = [44, 40, 60, 84,];\r\n    it('should return r^2', () => {\r\n      const R = ms.util.coefficientOfCorrelation(actuals, estimates);\r\n      const rSquared = ms.util.rSquared(actuals, estimates);\r\n      const COD = ms.util.coefficientOfDetermination(actuals, estimates);\r\n      expect(Math.pow(R, 2)).to.eql(rSquared);\r\n      expect(rSquared.toFixed(1)).to.eql(COD.toFixed(1));\r\n    });\r\n  });\r\n  describe('Coefficient of determination', () => {\r\n    const actuals = [2, 4, 5, 4, 5, ];\r\n    const estimates = [2.8, 3.4, 4, 4.6, 5.2, ];\r\n    it('should return the Coefficient of determination', () => {\r\n      const r2 = ms.util.coefficientOfDetermination(actuals, estimates);\r\n      expect(r2.toFixed(1)).to.eql(0.6.toString());\r\n    });\r\n    it('should return an error if array lengths are not the same', () => {\r\n      try {\r\n        ms.util.coefficientOfDetermination(actuals, [2, ]);\r\n      } catch (e) {\r\n        expect(e).to.be.an('error');\r\n      }\r\n    });\r\n  });\r\n  describe('adjusted coefficient of determination', () => {\r\n    it('should return the adjusted Coefficient of determination', () => {\r\n      const adjr2 = ms.util.adjustedCoefficentOfDetermination({\r\n        rSquared: 0.944346527,\r\n        sampleSize: 8,\r\n        independentVariables: 2,\r\n      }); \r\n      expect(adjr2.toFixed(3)).to.eql(0.922.toString());\r\n    });\r\n  });\r\n  describe('pivotVector', () => {\r\n    it('should pivot vectors into arrays', () => {\r\n      const arrays = ms.util.pivotVector(vectors); // => [ [1,2,3,3], [2,2,3,3], [3,3,4,3] ];\r\n      expect(arrays[ 0 ]).to.be.lengthOf(4);\r\n      expect(arrays[ 0 ]).to.eql([1, 1, 3, 3,]);\r\n      expect(arrays[ 1 ]).to.be.lengthOf(4);\r\n      expect(arrays[ 1 ]).to.eql([2, 2, 3, 3,]);\r\n      expect(arrays[ 2 ]).to.be.lengthOf(4);\r\n      expect(arrays[ 2 ]).to.eql([3, 3, 4, 3,]);\r\n    });\r\n  });\r\n  describe('pivotArrays', () => {\r\n    it('should pivot arrays into vectors', () => {\r\n      const translatedVectors = ms.util.pivotArrays(arrays);\r\n      expect(translatedVectors).to.eql(vectors);\r\n    });\r\n  });\r\n  describe('Z Scores / Standard Scores', () => {\r\n    it('should calculate standard scores', () => {\r\n      const observations = [\r\n        7, 8, 8, 7.5, 9,\r\n      ];\r\n      const zscores = ms.util.standardScore(observations);\r\n      const roundedZScores = zscores.map(z => parseFloat(z.toFixed(2), 10));\r\n      expect(roundedZScores[ 3 ]).to.eql(-0.54);\r\n      // console.log({ zscores,roundedZScores });\r\n    });\r\n    it('should approximate the p-value from the z score', () => { \r\n      const z1 = 2.87;\r\n      const z2 = 1.96;\r\n      const p1 = parseFloat(ms.util.approximateZPercentile(z1).toFixed(3), 10);\r\n      const p2 = parseFloat(ms.util.approximateZPercentile(z2).toFixed(3), 10);\r\n      const p3 = parseFloat(ms.util.approximateZPercentile(z1, false).toFixed(3), 10);\r\n      const p4 = parseFloat(ms.util.approximateZPercentile(z2, false).toFixed(3), 10);\r\n      expect(p1).to.eql(0.002);\r\n      expect(p3).to.eql(0.998);\r\n      expect(p2).to.eql(0.025);\r\n      expect(p4).to.eql(0.975);\r\n      expect(ms.util.approximateZPercentile(-10)).to.eql(0);\r\n      expect(ms.util.approximateZPercentile(10)).to.eql(1);\r\n      // console.log('ms.util.approximateZPercentile(-10)', ms.util.approximateZPercentile(-10));\r\n    });\r\n  });\r\n});",
+    "content": "import * as ms from '../../index.mjs';\r\nimport chai from 'chai';\r\nconst expect = chai.expect;\r\nconst testArray = [20, 25, 10, 33, 50, 42, 19, ];\r\nconst vectors = [\r\n  [1, 2, 3,],\r\n  [1, 2, 3,],\r\n  [3, 3, 4,],\r\n  [3, 3, 3,],\r\n];\r\nconst arrays = [\r\n  [1, 1, 3, 3, ],\r\n  [2, 2, 3, 3, ],\r\n  [3, 3, 4, 3, ],\r\n];\r\n\r\ndescribe('util', function () { \r\n  describe('forecasting metrics', () => {\r\n    const actuals = [45, 38, 43, 39,];\r\n    const estimates = [41, 43, 41, 42,];\r\n    const actuals2 = [120, 90, 101, 91, 115, 83,];\r\n    const estimates2 = [100, 106, 102, 101, 98, 103,];\r\n    describe('forecastErrors', () => {\r\n      it('should return array of residuals', () => {\r\n        expect(ms.util.forecastErrors).to.be.a('function');\r\n        expect(ms.util.forecastErrors(actuals, estimates)).to.eql([4, -5, 2, -3,]);\r\n      });\r\n      it('should throw an error if array lengths are not the same', () => {\r\n        expect(ms.util.forecastErrors.bind({},[1,2,3],[1,2,3,4])).to.throw(/must equal/);\r\n      });\r\n    });\r\n    describe('meanForecastError', () => {\r\n      it('should return bias of forecast accuracy', () => {\r\n        expect(ms.util.meanForecastError).to.be.a('function');\r\n        expect(ms.util.MFE).to.eql(ms.util.meanForecastError);\r\n        expect(ms.util.meanForecastError(actuals, estimates)).to.eql(-0.5);\r\n      });\r\n    });\r\n    describe('meanAbsoluteDeviation', () => {\r\n      it('should return absolute size of the errors', () => {\r\n        expect(ms.util.meanAbsoluteDeviation).to.be.a('function');\r\n        expect(ms.util.MAD).to.eql(ms.util.meanAbsoluteDeviation);\r\n        expect(ms.util.meanAbsoluteDeviation(actuals, estimates)).to.eql(3.5);\r\n      });\r\n    });\r\n    describe('trackingSignal', () => {\r\n      it('should return tracking Signal', () => {\r\n        expect(ms.util.trackingSignal).to.be.a('function');\r\n        expect(ms.util.TS).to.eql(ms.util.trackingSignal);\r\n        const TSig = ms.util.trackingSignal(actuals, estimates);\r\n        expect(TSig.toFixed(2)).to.eql('-0.57');\r\n      });\r\n    });\r\n    describe('meanSquaredError', () => {\r\n      it('should return MSE', () => {\r\n        expect(ms.util.meanSquaredError).to.be.a('function');\r\n        expect(ms.util.MSE).to.eql(ms.util.meanSquaredError);\r\n        expect(ms.util.meanSquaredError(actuals, estimates)).to.eql(13.5);\r\n      });\r\n    });\r\n    describe('MADMeanRatio', () => {\r\n      it('should return MMR', () => {\r\n        expect(ms.util.MADMeanRatio).to.be.a('function');\r\n        expect(ms.util.MMR).to.eql(ms.util.MADMeanRatio);\r\n        const MMR = ms.util.MADMeanRatio(actuals, estimates);\r\n        expect(MMR.toFixed(2)).to.eql('0.08');\r\n      });\r\n    });\r\n    describe('meanAbsolutePercentageError', () => {\r\n      it('should return MAPE', () => {\r\n        expect(ms.util.meanAbsolutePercentageError).to.be.a('function');\r\n        expect(ms.util.MAPE).to.eql(ms.util.meanAbsolutePercentageError);\r\n        const MAPE = ms.util.meanAbsolutePercentageError(actuals, estimates);\r\n        expect(MAPE.toFixed(2)).to.eql('0.09');\r\n      });\r\n    });\r\n  });\r\n  describe('max', () => {\r\n    it('should return max value', () => {\r\n      expect(ms.util).to.be.an('object');\r\n      expect(ms.util.max(testArray)).to.equal(50);   \r\n    });\r\n  });\r\n  describe('min', () => {\r\n    it('should return min value', () => {\r\n      expect(ms.util.min(testArray)).to.equal(10);   \r\n    });\r\n  });\r\n  describe('mean', () => {\r\n    it('should return mean value', () => {\r\n      expect(ms.util.mean(testArray)).to.equal(ms.util.sum(testArray) / testArray.length);   \r\n    });\r\n  });\r\n  describe('Standard Scaler Transforms', () => { \r\n    const standardScaledTestArray = ms.util.StandardScaler(testArray);\r\n    const standardScaledTransformsTestObj = ms.util.StandardScalerTransforms(testArray);\r\n    it('should return an object with a scale function, descale function and values array', () => {\r\n      expect(standardScaledTransformsTestObj).to.be.an('object');\r\n      expect(standardScaledTransformsTestObj).to.have.property('scale');\r\n      expect(standardScaledTransformsTestObj).to.have.property('descale');\r\n      expect(standardScaledTransformsTestObj).to.have.property('values');\r\n      expect(standardScaledTransformsTestObj.scale).to.be.a('function');\r\n      expect(standardScaledTransformsTestObj.descale).to.be.a('function');\r\n      expect(standardScaledTransformsTestObj.values).to.be.an('array');\r\n    });\r\n    it('should have a values array that is equal to the array produced by StandardScaler function', () => {\r\n      expect(standardScaledTransformsTestObj.values).to.eql(standardScaledTestArray);\r\n    });\r\n    it('should have a values array that is equal to the array produced by StandardScaler function', () => {\r\n      expect(standardScaledTransformsTestObj.values).to.eql(standardScaledTestArray);\r\n    });\r\n    it('should properly scale single values', () => {\r\n      expect(standardScaledTransformsTestObj.scale(testArray[0])).to.equal(standardScaledTestArray[0]);\r\n      expect(standardScaledTransformsTestObj.scale(testArray[1])).to.equal(standardScaledTestArray[1]);\r\n    });\r\n    it('should properly descale single values', () => {\r\n      expect(standardScaledTransformsTestObj.descale(standardScaledTestArray[0])).to.equal(testArray[0]);\r\n      expect(standardScaledTransformsTestObj.descale(standardScaledTestArray[1])).to.equal(testArray[1]);\r\n    });\r\n  });\r\n  describe('MinMax Scaler Transforms', () => { \r\n    const minMaxScaledTestArray = ms.util.MinMaxScaler(testArray);\r\n    const minMaxScaledTransformsTestObj = ms.util.MinMaxScalerTransforms(testArray);\r\n    it('should return an object with a scale function, descale function and values array', () => {\r\n      expect(minMaxScaledTransformsTestObj).to.be.an('object');\r\n      expect(minMaxScaledTransformsTestObj).to.have.property('scale');\r\n      expect(minMaxScaledTransformsTestObj).to.have.property('descale');\r\n      expect(minMaxScaledTransformsTestObj).to.have.property('values');\r\n      expect(minMaxScaledTransformsTestObj.scale).to.be.a('function');\r\n      expect(minMaxScaledTransformsTestObj.descale).to.be.a('function');\r\n      expect(minMaxScaledTransformsTestObj.values).to.be.an('array');\r\n      expect(minMaxScaledTransformsTestObj.values).to.eql(minMaxScaledTestArray);\r\n    });\r\n    it('should have a values array that is equal to the array produced by MinMaxScaler function', () => {\r\n      expect(minMaxScaledTransformsTestObj.values).to.eql(minMaxScaledTestArray);\r\n    });\r\n    it('should properly scale single values', () => {\r\n      expect(minMaxScaledTransformsTestObj.scale(testArray[0])).to.equal(minMaxScaledTestArray[0]);\r\n      expect(minMaxScaledTransformsTestObj.scale(testArray[1])).to.equal(minMaxScaledTestArray[1]);\r\n    });\r\n    it('should properly descale single values', () => {\r\n      expect(minMaxScaledTransformsTestObj.descale(minMaxScaledTestArray[0])).to.equal(testArray[0]);\r\n      expect(minMaxScaledTransformsTestObj.descale(minMaxScaledTestArray[1])).to.equal(testArray[1]);\r\n    });\r\n  });\r\n  describe('Log Scaler', () => { \r\n    it('should return log scaled values', () => {\r\n      const logScaledTestArray = ms.util.LogScaler(testArray);\r\n      expect(logScaledTestArray[ 0 ]).to.equal(Math.log(testArray[ 0 ]));\r\n      expect(logScaledTestArray[ 3 ]).to.equal(Math.log(testArray[ 3 ]));\r\n    });\r\n  });\r\n  describe('Exponent Scaler', () => {\r\n    it('should return exponent scaled values', () => {\r\n      const expScaledTestArray = ms.util.ExpScaler(testArray);\r\n      expect(expScaledTestArray[ 0 ]).to.equal(Math.exp(testArray[ 0 ]));\r\n      expect(expScaledTestArray[ 3 ]).to.equal(Math.exp(testArray[ 3 ]));\r\n    });\r\n  });\r\n  describe('Standard Error of the Estimate', () => {\r\n    const actuals = [2, 4, 5, 4, 5, ];\r\n    const estimates = [2.8, 3.4, 4, 4.6, 5.2, ];\r\n    it('should return the Standard Error of the Estimate', () => {\r\n      const SE = ms.util.standardError(actuals, estimates);\r\n      expect(SE.toFixed(2)).to.eql(0.89.toString());\r\n    });\r\n    it('should return an error if array lengths are not the same', () => {\r\n      try {\r\n        ms.util.standardError(actuals, [2, ]);\r\n      } catch (e) {\r\n        expect(e).to.be.an('error');\r\n      }\r\n    });\r\n  });\r\n  describe('getSafePropertyName', () => {\r\n    it('should sanitize property names', () => {\r\n      const names = [\r\n        'sa les',\r\n        'sa.les',\r\n        'sa.les!!!',\r\n        'Sa.les!!!',\r\n        'Sa.leS',\r\n        'Sa---leS',\r\n        'Sa---l#eS',\r\n      ];\r\n      const sanitizedNames = names.map(ms.util.getSafePropertyName);\r\n      const ranSanitized = ['sa les',\r\n        'sa_les',\r\n        'sa_les___',\r\n        'Sa_les___',\r\n        'Sa_leS',\r\n        'Sa___leS',\r\n        'Sa___l_eS',\r\n      ];\r\n      expect(sanitizedNames).to.eql(ranSanitized);\r\n      // console.log({ sanitizedNames });\r\n    });\r\n  });\r\n  describe('Coefficient of correlation', () => {\r\n    const actuals = [39, 42, 67, 76,];\r\n    const estimates = [44, 40, 60, 84,];\r\n    it('should return the Coefficient of correlation', () => {\r\n      const R = ms.util.coefficientOfCorrelation(actuals, estimates);\r\n      expect(R.toFixed(4)).to.eql(0.9408.toString());\r\n\r\n    });\r\n    it('should return an error if array lengths are not the same', () => {\r\n      try {\r\n        ms.util.coefficientOfCorrelation(actuals, [2, ]);\r\n      } catch (e) {\r\n        expect(e).to.be.an('error');\r\n      }\r\n    });\r\n  });\r\n  describe('rSquared', () => {\r\n    const actuals = [39, 42, 67, 76,];\r\n    const estimates = [44, 40, 60, 84,];\r\n    it('should return r^2', () => {\r\n      const R = ms.util.coefficientOfCorrelation(actuals, estimates);\r\n      const rSquared = ms.util.rSquared(actuals, estimates);\r\n      const COD = ms.util.coefficientOfDetermination(actuals, estimates);\r\n      expect(Math.pow(R, 2)).to.eql(rSquared);\r\n      expect(rSquared.toFixed(1)).to.eql(COD.toFixed(1));\r\n    });\r\n  });\r\n  describe('Coefficient of determination', () => {\r\n    const actuals = [2, 4, 5, 4, 5, ];\r\n    const estimates = [2.8, 3.4, 4, 4.6, 5.2, ];\r\n    it('should return the Coefficient of determination', () => {\r\n      const r2 = ms.util.coefficientOfDetermination(actuals, estimates);\r\n      expect(r2.toFixed(1)).to.eql(0.6.toString());\r\n    });\r\n    it('should return an error if array lengths are not the same', () => {\r\n      try {\r\n        ms.util.coefficientOfDetermination(actuals, [2, ]);\r\n      } catch (e) {\r\n        expect(e).to.be.an('error');\r\n      }\r\n    });\r\n  });\r\n  describe('adjusted coefficient of determination', () => {\r\n    it('should return the adjusted Coefficient of determination', () => {\r\n      const adjr2 = ms.util.adjustedCoefficentOfDetermination({\r\n        rSquared: 0.944346527,\r\n        sampleSize: 8,\r\n        independentVariables: 2,\r\n      }); \r\n      expect(adjr2.toFixed(3)).to.eql(0.922.toString());\r\n    });\r\n  });\r\n  describe('pivotVector', () => {\r\n    it('should pivot vectors into arrays', () => {\r\n      const arrays = ms.util.pivotVector(vectors); // => [ [1,2,3,3], [2,2,3,3], [3,3,4,3] ];\r\n      expect(arrays[ 0 ]).to.be.lengthOf(4);\r\n      expect(arrays[ 0 ]).to.eql([1, 1, 3, 3,]);\r\n      expect(arrays[ 1 ]).to.be.lengthOf(4);\r\n      expect(arrays[ 1 ]).to.eql([2, 2, 3, 3,]);\r\n      expect(arrays[ 2 ]).to.be.lengthOf(4);\r\n      expect(arrays[ 2 ]).to.eql([3, 3, 4, 3,]);\r\n    });\r\n  });\r\n  describe('pivotArrays', () => {\r\n    it('should pivot arrays into vectors', () => {\r\n      const translatedVectors = ms.util.pivotArrays(arrays);\r\n      expect(translatedVectors).to.eql(vectors);\r\n    });\r\n  });\r\n  describe('Z Scores / Standard Scores', () => {\r\n    it('should calculate standard scores', () => {\r\n      const observations = [\r\n        7, 8, 8, 7.5, 9,\r\n      ];\r\n      const zscores = ms.util.standardScore(observations);\r\n      const roundedZScores = zscores.map(z => parseFloat(z.toFixed(2), 10));\r\n      expect(roundedZScores[ 3 ]).to.eql(-0.54);\r\n      // console.log({ zscores,roundedZScores });\r\n    });\r\n    it('should approximate the p-value from the z score', () => { \r\n      const z1 = 2.87;\r\n      const z2 = 1.96;\r\n      const p1 = parseFloat(ms.util.approximateZPercentile(z1).toFixed(3), 10);\r\n      const p2 = parseFloat(ms.util.approximateZPercentile(z2).toFixed(3), 10);\r\n      const p3 = parseFloat(ms.util.approximateZPercentile(z1, false).toFixed(3), 10);\r\n      const p4 = parseFloat(ms.util.approximateZPercentile(z2, false).toFixed(3), 10);\r\n      expect(p1).to.eql(0.002);\r\n      expect(p3).to.eql(0.998);\r\n      expect(p2).to.eql(0.025);\r\n      expect(p4).to.eql(0.975);\r\n      expect(ms.util.approximateZPercentile(-10)).to.eql(0);\r\n      expect(ms.util.approximateZPercentile(10)).to.eql(1);\r\n      // console.log('ms.util.approximateZPercentile(-10)', ms.util.approximateZPercentile(-10));\r\n    });\r\n  });\r\n});",
     "static": true,
     "longname": "/Users/yawjosephetse/Developer/github/repetere/modelscript/test/unit/util_spec.mjs",
     "access": null,
@@ -7082,7 +7145,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 315,
+    "__docId__": 316,
     "kind": "test",
     "name": "describe141",
     "testId": 141,
@@ -7095,7 +7158,7 @@
     "lineNumber": 17
   },
   {
-    "__docId__": 316,
+    "__docId__": 317,
     "kind": "test",
     "name": "describe142",
     "testId": 142,
@@ -7108,7 +7171,7 @@
     "lineNumber": 18
   },
   {
-    "__docId__": 317,
+    "__docId__": 318,
     "kind": "test",
     "name": "describe143",
     "testId": 143,
@@ -7121,7 +7184,7 @@
     "lineNumber": 23
   },
   {
-    "__docId__": 318,
+    "__docId__": 319,
     "kind": "test",
     "name": "it144",
     "testId": 144,
@@ -7134,449 +7197,449 @@
     "lineNumber": 24
   },
   {
-    "__docId__": 319,
-    "kind": "test",
-    "name": "describe145",
-    "testId": 145,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe142",
-    "testDepth": 2,
-    "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe142.describe145",
-    "access": null,
-    "description": "meanForecastError",
-    "lineNumber": 29
-  },
-  {
     "__docId__": 320,
     "kind": "test",
-    "name": "it146",
-    "testId": 146,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe142.describe145",
+    "name": "it145",
+    "testId": 145,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe142.describe143",
     "testDepth": 3,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe142.describe145.it146",
+    "longname": "test/unit/util_spec.mjs~describe141.describe142.describe143.it145",
     "access": null,
-    "description": "should return bias of forecast accuracy",
-    "lineNumber": 30
+    "description": "should throw an error if array lengths are not the same",
+    "lineNumber": 28
   },
   {
     "__docId__": 321,
     "kind": "test",
-    "name": "describe147",
-    "testId": 147,
+    "name": "describe146",
+    "testId": 146,
     "memberof": "test/unit/util_spec.mjs~describe141.describe142",
     "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe142.describe147",
+    "longname": "test/unit/util_spec.mjs~describe141.describe142.describe146",
     "access": null,
-    "description": "meanAbsoluteDeviation",
-    "lineNumber": 36
+    "description": "meanForecastError",
+    "lineNumber": 32
   },
   {
     "__docId__": 322,
     "kind": "test",
-    "name": "it148",
-    "testId": 148,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe142.describe147",
+    "name": "it147",
+    "testId": 147,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe142.describe146",
     "testDepth": 3,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe142.describe147.it148",
+    "longname": "test/unit/util_spec.mjs~describe141.describe142.describe146.it147",
     "access": null,
-    "description": "should return absolute size of the errors",
-    "lineNumber": 37
+    "description": "should return bias of forecast accuracy",
+    "lineNumber": 33
   },
   {
     "__docId__": 323,
     "kind": "test",
-    "name": "describe149",
-    "testId": 149,
+    "name": "describe148",
+    "testId": 148,
     "memberof": "test/unit/util_spec.mjs~describe141.describe142",
     "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe142.describe149",
+    "longname": "test/unit/util_spec.mjs~describe141.describe142.describe148",
     "access": null,
-    "description": "trackingSignal",
-    "lineNumber": 43
+    "description": "meanAbsoluteDeviation",
+    "lineNumber": 39
   },
   {
     "__docId__": 324,
     "kind": "test",
-    "name": "it150",
-    "testId": 150,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe142.describe149",
+    "name": "it149",
+    "testId": 149,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe142.describe148",
     "testDepth": 3,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe142.describe149.it150",
+    "longname": "test/unit/util_spec.mjs~describe141.describe142.describe148.it149",
     "access": null,
-    "description": "should return tracking Signal",
-    "lineNumber": 44
+    "description": "should return absolute size of the errors",
+    "lineNumber": 40
   },
   {
     "__docId__": 325,
     "kind": "test",
-    "name": "describe151",
-    "testId": 151,
+    "name": "describe150",
+    "testId": 150,
     "memberof": "test/unit/util_spec.mjs~describe141.describe142",
     "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe142.describe151",
+    "longname": "test/unit/util_spec.mjs~describe141.describe142.describe150",
     "access": null,
-    "description": "meanSquaredError",
-    "lineNumber": 51
+    "description": "trackingSignal",
+    "lineNumber": 46
   },
   {
     "__docId__": 326,
     "kind": "test",
-    "name": "it152",
-    "testId": 152,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe142.describe151",
+    "name": "it151",
+    "testId": 151,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe142.describe150",
     "testDepth": 3,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe142.describe151.it152",
+    "longname": "test/unit/util_spec.mjs~describe141.describe142.describe150.it151",
     "access": null,
-    "description": "should return MSE",
-    "lineNumber": 52
+    "description": "should return tracking Signal",
+    "lineNumber": 47
   },
   {
     "__docId__": 327,
     "kind": "test",
-    "name": "describe153",
-    "testId": 153,
+    "name": "describe152",
+    "testId": 152,
     "memberof": "test/unit/util_spec.mjs~describe141.describe142",
     "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe142.describe153",
+    "longname": "test/unit/util_spec.mjs~describe141.describe142.describe152",
     "access": null,
-    "description": "meanAbsolutePercentageError",
-    "lineNumber": 58
+    "description": "meanSquaredError",
+    "lineNumber": 54
   },
   {
     "__docId__": 328,
     "kind": "test",
-    "name": "it154",
-    "testId": 154,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe142.describe153",
+    "name": "it153",
+    "testId": 153,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe142.describe152",
     "testDepth": 3,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe142.describe153.it154",
+    "longname": "test/unit/util_spec.mjs~describe141.describe142.describe152.it153",
     "access": null,
-    "description": "should return MAPE",
-    "lineNumber": 59
+    "description": "should return MSE",
+    "lineNumber": 55
   },
   {
     "__docId__": 329,
     "kind": "test",
-    "name": "describe155",
-    "testId": 155,
-    "memberof": "test/unit/util_spec.mjs~describe141",
-    "testDepth": 1,
+    "name": "describe154",
+    "testId": 154,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe142",
+    "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe155",
+    "longname": "test/unit/util_spec.mjs~describe141.describe142.describe154",
     "access": null,
-    "description": "max",
-    "lineNumber": 67
+    "description": "MADMeanRatio",
+    "lineNumber": 61
   },
   {
     "__docId__": 330,
     "kind": "test",
-    "name": "it156",
-    "testId": 156,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe155",
-    "testDepth": 2,
+    "name": "it155",
+    "testId": 155,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe142.describe154",
+    "testDepth": 3,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe155.it156",
+    "longname": "test/unit/util_spec.mjs~describe141.describe142.describe154.it155",
     "access": null,
-    "description": "should return max value",
-    "lineNumber": 68
+    "description": "should return MMR",
+    "lineNumber": 62
   },
   {
     "__docId__": 331,
     "kind": "test",
-    "name": "describe157",
-    "testId": 157,
-    "memberof": "test/unit/util_spec.mjs~describe141",
-    "testDepth": 1,
+    "name": "describe156",
+    "testId": 156,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe142",
+    "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe157",
+    "longname": "test/unit/util_spec.mjs~describe141.describe142.describe156",
     "access": null,
-    "description": "min",
-    "lineNumber": 73
+    "description": "meanAbsolutePercentageError",
+    "lineNumber": 69
   },
   {
     "__docId__": 332,
     "kind": "test",
-    "name": "it158",
-    "testId": 158,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe157",
-    "testDepth": 2,
+    "name": "it157",
+    "testId": 157,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe142.describe156",
+    "testDepth": 3,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe157.it158",
+    "longname": "test/unit/util_spec.mjs~describe141.describe142.describe156.it157",
     "access": null,
-    "description": "should return min value",
-    "lineNumber": 74
+    "description": "should return MAPE",
+    "lineNumber": 70
   },
   {
     "__docId__": 333,
     "kind": "test",
-    "name": "describe159",
-    "testId": 159,
+    "name": "describe158",
+    "testId": 158,
     "memberof": "test/unit/util_spec.mjs~describe141",
     "testDepth": 1,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe159",
+    "longname": "test/unit/util_spec.mjs~describe141.describe158",
     "access": null,
-    "description": "mean",
+    "description": "max",
     "lineNumber": 78
   },
   {
     "__docId__": 334,
     "kind": "test",
-    "name": "it160",
-    "testId": 160,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe159",
+    "name": "it159",
+    "testId": 159,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe158",
     "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe159.it160",
+    "longname": "test/unit/util_spec.mjs~describe141.describe158.it159",
     "access": null,
-    "description": "should return mean value",
+    "description": "should return max value",
     "lineNumber": 79
   },
   {
     "__docId__": 335,
     "kind": "test",
-    "name": "describe161",
-    "testId": 161,
+    "name": "describe160",
+    "testId": 160,
     "memberof": "test/unit/util_spec.mjs~describe141",
     "testDepth": 1,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe161",
+    "longname": "test/unit/util_spec.mjs~describe141.describe160",
     "access": null,
-    "description": "Standard Scaler Transforms",
-    "lineNumber": 83
+    "description": "min",
+    "lineNumber": 84
   },
   {
     "__docId__": 336,
     "kind": "test",
-    "name": "it162",
-    "testId": 162,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe161",
+    "name": "it161",
+    "testId": 161,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe160",
     "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe161.it162",
+    "longname": "test/unit/util_spec.mjs~describe141.describe160.it161",
     "access": null,
-    "description": "should return an object with a scale function, descale function and values array",
-    "lineNumber": 86
+    "description": "should return min value",
+    "lineNumber": 85
   },
   {
     "__docId__": 337,
     "kind": "test",
-    "name": "it163",
-    "testId": 163,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe161",
-    "testDepth": 2,
+    "name": "describe162",
+    "testId": 162,
+    "memberof": "test/unit/util_spec.mjs~describe141",
+    "testDepth": 1,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe161.it163",
+    "longname": "test/unit/util_spec.mjs~describe141.describe162",
     "access": null,
-    "description": "should have a values array that is equal to the array produced by StandardScaler function",
-    "lineNumber": 95
+    "description": "mean",
+    "lineNumber": 89
   },
   {
     "__docId__": 338,
     "kind": "test",
-    "name": "it164",
-    "testId": 164,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe161",
+    "name": "it163",
+    "testId": 163,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe162",
     "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe161.it164",
+    "longname": "test/unit/util_spec.mjs~describe141.describe162.it163",
     "access": null,
-    "description": "should have a values array that is equal to the array produced by StandardScaler function",
-    "lineNumber": 98
+    "description": "should return mean value",
+    "lineNumber": 90
   },
   {
     "__docId__": 339,
     "kind": "test",
-    "name": "it165",
-    "testId": 165,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe161",
-    "testDepth": 2,
+    "name": "describe164",
+    "testId": 164,
+    "memberof": "test/unit/util_spec.mjs~describe141",
+    "testDepth": 1,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe161.it165",
+    "longname": "test/unit/util_spec.mjs~describe141.describe164",
     "access": null,
-    "description": "should properly scale single values",
-    "lineNumber": 101
+    "description": "Standard Scaler Transforms",
+    "lineNumber": 94
   },
   {
     "__docId__": 340,
     "kind": "test",
-    "name": "it166",
-    "testId": 166,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe161",
+    "name": "it165",
+    "testId": 165,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe164",
     "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe161.it166",
+    "longname": "test/unit/util_spec.mjs~describe141.describe164.it165",
     "access": null,
-    "description": "should properly descale single values",
-    "lineNumber": 105
+    "description": "should return an object with a scale function, descale function and values array",
+    "lineNumber": 97
   },
   {
     "__docId__": 341,
     "kind": "test",
-    "name": "describe167",
-    "testId": 167,
-    "memberof": "test/unit/util_spec.mjs~describe141",
-    "testDepth": 1,
+    "name": "it166",
+    "testId": 166,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe164",
+    "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe167",
+    "longname": "test/unit/util_spec.mjs~describe141.describe164.it166",
     "access": null,
-    "description": "MinMax Scaler Transforms",
-    "lineNumber": 110
+    "description": "should have a values array that is equal to the array produced by StandardScaler function",
+    "lineNumber": 106
   },
   {
     "__docId__": 342,
     "kind": "test",
-    "name": "it168",
-    "testId": 168,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe167",
+    "name": "it167",
+    "testId": 167,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe164",
     "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe167.it168",
+    "longname": "test/unit/util_spec.mjs~describe141.describe164.it167",
     "access": null,
-    "description": "should return an object with a scale function, descale function and values array",
-    "lineNumber": 113
+    "description": "should have a values array that is equal to the array produced by StandardScaler function",
+    "lineNumber": 109
   },
   {
     "__docId__": 343,
     "kind": "test",
-    "name": "it169",
-    "testId": 169,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe167",
+    "name": "it168",
+    "testId": 168,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe164",
     "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe167.it169",
+    "longname": "test/unit/util_spec.mjs~describe141.describe164.it168",
     "access": null,
-    "description": "should have a values array that is equal to the array produced by MinMaxScaler function",
-    "lineNumber": 123
+    "description": "should properly scale single values",
+    "lineNumber": 112
   },
   {
     "__docId__": 344,
     "kind": "test",
-    "name": "it170",
-    "testId": 170,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe167",
+    "name": "it169",
+    "testId": 169,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe164",
     "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe167.it170",
+    "longname": "test/unit/util_spec.mjs~describe141.describe164.it169",
     "access": null,
-    "description": "should properly scale single values",
-    "lineNumber": 126
+    "description": "should properly descale single values",
+    "lineNumber": 116
   },
   {
     "__docId__": 345,
     "kind": "test",
-    "name": "it171",
-    "testId": 171,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe167",
-    "testDepth": 2,
+    "name": "describe170",
+    "testId": 170,
+    "memberof": "test/unit/util_spec.mjs~describe141",
+    "testDepth": 1,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe167.it171",
+    "longname": "test/unit/util_spec.mjs~describe141.describe170",
     "access": null,
-    "description": "should properly descale single values",
-    "lineNumber": 130
+    "description": "MinMax Scaler Transforms",
+    "lineNumber": 121
   },
   {
     "__docId__": 346,
     "kind": "test",
-    "name": "describe172",
-    "testId": 172,
-    "memberof": "test/unit/util_spec.mjs~describe141",
-    "testDepth": 1,
+    "name": "it171",
+    "testId": 171,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe170",
+    "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe172",
+    "longname": "test/unit/util_spec.mjs~describe141.describe170.it171",
     "access": null,
-    "description": "Log Scaler",
-    "lineNumber": 135
+    "description": "should return an object with a scale function, descale function and values array",
+    "lineNumber": 124
   },
   {
     "__docId__": 347,
     "kind": "test",
-    "name": "it173",
-    "testId": 173,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe172",
+    "name": "it172",
+    "testId": 172,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe170",
     "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe172.it173",
+    "longname": "test/unit/util_spec.mjs~describe141.describe170.it172",
     "access": null,
-    "description": "should return log scaled values",
-    "lineNumber": 136
+    "description": "should have a values array that is equal to the array produced by MinMaxScaler function",
+    "lineNumber": 134
   },
   {
     "__docId__": 348,
     "kind": "test",
-    "name": "describe174",
-    "testId": 174,
-    "memberof": "test/unit/util_spec.mjs~describe141",
-    "testDepth": 1,
+    "name": "it173",
+    "testId": 173,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe170",
+    "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe174",
+    "longname": "test/unit/util_spec.mjs~describe141.describe170.it173",
     "access": null,
-    "description": "Exponent Scaler",
-    "lineNumber": 142
+    "description": "should properly scale single values",
+    "lineNumber": 137
   },
   {
     "__docId__": 349,
     "kind": "test",
-    "name": "it175",
-    "testId": 175,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe174",
+    "name": "it174",
+    "testId": 174,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe170",
     "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe174.it175",
+    "longname": "test/unit/util_spec.mjs~describe141.describe170.it174",
     "access": null,
-    "description": "should return exponent scaled values",
-    "lineNumber": 143
+    "description": "should properly descale single values",
+    "lineNumber": 141
   },
   {
     "__docId__": 350,
     "kind": "test",
-    "name": "describe176",
-    "testId": 176,
+    "name": "describe175",
+    "testId": 175,
     "memberof": "test/unit/util_spec.mjs~describe141",
     "testDepth": 1,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe176",
+    "longname": "test/unit/util_spec.mjs~describe141.describe175",
     "access": null,
-    "description": "Standard Error of the Estimate",
-    "lineNumber": 149
+    "description": "Log Scaler",
+    "lineNumber": 146
   },
   {
     "__docId__": 351,
     "kind": "test",
-    "name": "it177",
-    "testId": 177,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe176",
+    "name": "it176",
+    "testId": 176,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe175",
     "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe176.it177",
+    "longname": "test/unit/util_spec.mjs~describe141.describe175.it176",
     "access": null,
-    "description": "should return the Standard Error of the Estimate",
-    "lineNumber": 152
+    "description": "should return log scaled values",
+    "lineNumber": 147
   },
   {
     "__docId__": 352,
     "kind": "test",
-    "name": "it178",
-    "testId": 178,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe176",
-    "testDepth": 2,
+    "name": "describe177",
+    "testId": 177,
+    "memberof": "test/unit/util_spec.mjs~describe141",
+    "testDepth": 1,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe176.it178",
+    "longname": "test/unit/util_spec.mjs~describe141.describe177",
     "access": null,
-    "description": "should return an error if array lengths are not the same",
-    "lineNumber": 156
+    "description": "Exponent Scaler",
+    "lineNumber": 153
   },
   {
     "__docId__": 353,
+    "kind": "test",
+    "name": "it178",
+    "testId": 178,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe177",
+    "testDepth": 2,
+    "static": true,
+    "longname": "test/unit/util_spec.mjs~describe141.describe177.it178",
+    "access": null,
+    "description": "should return exponent scaled values",
+    "lineNumber": 154
+  },
+  {
+    "__docId__": 354,
     "kind": "test",
     "name": "describe179",
     "testId": 179,
@@ -7585,11 +7648,11 @@
     "static": true,
     "longname": "test/unit/util_spec.mjs~describe141.describe179",
     "access": null,
-    "description": "getSafePropertyName",
-    "lineNumber": 164
+    "description": "Standard Error of the Estimate",
+    "lineNumber": 160
   },
   {
-    "__docId__": 354,
+    "__docId__": 355,
     "kind": "test",
     "name": "it180",
     "testId": 180,
@@ -7598,50 +7661,50 @@
     "static": true,
     "longname": "test/unit/util_spec.mjs~describe141.describe179.it180",
     "access": null,
-    "description": "should sanitize property names",
-    "lineNumber": 165
-  },
-  {
-    "__docId__": 355,
-    "kind": "test",
-    "name": "describe181",
-    "testId": 181,
-    "memberof": "test/unit/util_spec.mjs~describe141",
-    "testDepth": 1,
-    "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe181",
-    "access": null,
-    "description": "Coefficient of correlation",
-    "lineNumber": 188
+    "description": "should return the Standard Error of the Estimate",
+    "lineNumber": 163
   },
   {
     "__docId__": 356,
     "kind": "test",
-    "name": "it182",
-    "testId": 182,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe181",
+    "name": "it181",
+    "testId": 181,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe179",
     "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe181.it182",
+    "longname": "test/unit/util_spec.mjs~describe141.describe179.it181",
     "access": null,
-    "description": "should return the Coefficient of correlation",
-    "lineNumber": 191
+    "description": "should return an error if array lengths are not the same",
+    "lineNumber": 167
   },
   {
     "__docId__": 357,
     "kind": "test",
-    "name": "it183",
-    "testId": 183,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe181",
-    "testDepth": 2,
+    "name": "describe182",
+    "testId": 182,
+    "memberof": "test/unit/util_spec.mjs~describe141",
+    "testDepth": 1,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe181.it183",
+    "longname": "test/unit/util_spec.mjs~describe141.describe182",
     "access": null,
-    "description": "should return an error if array lengths are not the same",
-    "lineNumber": 196
+    "description": "getSafePropertyName",
+    "lineNumber": 175
   },
   {
     "__docId__": 358,
+    "kind": "test",
+    "name": "it183",
+    "testId": 183,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe182",
+    "testDepth": 2,
+    "static": true,
+    "longname": "test/unit/util_spec.mjs~describe141.describe182.it183",
+    "access": null,
+    "description": "should sanitize property names",
+    "lineNumber": 176
+  },
+  {
+    "__docId__": 359,
     "kind": "test",
     "name": "describe184",
     "testId": 184,
@@ -7650,11 +7713,11 @@
     "static": true,
     "longname": "test/unit/util_spec.mjs~describe141.describe184",
     "access": null,
-    "description": "rSquared",
-    "lineNumber": 204
+    "description": "Coefficient of correlation",
+    "lineNumber": 199
   },
   {
-    "__docId__": 359,
+    "__docId__": 360,
     "kind": "test",
     "name": "it185",
     "testId": 185,
@@ -7663,50 +7726,50 @@
     "static": true,
     "longname": "test/unit/util_spec.mjs~describe141.describe184.it185",
     "access": null,
-    "description": "should return r^2",
-    "lineNumber": 207
-  },
-  {
-    "__docId__": 360,
-    "kind": "test",
-    "name": "describe186",
-    "testId": 186,
-    "memberof": "test/unit/util_spec.mjs~describe141",
-    "testDepth": 1,
-    "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe186",
-    "access": null,
-    "description": "Coefficient of determination",
-    "lineNumber": 215
+    "description": "should return the Coefficient of correlation",
+    "lineNumber": 202
   },
   {
     "__docId__": 361,
     "kind": "test",
-    "name": "it187",
-    "testId": 187,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe186",
+    "name": "it186",
+    "testId": 186,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe184",
     "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe186.it187",
+    "longname": "test/unit/util_spec.mjs~describe141.describe184.it186",
     "access": null,
-    "description": "should return the Coefficient of determination",
-    "lineNumber": 218
+    "description": "should return an error if array lengths are not the same",
+    "lineNumber": 207
   },
   {
     "__docId__": 362,
     "kind": "test",
-    "name": "it188",
-    "testId": 188,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe186",
-    "testDepth": 2,
+    "name": "describe187",
+    "testId": 187,
+    "memberof": "test/unit/util_spec.mjs~describe141",
+    "testDepth": 1,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe186.it188",
+    "longname": "test/unit/util_spec.mjs~describe141.describe187",
     "access": null,
-    "description": "should return an error if array lengths are not the same",
-    "lineNumber": 222
+    "description": "rSquared",
+    "lineNumber": 215
   },
   {
     "__docId__": 363,
+    "kind": "test",
+    "name": "it188",
+    "testId": 188,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe187",
+    "testDepth": 2,
+    "static": true,
+    "longname": "test/unit/util_spec.mjs~describe141.describe187.it188",
+    "access": null,
+    "description": "should return r^2",
+    "lineNumber": 218
+  },
+  {
+    "__docId__": 364,
     "kind": "test",
     "name": "describe189",
     "testId": 189,
@@ -7715,11 +7778,11 @@
     "static": true,
     "longname": "test/unit/util_spec.mjs~describe141.describe189",
     "access": null,
-    "description": "adjusted coefficient of determination",
-    "lineNumber": 230
+    "description": "Coefficient of determination",
+    "lineNumber": 226
   },
   {
-    "__docId__": 364,
+    "__docId__": 365,
     "kind": "test",
     "name": "it190",
     "testId": 190,
@@ -7728,98 +7791,137 @@
     "static": true,
     "longname": "test/unit/util_spec.mjs~describe141.describe189.it190",
     "access": null,
-    "description": "should return the adjusted Coefficient of determination",
-    "lineNumber": 231
-  },
-  {
-    "__docId__": 365,
-    "kind": "test",
-    "name": "describe191",
-    "testId": 191,
-    "memberof": "test/unit/util_spec.mjs~describe141",
-    "testDepth": 1,
-    "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe191",
-    "access": null,
-    "description": "pivotVector",
-    "lineNumber": 240
+    "description": "should return the Coefficient of determination",
+    "lineNumber": 229
   },
   {
     "__docId__": 366,
     "kind": "test",
-    "name": "it192",
-    "testId": 192,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe191",
+    "name": "it191",
+    "testId": 191,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe189",
     "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe191.it192",
+    "longname": "test/unit/util_spec.mjs~describe141.describe189.it191",
     "access": null,
-    "description": "should pivot vectors into arrays",
-    "lineNumber": 241
+    "description": "should return an error if array lengths are not the same",
+    "lineNumber": 233
   },
   {
     "__docId__": 367,
     "kind": "test",
-    "name": "describe193",
-    "testId": 193,
+    "name": "describe192",
+    "testId": 192,
     "memberof": "test/unit/util_spec.mjs~describe141",
     "testDepth": 1,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe193",
+    "longname": "test/unit/util_spec.mjs~describe141.describe192",
     "access": null,
-    "description": "pivotArrays",
-    "lineNumber": 251
+    "description": "adjusted coefficient of determination",
+    "lineNumber": 241
   },
   {
     "__docId__": 368,
     "kind": "test",
-    "name": "it194",
-    "testId": 194,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe193",
+    "name": "it193",
+    "testId": 193,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe192",
     "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe193.it194",
+    "longname": "test/unit/util_spec.mjs~describe141.describe192.it193",
     "access": null,
-    "description": "should pivot arrays into vectors",
-    "lineNumber": 252
+    "description": "should return the adjusted Coefficient of determination",
+    "lineNumber": 242
   },
   {
     "__docId__": 369,
     "kind": "test",
-    "name": "describe195",
-    "testId": 195,
+    "name": "describe194",
+    "testId": 194,
     "memberof": "test/unit/util_spec.mjs~describe141",
     "testDepth": 1,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe195",
+    "longname": "test/unit/util_spec.mjs~describe141.describe194",
     "access": null,
-    "description": "Z Scores / Standard Scores",
-    "lineNumber": 257
+    "description": "pivotVector",
+    "lineNumber": 251
   },
   {
     "__docId__": 370,
     "kind": "test",
-    "name": "it196",
-    "testId": 196,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe195",
+    "name": "it195",
+    "testId": 195,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe194",
     "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe195.it196",
+    "longname": "test/unit/util_spec.mjs~describe141.describe194.it195",
     "access": null,
-    "description": "should calculate standard scores",
-    "lineNumber": 258
+    "description": "should pivot vectors into arrays",
+    "lineNumber": 252
   },
   {
     "__docId__": 371,
     "kind": "test",
+    "name": "describe196",
+    "testId": 196,
+    "memberof": "test/unit/util_spec.mjs~describe141",
+    "testDepth": 1,
+    "static": true,
+    "longname": "test/unit/util_spec.mjs~describe141.describe196",
+    "access": null,
+    "description": "pivotArrays",
+    "lineNumber": 262
+  },
+  {
+    "__docId__": 372,
+    "kind": "test",
     "name": "it197",
     "testId": 197,
-    "memberof": "test/unit/util_spec.mjs~describe141.describe195",
+    "memberof": "test/unit/util_spec.mjs~describe141.describe196",
     "testDepth": 2,
     "static": true,
-    "longname": "test/unit/util_spec.mjs~describe141.describe195.it197",
+    "longname": "test/unit/util_spec.mjs~describe141.describe196.it197",
+    "access": null,
+    "description": "should pivot arrays into vectors",
+    "lineNumber": 263
+  },
+  {
+    "__docId__": 373,
+    "kind": "test",
+    "name": "describe198",
+    "testId": 198,
+    "memberof": "test/unit/util_spec.mjs~describe141",
+    "testDepth": 1,
+    "static": true,
+    "longname": "test/unit/util_spec.mjs~describe141.describe198",
+    "access": null,
+    "description": "Z Scores / Standard Scores",
+    "lineNumber": 268
+  },
+  {
+    "__docId__": 374,
+    "kind": "test",
+    "name": "it199",
+    "testId": 199,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe198",
+    "testDepth": 2,
+    "static": true,
+    "longname": "test/unit/util_spec.mjs~describe141.describe198.it199",
+    "access": null,
+    "description": "should calculate standard scores",
+    "lineNumber": 269
+  },
+  {
+    "__docId__": 375,
+    "kind": "test",
+    "name": "it200",
+    "testId": 200,
+    "memberof": "test/unit/util_spec.mjs~describe141.describe198",
+    "testDepth": 2,
+    "static": true,
+    "longname": "test/unit/util_spec.mjs~describe141.describe198.it200",
     "access": null,
     "description": "should approximate the p-value from the z score",
-    "lineNumber": 267
+    "lineNumber": 278
   }
 ]

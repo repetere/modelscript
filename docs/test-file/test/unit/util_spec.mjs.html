@@ -94,6 +94,9 @@ describe(&apos;util&apos;, function () {
         expect(ms.util.forecastErrors).to.be.a(&apos;function&apos;);
         expect(ms.util.forecastErrors(actuals, estimates)).to.eql([4, -5, 2, -3,]);
       });
+      it(&apos;should throw an error if array lengths are not the same&apos;, () =&gt; {
+        expect(ms.util.forecastErrors.bind({},[1,2,3],[1,2,3,4])).to.throw(/must equal/);
+      });
     });
     describe(&apos;meanForecastError&apos;, () =&gt; {
       it(&apos;should return bias of forecast accuracy&apos;, () =&gt; {
@@ -122,6 +125,14 @@ describe(&apos;util&apos;, function () {
         expect(ms.util.meanSquaredError).to.be.a(&apos;function&apos;);
         expect(ms.util.MSE).to.eql(ms.util.meanSquaredError);
         expect(ms.util.meanSquaredError(actuals, estimates)).to.eql(13.5);
+      });
+    });
+    describe(&apos;MADMeanRatio&apos;, () =&gt; {
+      it(&apos;should return MMR&apos;, () =&gt; {
+        expect(ms.util.MADMeanRatio).to.be.a(&apos;function&apos;);
+        expect(ms.util.MMR).to.eql(ms.util.MADMeanRatio);
+        const MMR = ms.util.MADMeanRatio(actuals, estimates);
+        expect(MMR.toFixed(2)).to.eql(&apos;0.08&apos;);
       });
     });
     describe(&apos;meanAbsolutePercentageError&apos;, () =&gt; {
