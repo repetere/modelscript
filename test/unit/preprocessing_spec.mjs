@@ -120,10 +120,6 @@ describe('preprocessing', function() {
         expect(convertedMaptoObject.hello).to.be.an('array').and.to.include.members(testArray);
       });
       it('should convert nested map objects', () => {
-        const correctNest = {
-          nested_string: 'this is nested',
-          nested_array: [1, 2, 3, 4, ],
-        };
         const correctFullyNested = {
           foo: 'bar',
           hello: ['some', 'values', 'in', 'array',],
@@ -134,6 +130,10 @@ describe('preprocessing', function() {
         };
         const convertedMaptoObject = mapToObject(nestedMap);
         expect(JSON.stringify(convertedMaptoObject)).to.eql(JSON.stringify(correctFullyNested));
+      });
+      it('should handle empty maps', () => {
+        const emptyConverted = mapToObject(new Map());
+        expect(emptyConverted).to.deep.eql({});
       });
     });
     describe('exportFeatures', () => {
@@ -193,14 +193,12 @@ describe('preprocessing', function() {
         Purchased: ['label', { binary: true, },],
         Rating: ['label',],
       });
-      
-      console.log('FeatureDataSet.encoders', FeatureDataSet.encoders);
-      // console.log('FeatureDataSet.labels', FeatureDataSet.labels);
-      // console.log('FeatureDataSet.scalers', FeatureDataSet.scalers);
       const features = FeatureDataSet.exportFeatures();
-      console.log('features.encoders',features.encoders);
       it('should import exported Features', () => {
-
+        const newFeatureDataSet = new DataSet();
+        newFeatureDataSet.importFeatures(features);
+        const transformedObject = newFeatureDataSet.transformObject(fullDataDouble[ 0 ]);
+        expect(transformedObject).to.deep.eql(FeatureDataSet.data[ 0 ]);
       });
     });
     describe('filterColumn', () => {

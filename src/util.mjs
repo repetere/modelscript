@@ -253,11 +253,19 @@ const StandardScaler = (z) => scale(z, sd(z));
  * @param {Number[]} values - array of numbers
  * @returns {Object} - {scale[ Function ], descale[ Function ]}
 */
-function StandardScalerTransforms(vector = [], nan_value = -1, return_nan=false) {
-  const average = avg(vector);
-  const standard_dev = sd(vector);
-  const maximum = max(vector);
-  const minimum = min(vector);
+function StandardScalerTransforms(vector = [], nan_value = -1, return_nan = false, inputComponents = {}) {
+  const average = typeof inputComponents.average !=='undefined' 
+    ? inputComponents.average
+    : avg(vector);
+  const standard_dev = typeof inputComponents.standard_dev !=='undefined' 
+    ? inputComponents.standard_dev
+    : sd(vector);
+  const maximum = typeof inputComponents.maximum !=='undefined' 
+    ? inputComponents.maximum
+    : max(vector);
+  const minimum = typeof inputComponents.minimum !=='undefined' 
+    ? inputComponents.minimum
+    : min(vector);
   const scale = (z) => {
     const scaledValue = (z - average) / standard_dev;
     if (isNaN(scaledValue) && return_nan) return scaledValue;
@@ -301,11 +309,19 @@ const MinMaxScaler= (z) => scale(z, (max(z) - min(z)));
  * @param {Number[]} values - array of numbers
  * @returns {Object} - {scale[ Function ], descale[ Function ]}
 */
-function MinMaxScalerTransforms(vector = [], nan_value = -1, return_nan=false) {
-  const average = avg(vector);
-  const standard_dev = sd(vector);
-  const maximum = max(vector);
-  const minimum = min(vector);
+function MinMaxScalerTransforms(vector = [], nan_value = -1, return_nan=false, inputComponents = {}) {
+  const average = typeof inputComponents.average !=='undefined' 
+    ? inputComponents.average
+    : avg(vector);
+  const standard_dev = typeof inputComponents.standard_dev !=='undefined' 
+    ? inputComponents.standard_dev
+    : sd(vector);
+  const maximum = typeof inputComponents.maximum !=='undefined' 
+    ? inputComponents.maximum
+    : max(vector);
+  const minimum = typeof inputComponents.minimum !=='undefined' 
+    ? inputComponents.minimum
+    : min(vector);
   const scale = (z) => {
     const scaledValue = (z - average) / (maximum - minimum);
     if (isNaN(scaledValue) && return_nan) return scaledValue;

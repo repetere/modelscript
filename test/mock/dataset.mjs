@@ -65,9 +65,9 @@ export const fullDataDouble = [{
   'Age': '44',
   'Scale Age': 44,
   'Scale Age Half': 22,
-  'Salary': '72000',
+  'Salary': 72000,
   'Purchased': 'N',
-  'Rating': '4 Stars',
+  'Rating': '6 Stars',
 },
 {
   'Country': 'Mexico',

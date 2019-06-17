@@ -426,7 +426,7 @@ DataSet.fitColumns({col1:['label',{binary:true}]});
 Dataset.data // => [{col1:true,col2:5},{col1:false,col2:6}]
 Dataset.exportFeatures() //=> { labels: { col1: { "0": false, "1": true, "N": 0, "Yes": 1, "No": 0, "f": 0, "false": 1, } } }
   * @param {Function} [filter=()=>true] - filter function
-  * @returns {Object} JavaScript Object of transforms encoders and scalers(labels, encoders, scalers) 
+  * @returns {{labels:Map,encoders:Map,scalers:map}} JavaScript Object of transforms encoders and scalers(labels, encoders, scalers) 
   */
   exportFeatures(options = {}) {
     const config = Object.assign({
@@ -437,16 +437,49 @@ Dataset.exportFeatures() //=> { labels: { col1: { "0": false, "1": true, "N": 0,
       scalers: DataSet.mapToObject(this.scalers),
     };
   }
-  importFeature(features = {}) {
-    if (features.encoders) {
-      
-    }
-    if (features.labels) {
-      
-    }
-    if (features.scalers) {
-      
-    }
+  /**
+   * set encoders, labels and scalers 
+   * @example const csvObj = new DataSet([{col1:1,col2:5},{col1:false,col2:6}]);
+DataSet.fitColumns({col1:['label',{binary:true}]}); 
+Dataset.data // => [{col1:true,col2:5},{col1:false,col2:6}]
+Dataset.exportFeatures() //=> { labels: { col1: { "0": false, "1": true, "N": 0, "Yes": 1, "No": 0, "f": 0, "false": 1, } } }
+  * @param {{labels:Map,encoders:Map,scalers:map}} [features={}] - JavaScript Object of transforms encoders and scalers(labels, encoders, scalers) 
+  */
+  importFeatures(features = {}) {
+    Object.keys(features.encoders).forEach(encoderName => { 
+      const encoder = features.encoders[ encoderName ];
+      this.encoders.set(encoderName, encoder);
+    });
+    Object.keys(features.labels).forEach(labelName => {
+      const labelData = features.labels[labelName]
+      const labels = Object.keys(labelData)
+        .map(labelProp => [ labelProp, labelData[ labelProp ] ]);
+      this.labels.set(labelName, new Map(labels));
+    });
+    Object.keys(features.scalers).forEach(scalerName => {
+      let transforms;
+      const scalerData = features.scalers[ scalerName ];
+      const { config, } = scalerData;
+      switch (config.strategy) {
+      case 'standard':
+        transforms = utils.StandardScalerTransforms(...[ undefined, config.nan_value, config.return_nan, scalerData.components, ]);
+        scalerData.scale = transforms.scale;  
+        scalerData.descale = transforms.descale;  
+        break;
+      case 'normalize':
+      case 'minmax':
+        transforms = utils.MinMaxScalerTransforms(...[ undefined, config.nan_value, config.return_nan, scalerData.components, ]);
+        scalerData.scale = transforms.scale;  
+        scalerData.descale = transforms.descale;   
+        break;
+      case 'log':
+      default:
+        scalerData.scale = Math.log;  
+        scalerData.descale = Math.exp;  
+        break;
+      }
+      this.scalers.set(scalerName, scalerData);
+    });
   }
   /**
    * returns filtered rows of data 
@@ -503,7 +536,7 @@ dataset.scalers.get('Age').descale(3.8066624897703196) // => 45
       });
     switch (config.strategy) {
     case 'standard':
-      transforms = utils.StandardScalerTransforms(scaleData);     
+      transforms = utils.StandardScalerTransforms(...[ scaleData, config.nan_value, config.return_nan, ]);
       this.scalers.set(name, {
         name,
         scale: transforms.scale,
@@ -514,7 +547,7 @@ dataset.scalers.get('Age').descale(3.8066624897703196) // => 45
       break;
     case 'normalize':
     case 'minmax':
-      transforms = utils.MinMaxScalerTransforms(scaleData);     
+      transforms = utils.MinMaxScalerTransforms(...[ scaleData, config.nan_value, config.return_nan, ]);     
       this.scalers.set(name, {
         name,
         scale: transforms.scale,
@@ -573,6 +606,7 @@ const encodedPurchasedColumn = dataset.labelEncoder('Purchased');
   * @param {string} name - csv column header, or JSON object property name 
   * @param options
   * @param {boolean} [options.binary=false] - only replace with (0,1) with binary values 
+  * @param {function} options.sortFunction - custom label encoding value sort function
   * @see {@link http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html} 
   * @returns {array}
   */
@@ -581,8 +615,9 @@ const encodedPurchasedColumn = dataset.labelEncoder('Purchased');
       binary: false,
     }, options);
     const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
+    let labelDataUniqueValues = Array.from(new Set(labelData).values()).sort(config.sortFunction);
     const labels = new Map(
-      Array.from(new Set(labelData).values())
+      labelDataUniqueValues
         .reduce((result, val, i) => {
           if (config.binary) {
             if (i === 0) {
@@ -798,7 +833,9 @@ DataSet.transformObject({
         .map(label=>`${this.encoders.get(encodedColumn).prefix}${label}`)
       )
     );
-    const currentColumns = Object.keys(this.data[ 0 ]);
+    const currentColumns = (this.data.length)
+      ? Object.keys(this.data[ 0 ])
+      : Object.keys(data);
     const objectColumns = Object.keys(data).concat(encodedColumns);
     // console.log({ encodedColumns,currentColumns,objectColumns });
     const differentKeys = objectColumns.reduce((diffKeys, val) => {
