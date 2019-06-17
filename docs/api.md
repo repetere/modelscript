@@ -197,6 +197,38 @@ returns a matrix of values by combining column arrays into a matrix
 | vectors | Array | optional: true, default: [] | array of arguments for columnArray to merge columns into a matrix |
 | data | Array | optional: true, default: [] | array of data to convert to matrix |
 
+### `mapToObject(mapObj: Map): Object`
+
+returns a JavaScript Object from a Map (supports nested Map Objects)
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+| mapObj | Map |  | Map to convert into JavaScript Object |
+
+### `getBinaryValue(value: String|Number): Number`
+
+returns 0 or 1 depending on the input value
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+| value | String|Number | optional: true, default: '' | value to convert to a 1 or a 0 |
+
+### `exportFeatures(filter: Function): {labels:Map,encoders:Map,scalers:map}`
+
+returns Object of all encoders and scalers
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+| filter | Function | optional: true | filter function |
+
+### `importFeatures(features: {labels:Map,encoders:Map,scalers:map})`
+
+set encoders, labels and scalers
+
+| Name | Type | Attribute | Description |
+| --- | --- | --- | --- |
+| features | {labels:Map,encoders:Map,scalers:map} | optional: true, default: {} | JavaScript Object of transforms encoders and scalers(labels, encoders, scalers) |
+
 ### `filterColumn(filter: Function): Array`
 
 returns filtered rows of data
@@ -223,7 +255,7 @@ Returns a new array of descaled values
 | name | string |  | name - csv column header, or JSON object property name |
 | options.strategy | string | optional: true, default: "log" | strategy for scaling values |
 
-### `labelEncoder(name: string, options: *, options.binary: boolean): array`
+### `labelEncoder(name: string, options: *, options.binary: boolean, options.sortFunction: function): array`
 
 returns a new array and label encodes a selected column
 
@@ -232,6 +264,7 @@ returns a new array and label encodes a selected column
 | name | string |  | csv column header, or JSON object property name |
 | options | * |  |
 | options.binary | boolean | optional: true, default: false | only replace with (0,1) with binary values |
+| options.sortFunction | function |  | custom label encoding value sort function |
 
 ### `labelDecode(name: string, options: *): array`
 

@@ -212,6 +212,35 @@
           
           
           
+          <span class="code" data-ice="name"><span><a href="class/src/DataSet.mjs~DataSet.html#static-method-getBinaryValue">getBinaryValue</a></span></span><span class="code" data-ice="signature">(value: <span>String</span> | <span>Number</span>): <span>Number</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>returns 0 or 1 depending on the input value</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      <span data-ice="static">static</span>
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
           <span class="code" data-ice="name"><span><a href="class/src/DataSet.mjs~DataSet.html#static-method-getTransforms">getTransforms</a></span></span><span class="code" data-ice="signature">(transforms: <span>Object</span>): <span>Array</span>&lt;<span>Object</span>&gt;</span>
         </p>
       </div>
@@ -219,6 +248,35 @@
         
         
         <div data-ice="description"><p>Allows for fit transform short hand notation</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      <span data-ice="static">static</span>
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="class/src/DataSet.mjs~DataSet.html#static-method-mapToObject">mapToObject</a></span></span><span class="code" data-ice="signature">(mapObj: <span>Map</span>): <span>Object</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>returns a JavaScript Object from a Map (supports nested Map Objects)</p>
 </div>
       </div>
     </td>
@@ -972,6 +1030,35 @@
           
           
           
+          <span class="code" data-ice="name"><span><a href="class/src/DataSet.mjs~DataSet.html#instance-method-exportFeatures">exportFeatures</a></span></span><span class="code" data-ice="signature">(filter: <span>Function</span>): {labels: <span>Map</span>, encoders: <span>Map</span>, scalers: <span>map</span>}</span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>returns Object of all encoders and scalers </p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
           <span class="code" data-ice="name"><span><a href="class/src/DataSet.mjs~DataSet.html#instance-method-filterColumn">filterColumn</a></span></span><span class="code" data-ice="signature">(filter: <span>Function</span>): <span>Array</span></span>
         </p>
       </div>
@@ -1066,6 +1153,35 @@
         
         
         <div data-ice="description"><p>Mutate dataset data with all transforms</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="class/src/DataSet.mjs~DataSet.html#instance-method-importFeatures">importFeatures</a></span></span><span class="code" data-ice="signature">(features: {labels: <span>Map</span>, encoders: <span>Map</span>, scalers: <span>map</span>})</span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>set encoders, labels and scalers </p>
 </div>
       </div>
     </td>
@@ -1569,6 +1685,91 @@ EncodedCSVDataSet.encodeObject(data, options); // =&gt; { fruit_apple: 1, fruit_
   
 </div>
 <div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="static-method-getBinaryValue">
+    <span class="access" data-ice="access">public</span>
+    <span data-ice="static">static</span>
+    
+    
+    
+    
+    <span class="code" data-ice="name">getBinaryValue</span><span class="code" data-ice="signature">(value: <span>String</span> | <span>Number</span>): <span>Number</span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber379">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>returns 0 or 1 depending on the input value</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">value</td>
+      <td data-ice="type" class="code"><span>String</span> | <span>Number</span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: &apos;&apos;</li></ul></td>
+      <td data-ice="description"><p>value to convert to a 1 or a 0</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type code" data-ice="returnType"><span>Number</span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>0 or 1 depending on truthiness of value</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">DataSet.getBinaryValue(&apos;true&apos;) // =&gt; 1
+DataSet.getBinaryValue(&apos;false&apos;) // =&gt; 0
+DataSet.getBinaryValue(&apos;No&apos;) // =&gt; 0
+DataSet.getBinaryValue(false) // =&gt; 0</code></pre>
+    </div>
+</div>
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="static-method-getTransforms">
     <span class="access" data-ice="access">public</span>
     <span data-ice="static">static</span>
@@ -1649,6 +1850,92 @@ Rating: [&apos;label&apos;,],  }); //=&gt; [
 //    name: &apos;Rating&apos;, options: { strategy: &apos;label&apos;, }, 
 //   },
 // ];</code></pre>
+    </div>
+</div>
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="static-method-mapToObject">
+    <span class="access" data-ice="access">public</span>
+    <span data-ice="static">static</span>
+    
+    
+    
+    
+    <span class="code" data-ice="name">mapToObject</span><span class="code" data-ice="signature">(mapObj: <span>Map</span>): <span>Object</span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber356">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>returns a JavaScript Object from a Map (supports nested Map Objects)</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">mapObj</td>
+      <td data-ice="type" class="code"><span>Map</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Map to convert into JavaScript Object</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type code" data-ice="returnType"><span>Object</span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>JavaScript Object converted from a Map</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">const csvObj = new DataSet([{col1:1,col2:5},{col1:2,col2:6}]);
+csvObj.columnMatrix([[&apos;col1&apos;,{parseInt:true}],[&apos;col2&apos;]]); // =&gt;
+//[ 
+//  [1,5], 
+//  [2,6], 
+//]</code></pre>
     </div>
 </div>
 
@@ -2119,7 +2406,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber352">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber403">source</a></span></span>
     </span>
   </h3>
 
@@ -2201,7 +2488,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber361">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber412">source</a></span></span>
     </span>
   </h3>
 
@@ -2244,7 +2531,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber365">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber416">source</a></span></span>
     </span>
   </h3>
 
@@ -2287,7 +2574,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber353">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber404">source</a></span></span>
     </span>
   </h3>
 
@@ -2330,7 +2617,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber356">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber407">source</a></span></span>
     </span>
   </h3>
 
@@ -2373,7 +2660,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber362">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber413">source</a></span></span>
     </span>
   </h3>
 
@@ -2416,7 +2703,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber358">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber409">source</a></span></span>
     </span>
   </h3>
 
@@ -2459,7 +2746,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber368">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber419">source</a></span></span>
     </span>
   </h3>
 
@@ -2502,7 +2789,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber357">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber408">source</a></span></span>
     </span>
   </h3>
 
@@ -2545,7 +2832,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber364">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber415">source</a></span></span>
     </span>
   </h3>
 
@@ -2588,7 +2875,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber363">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber414">source</a></span></span>
     </span>
   </h3>
 
@@ -2631,7 +2918,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber366">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber417">source</a></span></span>
     </span>
   </h3>
 
@@ -2674,7 +2961,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber367">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber418">source</a></span></span>
     </span>
   </h3>
 
@@ -2717,7 +3004,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber359">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber410">source</a></span></span>
     </span>
   </h3>
 
@@ -2760,7 +3047,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber360">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber411">source</a></span></span>
     </span>
   </h3>
 
@@ -2806,7 +3093,7 @@ const selectedCols = CSVDataSet.selectColumns(cols); // =&gt; [{ Age: &apos;44&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber470">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber589">source</a></span></span>
     </span>
   </h3>
 
@@ -2898,7 +3185,7 @@ dataset.columnDescale(&apos;Age&apos;) // =&gt; [ &apos;44&apos;,&apos;27&apos;,
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber616">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber732">source</a></span></span>
     </span>
   </h3>
 
@@ -2985,7 +3272,7 @@ dataset.columnDescale(&apos;Age&apos;) // =&gt; [ &apos;44&apos;,&apos;27&apos;,
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber602">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber718">source</a></span></span>
     </span>
   </h3>
 
@@ -3100,7 +3387,7 @@ reducer,
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber776">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber894">source</a></span></span>
     </span>
   </h3>
 
@@ -3204,7 +3491,7 @@ const ReplacedAgeMeanColumn = dataset.columnReplace(&apos;Age&apos;,{strategy:&a
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber397">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber510">source</a></span></span>
     </span>
   </h3>
 
@@ -3287,6 +3574,90 @@ dataset.scalers.get(&apos;Age&apos;).descale(3.8066624897703196) // =&gt; 45
   
 </div>
 <div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-exportFeatures">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">exportFeatures</span><span class="code" data-ice="signature">(filter: <span>Function</span>): {labels: <span>Map</span>, encoders: <span>Map</span>, scalers: <span>map</span>}</span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber431">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>returns Object of all encoders and scalers </p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">filter</td>
+      <td data-ice="type" class="code"><span>Function</span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>filter function</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type code" data-ice="returnType">{labels: <span>Map</span>, encoders: <span>Map</span>, scalers: <span>map</span>}</td>
+          <td class="return-desc" data-ice="returnDescription"><p>JavaScript Object of transforms encoders and scalers(labels, encoders, scalers)</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">const csvObj = new DataSet([{col1:1,col2:5},{col1:false,col2:6}]);
+DataSet.fitColumns({col1:[&apos;label&apos;,{binary:true}]}); 
+Dataset.data // =&gt; [{col1:true,col2:5},{col1:false,col2:6}]
+Dataset.exportFeatures() //=&gt; { labels: { col1: { &quot;0&quot;: false, &quot;1&quot;: true, &quot;N&quot;: 0, &quot;Yes&quot;: 1, &quot;No&quot;: 0, &quot;f&quot;: 0, &quot;false&quot;: 1, } } }</code></pre>
+    </div>
+</div>
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="instance-method-filterColumn">
     <span class="access" data-ice="access">public</span>
     
@@ -3298,7 +3669,7 @@ dataset.scalers.get(&apos;Age&apos;).descale(3.8066624897703196) // =&gt; 45
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber381">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber494">source</a></span></span>
     </span>
   </h3>
 
@@ -3383,7 +3754,7 @@ csvObj.filterColumn((row)=&gt;row.col1&gt;=2); // =&gt;
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber877">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber995">source</a></span></span>
     </span>
   </h3>
 
@@ -3484,7 +3855,7 @@ columns:[{name:&apos;Age&apos;,options:{ strategy:&apos;mean&apos;} }]
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber946">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber1063">source</a></span></span>
     </span>
   </h3>
 
@@ -3571,7 +3942,7 @@ DataSet.fitInverseTransforms(); // =&gt;
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber983">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber1100">source</a></span></span>
     </span>
   </h3>
 
@@ -3647,6 +4018,78 @@ DataSet.fitTransforms(); // =&gt;
   
 </div>
 <div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-importFeatures">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">importFeatures</span><span class="code" data-ice="signature">(features: {labels: <span>Map</span>, encoders: <span>Map</span>, scalers: <span>map</span>})</span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber448">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>set encoders, labels and scalers </p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">features</td>
+      <td data-ice="type" class="code">{labels: <span>Map</span>, encoders: <span>Map</span>, scalers: <span>map</span>}</td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: {}</li></ul></td>
+      <td data-ice="description"><p>JavaScript Object of transforms encoders and scalers(labels, encoders, scalers)</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  <div data-ice="example">
+    <h4>Example:</h4>
+    
+  <div class="example-doc" data-ice="exampleDoc">
+      
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">const csvObj = new DataSet([{col1:1,col2:5},{col1:false,col2:6}]);
+DataSet.fitColumns({col1:[&apos;label&apos;,{binary:true}]}); 
+Dataset.data // =&gt; [{col1:true,col2:5},{col1:false,col2:6}]
+Dataset.exportFeatures() //=&gt; { labels: { col1: { &quot;0&quot;: false, &quot;1&quot;: true, &quot;N&quot;: 0, &quot;Yes&quot;: 1, &quot;No&quot;: 0, &quot;f&quot;: 0, &quot;false&quot;: 1, } } }</code></pre>
+    </div>
+</div>
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="instance-method-inverseTransformObject">
     <span class="access" data-ice="access">public</span>
     
@@ -3658,7 +4101,7 @@ DataSet.fitTransforms(); // =&gt;
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber643">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber759">source</a></span></span>
     </span>
   </h3>
 
@@ -3757,7 +4200,7 @@ DataSet.inverseTransformObject(DataSet.data[0]); // =&gt; {
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber535">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber651">source</a></span></span>
     </span>
   </h3>
 
@@ -3836,7 +4279,7 @@ DataSet.inverseTransformObject(DataSet.data[0]); // =&gt; {
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber493">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber613">source</a></span></span>
     </span>
   </h3>
 
@@ -3875,6 +4318,13 @@ DataSet.inverseTransformObject(DataSet.data[0]); // =&gt; {
       <td data-ice="appendix"><ul><li>optional</li>
 <li>default: false</li></ul></td>
       <td data-ice="description"><p>only replace with (0,1) with binary values</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">options.sortFunction</td>
+      <td data-ice="type" class="code"><span>function</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>custom label encoding value sort function</p>
 </td>
     </tr>
 </tbody>
@@ -3937,7 +4387,7 @@ const encodedPurchasedColumn = dataset.labelEncoder(&apos;Purchased&apos;); </co
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber576">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber692">source</a></span></span>
     </span>
   </h3>
 
@@ -4052,7 +4502,7 @@ EncodedCSVDataSet.oneHotColumnArray(&apos;Country);// =&gt;
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber708">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/DataSet.mjs.html#lineNumber824">source</a></span></span>
     </span>
   </h3>
 

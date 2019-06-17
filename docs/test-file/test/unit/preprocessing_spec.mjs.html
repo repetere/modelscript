@@ -69,7 +69,8 @@
 <div class="content" data-ice="content"><h1 data-ice="title">test/unit/preprocessing_spec.mjs</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import * as ms from &apos;../../index.mjs&apos;;
 import chai from &apos;chai&apos;;
-import { fullData, } from &apos;../mock/dataset&apos;;
+import { fullData, fullDataDouble, } from &apos;../mock/dataset&apos;;
+const DataSet = ms.preprocessing.DataSet;
 // import path from &apos;path&apos;;
 // const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const expect = chai.expect;
@@ -134,25 +135,139 @@ const csvData = [{
   &apos;Purchased&apos;: &apos;Yes&apos;,
 },
 ];
-const unmodifiedCSVData = [...csvData, ];
+const unmodifiedCSVData = [...csvData,];
 
 describe(&apos;preprocessing&apos;, function() {
   describe(&apos;DataSet class&apos;, () =&gt; {
     const CSVDataSet = new ms.preprocessing.DataSet(csvData, { debug: false, });
     const CSVFullDataSet = new ms.preprocessing.DataSet(fullData, { debug: false,  });
-    const EncodedCSVDataSet = new ms.preprocessing.DataSet(csvData, { debug: false,  });
+    const EncodedCSVDataSet = new ms.preprocessing.DataSet(csvData, { debug: false, });
     EncodedCSVDataSet.fitColumns({
       Country:&apos;onehot&apos;,
       Salary:&apos;parseNumber&apos;,
-      Age:[&apos;scale&apos;, &apos;standard&apos;, ],
-      Purchased:[&apos;label&apos;, ],
+      Age:[&apos;scale&apos;, &apos;standard&apos;,],
+      Purchased:[&apos;label&apos;, { binary:true, }, ],
     });
-    // console.log(&apos;EncodedCSVDataSet.data&apos;, EncodedCSVDataSet.data);
+
     describe(&apos;constructor&apos;, () =&gt; {
       it(&apos;should instantiate a new DataSet Class&apos;, () =&gt; {
         expect(ms.preprocessing).to.be.an(&apos;object&apos;);
         expect(ms.preprocessing.DataSet).to.be.a(&apos;function&apos;);
         expect(CSVDataSet).to.be.instanceof(ms.preprocessing.DataSet);
+      });
+    });
+    describe(&apos;static getBinaryValue&apos;, () =&gt; {
+      it(&apos;should return 0 or 1 depending on input values&apos;, () =&gt; {
+        const truthy = [&apos; &apos;, true, 1, 100, &apos;true&apos;, &apos;T&apos;, ];
+        const falsey = [undefined, null, &apos;&apos;, 0, &apos;N&apos;, &apos;n&apos;, &apos;NO&apos;, &apos;No&apos;, &apos;no&apos;, &apos;False&apos;, &apos;F&apos;, &apos;f&apos;, ];
+        truthy.forEach(truthVal =&gt; {
+          expect(DataSet.getBinaryValue(truthVal)).to.eql(1);
+        });
+        falsey.forEach(falseVal =&gt; {
+          expect(DataSet.getBinaryValue(falseVal)).to.eql(0);
+        });
+      });
+    });
+    describe(&apos;static mapToObject&apos;, () =&gt; {
+      const mapToObject = ms.preprocessing.DataSet.mapToObject;
+      const testArray = [&apos;some&apos;, &apos;values&apos;, &apos;in&apos;, &apos;array&apos;, ];
+      const testMap = new Map([
+        [&apos;foo&apos;, &apos;bar&apos;, ],
+        [&apos;hello&apos;, testArray, ],
+      ]);
+      const nestMap = new Map([
+        [&apos;nested_string&apos;, &apos;this is nested&apos;, ],
+        [&apos;nested_array&apos;, [1, 2, 3, 4, ], ],
+      ]);
+      const nestedMap = new Map(testMap);
+      nestedMap.set(&apos;deep_nest&apos;, nestMap);
+      it(&apos;should convert a map into an equivalent JavaScript Object&apos;, () =&gt; {
+        const convertedMaptoObject = ms.preprocessing.DataSet.mapToObject(testMap);
+        const correctObject = { foo: &apos;bar&apos;, hello: [&apos;some&apos;, &apos;values&apos;, &apos;in&apos;, &apos;array&apos;, ], };
+        // console.log({ convertedMaptoObject, correctObject, });
+        expect(JSON.stringify(convertedMaptoObject)).to.eql(JSON.stringify(correctObject));
+        expect(convertedMaptoObject.hello).to.be.an(&apos;array&apos;).and.to.include.members(testArray);
+      });
+      it(&apos;should convert nested map objects&apos;, () =&gt; {
+        const correctFullyNested = {
+          foo: &apos;bar&apos;,
+          hello: [&apos;some&apos;, &apos;values&apos;, &apos;in&apos;, &apos;array&apos;,],
+          deep_nest: {
+            nested_string: &apos;this is nested&apos;,
+            nested_array: [1, 2, 3, 4,],
+          },
+        };
+        const convertedMaptoObject = mapToObject(nestedMap);
+        expect(JSON.stringify(convertedMaptoObject)).to.eql(JSON.stringify(correctFullyNested));
+      });
+      it(&apos;should handle empty maps&apos;, () =&gt; {
+        const emptyConverted = mapToObject(new Map());
+        expect(emptyConverted).to.deep.eql({});
+      });
+    });
+    describe(&apos;exportFeatures&apos;, () =&gt; {
+      it(&apos;should export JavaScript Object of encoders,labels and scalers&apos;, () =&gt; {
+        const expectedFeatures = {
+          &apos;encoders&apos;: {
+            &apos;Country&apos;: {
+              &apos;name&apos;: &apos;Country&apos;,
+              &apos;labels&apos;: [
+                &apos;Brazil&apos;,
+                &apos;Mexico&apos;,
+                &apos;Ghana&apos;,
+              ],
+              &apos;prefix&apos;: &apos;Country_&apos;,
+            },
+          },
+          &apos;labels&apos;: {
+            &apos;Purchased&apos;: {
+              &apos;0&apos;: false,
+              &apos;1&apos;: true,
+              &apos;N&apos;: 0,
+              &apos;Yes&apos;: 1,
+              &apos;No&apos;: 0,
+              &apos;f&apos;: 0,
+              &apos;false&apos;: 1,
+            },
+          },
+          &apos;scalers&apos;: {
+            &apos;Age&apos;: {
+              &apos;name&apos;: &apos;Age&apos;,
+              &apos;components&apos;: {
+                &apos;average&apos;: 34.9,
+                &apos;standard_dev&apos;: 14.24741691988021,
+                &apos;maximum&apos;: 50,
+                &apos;minimum&apos;: 0,
+              },
+              &apos;config&apos;: {
+                &apos;forced_coercion&apos;: false,
+                &apos;strategy&apos;: &apos;standard&apos;,
+              },
+            },
+          },
+        };
+        const features = EncodedCSVDataSet.exportFeatures();
+        expect(features).to.deep.equal(expectedFeatures);
+      });
+    });
+    describe(&apos;importFeatures&apos;, () =&gt; { 
+      const FeatureDataSet = new DataSet(fullDataDouble);
+      FeatureDataSet.fitColumns({
+        Country: &apos;onehot&apos;,
+        &apos;Sister Country&apos;: &apos;onehot&apos;,
+        Salary: &apos;parseNumber&apos;,
+        Age: [&apos;scale&apos;, { strategy: &apos;standard&apos;, forced_coercion: true, },],
+        &apos;Scale Age&apos;: [&apos;scale&apos;, &apos;standard&apos;,],
+        &apos;Scale Age Half&apos;: [&apos;scale&apos;, &apos;log&apos;,],
+        Purchased: [&apos;label&apos;, { binary: true, },],
+        Rating: [&apos;label&apos;,],
+      });
+      const features = FeatureDataSet.exportFeatures();
+      it(&apos;should import exported Features&apos;, () =&gt; {
+        const newFeatureDataSet = new DataSet();
+        newFeatureDataSet.importFeatures(features);
+        const transformedObject = newFeatureDataSet.transformObject(fullDataDouble[ 0 ]);
+        expect(transformedObject).to.deep.eql(FeatureDataSet.data[ 0 ]);
       });
     });
     describe(&apos;filterColumn&apos;, () =&gt; {
@@ -165,7 +280,7 @@ describe(&apos;preprocessing&apos;, function() {
     });
     describe(&apos;columnMatrix&apos;, () =&gt; { 
       it(&apos;should create a matrix of values from columns&apos;, () =&gt; {
-        const AgeSalMatrix = CSVDataSet.columnMatrix([[&apos;Age&apos;,], [&apos;Salary&apos;,],]);
+        const AgeSalMatrix = CSVDataSet.columnMatrix([[&apos;Age&apos;, ], [&apos;Salary&apos;, ], ]);
         const AgeArray = CSVDataSet.columnArray(&apos;Age&apos;);
         expect(AgeSalMatrix).to.be.lengthOf(AgeArray.length);
         expect(AgeSalMatrix[ 0 ][0]).to.eql(AgeArray[0]);
@@ -181,7 +296,7 @@ describe(&apos;preprocessing&apos;, function() {
       });
       it(&apos;should handle invalid columns&apos;, () =&gt; {
         const invalidMatrix = CSVDataSet.columnMatrix([
-          [&apos;iojf&apos;, ],
+          [&apos;iojf&apos;,],
         ]);
         expect(invalidMatrix).to.be.an(&apos;Array&apos;);
         expect(invalidMatrix[ 0 ][ 0 ]).to.be.undefined;
@@ -189,13 +304,13 @@ describe(&apos;preprocessing&apos;, function() {
     });
     describe(&apos;static reverseColumnMatrix&apos;, () =&gt; {
       it(&apos;should reverse a matrix of values into labeled object&apos;, () =&gt; {
-        const dependentVariables = [[&apos;Age&apos;,], [&apos;Salary&apos;,],];
-        const dependentVariables2 = [&apos;Age&apos;, &apos;Salary&apos;, ];
+        const dependentVariables = [[&apos;Age&apos;, ], [&apos;Salary&apos;, ], ];
+        const dependentVariables2 = [&apos;Age&apos;, &apos;Salary&apos;,];
         const AgeSalMatrix = CSVDataSet.columnMatrix(dependentVariables);
         const AgeSalMatrix2 = CSVDataSet.columnMatrix(dependentVariables2);
         const AgeArray = CSVDataSet.columnArray(&apos;Age&apos;);
         const reversedAgeSalMatrix = ms.DataSet.reverseColumnMatrix({ vectors: AgeSalMatrix, labels: dependentVariables, });
-        const selectedCols = CSVDataSet.selectColumns([&apos;Age&apos;, &apos;Salary&apos;,]);
+        const selectedCols = CSVDataSet.selectColumns([&apos;Age&apos;, &apos;Salary&apos;, ]);
         expect(AgeSalMatrix).to.be.lengthOf(AgeArray.length);
         expect(AgeSalMatrix).to.eql(AgeSalMatrix2);
         expect(reversedAgeSalMatrix).to.be.lengthOf(AgeArray.length);
@@ -204,12 +319,12 @@ describe(&apos;preprocessing&apos;, function() {
     });
     describe(&apos;static reverseColumnVector&apos;, () =&gt; {
       it(&apos;should reverse a vector of values into labeled object&apos;, () =&gt; {
-        const dependentVariables = [[&apos;Age&apos;,], [&apos;Salary&apos;,],];
-        const dependentVariables2 = [&apos;Age&apos;, &apos;Salary&apos;, ];
+        const dependentVariables = [[&apos;Age&apos;, ], [&apos;Salary&apos;, ], ];
+        const dependentVariables2 = [&apos;Age&apos;, &apos;Salary&apos;,];
         const AgeArray = CSVDataSet.columnArray(&apos;Age&apos;);
         const reversedAgeSalVector = ms.DataSet.reverseColumnVector({ vector: AgeArray, labels: dependentVariables, });
         const reversedAgeSalVector2 = ms.DataSet.reverseColumnVector({ vector: AgeArray, labels: dependentVariables2, });
-        const selectedCols = CSVDataSet.selectColumns([&apos;Age&apos;,]);
+        const selectedCols = CSVDataSet.selectColumns([&apos;Age&apos;, ]);
         expect(reversedAgeSalVector).to.be.lengthOf(AgeArray.length);
         expect(reversedAgeSalVector).to.eql(selectedCols);
         expect(reversedAgeSalVector).to.eql(reversedAgeSalVector2);
@@ -217,7 +332,7 @@ describe(&apos;preprocessing&apos;, function() {
     });
     describe(&apos;selectColumns&apos;, () =&gt; { 
       it(&apos;should return a list of objects with only selected columns as properties&apos;, () =&gt; {
-        const cols = [&apos;Age&apos;, &apos;Salary&apos;,];
+        const cols = [&apos;Age&apos;, &apos;Salary&apos;, ];
         const selectedCols = CSVDataSet.selectColumns(cols);
         expect(Object.keys(selectedCols[ 0 ])).to.eql(cols);
         expect(Object.keys(selectedCols[ 0 ])).to.have.lengthOf(cols.length);
@@ -346,13 +461,13 @@ describe(&apos;preprocessing&apos;, function() {
           binary: true,
         });
         encodedPurchased = binaryEncodedColumn;
-        expect(binaryEncodedColumn).to.include.members([0, 1, ]);
+        expect(binaryEncodedColumn).to.include.members([0, 1,]);
       });
       it(&apos;should label encode&apos;, () =&gt; {
         const labelEncodedColumn = CSVDataSet.labelEncoder(&apos;Country&apos;);
         encodedCountry = labelEncodedColumn;
         // console.log({ CSVDataSet }, CSVDataSet.data);
-        expect(labelEncodedColumn).to.include.members([0, 1, 2, ]);
+        expect(labelEncodedColumn).to.include.members([0, 1, 2,]);
         labelEncodedColumn.forEach(lec =&gt; expect(lec).to.be.a(&apos;number&apos;));
         expect(CSVDataSet.labels.size).equal(2);
       });
@@ -367,15 +482,15 @@ describe(&apos;preprocessing&apos;, function() {
     describe(&apos;getTransforms&apos;, () =&gt; {
       it(&apos;should take column fit options as an array&apos;, () =&gt; {
         const e = EncodedCSVDataSet.getTransforms({
-          Age: [&apos;scale&apos;,],
-          Rating: [&apos;label&apos;,],  });
+          Age: [&apos;scale&apos;, ],
+          Rating: [&apos;label&apos;, ],  });
         const e1 = EncodedCSVDataSet.getTransforms({
           Age: &apos;scale&apos;,
           Rating:  &apos;label&apos;,  });
         const e2 = EncodedCSVDataSet.getTransforms({
         });
         const e3 = EncodedCSVDataSet.getTransforms({
-          Age: [&apos;scale&apos;, &apos;standard&apos;, ],
+          Age: [&apos;scale&apos;, &apos;standard&apos;,],
           Rating: &apos;label&apos;,
         });
         const fitConf1 = [
@@ -405,7 +520,7 @@ describe(&apos;preprocessing&apos;, function() {
     });
     describe(&apos;encodeObject&apos;, () =&gt; {
       it(&apos;should onehot encode an object&apos;, () =&gt; {
-        const labels = [&apos;apple&apos;, &apos;orange&apos;, &apos;banana&apos;, ];
+        const labels = [&apos;apple&apos;, &apos;orange&apos;, &apos;banana&apos;,];
         const prefix = &apos;fruit_&apos;;
         const name = &apos;fruit&apos;;
         const options = { labels, prefix, name, };
@@ -448,25 +563,25 @@ describe(&apos;preprocessing&apos;, function() {
         };
         const inverseTransformedObject = EncodedCSVDataSet.inverseTransformObject(tranformedObj);
         const inverseTransformedObject2 = EncodedCSVDataSet.inverseTransformObject(tranformedObj, { removeValues: true, });
+
         expect(inverseTransformedObject.Age.toString()).to.eql(csvData[0].Age);
         expect(inverseTransformedObject2.Age.toString()).to.eql(csvData[0].Age);
         expect(inverseTransformedObject.Salary).to.eql(csvData[0].Salary);
         expect(inverseTransformedObject2.Salary).to.eql(csvData[0].Salary);
-        expect(inverseTransformedObject2.Purchased).to.eql(csvData[0].Purchased);
+        expect(inverseTransformedObject2.Purchased).to.eql(Boolean(ms.preprocessing.DataSet.getBinaryValue(csvData[0].Purchased)));
         expect(inverseTransformedObject2.Country).to.eql(csvData[0].Country);
-        // console.log({ inverseTransformedObject, inverseTransformedObject2 });
       });
     });
     describe(&apos;oneHotDecoder&apos;, () =&gt; {
       it(&apos;should one hot decode&apos;, () =&gt; {
         const oneHotDecodeCountry = EncodedCSVDataSet.oneHotDecoder(&apos;Country&apos;);
-        const countryColumn = EncodedCSVDataSet.selectColumns([&apos;Country&apos;, ]);
+        const countryColumn = EncodedCSVDataSet.selectColumns([&apos;Country&apos;,]);
         expect(oneHotDecodeCountry).to.eql(countryColumn);
       });
     });
     describe(&apos;oneHotColumnArray&apos;, () =&gt; {
       it(&apos;should return all encoded columns&apos;, () =&gt; {
-        const selectedColumns = EncodedCSVDataSet.selectColumns([&apos;Country_Brazil&apos;, &apos;Country_Mexico&apos;, &apos;Country_Ghana&apos;, ]);
+        const selectedColumns = EncodedCSVDataSet.selectColumns([&apos;Country_Brazil&apos;, &apos;Country_Mexico&apos;, &apos;Country_Ghana&apos;,]);
         const oneHotArrayed = EncodedCSVDataSet.oneHotColumnArray(&apos;Country&apos;);
         expect(oneHotArrayed).to.eql(selectedColumns);
       });
@@ -570,7 +685,7 @@ describe(&apos;preprocessing&apos;, function() {
       });
     });
     describe(&apos;fitColumns&apos;, () =&gt; {
-      const extraColumn = [89, 12, 32, 45, 53, 52, 56, 21, 34, 56,];
+      const extraColumn = [89, 12, 32, 45, 53, 52, 56, 21, 34, 56, ];
       it(&apos;should accept simple format for transformations&apos;, () =&gt; {
         const trainningData = [
           {
@@ -594,13 +709,13 @@ describe(&apos;preprocessing&apos;, function() {
         ].concat(csvData);
         const fittingOptions = {
           Country: &apos;onehot&apos;,
-          Salary: [&apos;scale&apos;, &apos;standard&apos;,],
-          Age: [&apos;parseNumber&apos;,],
+          Salary: [&apos;scale&apos;, &apos;standard&apos;, ],
+          Age: [&apos;parseNumber&apos;, ],
         };
         const preprocessingOptions = {
-          Salary: [&apos;parseNumber&apos;,],
-          Purchased: [&apos;label&apos;, { binary:true, },],
-          Age: [&apos;median&apos;,],
+          Salary: [&apos;parseNumber&apos;, ],
+          Purchased: [&apos;label&apos;, { binary:true, }, ],
+          Age: [&apos;median&apos;, ],
         };
     
         const trainningDataSet = new ms.DataSet(trainningData);
@@ -608,7 +723,7 @@ describe(&apos;preprocessing&apos;, function() {
         trainningDataSet.fitColumns(fittingOptions);
       });
       it(&apos;should merge columns&apos;, () =&gt; {
-        const fittedOriginalData = new ms.DataSet([...unmodifiedCSVData, ]);
+        const fittedOriginalData = new ms.DataSet([...unmodifiedCSVData,]);
         fittedOriginalData.fitColumns({
           columns: [
             { name: &apos;Age&apos;, },
@@ -624,13 +739,13 @@ describe(&apos;preprocessing&apos;, function() {
         expect(fittedOriginalData.columnArray(&apos;Extra&apos;)).to.eql(extraColumn);
       });
       it(&apos;should only merge columns if data length matches&apos;, () =&gt; { 
-        const fittedOriginalData = new ms.DataSet([...unmodifiedCSVData,]);
-        const newColumn = fittedOriginalData.columnMerge(&apos;err&apos;, [1, 2, 3, 4, 5, 6, 7, 8, 9, 0,]);
+        const fittedOriginalData = new ms.DataSet([...unmodifiedCSVData, ]);
+        const newColumn = fittedOriginalData.columnMerge(&apos;err&apos;, [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, ]);
         expect(newColumn).to.be.an(&apos;Object&apos;);
         expect(newColumn).to.haveOwnProperty(&apos;err&apos;);
         expect(newColumn.err).to.be.an(&apos;array&apos;);
         try {
-          fittedOriginalData.columnMerge(&apos;err&apos;, [1, 2,]);
+          fittedOriginalData.columnMerge(&apos;err&apos;, [1, 2, ]);
         } catch (e) {
           expect(e).to.be.an(&apos;error&apos;);
           expect(e.toString()).to.eql(`RangeError: Merged data column must have the same length(2) as the DataSet&apos;s length (${10})`);
@@ -638,7 +753,7 @@ describe(&apos;preprocessing&apos;, function() {
       });
       it(&apos;should fit multiple columns&apos;, () =&gt; {
         const unmodifiedData = new ms.DataSet(unmodifiedCSVData);
-        const fittedOriginalData = new ms.DataSet([...unmodifiedCSVData, ]);
+        const fittedOriginalData = new ms.DataSet([...unmodifiedCSVData,]);
         const reducer = (result, value, index, arr) =&gt; {
           result.push(value * 2);
           return result;
@@ -732,8 +847,8 @@ describe(&apos;preprocessing&apos;, function() {
         refitDataSet.fitColumns({
           Country:&apos;onehot&apos;,
           Salary:&apos;parseNumber&apos;,
-          Age:[&apos;scale&apos;, &apos;standard&apos;, ],
-          Purchased:[&apos;label&apos;, ],
+          Age:[&apos;scale&apos;, &apos;standard&apos;,],
+          Purchased:[&apos;label&apos;,],
         });
         expect(refitDataSet.data[ 0 ]).to.eql(transformedFullObject);
         refitDataSet.fitInverseTransforms({ removeValues: true, });
