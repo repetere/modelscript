@@ -144,6 +144,7 @@ const oneHotCountryColumn = dataset.oneHotEncoder('Country');
   */
   static oneHotEncoder(name, options) {
     const config = Object.assign({
+      merge: true,
     }, options);
     const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
     const labels = Array.from(new Set(labelData).values());
@@ -161,11 +162,16 @@ const oneHotCountryColumn = dataset.oneHotEncoder('Country');
         });
         return result;
       }, {});
-    this.encoders.set(name, {
-      name,
-      labels,
-      prefix,
-    });
+    if (this.encoders.has(name) && config.merge) {
+      this.encoders.get(name).labels = Array.from(new Set(labels.concat(this.encoders.get(name).labels)));
+      // this.encoders.get(name);
+    } else {
+      this.encoders.set(name, {
+        name,
+        labels,
+        prefix,
+      });
+    }
     return encodedData;
   }
   /**
@@ -613,6 +619,7 @@ const encodedPurchasedColumn = dataset.labelEncoder('Purchased');
   labelEncoder(name, options) {
     const config = Object.assign({
       binary: false,
+      merge: true,
     }, options);
     const labelData = config.data || this.columnArray(name, config.columnArrayOptions);
     let labelDataUniqueValues = Array.from(new Set(labelData).values()).sort(config.sortFunction);
@@ -636,7 +643,9 @@ const encodedPurchasedColumn = dataset.labelEncoder('Purchased');
           return result;
         }, [])
     );
-    this.labels.set(name, labels);
+    if (this.labels.has(name) && config.merge) {
+      this.labels.set(name, new Map([...this.labels.get(name), ...labels, ]));
+    } else this.labels.set(name, labels);
     const labeledData = (config.binary) ?
       labelData.map(DataSet.getBinaryValue) :
       labelData.map(label => labels.get(label));
