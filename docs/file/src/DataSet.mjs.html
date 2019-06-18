@@ -475,7 +475,7 @@ DataSet.getBinaryValue(false) // =&gt; 0
    * @param {Object[]} dataset
    * @returns {this} 
    */
-  constructor(data = [], options) {
+  constructor(data = [], options = {}) {
     this.config = Object.assign({
       debug: true,
     }, options);
@@ -492,6 +492,13 @@ DataSet.getBinaryValue(false) // =&gt; 0
     this.reverseColumnMatrix = DataSet.reverseColumnMatrix;
     this.reverseColumnVector = DataSet.reverseColumnVector;
     this.getTransforms = DataSet.getTransforms;
+    if (this.config.labels || this.config.encoders || this.config.scalers) {
+      this.importFeatures({
+        labels: this.config.labels,
+        encoders: this.config.encoders,
+        scalers: this.config.scalers,
+      });
+    }
     return this;
   }
   /**
@@ -521,17 +528,17 @@ Dataset.exportFeatures() //=&gt; { labels: { col1: { &quot;0&quot;: false, &quot
   * @param {{labels:Map,encoders:Map,scalers:map}} [features={}] - JavaScript Object of transforms encoders and scalers(labels, encoders, scalers) 
   */
   importFeatures(features = {}) {
-    Object.keys(features.encoders).forEach(encoderName =&gt; { 
+    Object.keys(features.encoders || {}).forEach(encoderName =&gt; { 
       const encoder = features.encoders[ encoderName ];
       this.encoders.set(encoderName, encoder);
     });
-    Object.keys(features.labels).forEach(labelName =&gt; {
+    Object.keys(features.labels || {}).forEach(labelName =&gt; {
       const labelData = features.labels[labelName]
       const labels = Object.keys(labelData)
         .map(labelProp =&gt; [ labelProp, labelData[ labelProp ] ]);
       this.labels.set(labelName, new Map(labels));
     });
-    Object.keys(features.scalers).forEach(scalerName =&gt; {
+    Object.keys(features.scalers || {}).forEach(scalerName =&gt; {
       let transforms;
       const scalerData = features.scalers[ scalerName ];
       const { config, } = scalerData;
