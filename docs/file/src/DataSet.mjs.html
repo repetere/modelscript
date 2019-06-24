@@ -189,7 +189,7 @@ EncodedCSVDataSet.encodeObject(data, options); // =&gt; { fruit_apple: 1, fruit_
     const { labels, prefix, name, } = options;
     const encodedData = labels.reduce((encodedObj, label) =&gt; {
       const oneHotLabelArrayName = `${prefix}${label}`;
-      encodedObj[ oneHotLabelArrayName ] = (data[ name ] &amp;&amp; data[ name ].toString() === label.toString()) ? 1 : 0;
+      encodedObj[ oneHotLabelArrayName ] = (label &amp;&amp; data[ name ] &amp;&amp; data[ name ].toString() === label.toString()) ? 1 : 0;
       return encodedObj;
     }, {});
     return encodedData;

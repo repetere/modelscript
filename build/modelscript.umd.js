@@ -83086,7 +83086,7 @@
                 const { labels, prefix, name, } = options;
                 const encodedData = labels.reduce((encodedObj, label) => {
                   const oneHotLabelArrayName = `${prefix}${label}`;
-                  encodedObj[ oneHotLabelArrayName ] = (data[ name ] && data[ name ].toString() === label.toString()) ? 1 : 0;
+                  encodedObj[ oneHotLabelArrayName ] = (label && data[ name ] && data[ name ].toString() === label.toString()) ? 1 : 0;
                   return encodedObj;
                 }, {});
                 return encodedData;

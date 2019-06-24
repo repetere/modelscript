@@ -48,7 +48,7 @@
     "esdoc-ecmascript-proposal-plugin": "^1.0.0",
     "esdoc-publish-markdown-plugin": "^1.1.0",
     "esdoc-standard-plugin": "^1.0.0",
-    "esm": "^3.0.72",
+    "esm": "^3.2.25",
     "istanbul": "^0.4.5",
     "matplotnode": "^0.1.3",
     "mocha": "^5.2.0",
