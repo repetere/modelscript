@@ -23,7 +23,6 @@ var mlnModule = require('ml-naivebayes');
 var mlnModule__default = _interopDefault(mlnModule);
 var MultivariateLinearRegression = _interopDefault(require('ml-regression-multivariate-linear'));
 var PCA = _interopDefault(require('ml-pca'));
-var natural = _interopDefault(require('natural'));
 var Random = _interopDefault(require('random-js'));
 var jgsl = _interopDefault(require('js-grid-search-lite'));
 
@@ -2381,13 +2380,17 @@ ColumnVectorizer.evaluate('I would rate everything Great, views Great, food Grea
   }
 }
 
+// import { default as natural, } from 'natural';
+
 /**
  * @namespace
  * @see {@link https://github.com/NaturalNode/natural} 
  */
 const nlp = Object.assign({
   ColumnVectorizer,
-}, natural);
+}
+// ,  natural
+);
 
 const { GridSearch, } = jgsl;
 const Matrix = ml.Matrix;

@@ -1,7 +1,7 @@
 {
   "name": "modelscript",
   "description": "modelscript is a javascript module with simple and efficient tools for data mining and data analysis in JavaScript. When modelscript used with ML.js, pandas-js, and numjs, you're left with the equivalent R/Python tool set in JavaScript.",
-  "version": "2.3.5",
+  "version": "2.4.0",
   "commonjs": "build/modelscript.cjs.js",
   "esm": "build/modelscript.esm.js",
   "main": "index.mjs",
@@ -23,7 +23,6 @@
     "ml-pca": "^2.1.0",
     "ml-random-forest": "^1.0.3",
     "ml-regression-multivariate-linear": "^1.2.0",
-    "natural": "^0.5.6",
     "node-fpgrowth": "^1.2.1",
     "object.values": "^1.0.4",
     "probability-distributions": "^0.9.1",
@@ -34,6 +33,7 @@
   "devDependencies": {
     "@repetere/esdoc-inject-gtm-plugin": "^0.1.0",
     "@std/esm": "^0.26.0",
+    "natural": "^0.5.6",
     "babel-core": "^6.26.3",
     "babel-plugin-istanbul": "^4.1.6",
     "babel-polyfill": "^6.26.0",

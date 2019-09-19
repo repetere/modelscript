@@ -17,7 +17,6 @@ import * as mlnModule from 'ml-naivebayes';
 import mlnModule__default, {  } from 'ml-naivebayes';
 import MultivariateLinearRegression from 'ml-regression-multivariate-linear';
 import PCA from 'ml-pca';
-import natural from 'natural';
 import Random from 'random-js';
 import jgsl from 'js-grid-search-lite';
 
@@ -2375,13 +2374,17 @@ ColumnVectorizer.evaluate('I would rate everything Great, views Great, food Grea
   }
 }
 
+// import { default as natural, } from 'natural';
+
 /**
  * @namespace
  * @see {@link https://github.com/NaturalNode/natural} 
  */
 const nlp = Object.assign({
   ColumnVectorizer,
-}, natural);
+}
+// ,  natural
+);
 
 const { GridSearch, } = jgsl;
 const Matrix = ml.Matrix;

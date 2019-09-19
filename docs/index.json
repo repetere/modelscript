@@ -3911,7 +3911,7 @@
     "__docId__": 137,
     "kind": "file",
     "name": "src/nlp.mjs",
-    "content": "import { default as natural, } from 'natural';\r\nimport { ColumnVectorizer, } from './ColumnVectorizer';\r\n\r\n/**\r\n * @namespace\r\n * @see {@link https://github.com/NaturalNode/natural} \r\n */\r\nexport const nlp = Object.assign({\r\n  ColumnVectorizer,\r\n}, natural);",
+    "content": "// import { default as natural, } from 'natural';\r\nimport { ColumnVectorizer, } from './ColumnVectorizer';\r\n\r\n/**\r\n * @namespace\r\n * @see {@link https://github.com/NaturalNode/natural} \r\n */\r\nexport const nlp = Object.assign({\r\n  ColumnVectorizer,\r\n}\r\n// ,  natural\r\n);",
     "static": true,
     "longname": "/Users/yawjosephetse/Developer/github/repetere/modelscript/src/nlp.mjs",
     "access": "public",
