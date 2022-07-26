@@ -1,3 +1,9 @@
+# ⚠️ REPO MOVED TO https://github.com/repetere/jsonstack-data ⚠️ #
+
+
+
+
+
 # ModelScript
 
 [![Coverage Status](https://coveralls.io/repos/github/repetere/modelscript/badge.svg?branch=master)](https://coveralls.io/github/repetere/modelscript?branch=master) [![Build Status](https://travis-ci.org/repetere/modelscript.svg?branch=master)](https://travis-ci.org/repetere/modelscript)
